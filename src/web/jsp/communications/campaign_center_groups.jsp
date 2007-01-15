@@ -34,7 +34,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="groups" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="groups" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
       <%
       	LinkedHashMap groups = Campaign.getGroups();
         Iterator i = groups.keySet().iterator();

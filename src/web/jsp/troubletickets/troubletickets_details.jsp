@@ -77,7 +77,7 @@ function popKbEntries() {
 </table>
 <%-- End Trails --%>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="details" object="TicketDetails" param="<%= param1 %>" hideContainer="<%= isPopup(request) || (defectCheck != null && !"".equals(defectCheck.trim())) %>">
+<dhv:container name="tickets" selected="details" object="TicketDetails" param="<%= param1 %>" hideContainer='<%= isPopup(request) || (defectCheck != null && !"".equals(defectCheck.trim())) %>'>
     <%@ include file="ticket_header_include.jsp" %>
     <% if (TicketDetails.isTrashed()) {%>
       <dhv:permission name="tickets-tickets-delete">
@@ -251,11 +251,11 @@ function popKbEntries() {
       Quote quote = (Quote) quotes.next();
       if(quoteCounter++ == 0 ){
 %>
-        <a href="Quotes.do?command=Details&quoteId=<%= quote.getId() %>"><dhv:label name="quotes.symbol.number" param="<%= "number="+quote.getGroupId() %>">Quote #<%= quote.getGroupId() %></dhv:label></a>
+        <a href="Quotes.do?command=Details&quoteId=<%= quote.getId() %>"><dhv:label name="quotes.symbol.number" param='<%= "number="+quote.getGroupId() %>'>Quote #<%= quote.getGroupId() %></dhv:label></a>
 <%
       } else {
 %>
-        , <a href="Quotes.do?command=Details&quoteId=<%= quote.getId() %>"><dhv:label name="quotes.symbol.number" param="<%= "number="+quote.getGroupId() %>">Quote #<%= quote.getGroupId() %></dhv:label></a>
+        , <a href="Quotes.do?command=Details&quoteId=<%= quote.getId() %>"><dhv:label name="quotes.symbol.number" param='<%= "number="+quote.getGroupId() %>'>Quote #<%= quote.getGroupId() %></dhv:label></a>
 <%
       }
     }
@@ -429,10 +429,10 @@ function popKbEntries() {
       <dhv:label name="usergroup.assignedGroup">Assigned Group</dhv:label>
 		</td>
 		<td>
-      <dhv:evaluate if="<%= TicketDetails.getUserGroupName() != null && !"".equals(TicketDetails.getUserGroupName()) %>">
+      <dhv:evaluate if='<%= TicketDetails.getUserGroupName() != null && !"".equals(TicketDetails.getUserGroupName()) %>'>
       <%= toHtml(TicketDetails.getUserGroupName()) %>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= TicketDetails.getUserGroupName() == null || "".equals(TicketDetails.getUserGroupName()) %>">
+      <dhv:evaluate if='<%= TicketDetails.getUserGroupName() == null || "".equals(TicketDetails.getUserGroupName()) %>'>
         <dhv:label name="ticket.unassigned.text">-- unassigned --</dhv:label>
       </dhv:evaluate>
 		</td>
@@ -493,7 +493,7 @@ function popKbEntries() {
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getCause()) %>
-      <dhv:include name="ticket.causeId" none="true"><dhv:evaluate if="<%= TicketDetails.getCause() != null && !"".equals(TicketDetails.getCause().trim()) %>"><br /></dhv:evaluate>
+      <dhv:include name="ticket.causeId" none="true"><dhv:evaluate if='<%= TicketDetails.getCause() != null && !"".equals(TicketDetails.getCause().trim()) %>'><br /></dhv:evaluate>
         <%= causeList.getSelectedValue(TicketDetails.getCauseId()) %>
       </dhv:include>
 		</td>
@@ -525,7 +525,7 @@ function popKbEntries() {
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getSolution()) %>
-      <dhv:include name="ticket.resolutionId" none="true"><dhv:evaluate if="<%= TicketDetails.getSolution() != null && !"".equals(TicketDetails.getSolution()) %>"><br /></dhv:evaluate>
+      <dhv:include name="ticket.resolutionId" none="true"><dhv:evaluate if='<%= TicketDetails.getSolution() != null && !"".equals(TicketDetails.getSolution()) %>'><br /></dhv:evaluate>
         <%= resolutionList.getSelectedValue(TicketDetails.getResolutionId()) %>
       </dhv:include>
 		</td>

@@ -48,14 +48,14 @@
   </tr>
   <tr class="containerBack">
     <td align="left">
-      <dhv:label name="admin.disableUserAccount.text.1" param="<%= "username="+User.getUsername()+"|contactName="+User.getContact().getNameLastFirst() %>">You have requested to disable the user account <b><%=User.getUsername()%></b> (<%=User.getContact().getNameLastFirst()%>).</dhv:label><p>
+      <dhv:label name="admin.disableUserAccount.text.1" param='<%= "username="+User.getUsername()+"|contactName="+User.getContact().getNameLastFirst() %>'>You have requested to disable the user account <b><%=User.getUsername()%></b> (<%=User.getContact().getNameLastFirst()%>).</dhv:label><p>
       <dhv:label name="admin.disableUserAccount.text.2" param="page=<p>">Nearly every object within ultimately depends on a user account, so it is imperative that any data directly associated with the user account you wish to disable gets re-assigned to an active user within the system.<p>If you click "Proceed", the following actions will occur:</dhv:label>
       <ul>
-      <li><dhv:label name="admin.userImmediatelyDisabled" param="<%= "username="+User.getUsername() %>"><b><%= User.getUsername() %></b> will be immediately disabled</dhv:label></li>
+      <li><dhv:label name="admin.userImmediatelyDisabled" param='<%= "username="+User.getUsername() %>'><b><%= User.getUsername() %></b> will be immediately disabled</dhv:label></li>
       <li><dhv:label name="admin.userdisable.ticketCreated.text">A Ticket will be created and assigned to the direct manager, if there is one, of the newly disabled User in reference to any data re-assignment that needs to occur</dhv:label></li>
       <li><dhv:label name="admin.userDisable.managerNotified.text">The direct manager will be notified via email</dhv:label></li>
     <dhv:evaluate if="<%= ManagerUser.getId() > 0 %>">
-      <li><dhv:label name="admin.usersManagerIs.colon" param="<%= "contactName="+ManagerUser.getContact().getNameFirstLast() %>">This user's direct manager is listed as: <%= ManagerUser.getContact().getNameFirstLast() %></dhv:label></li>
+      <li><dhv:label name="admin.usersManagerIs.colon" param='<%= "contactName="+ManagerUser.getContact().getNameFirstLast() %>'>This user's direct manager is listed as: <%= ManagerUser.getContact().getNameFirstLast() %></dhv:label></li>
     </dhv:evaluate>
       </ul>
 <dhv:permission name="myhomepage-reassign-edit">

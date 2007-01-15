@@ -66,14 +66,14 @@ function reopenOpportunity(id) {
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin container --%>
 <% String param1 = "id=" + opportunityHeader.getId();
    String param2 = addLinkParams(request, "viewSource");
 %>
-<dhv:container name="opportunities" selected="<%= (opportunityComponent.getId() != -1 ? "details" : "history") %>" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
+<dhv:container name="opportunities" selected='<%= (opportunityComponent.getId() != -1 ? "details" : "history") %>' object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
@@ -122,7 +122,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= componentLogDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= componentLogDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     </dhv:include>
@@ -131,7 +131,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= componentLogDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= componentLogDetails.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -139,7 +139,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= componentLogDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= componentLogDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <dhv:include name="opportunity.termsAndUnits" none="true">
@@ -148,9 +148,9 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
       </td>
       <td><%= componentLogDetails.getTerms() %>
-        <dhv:evaluate if="<%= componentLogDetails.getUnits().equals("M") %>">
+        <dhv:evaluate if='<%= componentLogDetails.getUnits().equals("M") %>'>
            <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-        </dhv:evaluate><dhv:evaluate if="<%= componentLogDetails.getUnits().equals("W") %>">
+        </dhv:evaluate><dhv:evaluate if='<%= componentLogDetails.getUnits().equals("W") %>'>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
         </dhv:evaluate>
       </td>
@@ -162,10 +162,10 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
       </td>
       <td>
-        <dhv:evaluate if="<%= "Closed".equals(componentLogDetails.getStageName()) %>">
+        <dhv:evaluate if='<%= "Closed".equals(componentLogDetails.getStageName()) %>'>
           <dhv:label name="quotes.closed">Closed</dhv:label>&nbsp;
         </dhv:evaluate>
-        <dhv:evaluate if="<%= !"Closed".equals(componentLogDetails.getStageName()) %>">
+        <dhv:evaluate if='<%= !"Closed".equals(componentLogDetails.getStageName()) %>'>
           <%= toHtml(componentLogDetails.getStageName()) %>&nbsp;
         </dhv:evaluate>
       </td>

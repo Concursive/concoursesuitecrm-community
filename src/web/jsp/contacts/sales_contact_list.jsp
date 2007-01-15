@@ -28,7 +28,7 @@
 <table width="100%" border="0">
   <tr>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SalesContactListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SalesContactListInfo"/>
     </td>
   </tr>
 </table>
@@ -48,7 +48,7 @@
     <th>
       <strong><dhv:label name="account.phones">Phone(s)</dhv:label></strong>
     </th>
-    <dhv:evaluate if="<%= !"".equals(SalesContactListInfo.getListView()) %>">
+    <dhv:evaluate if='<%= !"".equals(SalesContactListInfo.getListView()) %>'>
       <th>
         <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
@@ -102,7 +102,7 @@
               <%=(phoneItr.hasNext()?"<br />":"")%>
            <%}%>&nbsp;
           </td>
-        <dhv:evaluate if="<%= !"".equals(SalesContactListInfo.getListView()) %>">
+        <dhv:evaluate if='<%= !"".equals(SalesContactListInfo.getListView()) %>'>
           <td class="row<%= rowid %>" nowrap>
             <dhv:username id="<%= thisContact.getOwner() %>"/>
           </td>

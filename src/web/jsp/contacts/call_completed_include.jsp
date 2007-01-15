@@ -119,7 +119,7 @@
       </strong>
     </th>
   </tr>
-<dhv:evaluate if="<%= "GlobalItem".equals(request.getParameter("actionSource")) %>">  
+<dhv:evaluate if='<%= "GlobalItem".equals(request.getParameter("actionSource")) %>'>
   <tr>
     <td class="formLabel">
       <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>

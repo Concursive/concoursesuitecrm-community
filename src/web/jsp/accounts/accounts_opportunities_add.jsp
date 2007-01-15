@@ -118,12 +118,12 @@ function checkForm(form) {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer='<%="true".equals(request.getParameter("actionplan")) %>' object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>'>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <dhv:evaluate if="<%= !isPopup(request) || (request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>">
+  <dhv:evaluate if='<%= !isPopup(request) || (request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>'>
     <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';this.form.dosubmit.value='false';" />
   </dhv:evaluate>
-  <dhv:evaluate if="<%= isPopup(request) && !(request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>">
+  <dhv:evaluate if='<%= isPopup(request) && !(request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>'>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"/>
   </dhv:evaluate>
   <br />
@@ -132,10 +132,10 @@ function checkForm(form) {
   <%@ include file="../pipeline/opportunity_include.jsp" %>
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
-  <dhv:evaluate if="<%= !isPopup(request) || (request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>">
+  <dhv:evaluate if='<%= !isPopup(request) || (request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>'>
     <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>';this.form.dosubmit.value='false';" />
   </dhv:evaluate>
-  <dhv:evaluate if="<%= isPopup(request) && !(request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>">
+  <dhv:evaluate if='<%= isPopup(request) && !(request.getParameter("popupType") != null && "inline".equals(request.getParameter("popupType"))) %>'>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"/>
   </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true" />

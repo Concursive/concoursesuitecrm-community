@@ -52,7 +52,7 @@ if (hits.length() > 1) {
 }
 title.append(" (" + duration + " ms)");
 %>
-<dhv:pagedListStatus label="Results" title="<%= "<b>" + title.toString() + "</b>" %>" object="searchBeanInfo"/>
+<dhv:pagedListStatus label="Results" title='<%= "<b>" + title.toString() + "</b>" %>' object="searchBeanInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" border="0">
 <%
 for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize() ; i++) {
@@ -72,15 +72,15 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
   <tr>
     <td class="searchCount" valign="top" align="right" nowrap><%= i + 1 %>.</td>
     <td width="100%">
-      <dhv:evaluate if="<%= "file".equals(type) %>"><a class="search" href="DocumentStoreManagementFiles.do?command=Details&documentStoreId=<%= document.get("documentStoreId") %>&fid=<%= document.get("fileId") %>&folderId=<%= document.get("folderId") %>"><dhv:label name="project.document">Document</dhv:label></a></dhv:evaluate>
-      <dhv:evaluate if="<%= "documentStoreDetails".equals(type) %>"><a class="search" href="DocumentManagement.do?command=DocumentStoreCenter&section=Details&documentStoreId=<%= document.get("documentStoreId") %>"><dhv:label name="documents.documentStoreDetails">Document Store Details</dhv:label></a></dhv:evaluate>
-      <dhv:evaluate if="<%= hasText(document.get("filename")) %>">[<%= document.get("filename") %>]</dhv:evaluate>
+      <dhv:evaluate if='<%= "file".equals(type) %>'><a class="search" href="DocumentStoreManagementFiles.do?command=Details&documentStoreId=<%= document.get("documentStoreId") %>&fid=<%= document.get("fileId") %>&folderId=<%= document.get("folderId") %>"><dhv:label name="project.document">Document</dhv:label></a></dhv:evaluate>
+      <dhv:evaluate if='<%= "documentStoreDetails".equals(type) %>'><a class="search" href="DocumentManagement.do?command=DocumentStoreCenter&section=Details&documentStoreId=<%= document.get("documentStoreId") %>"><dhv:label name="documents.documentStoreDetails">Document Store Details</dhv:label></a></dhv:evaluate>
+      <dhv:evaluate if='<%= hasText(document.get("filename")) %>'>[<%= document.get("filename") %>]</dhv:evaluate>
     </td>
   </tr>
   <tr>
     <td>&nbsp;</td>
     <td>
-      <%--<dhv:evaluate if="<%= hasText(document.get("title")) %>">  
+      <%--<dhv:evaluate if='<%= hasText(document.get("title")) %>'>
         <%= toHtml(document.get("title")) %>
         <hr color="#BFBFBB" noshade>
       </dhv:evaluate>--%>
@@ -88,7 +88,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
 <%
     String highlightedText = SearchHTMLUtils.highlightText(documentsSearchBean.getTerms(), document.get("contents"));
 %>
-     <dhv:evaluate if="<%=!"".equals(document.get("trashed"))%>">
+     <dhv:evaluate if='<%=!"".equals(document.get("trashed"))%>'>
        <font color="red">(<%= toHtml(document.get("trashed")) %>)</font><br />
      </dhv:evaluate>
       <dhv:evaluate if="<%= hasText(highlightedText) %>">
@@ -104,7 +104,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
     <td class="searchItem">
     <%--
       <a class="searchLink" 
-         href="DocumentManagement.do?command=DocumentStoreCenter&pid=<%= document.get("documentStoreId") %>"><zeroio:project id="<%= document.get("documentStoreId") %>"/></a>
+         href="DocumentManagement.do?command=DocumentStoreCenter&pid=<%= document.get("documentStoreId") %>"><zeroio:project id='<%= document.get("documentStoreId") %>'/></a>
     --%>
       <a class="searchLink" 
          href="DocumentManagement.do?command=DocumentStoreCenter&documentStoreId=<%= document.get("documentStoreId") %>"><%=document.get("title")%></a>

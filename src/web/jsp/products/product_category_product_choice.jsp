@@ -41,7 +41,7 @@
 <form name="optionForm" action="ProductCategoryProducts.do?command=OptionSource&moduleId=<%= PermissionCategory.getId() %>&categoryId=<%= ProductCategory.getId() %>" onSubmit="return checkForm(this);" method="post">
 <% String param1 = "categoryId=" + ProductCategory.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcategories" selected="products" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcategories" selected="products" object="ProductCategory" param='<%= param1 + "|" + param2 %>'>
   <table class="note" cellspacing="0">
     <tr class="containerBody">
       <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>

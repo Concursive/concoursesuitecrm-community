@@ -53,7 +53,7 @@ for(int i=1;productIterator.hasNext();i++){
     <td align="left"><%= product.getId() %></td>
     <td align="left"><%= toHtml(product.getName()) %><input type="hidden" name="product_<%= i %>" value="<%= product.getId() %>"/></td>
     <td align="left"><%=(product.getShortDescription().equals("") || product.getShortDescription() == null) ? "-" : toHtml(product.getShortDescription()) %>&nbsp;</td>
-    <td align="left"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td align="left"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
     <td><input type="text" name="qty_<%= i %>"/></td>
   </tr>
 <%

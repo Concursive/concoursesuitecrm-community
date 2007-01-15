@@ -40,13 +40,13 @@
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td>
-      <dhv:productCategoryHierarchy link="<%= "PortfolioEditor.do?command=PopupSingleSelector&listType=single&flushtemplist=true&displayFieldId="+ (String) request.getAttribute("displayFieldId") + "&hiddenFieldId="+ (String) request.getAttribute("hiddenFieldId") %>" />
+      <dhv:productCategoryHierarchy link='<%= "PortfolioEditor.do?command=PopupSingleSelector&listType=single&flushtemplist=true&displayFieldId="+ (String) request.getAttribute("displayFieldId") + "&hiddenFieldId="+ (String) request.getAttribute("hiddenFieldId") %>' />
     </td>
   </tr>
 </table>
 &nbsp;<br />
 <%-- End Category Trails --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="portfolioCategoryInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="portfolioCategoryInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th colspan="3" width="100%">

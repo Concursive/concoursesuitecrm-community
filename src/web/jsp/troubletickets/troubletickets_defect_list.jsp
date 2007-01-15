@@ -46,7 +46,7 @@
 <dhv:permission name="tickets-defects-add">
 <a href="TroubleTicketDefects.do?command=Add"><dhv:label name="tickets.addDefect">Add a Defect</dhv:label></a><br />
 </dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="defectListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="defectListInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="8" nowrap>&nbsp;</th>
@@ -119,9 +119,9 @@
         <%= SiteList.getSelectedValue(thisDefect.getSiteId()) %>
       </td>
       <td valign="top" nowrap>
-        <dhv:evaluate if="<%= "".equals(thisDefect.getAgeOf()) %>">&nbsp;</dhv:evaluate>
-        <dhv:evaluate if="<%= !"".equals(thisDefect.getAgeOf()) %>">
-          <dhv:label name="tickets.defects.ageOf" param="<%= "hours="+thisDefect.getAgeHours()+"|days="+thisDefect.getAgeDays() %>"><%= thisDefect.getAgeOf() %></dhv:label>
+        <dhv:evaluate if='<%= "".equals(thisDefect.getAgeOf()) %>'>&nbsp;</dhv:evaluate>
+        <dhv:evaluate if='<%= !"".equals(thisDefect.getAgeOf()) %>'>
+          <dhv:label name="tickets.defects.ageOf" param='<%= "hours="+thisDefect.getAgeHours()+"|days="+thisDefect.getAgeDays() %>'><%= thisDefect.getAgeOf() %></dhv:label>
         </dhv:evaluate>
       </td>
       <td valign="top" nowrap>

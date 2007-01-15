@@ -46,7 +46,7 @@
   var thisRowColumnId = -1;
   var menu_init = false;
 </SCRIPT>
-<dhv:evaluate if="<%= !"true".equals(portal) %>">
+<dhv:evaluate if='<%= !"true".equals(portal) %>'>
 <%@ include file="website_tab_menu.jsp" %>
 <%@ include file="website_page_group_menu.jsp" %>
 <%@ include file="website_page_menu.jsp" %>

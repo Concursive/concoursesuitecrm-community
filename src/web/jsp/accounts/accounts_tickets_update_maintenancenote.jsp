@@ -49,8 +49,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param='<%= "id=" + ticketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
     <%if ("list".equals(request.getParameter("return"))) { %>

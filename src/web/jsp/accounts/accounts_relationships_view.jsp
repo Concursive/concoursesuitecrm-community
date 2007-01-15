@@ -46,7 +46,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="relationships" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
     <dhv:permission name="accounts-accounts-relationships-add"><a href="AccountRelationships.do?command=Add&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_relationships_view.AddARelationship">Add a  Relationship</dhv:label></a><br><br></dhv:permission>
   </dhv:evaluate>

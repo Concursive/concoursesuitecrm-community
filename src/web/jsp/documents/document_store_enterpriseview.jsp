@@ -54,7 +54,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus label="DocumentStores" title="<%= showError(request, "actionError") %>" object="documentStoreListInfo"/>
+      <dhv:pagedListStatus label="DocumentStores" title='<%= showError(request, "actionError") %>' object="documentStoreListInfo"/>
     </td>
     </form>
   </tr>
@@ -101,7 +101,7 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisDocumentStore.getCloseDate() != null %>">
         <font color="blue">
-        <dhv:label name="documents.details.archivedMessage" param="<%= "time="+getTime(pageContext,thisDocumentStore.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">This document store was archived on&nbsp;<zeroio:tz timestamp="<%= thisDocumentStore.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+        <dhv:label name="documents.details.archivedMessage" param='<%= "time="+getTime(pageContext,thisDocumentStore.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>This document store was archived on&nbsp;<zeroio:tz timestamp="<%= thisDocumentStore.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
         </font>
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisDocumentStore.getCloseDate() == null %>">
@@ -109,7 +109,7 @@
           <font color="red"><dhv:label name="documents.details.unapprovedMessage">This document store is currently under review and has not been approved</dhv:label></font>
         </dhv:evaluate>
         <dhv:evaluate if="<%= thisDocumentStore.getApprovalDate() != null %>">
-          <font color="darkgreen"><dhv:label name="documents.details.approvedMessage" param="<%= "time="+getTime(pageContext,thisDocumentStore.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>">This document store was approved on&nbsp; <zeroio:tz timestamp="<%= thisDocumentStore.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font>
+          <font color="darkgreen"><dhv:label name="documents.details.approvedMessage" param='<%= "time="+getTime(pageContext,thisDocumentStore.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>'>This document store was approved on&nbsp; <zeroio:tz timestamp="<%= thisDocumentStore.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font>
         </dhv:evaluate>
       </dhv:evaluate>
       </td>

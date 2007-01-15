@@ -58,12 +58,12 @@
     </tr>
     <tr>
       <td>
-        <dhv:label name="help.section.colon" param="<%= "help.section="+toHtml(Help.getSection()) %>">Section: <b><%= toHtml(Help.getSection()) %></b></dhv:label>
+        <dhv:label name="help.section.colon" param='<%= "help.section="+toHtml(Help.getSection()) %>'>Section: <b><%= toHtml(Help.getSection()) %></b></dhv:label>
       </td>
     </tr>
     <tr>
       <td>
-        <dhv:label name="help.subsection.colon" param="<%= "help.subsection="+toHtml(Help.getSubsection()) %>">Sub-section: <b><%= toHtml(Help.getSubsection()) %></b></dhv:label>
+        <dhv:label name="help.subsection.colon" param='<%= "help.subsection="+toHtml(Help.getSubsection()) %>'>Sub-section: <b><%= toHtml(Help.getSubsection()) %></b></dhv:label>
       </td>
     </tr>
     <tr>

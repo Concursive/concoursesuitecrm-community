@@ -49,7 +49,7 @@
     <%@ include file="portal_body_include.jsp" %>
   </td>
 <%-- the right pageGroup menu --%>
-<dhv:evaluate if="<%= portal == null || !"true".equals(portal) || site.getTabToDisplay().getPageGroupList().canDisplay() %>">
+<dhv:evaluate if='<%= portal == null || !"true".equals(portal) || site.getTabToDisplay().getPageGroupList().canDisplay() %>'>
 <td nowrap valign="top">
   <table cellpadding="0" cellspacing="0" width="100%" class="details">
 <%

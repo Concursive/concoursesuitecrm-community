@@ -65,7 +65,7 @@
     </td>
   </tr>
 </table>
-<dhv:evaluate if="<%= "true".equals(request.getParameter("popup")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("popup")) %>'>
 <br>
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
 </dhv:evaluate>

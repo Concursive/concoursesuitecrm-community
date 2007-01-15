@@ -79,10 +79,10 @@
             <table width="100%" cellspacing="1" cellpadding="3" border="0">
               <tr>
                 <td colspan="4" align="center">
-                  <dhv:evaluate if="<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>">
+                  <dhv:evaluate if='<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>'>
                     <img src="images/centric/logo-centric.gif" width="295" height="66" alt="" border="0" />
                   </dhv:evaluate>
-                  <dhv:evaluate if="<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>">
+                  <dhv:evaluate if='<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>'>
                     <%= applicationPrefs.get("LAYOUT.JSP.LOGIN.LOGO") %>
                   </dhv:evaluate>
                 </td>
@@ -92,10 +92,10 @@
                 <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
                 <tr><td align="center">
                   <font size="2"><strong>
-                    <dhv:evaluate if="<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.TEXT") %>">
+                    <dhv:evaluate if='<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.TEXT") %>'>
                       Centric CRM
                     </dhv:evaluate>
-                    <dhv:evaluate if="<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.TEXT") %>">
+                    <dhv:evaluate if='<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.TEXT") %>'>
                       <%= toHtml(applicationPrefs.get("LAYOUT.JSP.LOGIN.TEXT")) %>
                     </dhv:evaluate>
                     <% if("https".equals(request.getScheme())) {%>
@@ -105,7 +105,7 @@
                     <%}%></strong>
                   <dhv:evaluate if="<%= hasText(APP_TEXT) %>">
                     <br /><%= toHtml(APP_TEXT) %>
-                    <dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br /><dhv:label name="calendar.licensedTo.colon" param="<%= "organization="+toHtml(APP_ORGANIZATION) %>">Licensed to: <%= toHtml(APP_ORGANIZATION) %></dhv:label></dhv:evaluate>
+                    <dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br /><dhv:label name="calendar.licensedTo.colon" param='<%= "organization="+toHtml(APP_ORGANIZATION) %>'>Licensed to: <%= toHtml(APP_ORGANIZATION) %></dhv:label></dhv:evaluate>
                   </dhv:evaluate>
                   </font>
                 </td></tr>
@@ -168,7 +168,7 @@
             </tr>
 <%}%>
             </table>
-            <dhv:evaluate if="<%= LoginBean.getRedirectTo() != null %>">
+            <dhv:evaluate if='<%= LoginBean.getRedirectTo() != null %>'>
               <input type="hidden" name="redirectTo" value="<%= LoginBean.getRedirectTo() %>" />
             </dhv:evaluate>
           </form>

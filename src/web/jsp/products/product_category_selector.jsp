@@ -95,7 +95,7 @@
 			<%= CategoryTypeList.getHtmlSelect("listFilter1", ProductCategoryListInfo.getFilterKey("listFilter1")) %>
 		</td>
 		<td>
-			<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ProductCategoryListInfo" showHiddenParams="true" enableJScript="true" form="categoryListView"/>
+			<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ProductCategoryListInfo" showHiddenParams="true" enableJScript="true" form="categoryListView"/>
 		</td>
 	</tr>
 </table>

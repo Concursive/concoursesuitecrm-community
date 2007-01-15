@@ -88,9 +88,9 @@
   </td>
   <td>
     <dhv:label name="admin.config.numberOfEvents.text"
-               param="<%= "eventNumber="+hooks %>"><%= hooks %> Object Events
+               param='<%= "eventNumber="+hooks %>'><%= hooks %> Object Events
     </dhv:label> / <dhv:label name="admin.config.numberOfProcesses.text"
-                              param="<%= "processNumber="+processes %>"><%= processes %>
+                              param='<%= "processNumber="+processes %>'><%= processes %>
     Business Processes</dhv:label>
   </td>
 </tr>
@@ -105,11 +105,11 @@
       Manager</dhv:label>
   </td>
   <td>
-    <dhv:label name="admin.config.httpXmlApiClients.value" param="<%= "clients="+clients %>">Total # of enabled clients <%= clients %></dhv:label>
+    <dhv:label name="admin.config.httpXmlApiClients.value" param='<%= "clients="+clients %>'>Total # of enabled clients <%= clients %></dhv:label>
   </td>
 </tr>
 <dhv:evaluate
-    if="<%= getPref(getServletConfig().getServletContext(), "WEBSERVER.ASPMODE") == null || !"true".equals(getPref(getServletConfig().getServletContext(), "WEBSERVER.ASPMODE")) %>">
+    if='<%= getPref(getServletConfig().getServletContext(), "WEBSERVER.ASPMODE") == null || !"true".equals(getPref(getServletConfig().getServletContext(), "WEBSERVER.ASPMODE")) %>'>
 <dhv:evaluate if="<%= hasText(APP_TEXT) %>">
   <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
     <dhv:permission name="admin-sysconfig-edit">
@@ -128,7 +128,7 @@
     </td>
   </tr>
 </dhv:evaluate>
-<tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+<tr class='row<%= (++count % 2 == 0 ? "1":"2") %>'>
   <dhv:permission name="admin-sysconfig-edit">
     <td align="center">
       <a href="AdminConfig.do?command=Modify&param=MAILSERVER"><dhv:label

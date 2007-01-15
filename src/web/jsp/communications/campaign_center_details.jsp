@@ -39,7 +39,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
@@ -62,7 +62,7 @@
               <tr class="containerBody">
                 <td style="text-align: center;">
                   <% if(Campaign.hasGroups()) {%>
-                    <font color='green'><dhv:label name="campaign.selected" param="<%= "number="+Campaign.getGroupCount() %>"><%= Campaign.getGroupCount() %> selected</dhv:label></font>
+                    <font color='green'><dhv:label name="campaign.selected" param='<%= "number="+Campaign.getGroupCount() %>'><%= Campaign.getGroupCount() %> selected</dhv:label></font>
                   <%} else {%>
                     <font color='red'><dhv:label name="campaign.noGroupsSelected">No Groups Selected</dhv:label></font>
                   <%}%><br />
@@ -139,7 +139,7 @@
                 <td style="text-align: center;">
                   <% if(Campaign.hasDetails()){ %>
                     <font color="green">
-                    <dhv:label name="campaign.scheduledFor" param="<%= "time="+getTime(pageContext,Campaign.getActiveDate(),Campaign.getActiveDateTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">Scheduled for <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
+                    <dhv:label name="campaign.scheduledFor" param='<%= "time="+getTime(pageContext,Campaign.getActiveDate(),Campaign.getActiveDateTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>Scheduled for <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
                     <% if (!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())) { %>
                     <br />
                     <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>

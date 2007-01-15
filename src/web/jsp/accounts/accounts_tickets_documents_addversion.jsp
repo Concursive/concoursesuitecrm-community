@@ -46,8 +46,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="documents" object="TicketDetails" param='<%= "id=" + TicketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <%@ include file="accounts_ticket_header_include.jsp" %>
     <table border="0" cellpadding="4" cellspacing="0" width="100%">
       <tr class="subtab">

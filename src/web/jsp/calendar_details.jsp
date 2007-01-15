@@ -63,7 +63,7 @@ function reloadCalendar(){
   window.parent.frames['calendar'].location.href='MyCFS.do?command=MonthView&inline=true&month=<%= CalendarInfo.getMonthSelected() %>&year=<%= CalendarInfo.getYearSelected() %>&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>';
 }
 </script>
-<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendar")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("reloadCalendar")) %>'>
 <body onLoad="javascript:reloadCalendar();">
 </dhv:evaluate>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -76,10 +76,10 @@ function reloadCalendar(){
           &nbsp;
         </dhv:evaluate>
         <dhv:evaluate if="<%= !CalendarInfo.isAgendaView() %>">
-          <dhv:evaluate if="<%= "week".equalsIgnoreCase(CalendarInfo.getCalendarView()) %>">
-            <dhv:label name="calendar.weekView.colon" param="<%= "startTime="+getTime(pageContext,new Timestamp(CompanyCalendar.getCalendarInfo().getStartOfWeekDate().getTime()),"&nbsp;",DateFormat.MEDIUM,false,false,true,"&nbsp;")+"|endTime="+getTime(pageContext,new Timestamp(CompanyCalendar.getCalendarInfo().getEndOfWeekDate().getTime()),"&nbsp;",DateFormat.MEDIUM,false,false,true,"&nbsp;") %>">Week View: <zeroio:tz timestamp="<%= CompanyCalendar.getCalendarInfo().getStartOfWeekDate() %>" dateOnly="true" dateFormat="<%= DateFormat.MEDIUM %>" userTimeZone="false" default="&nbsp;"/> - <zeroio:tz timestamp="<%= CompanyCalendar.getCalendarInfo().getEndOfWeekDate() %>" dateOnly="true" dateFormat="<%= DateFormat.MEDIUM %>" userTimeZone="false" default="&nbsp;"/></dhv:label>
+          <dhv:evaluate if='<%= "week".equalsIgnoreCase(CalendarInfo.getCalendarView()) %>'>
+            <dhv:label name="calendar.weekView.colon" param='<%= "startTime="+getTime(pageContext,new Timestamp(CompanyCalendar.getCalendarInfo().getStartOfWeekDate().getTime()),"&nbsp;",DateFormat.MEDIUM,false,false,true,"&nbsp;")+"|endTime="+getTime(pageContext,new Timestamp(CompanyCalendar.getCalendarInfo().getEndOfWeekDate().getTime()),"&nbsp;",DateFormat.MEDIUM,false,false,true,"&nbsp;") %>'>Week View: <zeroio:tz timestamp="<%= CompanyCalendar.getCalendarInfo().getStartOfWeekDate() %>" dateOnly="true" dateFormat="<%= DateFormat.MEDIUM %>" userTimeZone="false" default="&nbsp;"/> - <zeroio:tz timestamp="<%= CompanyCalendar.getCalendarInfo().getEndOfWeekDate() %>" dateOnly="true" dateFormat="<%= DateFormat.MEDIUM %>" userTimeZone="false" default="&nbsp;"/></dhv:label>
           </dhv:evaluate>
-          <dhv:evaluate if="<%= "day".equalsIgnoreCase(CalendarInfo.getCalendarView()) %>">
+          <dhv:evaluate if='<%= "day".equalsIgnoreCase(CalendarInfo.getCalendarView()) %>'>
             <dhv:label name="calendar.dayView">Day View</dhv:label>
           </dhv:evaluate>
         </dhv:evaluate>
@@ -199,6 +199,6 @@ function reloadCalendar(){
     </td>
   </tr>
 </table>
-<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendar")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("reloadCalendar")) %>'>
 </body>
 </dhv:evaluate>

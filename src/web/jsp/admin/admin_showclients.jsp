@@ -55,7 +55,7 @@
 <dhv:permission name="admin-sysconfig-edit"><a
     href="AdminClientManager.do?command=AddClientForm"><dhv:label
     name="admin.addClient">Add Client</dhv:label></a></dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>"
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>'
                      object="SyncListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%"
        class="pagedList">

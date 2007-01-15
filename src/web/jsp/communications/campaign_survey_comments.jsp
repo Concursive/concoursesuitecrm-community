@@ -24,7 +24,7 @@
 <%
   boolean openEnded =  "open".equalsIgnoreCase(request.getParameter("type"));
 %>
-<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CommentListInfo"/>
+<dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="CommentListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="<%= openEnded ? "3" : "4"%>">

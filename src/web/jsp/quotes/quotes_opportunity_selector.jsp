@@ -24,7 +24,7 @@
   }
 </script>
 &nbsp;<br />
-<dhv:evaluate if="<%= "true".equals(request.getParameter("addNewOpp")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("addNewOpp")) %>'>
   <a href="javascript:window.location.href='Opportunities.do?command=Add&popup=true&source=<%= request.getParameter("source") %>&actionStepWork=<%= request.getParameter("actionStepWork") %>&orgId=<%= request.getParameter("orgId") %>';">Create New Opportunity</a>
   &nbsp;<br /><br />
 </dhv:evaluate>

@@ -44,7 +44,7 @@
 <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle"/>
 <a href="<%= documentFolderAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId() %>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
 </dhv:permission>
-<dhv:permission name="<%= permission_doc_folders_add+","+ permission_doc_files_upload %>" all="true">
+<dhv:permission name='<%= permission_doc_folders_add+","+ permission_doc_files_upload %>' all="true">
 |
 </dhv:permission>
 <dhv:permission name="<%= permission_doc_files_upload %>">
@@ -53,7 +53,7 @@
 </dhv:permission>
 <dhv:evaluate if="<%= fileItemList.getFolderId() != -1 %>">
 <dhv:permission name="<%= permission_doc_folders_edit %>">
-  <dhv:permission name="<%= permission_doc_folders_add +","+permission_doc_files_upload %>" all="false">
+  <dhv:permission name='<%= permission_doc_folders_add +","+permission_doc_files_upload %>' all="false">
 |
   </dhv:permission>
 <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle">
@@ -61,7 +61,7 @@
 </dhv:permission>
 </dhv:evaluate>
 </dhv:evaluate>
-<dhv:permission name="<%= permission_doc_folders_add +","+ permission_doc_files_upload +","+ permission_doc_folders_edit %>" all="false">
+<dhv:permission name='<%= permission_doc_folders_add +","+ permission_doc_files_upload +","+ permission_doc_folders_edit %>' all="false">
 <br>
 &nbsp;<br>
 </dhv:permission>
@@ -136,7 +136,7 @@
   <tr>
     <td class="row<%= rowid %>" align="center" nowrap>
     <% if (documentModule.equals("Pipeline")) { %>
-      <zeroio:debug value="<%= "JSP:: the value of hasPermission is "+hasPermission %>"/>
+      <zeroio:debug value='<%= "JSP:: the value of hasPermission is "+hasPermission %>'/>
       <a href="javascript:displayMenu('selectfi<%= thisFile.getId() %>', 'menuFile', '<%= thisFile.getFolderId() %>', '<%= thisFile.getId() %>','<%= specialID %>', '<%= hasPermission %>')"
          onMouseOver="over(0, 'fi<%= thisFile.getId() %>')"
          onmouseout="out(0, 'fi<%= thisFile.getId() %>'); hideMenu('menuFile');">

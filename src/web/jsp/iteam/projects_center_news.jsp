@@ -67,7 +67,7 @@
       </zeroio:permission>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="projectNewsInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="projectNewsInfo"/>
     </td>
     </form>
   </tr>

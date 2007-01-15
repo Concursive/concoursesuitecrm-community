@@ -66,7 +66,7 @@
 </table>
 <%-- End Trails --%>
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
-<dhv:evaluate if="<%= request.getParameter("return") != null %>">
+<dhv:evaluate if='<%= request.getParameter("return") != null %>'>
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
 <input type="submit" value="<dhv:label name="campaign.updateMessage">Update Message</dhv:label>" name="Save">

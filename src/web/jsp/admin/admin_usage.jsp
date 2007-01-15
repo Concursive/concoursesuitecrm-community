@@ -150,7 +150,7 @@ Total Memory:<%= total %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong><dhv:label name="admin.usageFor" param="<%= "startDate="+getTime(pageContext,dateStart,"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;")+"|endDate="+getTime(pageContext,dateEnd,"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>">Usage for <zeroio:tz timestamp="<%= dateStart %>" dateOnly="true" /> - <zeroio:tz timestamp="<%= dateEnd %>" dateOnly="true" /></dhv:label></strong>
+      <strong><dhv:label name="admin.usageFor" param='<%= "startDate="+getTime(pageContext,dateStart,"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;")+"|endDate="+getTime(pageContext,dateEnd,"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>'>Usage for <zeroio:tz timestamp="<%= dateStart %>" dateOnly="true" /> - <zeroio:tz timestamp="<%= dateEnd %>" dateOnly="true" /></dhv:label></strong>
     </th>
   </tr>
 <%

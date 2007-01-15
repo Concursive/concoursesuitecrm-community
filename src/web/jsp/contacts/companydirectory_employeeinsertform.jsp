@@ -126,7 +126,7 @@
   <dhv:evaluate if="<%= !isPopup(request) %>">
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">
     <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';" %>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';" %>'>
     <input type="hidden" name="dosubmit" value="true">
     </dhv:evaluate>
 <br />
@@ -244,7 +244,7 @@
   <dhv:evaluate if="<%= !isPopup(request) %>">
     <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   </dhv:evaluate>
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';" %>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';" %>'>
   <input type="hidden" name="dosubmit" value="true">
   <%= addHiddenParams(request, "popup|source") %>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

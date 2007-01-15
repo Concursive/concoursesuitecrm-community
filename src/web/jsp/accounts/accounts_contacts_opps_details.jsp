@@ -70,9 +70,9 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <dhv:container name="accountcontactopportunities" selected="details" object="OpportunityHeader" param="<%= "headerId=" + OpportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+    <dhv:container name="accountcontactopportunities" selected="details" object="OpportunityHeader" param='<%= "headerId=" + OpportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
@@ -94,7 +94,7 @@
     </dhv:hasAuthority>
     <%= addHiddenParams(request, "popup|popupType|actionId") %>
     <input type="hidden" name="actionSource" value="AccountContactsOppComponents">
-    <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountContactComponentListInfo"/>
+    <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AccountContactComponentListInfo"/>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
         <th nowrap>
@@ -132,7 +132,7 @@
             OpportunityComponent oppComponent = (OpportunityComponent)j.next();
             boolean hasPermission = false;
     %>
-      <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) %>">
+      <dhv:hasAuthority owner='<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) %>'>
         <% hasPermission = true; %>
       </dhv:hasAuthority>
       <tr class="row<%= rowid %>">
@@ -156,7 +156,7 @@
           <%}%>
         </td>
         <td valign="top" align="right" nowrap>
-          <zeroio:currency value="<%= oppComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= oppComponent.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
         <td valign="top" align="center" nowrap>
           <zeroio:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponent.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>

@@ -87,7 +87,7 @@
           <a href="javascript:displayMenu('select<%= count %>','menuProcess', '<%= PermissionCategory.getId() %>', '<%= thisAction.getProcessId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuProcess');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td width="50%" valign="top">
-      <dhv:label name="admin.object.lowercase" param="<%= "action.TypeText="+toHtml(thisAction.getTypeText())+"|action.baseClassName="+toHtml(thisAction.getBaseClassName().toLowerCase()) %>"><%= toHtml(thisAction.getTypeText()) %> <%= toHtml(thisAction.getBaseClassName().toLowerCase()) %> object</dhv:label>
+      <dhv:label name="admin.object.lowercase" param='<%= "action.TypeText="+toHtml(thisAction.getTypeText())+"|action.baseClassName="+toHtml(thisAction.getBaseClassName().toLowerCase()) %>'><%= toHtml(thisAction.getTypeText()) %> <%= toHtml(thisAction.getBaseClassName().toLowerCase()) %> object</dhv:label>
     </td>
     <td valign="top">
        <a href="AdminObjectEvents.do?command=Workflow&moduleId=<%= PermissionCategory.getId() %>&process=<%= thisAction.getProcessId() %>&return=AdminObjectEvents"><%= toHtml(thisAction.getProcessName()) %></a>

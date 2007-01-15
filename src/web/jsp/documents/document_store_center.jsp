@@ -67,20 +67,20 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <dhv:documentPermission name="documentcenter-documents-view">
-        <zeroio:tabbedMenu text="<%= "Documents" %>" display="Documents" type="project.documents" key="file" value="<%= section %>" url="<%= "DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId=" + documentStore.getId() + "&folderId=-1" %>"/>
+        <zeroio:tabbedMenu text='<%= "Documents" %>' display="Documents" type="project.documents" key="file" value="<%= section %>" url='<%= "DocumentManagement.do?command=DocumentStoreCenter&section=File_Library&documentStoreId=" + documentStore.getId() + "&folderId=-1" %>'/>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-accounts-view">
-        <zeroio:tabbedMenu text="<%= "Accounts" %>" display="Accounts" type="project.accounts" key="accounts" value="<%= section %>" url="<%= "DocumentStoreManagementAccounts.do?command=View&section=Accounts&documentStoreId=" + documentStore.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= "Accounts" %>' display="Accounts" type="project.accounts" key="accounts" value="<%= section %>" url='<%= "DocumentStoreManagementAccounts.do?command=View&section=Accounts&documentStoreId=" + documentStore.getId() %>'/>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-team-view">
-        <zeroio:tabbedMenu text="<%= "Team" %>" display="Team" type="project.team" key="team,user_membership_modify,group_membership_modify" value="<%= section %>" url="<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + documentStore.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= "Team" %>' display="Team" type="project.team" key="team,user_membership_modify,group_membership_modify" value="<%= section %>" url='<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Team&documentStoreId=" + documentStore.getId() %>'/>
     </dhv:documentPermission>
     <dhv:documentPermission name="documentcenter-details-view">
-        <zeroio:tabbedMenu text="<%= "Details" %>" display="Details" type="project.details" key="details,modify_document_store" value="<%= section %>" url="<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Details&documentStoreId=" + documentStore.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= "Details" %>' display="Details" type="project.details" key="details,modify_document_store" value="<%= section %>" url='<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Details&documentStoreId=" + documentStore.getId() %>'/>
     </dhv:documentPermission>
     <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
       <dhv:evaluate if="<%= currentMember.getRoleId() <= DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER %>">
-        <zeroio:tabbedMenu text="Permissions" display="Permissions" type="project.permissions" key="setup" value="<%= section %>" url="<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Setup&documentStoreId=" + documentStore.getId() %>"/>
+        <zeroio:tabbedMenu text="Permissions" display="Permissions" type="project.permissions" key="setup" value="<%= section %>" url='<%= "DocumentManagement.do?command=DocumentStoreCenter&section=Setup&documentStoreId=" + documentStore.getId() %>'/>
       </dhv:evaluate>
     </dhv:evaluate>
     <td width="100%" style="background-image: none; background-color: transparent; border: 0px; border-bottom: 1px solid #666; cursor: default;">&nbsp;</td>

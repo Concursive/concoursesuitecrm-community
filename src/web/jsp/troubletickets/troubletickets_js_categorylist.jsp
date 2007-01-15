@@ -208,13 +208,13 @@ if (autoSetFieldsValue) {
   </dhv:evaluate>
   }
   </dhv:include>
-  <dhv:evaluate if="<%= (assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim())) %>">
+  <dhv:evaluate if='<%= (assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim())) %>'>
     try {
       parent.updateAllUserLists();
     } catch (oException) {
     }
   </dhv:evaluate>
-  <dhv:evaluate if="<%= !((assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim()))) %>">
+  <dhv:evaluate if='<%= !((assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim()))) %>'>
     try {
       parent.updateResolvedByUserList();
     } catch(oException) {

@@ -71,13 +71,13 @@
     //siteid is to be prompted but not when user belongs to a specific site (required == false)
 %>
 <dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% ++count; %>
-  <dhv:evaluate if="<%= !parameter.getName().startsWith("hidden_") %>">
+  <dhv:evaluate if='<%= !parameter.getName().startsWith("hidden_") %>'>
     <tr>
       <td class="formLabel"><%= toHtml(parameter.getDisplayName(systemStatus)) %></td>
       <td>
   </dhv:evaluate>
         <%= parameter.getHtml(systemStatus, request, parameterList) %>
-  <dhv:evaluate if="<%= !parameter.getName().startsWith("hidden_") %>">
+  <dhv:evaluate if='<%= !parameter.getName().startsWith("hidden_") %>'>
         <font color="red">*</font>
         <%= showAttribute(request,parameter.getName() + "Error") %>
       </td>
@@ -117,11 +117,11 @@
   </tr>
 </table>
 <%-- No previously saved criteria --%>
-<dhv:evaluate if="<%= "-1".equals(request.getAttribute("criteriaId")) %>">
+<dhv:evaluate if='<%= "-1".equals(request.getAttribute("criteriaId")) %>'>
 <input type="checkbox" name="save" value="true"> <dhv:label name="reports.saveCriteria.text">Save this criteria for generating future reports</dhv:label><br />
 </dhv:evaluate>
 <%-- Using previously saved criteria --%>
-<dhv:evaluate if="<%= !"-1".equals(request.getAttribute("criteriaId")) %>">
+<dhv:evaluate if='<%= !"-1".equals(request.getAttribute("criteriaId")) %>'>
 <input type="radio" name="saveType" value="none" checked> <dhv:label name="reports.doNotSaveCriteria">Do not save criteria for generating future reports</dhv:label><br />
 <input type="radio" name="saveType" value="overwrite"> <dhv:label name="reports.overwritePreviousCriteria.text">Overwrite previously saved criteria</dhv:label><br />
 <input type="radio" name="saveType" value="save"> <dhv:label name="reports.saveNewCopyCriteria.text">Save a new copy of this criteria</dhv:label><br />

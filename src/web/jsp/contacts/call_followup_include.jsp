@@ -41,7 +41,7 @@
       <%= CallTypeList.getHtmlSelect("alertCallTypeId", CallDetails.getAlertCallTypeId()) %><font color="red">*</font><%= showAttribute(request, "followupTypeError") %>
     </td>
   </tr>
-  <dhv:evaluate if="<%= "GlobalItem".equals(request.getParameter("actionSource")) %>">  
+  <dhv:evaluate if='<%= "GlobalItem".equals(request.getParameter("actionSource")) %>'>
   <tr>
     <td class="formLabel">
       <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>

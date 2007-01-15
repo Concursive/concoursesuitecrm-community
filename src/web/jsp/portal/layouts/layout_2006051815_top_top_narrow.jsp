@@ -13,7 +13,7 @@
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <center>
 <%-- Login Link --%>
-<dhv:evaluate if="<%= "true".equals(portal) %>">
+<dhv:evaluate if='<%= "true".equals(portal) %>'>
 <table width="768" border="0" cellpadding="0" cellspacing="0" class="portalLogin">
 	<tr>
     <td>

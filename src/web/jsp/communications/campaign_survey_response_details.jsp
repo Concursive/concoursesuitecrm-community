@@ -38,11 +38,11 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="response" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="response" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td>
-        <dhv:label name="campaign.responseFrom.colon" param="<%= "contact.name="+contact.getNameLastFirst() %>"><b>Response from:</b> <%= contact.getNameLastFirst() %></dhv:label><br />
+        <dhv:label name="campaign.responseFrom.colon" param='<%= "contact.name="+contact.getNameLastFirst() %>'><b>Response from:</b> <%= contact.getNameLastFirst() %></dhv:label><br />
         &nbsp;<br>
 <%
     Iterator z = ResponseDetails.iterator();

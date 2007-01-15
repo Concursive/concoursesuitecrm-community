@@ -72,7 +72,7 @@
       <%= toHtml(materialTypeList.getSelectedValue(key.intValue())) %>
     </td>
     <td nowrap>
-      <dhv:evaluate if="<%= value != null && !"".equals(value.trim()) && java.lang.Math.round(Float.parseFloat(value.trim())) >= 0 %>">
+      <dhv:evaluate if='<%= value != null && !"".equals(value.trim()) && java.lang.Math.round(Float.parseFloat(value.trim())) >= 0 %>'>
         <%= value %>
       </dhv:evaluate>
     </td>

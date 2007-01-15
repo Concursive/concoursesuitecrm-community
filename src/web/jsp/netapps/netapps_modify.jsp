@@ -76,7 +76,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="netapps" selected="details" param="<%= "expirationId=" + contractExpiration.getId() %>" style="tabs"/>
+<dhv:container name="netapps" selected="details" param='<%= "expirationId=" + contractExpiration.getId() %>' style="tabs"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Dialog" class="org.aspcfs.utils.web.HtmlDialog" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <%if(Dialog.getShowAndConfirm()){
   if(Dialog.getText().equals("")){
 %>

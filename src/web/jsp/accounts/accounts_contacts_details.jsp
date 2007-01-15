@@ -55,8 +55,8 @@ function reopen() {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() || !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() || !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <dhv:evaluate if="<%= (OrgDetails.getEnabled() && !OrgDetails.isTrashed()) && (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>">
       <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
@@ -71,7 +71,7 @@ function reopen() {
 <%-- TODO: Currently this block appears and hides depending on the content,
      this will need to be changed --%>
 <dhv:formMessage />
-<dhv:evaluate if="<%= hasText(ContactDetails, "title, typesNameString, additionalNames, nickname, birthDate, title, role") %>">
+<dhv:evaluate if='<%= hasText(ContactDetails, "title, typesNameString, additionalNames, nickname, birthDate, title, role") %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -290,7 +290,7 @@ function reopen() {
     </td>
     <td>
       <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
-      <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+      <dhv:evaluate if='<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>'>
         <dhv:evaluate if="<%= hasText(thisPhoneNumber.getPhoneNumber()) %>">
           <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(thisPhoneNumber.getPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
         </dhv:evaluate>

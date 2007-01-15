@@ -60,8 +60,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>'>
       <% int i = 0; %>
       <dhv:evaluate if="<%= !isPopup(request) %>">
         <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
@@ -76,7 +76,7 @@
       </dhv:evaluate>
     <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
       <%-- Pending list --%>
-      <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.PendingActivities", "Pending Activities") %>" object="AccountContactCallsListInfo"/>
+      <dhv:pagedListStatus showExpandLink="true" title='<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.PendingActivities", "Pending Activities") %>' object="AccountContactCallsListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th>
@@ -132,7 +132,7 @@
             </a>
           </td>
         </tr>
-        <dhv:evaluate if="<%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>">
+        <dhv:evaluate if='<%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>'>
             <tr class="row<%= rowid %>">
               <td colspan="5" valign="top">
                 <%= toHtmlValue(thisCall.getFollowupNotes()) %>
@@ -153,7 +153,7 @@
 <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCallsListInfo.getExpandedSelection()) || AccountContactCompletedCallsListInfo.getExpandedSelection()) { %>
      <%-- Completed/Canceled list --%>
       <%-- accounts.accounts_contacts_calls_list.CompletedCanceledActivities --%>
-      <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.CompletedCanceledActivities", "Completed/Canceled Activities") %>" object="AccountContactCompletedCallsListInfo"/>
+      <dhv:pagedListStatus showExpandLink="true" title='<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.CompletedCanceledActivities", "Completed/Canceled Activities") %>' object="AccountContactCompletedCallsListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th>
@@ -217,7 +217,7 @@
             <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
           </td>
         </tr>
-        <dhv:evaluate if="<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
+        <dhv:evaluate if='<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>'>
         <tr class="row<%= rowid %>">
           <td colspan="7" valign="top">
             <%= toHtmlValue(thisCall.getNotes()) %>

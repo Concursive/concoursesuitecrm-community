@@ -67,7 +67,7 @@
     </td>
   </tr>
 </table>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TMListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="TMListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>

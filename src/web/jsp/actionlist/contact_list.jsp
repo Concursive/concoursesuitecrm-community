@@ -84,7 +84,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactActionListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ContactActionListInfo"/>
     </td>
     </form>
   </tr>
@@ -102,7 +102,7 @@
     <th nowrap>
       <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
-<dhv:evaluate if="<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1 %>">
+<dhv:evaluate if='<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1 %>'>
     <th nowrap>
       <strong><dhv:label name="accounts.site">Site</dhv:label></strong>
     </th>
@@ -165,7 +165,7 @@
       <dhv:label name="actionList.noItemsInHistory">No items in History.</dhv:label>
     <% } %>
     </td>
-<dhv:evaluate if="<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1 %>">
+<dhv:evaluate if='<%= (viewUserId == null || "".equals(viewUserId.trim())) && User.getSiteId() == -1 %>'>
     <td align="center" valign="top" nowrap>
       <%= SiteIdList.getSelectedValue(thisContact.getContact().getSiteId()) %>&nbsp;
     </td>

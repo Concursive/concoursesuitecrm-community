@@ -135,7 +135,7 @@ function checkForm(form) {
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
@@ -151,7 +151,6 @@ function checkForm(form) {
 <br />
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<%--  include basic opportunity form --%>
 <%@ include file="opportunity_include.jsp" %> 
 &nbsp;
 <br>

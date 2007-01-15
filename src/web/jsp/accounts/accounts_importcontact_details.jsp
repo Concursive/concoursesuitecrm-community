@@ -53,7 +53,7 @@
     <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteContact();"><br /><br />
   </dhv:evaluate>
 </dhv:permission>
-<dhv:evaluate if="<%= hasText(OrgDetails, "title, typesNameString, additionalNames, nickname, birthDate, role, accountNumber, industryName, dunsType, ticker, dunsNumber, businessNameTwo, sicDescription, accountSizeName, revenue, potential, employees") %>">
+<dhv:evaluate if='<%= hasText(OrgDetails, "title, typesNameString, additionalNames, nickname, birthDate, role, accountNumber, industryName, dunsType, ticker, dunsNumber, businessNameTwo, sicDescription, accountSizeName, revenue, potential, employees") %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -144,7 +144,7 @@
       <dhv:label name="accounts.accounts_add.potential">Potential</dhv:label>
     </td>
     <td>
-       <zeroio:currency value="<%= OrgDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+       <zeroio:currency value="<%= OrgDetails.getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
   </dhv:evaluate>
@@ -156,7 +156,7 @@
         <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
       </td>
       <td>
-         <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+         <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
   </dhv:evaluate>

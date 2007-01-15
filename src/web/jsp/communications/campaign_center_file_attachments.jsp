@@ -62,7 +62,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>

@@ -63,7 +63,7 @@ function hideSendButton() {
 <% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
 <a href="LeadsCalls.do?command=View&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
 <a href="LeadsCalls.do?command=Details&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></a> >
 </dhv:evaluate>
 <dhv:label name="accounts.accounts_contacts_calls_forward.ForwardActivity">Forward Activity</dhv:label>
@@ -72,7 +72,7 @@ function hideSendButton() {
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <% String param1 = "id=" + opportunityHeader.getId(); 

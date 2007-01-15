@@ -53,8 +53,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <dhv:permission name="accounts-accounts-contacts-opportunities-add"><a href="AccountContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=AccountContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
     <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
     <center><dhv:pagedListAlphabeticalLinks object="AccountContactOppsPagedListInfo"/></center></dhv:include>
@@ -69,7 +69,7 @@
           </select>
         </td>
         <td>
-          <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountContactOppsPagedListInfo"/>
+          <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AccountContactOppsPagedListInfo"/>
         </td>
         </form>
       </tr>
@@ -117,7 +117,7 @@
             </dhv:evaluate>
           </td>
           <td valign="top" align="right" class="row<%= rowid %>" nowrap>
-            <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+            <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
           </td>
           <td valign="top" align="center" class="row<%= rowid %>" nowrap>
             <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

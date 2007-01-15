@@ -267,7 +267,7 @@ listOfOperators[2] = numberOperators
 <td>
 <a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
 <a href="CampaignManagerGroup.do?command=View"><dhv:label name="campaign.viewGroups">View Groups</dhv:label></a> >
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
 <a href="CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>"><dhv:label name="campaign.groupDetails">Group Details</dhv:label></a> >
 </dhv:evaluate>
 <dhv:label name="campaign.groupDetails">Group Details</dhv:label>
@@ -276,10 +276,10 @@ listOfOperators[2] = numberOperators
 </table>
 <%-- End Trails --%>
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save">
-<dhv:evaluate if="<%= "list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= "list".equals(request.getParameter("return")) %>'>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=View'">
 </dhv:evaluate>
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
 </dhv:evaluate>
 <input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">
@@ -493,10 +493,10 @@ listOfOperators[2] = numberOperators
 <input type="hidden" name="owner" value="<%= SCL.getOwner() %>">
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save">
-<dhv:evaluate if="<%= "list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= "list".equals(request.getParameter("return")) %>'>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=View'">
 </dhv:evaluate>
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
 </dhv:evaluate>
 <input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">

@@ -32,7 +32,7 @@
       <%= toHtml((String) sentEmailAddresses.get("to")) %>
     </td>
   </tr>
-<dhv:evaluate if="<%= sentEmailAddresses.get("from") != null && !"".equals(((String) sentEmailAddresses.get("from")).trim()) %>">
+<dhv:evaluate if='<%= sentEmailAddresses.get("from") != null && !"".equals(((String) sentEmailAddresses.get("from")).trim()) %>'>
   <tr class="row2">
     <td>
       <%= toHtml((String) sentEmailAddresses.get("from")) %>
@@ -42,4 +42,3 @@
 </table>
 <p>
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
-</body>

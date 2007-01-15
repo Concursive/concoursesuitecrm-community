@@ -134,7 +134,7 @@
   </tr>
 </table>
 <br />
-<input type="hidden" name="onlyWarnings" value="<%=(documentStore.getOnlyWarnings()?"on":"off")%>" />
+<input type="hidden" name="onlyWarnings" value='<%=(documentStore.getOnlyWarnings()?"on":"off")%>' />
 <input type="hidden" name="showDetails" value="true" />
 <input type="hidden" name="showTeam" value="true" />
 <input type="hidden" name="showDocuments" value="true" />

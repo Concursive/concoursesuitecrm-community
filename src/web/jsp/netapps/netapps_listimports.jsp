@@ -56,7 +56,7 @@ View Imports
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="NetworkApplicationsImportListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="NetworkApplicationsImportListInfo"/>
     </td>
     </form>
   </tr>

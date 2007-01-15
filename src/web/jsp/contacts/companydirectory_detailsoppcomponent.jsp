@@ -80,14 +80,14 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
   <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
     <%= thisFile.getImageTag() %>
   </dhv:evaluate>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponentDetails.getOwner()?"":","+oppComponentDetails.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponentDetails.getOwner()?"":","+oppComponentDetails.getOwner())) %>'>
   <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
     <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
       <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
@@ -159,7 +159,7 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= oppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= oppComponentDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </tr>
     </dhv:include>
@@ -178,7 +178,7 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= oppComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= oppComponentDetails.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -186,7 +186,7 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= oppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= oppComponentDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <dhv:include name="opportunity.termsAndUnits,pipeline-terms" none="true">
@@ -336,7 +336,7 @@
     </tr>
     </dhv:include>
   </table>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponentDetails.getOwner()?"":","+oppComponentDetails.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponentDetails.getOwner()?"":","+oppComponentDetails.getOwner())) %>'>
   <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
     <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !opportunityHeader.isTrashed() %>">
       <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>

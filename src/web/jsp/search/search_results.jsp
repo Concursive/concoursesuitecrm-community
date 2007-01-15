@@ -307,7 +307,7 @@ if (i.hasNext()) {
 		</td>
     <dhv:include name="sitesearch-account-email" none="true">
 		<td valign="center" nowrap>
-      <dhv:evaluate if="<%= !"".equals(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %>">
+      <dhv:evaluate if='<%= !"".equals(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %>'>
         <a href="mailto:<%= toHtml(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getEmailAddressList().getPrimaryEmailAddress()) %></a>
       </dhv:evaluate>&nbsp;
     </td>
@@ -426,7 +426,7 @@ if (i.hasNext()) {
 %>        
       </td>
       <td valign="center" nowrap>
-        <zeroio:currency value="<%= thisOpp.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisOpp.getComponent().getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
       <td valign="center" nowrap>
         <%= toHtml(thisOpp.getComponent().getCloseDateString()) %>

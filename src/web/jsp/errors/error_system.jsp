@@ -42,7 +42,7 @@
   }
   if (!errorMessage.equals("")) {
 %>
-<dhv:label name="errors.actualErrorIs.colon" param="<%= "errorMessage="+errorMessage %>">The actual error is:<br /><br /><%= errorMessage %></dhv:label>
+<dhv:label name="errors.actualErrorIs.colon" param='<%= "errorMessage="+errorMessage %>'>The actual error is:<br /><br /><%= errorMessage %></dhv:label>
 <%
   } else {
 %>

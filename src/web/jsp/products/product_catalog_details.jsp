@@ -44,7 +44,7 @@
   </tr>
 </table>
 <br />
-  <dhv:container name="productcatalogs" selected="details" object="productCatalog" param="<%= "productId=" + productCatalog.getId() + "|" + "moduleId=" + permissionCategory.getId() + "|" + "categoryId=" + productCategory.getId() %>">
+  <dhv:container name="productcatalogs" selected="details" object="productCatalog" param='<%= "productId=" + productCatalog.getId() + "|" + "moduleId=" + permissionCategory.getId() + "|" + "categoryId=" + productCategory.getId() %>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td>

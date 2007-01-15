@@ -63,7 +63,7 @@
 <table width="100%" border="0">
   <tr>
       <td align="right">
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetMaterialsSelectorInfo" showHiddenParams="true" enableJScript="true" form="elementListView"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AssetMaterialsSelectorInfo" showHiddenParams="true" enableJScript="true" form="elementListView"/>
       </td>
   </tr>
 </table>

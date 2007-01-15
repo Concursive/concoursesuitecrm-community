@@ -57,7 +57,7 @@
       <%= toHtml(thisOpportunity.getComponent().getDescription()) %>
     </td>
     <td width="20%" valign="center" align="right" nowrap class="row<%= row %>">
-      <zeroio:currency value="<%= thisOpportunity.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      <zeroio:currency value="<%= thisOpportunity.getComponent().getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td width="20%" valign="center" align="right" nowrap class="row<%= row %>">
       <zeroio:tz timestamp="<%= thisOpportunity.getComponent().getCloseDate() %>" dateOnly="true" default="&nbsp;"/>

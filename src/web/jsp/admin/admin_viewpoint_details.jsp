@@ -37,7 +37,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="users" selected="viewpoints" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+<dhv:container name="users" selected="viewpoints" object="UserRecord" param='<%= "id=" + UserRecord.getId() %>'>
   <dhv:permission name="admin-roles-edit">
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save">
     <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">

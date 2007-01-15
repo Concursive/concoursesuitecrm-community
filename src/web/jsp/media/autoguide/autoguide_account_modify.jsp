@@ -104,7 +104,7 @@
 <a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">Vehicle Inventory List</a> >
-<dhv:evaluate if="<%= (request.getParameter("return") == null) %>">
+<dhv:evaluate if='<%= (request.getParameter("return") == null) %>'>
 <a href="AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryDetails.getId() %>">Vehicle Details</a> >
 </dhv:evaluate>
 Modify Vehicle
@@ -112,7 +112,7 @@ Modify Vehicle
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>'>
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
   <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">

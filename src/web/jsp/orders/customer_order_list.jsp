@@ -16,7 +16,7 @@
   </tr>
 </table>
 <%-- End Trails --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="orderListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="orderListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th nowrap>

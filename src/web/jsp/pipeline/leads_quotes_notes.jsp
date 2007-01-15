@@ -78,11 +78,11 @@ function reopenOpportunity(id) {
 <%-- End Trails --%>
 <%= showError(request, "actionError", false) %>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="quotes" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
-  <dhv:container name="opportunitiesQuotes" selected="notes" object="quote" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+<dhv:container name="opportunities" selected="quotes" object="opportunityHeader" param='<%= "id=" + opportunityHeader.getId() %>' appendToUrl='<%= addLinkParams(request, "viewSource") %>'>
+  <dhv:container name="opportunitiesQuotes" selected="notes" object="quote" param='<%= "quoteId=" + quote.getId() + "|version=" + version %>' appendToUrl='<%= addLinkParams(request, "viewSource") %>'>
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <% String status = quoteStatusList.getValueFromId(quote.getStatusId()); %>
     <dhv:hasAuthority owner="<%= opportunityHeader.getManagerOwnerIdRange() %>">

@@ -37,14 +37,14 @@
 <table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td valign="top">
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
      </td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td>
-<dhv:evaluate if="<%= (String.valueOf(SurveyResponse.ADDRESS_UPDATED)).equals(request.getAttribute("section")) %>">
+<dhv:evaluate if='<%= (String.valueOf(SurveyResponse.ADDRESS_UPDATED)).equals(request.getAttribute("section")) %>'>
 <table cellpadding="4" cellspacing="0" width="100%" border="0">
 <tr align="left">
   <td>
@@ -55,7 +55,7 @@
 </table>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="YesResponseDetailsListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="YesResponseDetailsListInfo"/>
+<dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="YesResponseDetailsListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="20%" nowrap>
@@ -106,7 +106,7 @@
   </table>
 <%}%>
 </dhv:evaluate>
-<dhv:evaluate if="<%= (String.valueOf(SurveyResponse.ADDRESS_VALID)).equals(request.getAttribute("section")) %>">
+<dhv:evaluate if='<%= (String.valueOf(SurveyResponse.ADDRESS_VALID)).equals(request.getAttribute("section")) %>'>
 <table cellpadding="4" cellspacing="0" width="100%" border="0">
 <tr align="left">
   <td>
@@ -117,7 +117,7 @@
 </table>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="NoResponseDetailsListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="NoResponseDetailsListInfo"/>
+<dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="NoResponseDetailsListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="20%" nowrap>
@@ -168,7 +168,7 @@
   </table>
 <%}%>
 </dhv:evaluate>
-<dhv:evaluate if="<%= (String.valueOf(SurveyResponse.ADDRESS_NO_RESPONSE)).equals(request.getAttribute("section")) %>">
+<dhv:evaluate if='<%= (String.valueOf(SurveyResponse.ADDRESS_NO_RESPONSE)).equals(request.getAttribute("section")) %>'>
 <table cellpadding="4" cellspacing="0" width="100%" border="0">
 <tr align="left">
   <td>
@@ -181,7 +181,7 @@
   <tr>
     <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
     <center><dhv:pagedListAlphabeticalLinks object="CampaignRecipientInfo"/></center></dhv:include>
-    <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignRecipientInfo"/>
+    <dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="CampaignRecipientInfo"/>
 	<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	  <tr>
 	    <th width="70%">

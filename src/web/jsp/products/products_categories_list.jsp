@@ -67,7 +67,7 @@
     </tr>
   </table>
 </dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="productListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="productListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="8" align="center" nowrap>&nbsp;</th>
@@ -142,7 +142,7 @@
     </td>
     <td align="right" nowrap>
       <dhv:evaluate if="<%= thisProduct.getActivePrice() != null %>">
-        <zeroio:currency value="<%= thisProduct.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+        <zeroio:currency value="<%= thisProduct.getActivePrice().getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisProduct.getActivePrice() == null %>">
         --

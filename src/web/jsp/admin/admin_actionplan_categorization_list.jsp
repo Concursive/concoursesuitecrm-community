@@ -213,7 +213,7 @@ function loadTopCategories() {
     <strong><dhv:label name="categories.switchToSite">Switch to Site</dhv:label></strong>&nbsp;
     <select name="selectedSiteId" id="selectedSiteId" onChange="javascript:reopen('&siteId=<%= siteId %>&selectedSiteId='+this.options[this.options.selectedIndex].value);">
       <option value="-1" <%= selectedSiteId != null && selectedSiteId.equals("-1")? "selected":"" %>><dhv:label name="tickets.nonSite">Non-Site</dhv:label></option>
-      <dhv:evaluate if="<%= siteId != null && !"".equals(siteId) && !"-1".equals(siteId) %>">
+      <dhv:evaluate if='<%= siteId != null && !"".equals(siteId) && !"-1".equals(siteId) %>'>
         <option value="<%= siteId %>"  <%= selectedSiteId != null && !selectedSiteId.equals("-1")? "selected":"" %>><%= SiteIdList.getSelectedValue(Integer.parseInt(siteId)) %></option>
       </dhv:evaluate>
     </select>
@@ -238,7 +238,7 @@ function loadTopCategories() {
 </tr>
 </table>
 <%--<dhv:pagedListAlphabeticalLinks object="actionPlanSelectorInfo"/></center></dhv:include><br /> --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="actionPlanSelectorInfo" showHiddenParams="true" form="elementListView"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="actionPlanSelectorInfo" showHiddenParams="true" form="elementListView"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th align="center">

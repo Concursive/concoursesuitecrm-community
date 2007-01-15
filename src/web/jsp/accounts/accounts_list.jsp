@@ -56,7 +56,7 @@
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add"><dhv:label name="accounts.add">Add an Account</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="SearchOrgListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SearchOrgListInfo"/>
 <% int columnCount = 0; %>
 <table cellpadding="8" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -74,8 +74,8 @@
     </th>
     
 <%--    <dhv:include name="organization.list.siteId" none="true"> --%>
-<zeroio:debug value="<%="JSP::accounts_list.jsp "+ SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId")+" == "+(String.valueOf(Constants.INVALID_SITE)) %>"/>
-      <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+<zeroio:debug value='<%="JSP::accounts_list.jsp "+ SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId")+" == "+(String.valueOf(Constants.INVALID_SITE)) %>'/>
+      <dhv:evaluate if='<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>'>
         <th <% ++columnCount; %>>
           <strong><dhv:label name="accounts.site">Site</dhv:label></strong>
         </th>
@@ -139,7 +139,7 @@
 		
 		
 <%--    <dhv:include name="organization.list.siteId" none="true"> --%>
-      <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+      <dhv:evaluate if='<%= SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>'>
         <td valign="top"><%= SiteIdList.getSelectedValue(thisOrg.getSiteId()) %></td>
       </dhv:evaluate>
 <%--    </dhv:include> --%>

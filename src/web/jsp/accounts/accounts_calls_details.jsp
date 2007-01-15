@@ -55,9 +55,9 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="activities" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <dhv:evaluate if="<%=ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !CallDetails.isTrashed()%>">
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:evaluate if='<%= "pending".equals(request.getParameter("view")) %>'>
         <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %>&orgId=<%=OrgDetails.getOrgId() %><%= addLinkParams(request, "view|trailSource|action") %>'"></dhv:permission>
       </dhv:evaluate>
       <% if("pending".equals(request.getParameter("view"))){ %>
@@ -69,7 +69,7 @@
           <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>">
         </dhv:permission>
       <%}%>
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:evaluate if='<%= "pending".equals(request.getParameter("view")) %>'>
         <dhv:permission name="accounts-accounts-contacts-calls-delete">
           <input type="button" value="<dhv:label name="global.button.CancelpendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&orgId=<%=OrgDetails.getOrgId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>';">
         </dhv:permission>
@@ -126,7 +126,7 @@
     </table>
     <br />
     <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !CallDetails.isTrashed()%>">
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:evaluate if='<%= "pending".equals(request.getParameter("view")) %>'>
         <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&orgId=<%=OrgDetails.getOrgId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource|action") %>'"></dhv:permission>
       </dhv:evaluate>
       <% if("pending".equals(request.getParameter("view"))){ %>
@@ -134,7 +134,7 @@
       <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
         <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
       <%}%>
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:evaluate if='<%= "pending".equals(request.getParameter("view")) %>'>
         <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&orgId=<%=OrgDetails.getOrgId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= isPopup(request) ? "&popup=true" : "" %><%= addLinkParams(request, "popupType|actionId|view|action") %>';"></dhv:permission>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !isPopup(request) %>">

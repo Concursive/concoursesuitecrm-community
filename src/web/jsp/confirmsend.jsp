@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <p>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>

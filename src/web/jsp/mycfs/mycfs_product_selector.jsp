@@ -32,7 +32,7 @@
 %>
 <%-- Navigating the contact list --%>
 <br>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractProductListInfo" showHiddenParams="true" enableJScript="true" form="productListView"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ServiceContractProductListInfo" showHiddenParams="true" enableJScript="true" form="productListView"/>
 <br>
 
 <form name="productListView" method="post" action="ProductSelector.do?command=ListProducts&contractId=<%=request.getParameter("contractId")%>">

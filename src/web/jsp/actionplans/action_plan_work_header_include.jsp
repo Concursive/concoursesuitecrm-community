@@ -115,7 +115,7 @@
                 <dhv:label name="actionPlan.totalWkPotential">Total Wk. Potential</dhv:label>:
               </td>
               <td>
-                <zeroio:currency value="<%= actionPlanWork.getContact().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+                <zeroio:currency value="<%= actionPlanWork.getContact().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
               </td>
             </tr>
           </dhv:evaluate>
@@ -148,7 +148,7 @@
                 <dhv:label name="actionPlan.totalWkPotential">Total Wk. Potential</dhv:label>:
               </td>
               <td>
-                <zeroio:currency value="<%= actionPlanWork.getOrganization().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+                <zeroio:currency value="<%= actionPlanWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
               </td>
             </tr>
           </dhv:evaluate>

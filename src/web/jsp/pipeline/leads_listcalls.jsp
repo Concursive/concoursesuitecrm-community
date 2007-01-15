@@ -71,7 +71,7 @@ function reopenOpportunity(id) {
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <% String param1 = "id=" + opportunityHeader.getId(); 
@@ -155,7 +155,7 @@ function reopenOpportunity(id) {
         </a>
       </td>
     </tr>
-    <dhv:evaluate if="<%= LeadsCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>">
+    <dhv:evaluate if='<%= LeadsCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>'>
         <tr class="row<%= rowid %>">
           <td colspan="5" valign="top">
             <%= toHtmlValue(thisCall.getFollowupNotes()) %>
@@ -241,7 +241,7 @@ function reopenOpportunity(id) {
         <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-    <dhv:evaluate if="<%= LeadsCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
+    <dhv:evaluate if='<%= LeadsCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>'>
     <tr class="row<%= rowid %>">
       <td colspan="7" valign="top">
         <%= toHtmlValue(thisCall.getNotes()) %>

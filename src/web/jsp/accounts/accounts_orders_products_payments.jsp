@@ -32,7 +32,7 @@
 </table>
 <%-- End Trails --%>
 <%= showError(request, "actionError", false) %>
-<dhv:container name="accounts" selected="orders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="orders" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td width="100%"><%@ include file="accounts_details_header_include.jsp" %></td>
@@ -41,12 +41,12 @@
   <tr>
     <td class="containerBackSide">
 <input type="button" value="Modify Status" onClick="javascript:popURL('OrdersPayments.do?command=Modify&paymentId=<%= orderPayment.getId() %>&popup=true','OrderPayments','500','200','yes','yes');"/><br />
-<dhv:evaluate if="<%= creditCardPassword == null || "".equals(creditCardPassword) %>">
+<dhv:evaluate if='<%= creditCardPassword == null || "".equals(creditCardPassword) %>'>
   To view credit card information, enter the site password:
   <input type="password" name="creditCardPassword"/>
   <input type="submit" value="Submit"/>
 </dhv:evaluate>
-<dhv:evaluate if="<%= creditCardPassword != null && !"".equals(creditCardPassword) %>">
+<dhv:evaluate if='<%= creditCardPassword != null && !"".equals(creditCardPassword) %>'>
   <a href="AccountOrdersPayments.do?command=Details&paymentId=<%= orderPayment.getId() %>&resetPassword=true">Hide credit card information</a>
 </dhv:evaluate>
 <br /><br />
@@ -170,10 +170,10 @@ if ( order.getAddressList().size() > 0) {
   <tr>
     <td nowrap class="formLabel">Card Number </td>
     <td>
-      <dhv:evaluate if="<%= creditCardPassword == null || "".equals(creditCardPassword) %>">
+      <dhv:evaluate if='<%= creditCardPassword == null || "".equals(creditCardPassword) %>'>
         &lt;protected from view&gt;
       </dhv:evaluate>
-      <dhv:evaluate if="<%= creditCardPassword != null && !"".equals(creditCardPassword) %>">
+      <dhv:evaluate if='<%= creditCardPassword != null && !"".equals(creditCardPassword) %>'>
         <%= creditCard.getCardNumber() %>
       </dhv:evaluate>
     </td>

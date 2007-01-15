@@ -60,13 +60,13 @@
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br />
 </dhv:evaluate>
 <dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=Prepare&source=list"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="SearchOppListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOppListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SearchOppListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
@@ -155,11 +155,11 @@
     </td>
     <dhv:include name="opportunity.singleComponent">
       <td valign="top" align="right" nowrap class="row<%= rowid %>">
-        <zeroio:currency value="<%= thisOpp.getComponent().getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisOpp.getComponent().getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </dhv:include>
     <td valign="top" align="right" nowrap class="row<%= rowid %>">
-      <zeroio:currency value="<%= thisOpp.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      <zeroio:currency value="<%= thisOpp.getComponent().getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= thisOpp.getComponent().getCloseProbValue() %>%
@@ -174,9 +174,9 @@
     <dhv:include name="opportunity.termsAndUnits" none="true">
       <td valign="top" align="center" nowrap class="row<%= rowid %>">
         <%= toHtml(thisOpp.getComponent().getTermsString()) %>
-        <dhv:evaluate if="<%= thisOpp.getComponent().getUnits().equals("M") %>">
+        <dhv:evaluate if='<%= thisOpp.getComponent().getUnits().equals("M") %>'>
            <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-        </dhv:evaluate><dhv:evaluate if="<%= thisOpp.getComponent().getUnits().equals("W") %>">
+        </dhv:evaluate><dhv:evaluate if='<%= thisOpp.getComponent().getUnits().equals("W") %>'>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
         </dhv:evaluate>
       </td>

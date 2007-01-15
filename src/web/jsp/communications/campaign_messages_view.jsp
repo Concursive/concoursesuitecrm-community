@@ -57,7 +57,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CampaignMessageListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="CampaignMessageListInfo"/>
     </td>
     </form>
   </tr>

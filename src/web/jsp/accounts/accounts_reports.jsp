@@ -56,7 +56,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RptListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="RptListInfo"/>
     </td>
     </form>
   </tr>

@@ -66,8 +66,8 @@
       <dhv:label name="project.message">Message</dhv:label>
     </td>
     <td valign="top">
-      <dhv:label name="campaign.from.colon" param="<%= "from="+toHtml(MessageDetails.getReplyTo()) %>"><strong>From:</strong> <%= toHtml(MessageDetails.getReplyTo()) %></dhv:label><br />
-      <dhv:label name="mail.label.subject" param="<%= "subject="+toHtml(MessageDetails.getMessageSubject()) %>"><strong>Subject:</strong> <%= toHtml(MessageDetails.getMessageSubject()) %></dhv:label><br />
+      <dhv:label name="campaign.from.colon" param='<%= "from="+toHtml(MessageDetails.getReplyTo()) %>'><strong>From:</strong> <%= toHtml(MessageDetails.getReplyTo()) %></dhv:label><br />
+      <dhv:label name="mail.label.subject" param='<%= "subject="+toHtml(MessageDetails.getMessageSubject()) %>'><strong>Subject:</strong> <%= toHtml(MessageDetails.getMessageSubject()) %></dhv:label><br />
       &nbsp;<br />
 			<%= (MessageDetails.getMessageText()) %>
     </td>

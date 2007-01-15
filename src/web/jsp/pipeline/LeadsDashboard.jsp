@@ -130,13 +130,13 @@ function reopenOpportunity(id) {
           <td valign="center" nowrap>
             <a href="Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) == 0.0 %>">
-              (<zeroio:currency value="<%= 0 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+              (<zeroio:currency value="<%= 0 %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) > 0 && thisRec.getGrossPipeline(1000) < 1 %>">
-              (&lt; <zeroio:currency value="<%= 1 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+              (&lt; <zeroio:currency value="<%= 1 %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) >= 1 %>">
-              (<zeroio:currency value="<%= thisRec.getGrossPipeline(1000) %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+              (<zeroio:currency value="<%= thisRec.getGrossPipeline(1000) %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
             <dhv:evaluate if="<%=!thisRec.getEnabled() || (thisRec.getExpires() != null && thisRec.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))%>"><font color="red">*</font></dhv:evaluate>
           </td>
@@ -201,13 +201,13 @@ function reopenOpportunity(id) {
           </td>
           <td width="55" nowrap align="right">
             <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) == 0.0 %>">
-              <zeroio:currency value="<%= 0 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K
+              <zeroio:currency value="<%= 0 %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>K
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) > 0 && thisHeader.getTotalValue(1000) < 1 %>">
-              &lt; <zeroio:currency value="<%= 1 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K
+              &lt; <zeroio:currency value="<%= 1 %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>K
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) >= 1 %>">
-              <zeroio:currency value="<%= thisHeader.getTotalValue(1000) %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K
+              <zeroio:currency value="<%= thisHeader.getTotalValue(1000) %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>K
             </dhv:evaluate>
           </td>
         </tr>

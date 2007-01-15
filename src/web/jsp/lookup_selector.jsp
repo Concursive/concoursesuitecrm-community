@@ -10,7 +10,7 @@
 <jsp:useBean id="Table" class="java.lang.String" scope="request"/>
 <jsp:useBean id="LookupSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <br>
@@ -19,7 +19,7 @@
 <table width="100%" border="0">
   <tr>
       <td align="right">
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LookupSelectorInfo" showHiddenParams="true" enableJScript="true" form="elementListView"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="LookupSelectorInfo" showHiddenParams="true" enableJScript="true" form="elementListView"/>
       </td>
   </tr>
 </table>

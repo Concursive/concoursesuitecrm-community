@@ -75,7 +75,7 @@ if (OrderDetails.getQuoteId() != -1) {
 %>
   <tr>
     <td class="formLabel">Originating Quote</td>
-    <td><a href="Quotes.do?command=Details&quoteId=<%= OrderDetails.getQuoteId() %>"><dhv:label name="quotes.symbol.number" param="<%= "number="+OrderDetails.getQuoteId() %>">Quote #<%= OrderDetails.getQuoteId() %></dhv:label></a></td>
+    <td><a href="Quotes.do?command=Details&quoteId=<%= OrderDetails.getQuoteId() %>"><dhv:label name="quotes.symbol.number" param='<%= "number="+OrderDetails.getQuoteId() %>'>Quote #<%= OrderDetails.getQuoteId() %></dhv:label></a></td>
   </tr>
 <%
 }

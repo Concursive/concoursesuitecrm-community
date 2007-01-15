@@ -37,7 +37,7 @@
 <%-- <%@ include file="../contacts/contact_details_header_include.jsp" %><br>--%>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=CalendarCalls" onSubmit="return doCheck(this);" method="post">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId()%>"/>
-<dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= isPopup(request) %>">
+<dhv:container name="contacts" selected="calls" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' hideContainer="<%= isPopup(request) %>">
   <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>"><%= toHtml(ContactDetails.getTitle()) %><br /></dhv:evaluate>
   <dhv:evaluate if="<%= hasText(ContactDetails.getPhoneNumberList().getPrimaryPhoneNumber()) %>"><%= toHtml(ContactDetails.getPhoneNumberList().getPrimaryPhoneNumber()) %><br /></dhv:evaluate>
   <dhv:evaluate if="<%= hasText(ContactDetails.getEmailAddressList().getPrimaryEmailAddress()) %>"><%= toHtml(ContactDetails.getEmailAddressList().getPrimaryEmailAddress()) %><br /></dhv:evaluate>

@@ -56,10 +56,10 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param="<%= "id=" + OpportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param='<%= "id=" + OpportunityHeader.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
       <td>

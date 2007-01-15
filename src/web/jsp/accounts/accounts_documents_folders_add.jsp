@@ -66,7 +66,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" hideContainer="<%= "true".equals(request.getParameter("actionplan")) %>" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+<dhv:container name="accounts" selected="documents" object="OrgDetails" hideContainer='<%= "true".equals(request.getParameter("actionplan")) %>' param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>'>
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>

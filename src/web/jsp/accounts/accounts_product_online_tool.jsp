@@ -53,7 +53,7 @@ function redrawAd() {
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="products" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="products" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <table cellpadding="4" cellspacing="0" border="0" width="100%">
       <tr>
         <td colspan="2">
@@ -88,10 +88,10 @@ function redrawAd() {
                 <tr class="title2">
                   <td><%=  str.substring(1) %></td>
                   <td>
-                    <dhv:evaluate if="<%= str.substring(0,1).equals("P") %>">
+                    <dhv:evaluate if='<%= str.substring(0,1).equals("P") %>'>
                       <input type="text" name="text<%=(i+1)%>" id="text<%=(i+1)%>" value="<%= toHtmlValue(str.substring(1)) %>" size="40">
                     </dhv:evaluate>
-                    <dhv:evaluate if="<%= str.substring(0,1).equals("A") %>">
+                    <dhv:evaluate if='<%= str.substring(0,1).equals("A") %>'>
                       <textarea name="text<%=(i+1)%>" id="text<%=(i+1)%>" cols="40" rows="3"><%= toHtmlValue(str.substring(1)) %></textarea>
                     </dhv:evaluate>
                   </td>

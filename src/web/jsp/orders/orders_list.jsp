@@ -33,7 +33,7 @@
 <%--
 <a href="Orders.do?command=Add">Add an Order</a>
 --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="searchOrderListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="searchOrderListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>

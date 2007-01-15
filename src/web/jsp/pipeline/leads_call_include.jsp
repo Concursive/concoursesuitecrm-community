@@ -142,16 +142,16 @@
   }
 </script>
 <%-- include completed activity form --%>
-<dhv:evaluate if="<%= !("schedule".equals(action)) %>">
+<dhv:evaluate if='<%= !("schedule".equals(action)) %>'>
 <%@ include file="../contacts/call_completed_include.jsp" %>
 </dhv:evaluate>
-<dhv:evaluate if="<%= !("cancel".equals(request.getParameter("action"))) || CallDetails.getStatusId() != Call.CANCELED %>">
-<dhv:evaluate if="<%= !("schedule".equals(action)) %>">
+<dhv:evaluate if='<%= !("cancel".equals(request.getParameter("action"))) || CallDetails.getStatusId() != Call.CANCELED %>'>
+<dhv:evaluate if='<%= !("schedule".equals(action)) %>'>
 <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
 </dhv:evaluate>
 <%-- include pending activity form --%>
 <%@ include file="../contacts/call_followup_include.jsp" %>
-<dhv:evaluate if="<%= !("schedule".equals(action)) %>">
+<dhv:evaluate if='<%= !("schedule".equals(action)) %>'>
 </span>
 </dhv:evaluate>
 </dhv:evaluate>

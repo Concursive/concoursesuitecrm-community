@@ -30,12 +30,12 @@
 <%= showError(request, "actionError", false) %>
 <form name="order_payment_form" action="OrdersPayments.do?command=Details&paymentId=<%= orderPayment.getId() %>" method="post">
 <input type="button" value="Modify Status" onClick="javascript:popURL('OrdersPayments.do?command=Modify&paymentId=<%= orderPayment.getId() %>&popup=true','OrderPayments','500','200','yes','yes');"/><br />
-<dhv:evaluate if="<%= creditCardPassword == null || "".equals(creditCardPassword) %>">
+<dhv:evaluate if='<%= creditCardPassword == null || "".equals(creditCardPassword) %>'>
   To view credit card information, enter the site password:
   <input type="password" name="creditCardPassword"/>
   <input type="submit" value="Submit"/>
 </dhv:evaluate>
-<dhv:evaluate if="<%= creditCardPassword != null && !"".equals(creditCardPassword) %>">
+<dhv:evaluate if='<%= creditCardPassword != null && !"".equals(creditCardPassword) %>'>
   <a href="OrdersPayments.do?command=Details&paymentId=<%= orderPayment.getId() %>&resetPassword=true">Hide credit card information</a>
 </dhv:evaluate>
 <br /><br />
@@ -159,10 +159,10 @@
   <tr>
     <td nowrap class="formLabel">Card Number </td>
     <td>
-      <dhv:evaluate if="<%= creditCardPassword == null || "".equals(creditCardPassword) %>">
+      <dhv:evaluate if='<%= creditCardPassword == null || "".equals(creditCardPassword) %>'>
         &lt;protected from view&gt;
       </dhv:evaluate>
-      <dhv:evaluate if="<%= creditCardPassword != null && !"".equals(creditCardPassword) %>">
+      <dhv:evaluate if='<%= creditCardPassword != null && !"".equals(creditCardPassword) %>'>
         <%= creditCard.getCardNumber() %>
       </dhv:evaluate>
     </td>

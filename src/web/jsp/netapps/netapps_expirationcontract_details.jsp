@@ -54,7 +54,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="netapps" selected="details" param="<%= "expirationId=" + contractExpiration.getId() %>" style="tabs"/>
+<dhv:container name="netapps" selected="details" param='<%= "expirationId=" + contractExpiration.getId() %>' style="tabs"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">
@@ -199,7 +199,7 @@
     <tr class="containerBody">
       <td class="formLabel" nowrap>Quote Amount</td>
       <td>
-        <zeroio:currency value="<%= contractExpiration.getQuoteAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= contractExpiration.getQuoteAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">

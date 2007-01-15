@@ -79,7 +79,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= !ContactDetails.isTrashed() %>" >
     <dhv:evaluate if="<%= (ContactDetails.getEnabled() && !ContactDetails.isTrashed() && ContactDetails.getOrgId() > 0) %>" >
       <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add" all="true">
@@ -105,7 +105,7 @@
         </select>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ExternalOppsPagedListInfo"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ExternalOppsPagedListInfo"/>
       </td>
       </form>
     </tr>
@@ -178,7 +178,7 @@
   </dhv:evaluate>
       </td>
       <td valign="top" align="right" nowrap>
-        <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
       <td valign="top" align="center" nowrap>
         <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />

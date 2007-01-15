@@ -77,5 +77,5 @@ function addWebsite(template) {
 	</tr>
 </table>
 <br />
-<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (fromList != null && "true".equals(fromList.trim())? "javascript:window.location.href='Sites.do?command=List&popup=true'":"javascript:self.close();") %>"/>
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (fromList != null && "true".equals(fromList.trim())? "javascript:window.location.href='Sites.do?command=List&popup=true'":"javascript:self.close();") %>'/>
 

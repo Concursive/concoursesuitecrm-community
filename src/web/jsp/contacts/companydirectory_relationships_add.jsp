@@ -36,7 +36,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="contacts" selected="relationships" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="relationships" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <%= toHtml(ContactDetails.getNameFull()) %> <dhv:label name="contact.subjectIsAAn">(Subject) is a/an:</dhv:label> <%= relationshipTypeSelect.getHtml() %> (<dhv:label name="accounts.accounts_relationships_add.RelationshipType">Relationship Type</dhv:label>)<br>
   &nbsp;<br>
   &nbsp;&nbsp;&nbsp;&nbsp;<%= objectSelect.getHtml() %> <dhv:label name="contact.objectType.brackets">(Object Type)</dhv:label><br>

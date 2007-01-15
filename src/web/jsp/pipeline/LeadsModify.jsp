@@ -72,10 +72,10 @@ function reopenOpportunity(id) {
 </dhv:evaluate>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>">
+<dhv:container name="opportunities" selected="details" object="opportunityHeader" param='<%= "id=" + opportunityHeader.getId() %>'>
   <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
   <%}%>

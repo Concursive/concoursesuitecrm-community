@@ -2,7 +2,7 @@
 <jsp:useBean id="CustomFormInfo" class="org.aspcfs.utils.web.CustomForm" scope="request"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <%@ page import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.utils.web.CustomFormTab,org.aspcfs.utils.web.CustomFormGroup" %>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <%= CustomFormInfo.getJScripts() %>
 <%
   int pg = 0;

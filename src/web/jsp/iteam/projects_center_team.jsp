@@ -107,20 +107,20 @@
     </td>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
       <td valign="top" nowrap>
-        <dhv:label name="project.added" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+        <dhv:label name="project.added" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
       </td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
-      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
-      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
       <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationCouldNotBeSent">Invitation could not be sent to email address</dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
-      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>" >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>' >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <td nowrap valign="top">
       <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
@@ -194,20 +194,20 @@
     </td>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
       <td valign="top" nowrap>
-        <dhv:label name="project.added" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+        <dhv:label name="project.added" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
       </td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
-      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
-      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
       <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationCouldNotBeSent">Invitation could not be sent to email address</dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
-      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>" >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>' >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <td nowrap valign="top">
       <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
@@ -282,20 +282,20 @@
     </td>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
       <td valign="top" nowrap>
-        <dhv:label name="project.added" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+        <dhv:label name="project.added" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
       </td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
-      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
-      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
       <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationCouldNotBeSent">Invitation could not be sent to email address</dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
-      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>" >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param='<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>' >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <td nowrap valign="top">
       <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

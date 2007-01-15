@@ -123,7 +123,7 @@
             <dhv:evaluate if="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width="55" nowrap class="row<%= rowid %>" valign="center">
-            <zeroio:currency value="<%= thisRec.getYTD() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+            <zeroio:currency value="<%= thisRec.getYTD() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
           </td>
         </tr>
       <%}
@@ -154,7 +154,7 @@
             <a href="RevenueManager.do?command=View&orgId=<%=thisOrg.getId()%>"><%= toHtml(thisOrg.getName()) %></a>
           </td>
           <td class="row<%= rowid %>" valign="center" width="50" nowrap>
-            <zeroio:currency value="<%= thisOrg.getYTD() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+            <zeroio:currency value="<%= thisOrg.getYTD() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
           </td>
         </tr>
 <%    }

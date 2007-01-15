@@ -77,7 +77,7 @@
 		</tr>
 	</table>
 	&nbsp;<br>
-  <dhv:evaluate if="<%= "true".equals(request.getParameter("addNewContact")) %>">
+  <dhv:evaluate if='<%= "true".equals(request.getParameter("addNewContact")) %>'>
     <a href="javascript:window.location.href='Contacts.do?command=Prepare&popup=true&hiddensource=<%= request.getParameter("hiddensource") %>&actionStepWork=<%= request.getParameter("actionStepWork") %>&orgId=<%= request.getParameter("orgId")%><%= "true".equals(request.getParameter("actionplan"))?"&actionplan=true":"" %>';">Create New Contact</a>
   </dhv:evaluate>
   &nbsp;<br>

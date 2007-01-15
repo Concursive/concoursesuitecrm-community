@@ -50,7 +50,7 @@
 <table width="100%" border="0">
   <tr>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="NetworkApplicationsImportResultsInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="NetworkApplicationsImportResultsInfo"/>
     </td>
   </tr>
 </table>

@@ -88,7 +88,7 @@
     }
   }
 </script>
-<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>'>
 <body onLoad="javascript:reloadCalendarDetails();">
 </dhv:evaluate>
 <form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar&userId=<%=CalendarInfo.getSelectedUserId()%>&resetView=true<%= returnPage!=null?"&return="+returnPage:"" %>" method="post">
@@ -157,6 +157,6 @@
   </tr>
 </table>
 </form>
-<dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>'>
 </body>
 </dhv:evaluate>

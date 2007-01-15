@@ -49,7 +49,7 @@ function reopenContact(id) {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="folders" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="folders" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th>

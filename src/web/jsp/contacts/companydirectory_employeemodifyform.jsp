@@ -142,7 +142,7 @@
 </table>
 </dhv:evaluate>
 <%-- End Trails --%>
-<dhv:container name="employees" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="employees" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>

@@ -165,7 +165,7 @@
       </select>
       </td><td valign="top">
       <%-- TODO: Dropdown lists--%>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SalesDashboardListInfo"/></td></tr></table>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SalesDashboardListInfo"/></td></tr></table>
       <%-- Leads List --%>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
@@ -193,13 +193,13 @@
             src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
           </td>
           <td valign="top" width="100%">
-            <dhv:evaluate if="<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) %>">
+            <dhv:evaluate if='<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) %>'>
               <%= toHtml(thisLead.getNameLastFirst()) %>
             </dhv:evaluate>
-            <dhv:evaluate if="<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) && thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
+            <dhv:evaluate if='<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) && thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>'>
               <br />
             </dhv:evaluate>
-            <dhv:evaluate if="<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) && !thisLead.getPrimaryContact() %>">
+            <dhv:evaluate if='<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) && !thisLead.getPrimaryContact() %>'>
               <%= toHtml(thisLead.getCompany()) %>
             </dhv:evaluate>
           </td>
@@ -208,7 +208,7 @@
               <dhv:label name="sales.working">Working</dhv:label>
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisLead.getIsLead() %>">
-              <dhv:label name="<%= "sales." + thisLead.getLeadStatusString() %>"><%= toHtml(thisLead.getLeadStatusString()) %></dhv:label>
+              <dhv:label name='<%= "sales." + thisLead.getLeadStatusString() %>'><%= toHtml(thisLead.getLeadStatusString()) %></dhv:label>
             </dhv:evaluate>
           </td>
           <td valign="top">

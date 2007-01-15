@@ -93,7 +93,7 @@
 	</dhv:evaluate>
 </table>
 &nbsp;<br />
-<dhv:evaluate if="<%= !("true".equals(allowMultiplePrices)) %>">
+<dhv:evaluate if='<%= !("true".equals(allowMultiplePrices)) %>'>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -131,7 +131,7 @@
 </table>
 </dhv:evaluate>
 <%-- Lookup List configurator --%>
-<dhv:evaluate if="<%= "true".equals(allowMultiplePrices) %>">
+<dhv:evaluate if='<%= "true".equals(allowMultiplePrices) %>'>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th><strong><dhv:label name="quotes.item">Item</dhv:label></strong></th>
@@ -170,10 +170,10 @@
           </td>
       </dhv:evaluate>
       <dhv:evaluate if="<%= (property.getIsForPrompting() && property.getType() == property.LOOKUP_PROPERTY) %>">
-			    <dhv:evaluate if="<%= property.getName().startsWith("boolean_") %>">
+			    <dhv:evaluate if='<%= property.getName().startsWith("boolean_") %>'>
             <td class="empty" width="100%" align="center"><%= property.getHtml(request) %></td>
           </dhv:evaluate>
-          <dhv:evaluate if="<%= !property.getName().startsWith("boolean_") %>">
+          <dhv:evaluate if='<%= !property.getName().startsWith("boolean_") %>'>
             <td class="empty" width="100%"><%= property.getHtml(request) %></td>
           </dhv:evaluate>
       </dhv:evaluate>

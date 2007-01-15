@@ -64,11 +64,11 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="access" object="campaign" param="<%= "id=" + campaign.getId() %>">
+<dhv:container name="communications" selected="access" object="campaign" param='<%= "id=" + campaign.getId() %>'>
 <dhv:hasAuthority owner="<%= campaign.getEnteredBy() %>"><dhv:permission name="campaign-dashboard-view">
   <a href="javascript:popUserGroupsSelectMultiple('campaign','1','lookup_quote_remarks','<%= campaign.getId() %>',currentUserGroupIds, currentUserGroupNames,'active');"><dhv:label name="campaigns.chooseActiveUserGroups">Choose Active User Groups</dhv:label></a>
 </dhv:permission></dhv:hasAuthority>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="campaignUserGroupListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="campaignUserGroupListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th align="center">

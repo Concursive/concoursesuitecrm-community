@@ -46,9 +46,9 @@
 <%-- End Trails --%>
 <% String param1 = "catalogId=" + ProductCatalog.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param='<%= param1 + "|" + param2 %>'>
   <% String param3 = "optionId=" + ProductOption.getId(); %>
-  <dhv:container name="productcatalogoptions" selected="values" object="ProductOption" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+  <dhv:container name="productcatalogoptions" selected="values" object="ProductOption" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
     <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">
     <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProductCatalogOptionPricings.do?command=PricingList&moduleId=<%= PermissionCategory.getId() %>&catalogId=<%= ProductCatalog.getId() %>&optionId=<%= ProductOption.getId() %>';">
     <br><br>

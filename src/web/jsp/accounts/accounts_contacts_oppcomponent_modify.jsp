@@ -117,9 +117,9 @@ function checkForm(form) {
 <%-- End Trails --%>
 </dhv:evaluate>
 <form name="opportunityForm" action="AccountContactsOppComponents.do?command=SaveComponent&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param="<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param='<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
@@ -159,7 +159,7 @@ function checkForm(form) {
     <input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
     <input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
     <input type="hidden" name="actionSource" value="AccountContactsOppComponents">
-    <dhv:evaluate if="<%= request.getParameter("return") != null %>">
+    <dhv:evaluate if='<%= request.getParameter("return") != null %>'>
       <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
     </dhv:evaluate>
     <%= addHiddenParams(request, "popup|popupType|actionId") %>

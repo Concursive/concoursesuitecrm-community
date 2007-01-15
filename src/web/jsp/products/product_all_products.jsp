@@ -42,7 +42,7 @@
 </table>
 <%-- End Trails --%>
 <dhv:permission name="product-catalog-product-add"><a href="ProductsCatalog.do?command=AddProduct&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.addItem">Add Item</dhv:label></a></dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="productCatalogListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="productCatalogListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th>

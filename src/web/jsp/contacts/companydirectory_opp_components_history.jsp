@@ -55,7 +55,7 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:formMessage showSpace="false" />
-<dhv:container name="contacts" selected="opportunities" object="contactDetails" param="<%= "id=" + contactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="opportunities" object="contactDetails" param='<%= "id=" + contactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -63,7 +63,7 @@
     <%= thisFile.getImageTag("-23") %>
   </dhv:evaluate>
   <br>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="contactComponentHistoryListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="contactComponentHistoryListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th align="center" nowrap>
@@ -111,7 +111,7 @@
         OpportunityComponentLog thisComponentLog = (OpportunityComponentLog)j.next();
         boolean hasPermission = false;
 %>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponentLog.getOwner()?"":","+thisComponentLog.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponentLog.getOwner()?"":","+thisComponentLog.getOwner())) %>'>
     <% hasPermission = true;%>
   </dhv:hasAuthority>
     <tr class="row<%= rowid %>">

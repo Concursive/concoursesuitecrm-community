@@ -82,7 +82,7 @@
 </table>
 <%-- End Trails --%>
 <% String param1 = "id=" + ticket.getId(); %>
-<dhv:container name="tickets" selected="actionplans" object="ticket" param="<%= param1 %>" hideContainer="<%= (isPopup(request) || (defectCheck != null && !"".equals(defectCheck.trim()))) %>">
+<dhv:container name="tickets" selected="actionplans" object="ticket" param="<%= param1 %>" hideContainer='<%= (isPopup(request) || (defectCheck != null && !"".equals(defectCheck.trim()))) %>'>
   <%@ include file="ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>

@@ -67,7 +67,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SalesListInfo" showHiddenParams="false" />
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SalesListInfo" showHiddenParams="false" />
 <table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th nowrap>&nbsp;</th>
@@ -93,7 +93,7 @@
     <dhv:evaluate if="<%= contacts.getOwner() != User.getUserId() %>">
       <th nowrap><strong><dhv:label name="reports.owner">Owner</dhv:label></strong></th>
     </dhv:evaluate>
-<dhv:evaluate if="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 %>">
+<dhv:evaluate if='<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 %>'>
     <th nowrap>
       <strong><a href="Sales.do?command=List&from=list&column=lsi.description"><dhv:label name="accounts.site">Site</dhv:label></a></strong>
       <%= SalesListInfo.getSortIcon("lsi.description") %>
@@ -125,17 +125,17 @@
       <td valign="top" nowrap>
         <dhv:evaluate if="<%= thisLead.getIsLead() %>">
           <a href="Sales.do?command=Details&contactId=<%= thisLead.getId() %>&from=list&listForm=true">
-            <dhv:evaluate if="<%= thisLead.getCompany() == null || "".equals(thisLead.getCompany()) %>">
+            <dhv:evaluate if='<%= thisLead.getCompany() == null || "".equals(thisLead.getCompany()) %>'>
               <dhv:label name="actionPlan.notAvailable">Not available</dhv:label>
-            </dhv:evaluate><dhv:evaluate if="<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
+            </dhv:evaluate><dhv:evaluate if='<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>'>
               <%= toHtml(thisLead.getCompany()) %>
             </dhv:evaluate>
           </a>
         </dhv:evaluate><dhv:evaluate if="<%= !thisLead.getIsLead() %>">
           <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= thisLead.getId() %>&popup=true&viewOnly=true','Details','650','500','yes','yes');">
-            <dhv:evaluate if="<%= thisLead.getCompany() == null || "".equals(thisLead.getCompany()) %>">
+            <dhv:evaluate if='<%= thisLead.getCompany() == null || "".equals(thisLead.getCompany()) %>'>
               <dhv:label name="actionPlan.notAvailable">Not available</dhv:label>
-            </dhv:evaluate><dhv:evaluate if="<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>">
+            </dhv:evaluate><dhv:evaluate if='<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>'>
               <%= toHtml(thisLead.getCompany()) %>
             </dhv:evaluate>
           </a>
@@ -151,7 +151,7 @@
         <%= toHtml(thisLead.getPostalcode()) %>
       </td>
       <td valign="top" align="right">
-        <zeroio:currency value="<%= thisLead.getPotential() %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisLead.getPotential() %>" fractionDigits="false" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
       <td valign="top">
         <%= toHtml(segmentList.getValueFromId(thisLead.getIndustryTempCode())) %>
@@ -161,7 +161,7 @@
           <dhv:label name="sales.working">Working</dhv:label>
         </dhv:evaluate>
         <dhv:evaluate if="<%= thisLead.getIsLead() %>">
-          <dhv:label name="<%= "sales."+thisLead.getLeadStatusString() %>"><%= toHtml(thisLead.getLeadStatusString()) %></dhv:label>
+          <dhv:label name='<%= "sales."+thisLead.getLeadStatusString() %>'><%= toHtml(thisLead.getLeadStatusString()) %></dhv:label>
         </dhv:evaluate>
       </td>
       <dhv:evaluate if="<%= contacts.getOwner() != User.getUserId() %>">
@@ -169,7 +169,7 @@
           <dhv:username id="<%= thisLead.getOwner() %>" />
         </td>
       </dhv:evaluate>
-<dhv:evaluate if="<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 %>">
+<dhv:evaluate if='<%= SalesListInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) || SiteIdList.size() > 2 %>'>
       <dhv:include name="sales.list.site" none="true">
         <td valign="top"><%= SiteIdList.getSelectedValue(thisLead.getSiteId()) %></td>
       </dhv:include>

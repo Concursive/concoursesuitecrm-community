@@ -59,10 +59,10 @@
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="productCatalogListCategory">
         <TR>
           <td nowrap>
-            <dhv:evaluate if="<%= "searchResult".equals(previousPage) %>">
+            <dhv:evaluate if='<%= "searchResult".equals(previousPage) %>'>
               Search Results
             </dhv:evaluate>
-            <dhv:evaluate if="<%= !"searchResult".equals(previousPage) %>">
+            <dhv:evaluate if='<%= !"searchResult".equals(previousPage) %>'>
               <dhv:evaluate if="<%= hasText(parentCategory.getName()) %>">
                 <%= StringUtils.toHtml(parentCategory.getName()) %><br />
               </dhv:evaluate>
@@ -84,10 +84,10 @@
               <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getId()) %>"/>
               <portlet:param name="page" value="<%= String.valueOf((String) request.getAttribute("page")) %>"/>
             </portlet:renderURL>
-            <dhv:evaluate if="<%= "searchResult".equals(previousPage) %>">
+            <dhv:evaluate if='<%= "searchResult".equals(previousPage) %>'>
               <a href="<%= pageContext.getAttribute("url") %>">Back to Search Results</a>
             </dhv:evaluate>
-            <dhv:evaluate if="<%= !"searchResult".equals(previousPage) %>">
+            <dhv:evaluate if='<%= !"searchResult".equals(previousPage) %>'>
               <a href="<%= pageContext.getAttribute("url") %>">Back to Category</a>
             </dhv:evaluate>
           </td>
@@ -99,7 +99,7 @@
     </th>
   </tr>
   <%-- Optional cart information --%>
-  <dhv:evaluate if="<%= "true".equals(ADD_QUOTE) %>">
+  <dhv:evaluate if='<%= "true".equals(ADD_QUOTE) %>'>
     <dhv:evaluate if="<%= quotes != null && quotes.containsKey(String.valueOf(productCatalog.getId())) %>">
       <tr>
         <td colspan="2">
@@ -116,7 +116,7 @@
 		</td>
     </dhv:evaluate>
     <td valign="top" width="100%" <dhv:evaluate if="<%= productCatalog.getLargestImageId() == -1 %>">colspan="2"</dhv:evaluate>>
-      <dhv:evaluate if="<%= "true".equals(SHOW_SKU) %>">
+      <dhv:evaluate if='<%= "true".equals(SHOW_SKU) %>'>
         <dhv:evaluate if="<%= StringUtils.hasText(productCatalog.getSku()) %>">
           <strong><%= toHtml(SKU_TEXT) %><%= StringUtils.toHtml(productCatalog.getSku()) %></strong><br />
           <br />
@@ -129,16 +129,16 @@
         <br />
       </dhv:evaluate>
       <%-- show price: must be greater than 0 --%>
-      <dhv:evaluate if="<%= "true".equals(SHOW_PRICE) %>">
+      <dhv:evaluate if='<%= "true".equals(SHOW_PRICE) %>'>
         <dhv:evaluate if="<%= productCatalog.getActivePrice() != null && productCatalog.getActivePrice().getPriceAmount() > 0 %>">
-          <dhv:evaluate if="<%= "true".equals(SHOW_PRICE_SAVINGS) %>">
+          <dhv:evaluate if='<%= "true".equals(SHOW_PRICE_SAVINGS) %>'>
             <dhv:evaluate if="<%= productCatalog.getActivePrice().getMsrpAmount() > productCatalog.getActivePrice().getPriceAmount() && productCatalog.getActivePrice().getMsrpAmount() > 0 %>">
-              <%= toHtml(ORIGINAL_PRICE_TEXT) %> <zeroio:currency value="<%= productCatalog.getActivePrice().getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/><br />
-              <%= toHtml(PRICE_SAVINGS_TEXT) %> <zeroio:currency value="<%= (productCatalog.getActivePrice().getPriceAmount() - productCatalog.getActivePrice().getMsrpAmount()) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;" allowNegative="true"/><br />
+              <%= toHtml(ORIGINAL_PRICE_TEXT) %> <zeroio:currency value="<%= productCatalog.getActivePrice().getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale='<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>' default="&nbsp;"/><br />
+              <%= toHtml(PRICE_SAVINGS_TEXT) %> <zeroio:currency value="<%= (productCatalog.getActivePrice().getPriceAmount() - productCatalog.getActivePrice().getMsrpAmount()) %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale='<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>' default="&nbsp;" allowNegative="true"/><br />
               <br />
             </dhv:evaluate>
           </dhv:evaluate>
-          <strong><%= toHtml(PRICE_TEXT) %><zeroio:currency value="<%= productCatalog.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/></strong><br />
+          <strong><%= toHtml(PRICE_TEXT) %><zeroio:currency value="<%= productCatalog.getActivePrice().getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale='<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>' default="&nbsp;"/></strong><br />
           <br />
         </dhv:evaluate>
       </dhv:evaluate>
@@ -152,7 +152,7 @@
   </tr>
 </table>
 <%-- show email option --%>
-<dhv:evaluate if="<%= "true".equals(ADD_QUOTE) %>">
+<dhv:evaluate if='<%= "true".equals(ADD_QUOTE) %>'>
  <% if(quotes==null || !quotes.containsKey(String.valueOf(productCatalog.getId()))){%>
   
   <form name="addQuote" action="<portlet:actionURL/>" method="POST">
@@ -167,7 +167,7 @@
    </form>
    <%}%>
 </dhv:evaluate>
-<dhv:evaluate if="<%= "true".equals(INCLUDE_EMAIL) %>">
+<dhv:evaluate if='<%= "true".equals(INCLUDE_EMAIL) %>'>
   <span name="emailSpanLink" id="emailSpanLink">
     <input type="button" name="Send Email" value="Email this item to a friend" onclick="javascript:showEmailSpan();" />
   </span>

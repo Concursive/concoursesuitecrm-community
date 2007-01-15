@@ -96,7 +96,7 @@
   <input type="hidden" name="documentStoreId" value="<%= documentStore.getId() %>">
   <input type="hidden" name="id" value="<%= fileFolder.getId() %>">
   <input type="hidden" name="parentId" value="<%= fileFolder.getParentId() %>">
-  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+  <input type="hidden" name="folderId" value='<%= request.getParameter("folderId") %>'>
   <input type="hidden" name="dosubmit" value="true">
   <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="save">
   <input type="submit" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='DocumentManagement.do?command=DocumentStoreCenter&section=File_Library';"><br>

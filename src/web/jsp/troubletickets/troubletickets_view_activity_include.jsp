@@ -89,10 +89,10 @@
             <zeroio:tz timestamp="<%= thisDayDescription.getActivityDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } %>
           <td align="right" nowrap>
-            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+thisDayDescription.getTravelHours()+"|minutes="+thisDayDescription.getTravelMinutes() %>"><%= thisDayDescription.getTravelHours() %> hrs &nbsp <%= thisDayDescription.getTravelMinutes() %> min</dhv:label> 
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param='<%= "hours="+thisDayDescription.getTravelHours()+"|minutes="+thisDayDescription.getTravelMinutes() %>'><%= thisDayDescription.getTravelHours() %> hrs &nbsp <%= thisDayDescription.getTravelMinutes() %> min</dhv:label>
           </td>
           <td align="right" nowrap>
-            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+thisDayDescription.getLaborHours()+"|minutes="+thisDayDescription.getLaborMinutes() %>"><%= thisDayDescription.getLaborHours() %> hrs &nbsp <%= thisDayDescription.getLaborMinutes() %> min</dhv:label> 
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param='<%= "hours="+thisDayDescription.getLaborHours()+"|minutes="+thisDayDescription.getLaborMinutes() %>'><%= thisDayDescription.getLaborHours() %> hrs &nbsp <%= thisDayDescription.getLaborMinutes() %> min</dhv:label>
           </td>
           <td>
             <%=toHtml(thisDayDescription.getDescriptionOfService())%>
@@ -105,12 +105,12 @@
           </td>
           <td align="right" bgcolor="#E8E8E8">
           <strong>
-            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+activityDetails.getTotalTravelHours()+"|minutes="+activityDetails.getTotalTravelMinutes() %>"><%= activityDetails.getTotalTravelHours() %> hrs &nbsp <%= activityDetails.getTotalTravelMinutes() %> min</dhv:label>
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param='<%= "hours="+activityDetails.getTotalTravelHours()+"|minutes="+activityDetails.getTotalTravelMinutes() %>'><%= activityDetails.getTotalTravelHours() %> hrs &nbsp <%= activityDetails.getTotalTravelMinutes() %> min</dhv:label>
            </strong>
         </td>
         <td align="right" bgcolor="#E8E8E8">
           <strong>
-            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+activityDetails.getTotalLaborHours()+"|minutes="+activityDetails.getTotalLaborMinutes() %>"><%= activityDetails.getTotalLaborHours() %> hrs &nbsp <%= activityDetails.getTotalLaborMinutes() %> min</dhv:label>
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param='<%= "hours="+activityDetails.getTotalLaborHours()+"|minutes="+activityDetails.getTotalLaborMinutes() %>'><%= activityDetails.getTotalLaborHours() %> hrs &nbsp <%= activityDetails.getTotalLaborMinutes() %> min</dhv:label>
           </strong>
         </td>
         <td bgcolor="#E8E8E8">&nbsp;</td>

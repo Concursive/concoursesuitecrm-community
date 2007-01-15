@@ -78,7 +78,7 @@
   <tr>
     <zeroio:permission name="project-news-view">
       <dhv:evaluate if="<%= Project.getShowNews() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("News") %>" display="News" type="project.news" key="home,news" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=News&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("News") %>' display="News" type="project.news" key="home,news" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=News&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
 <%--
@@ -88,47 +88,47 @@
 --%>
     <zeroio:permission name="project-discussion-forums-view">
       <dhv:evaluate if="<%= Project.getShowDiscussion() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Discussion") %>" display="Discussion" type="project.discussion" key="issues" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Discussion") %>' display="Discussion" type="project.discussion" key="issues" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-documents-view">
       <dhv:evaluate if="<%= Project.getShowDocuments() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Documents") %>" display="Documents" type="project.documents" key="file" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + Project.getId() + "&folderId=-1" %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Documents") %>' display="Documents" type="project.documents" key="file" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + Project.getId() + "&folderId=-1" %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-lists-view">
       <dhv:evaluate if="<%= Project.getShowLists() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Lists") %>" display="Lists" type="project.lists" key="lists" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Lists") %>' display="Lists" type="project.lists" key="lists" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-plan-view">
       <dhv:evaluate if="<%= Project.getShowPlan() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Plan") %>" display="Plan" type="project.plan" key="requirements,assignments" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Plan") %>' display="Plan" type="project.plan" key="requirements,assignments" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-tickets-view">
       <dhv:evaluate if="<%= Project.getShowTickets() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Tickets") %>" display="Tickets" type="project.tickets" key="tickets" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Tickets") %>' display="Tickets" type="project.tickets" key="tickets" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-accounts-view">
       <dhv:evaluate if="<%= Project.getShowAccounts() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Accounts") %>" display="Accounts" type="project.accounts" key="accounts" value="<%= section %>" url="<%= "ProjectManagementAccounts.do?command=List&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Accounts") %>' display="Accounts" type="project.accounts" key="accounts" value="<%= section %>" url='<%= "ProjectManagementAccounts.do?command=List&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-team-view">
       <dhv:evaluate if="<%= Project.getShowTeam() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Team") %>" display="Team" type="project.team" key="team" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Team") %>' display="Team" type="project.team" key="team" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-details-view">
       <dhv:evaluate if="<%= Project.getShowDetails() %>">
-        <zeroio:tabbedMenu text="<%= Project.getLabel("Details") %>" display="Details" type="project.details" key="details,modifyproject" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Details&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text='<%= Project.getLabel("Details") %>' display="Details" type="project.details" key="details,modifyproject" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Details&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </zeroio:permission>
     <dhv:evaluate if="<%= !Project.isTrashed() %>" >
       <dhv:evaluate if="<%= currentMember.getRoleId() <= TeamMember.PROJECT_LEAD %>">
-        <zeroio:tabbedMenu text="Setup" display="Setup" type="project.setup" key="setup" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Setup&pid=" + Project.getId() %>"/>
+        <zeroio:tabbedMenu text="Setup" display="Setup" type="project.setup" key="setup" value="<%= section %>" url='<%= "ProjectManagement.do?command=ProjectCenter&section=Setup&pid=" + Project.getId() %>'/>
       </dhv:evaluate>
     </dhv:evaluate>
     <td width="100%" style="background-image: none; background-color: transparent; border: 0px; border-bottom: 1px solid #666; cursor: default;">&nbsp;</td>

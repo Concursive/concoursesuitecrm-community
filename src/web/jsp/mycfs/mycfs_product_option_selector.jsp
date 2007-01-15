@@ -43,7 +43,7 @@
 <%-- Navigating the contact list, not the final submit --%>
 <form name="optionListView" method="post" action="ProductOptionSelector.do?command=ListProductOptions">
   <input type="hidden" name="letter">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OptionListInfo" showHiddenParams="true" enableJScript="true" form="optionListView"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="OptionListInfo" showHiddenParams="true" enableJScript="true" form="optionListView"/>
   <input type="button" value="Create New Option" onclick="javascript:window.location.href='ProductOptions.do?command=Add&action=ProductCatalogOptions.do?command=List&popup=true&moduleId=<%= request.getParameter("moduleId") %>&catalogId=<%= request.getParameter("catalogId") %>';"/><br /><br />
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

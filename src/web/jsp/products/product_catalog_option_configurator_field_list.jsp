@@ -70,7 +70,7 @@
   </tr>
 </table>
 <br />
-<dhv:container name="productcatalogs" selected="options" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="options" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
@@ -92,7 +92,7 @@
       <input type="hidden" name="moduleId" value="<%= permissionCategory.getId() %>"/>
       <input type="hidden" name="categoryId" value="<%= productCategory.getId()  %>"/>
       <input type="hidden" name="productId" value="<%= productCatalog.getId() %>"/>
-      <dhv:evaluate if="<%= (request.getParameter("return") != null && !"".equals(request.getParameter("return").trim())) %>">
+      <dhv:evaluate if='<%= (request.getParameter("return") != null && !"".equals(request.getParameter("return").trim())) %>'>
         <input type="hidden" name="return" value="<%= request.getParameter("return") %>"/>
       </dhv:evaluate>
       &nbsp;<br />

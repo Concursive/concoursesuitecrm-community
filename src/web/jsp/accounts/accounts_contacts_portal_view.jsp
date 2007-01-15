@@ -42,8 +42,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="portal" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="portal" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <input type="hidden" name="id" value="<%=ContactDetails.getId()%>" />
     <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>" />
     <input type="hidden" name="userId" value="<%=portalUserDetails.getId()%>">
@@ -51,7 +51,7 @@
     <% if (ContactDetails.getUserId() == -1 ){ %>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" >
       <tr>
-        <td><dhv:label name="account.contact.doesNotHavePortalAccess" param="<%= "contactName="+ContactDetails.getNameLastFirst() %>"><%=ContactDetails.getNameLastFirst()%> does not have portal access</dhv:label></td>
+        <td><dhv:label name="account.contact.doesNotHavePortalAccess" param='<%= "contactName="+ContactDetails.getNameLastFirst() %>'><%=ContactDetails.getNameLastFirst()%> does not have portal access</dhv:label></td>
       </tr>
       <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
         <dhv:permission name="portal-user-add">
@@ -65,12 +65,12 @@
     <table cellpadding="4" cellspacing="0" border="0" width="100%" >
       <dhv:evaluate if="<%= !portalUserDetails.getEnabled() %>">
         <tr>
-          <td><dhv:label name="account.contact.hasDisabledUserAccount" param="<%= "contactName="+ContactDetails.getNameLastFirst() %>"><%=ContactDetails.getNameLastFirst()%> has a disabled user account</dhv:label></td>
+          <td><dhv:label name="account.contact.hasDisabledUserAccount" param='<%= "contactName="+ContactDetails.getNameLastFirst() %>'><%=ContactDetails.getNameLastFirst()%> has a disabled user account</dhv:label></td>
         </tr>
       </dhv:evaluate>
       <dhv:evaluate if="<%= portalUserDetails.getEnabled() %>">
       <tr>
-        <td><dhv:label name="account.contact.hasUserAccount" param="<%= "contactName="+ContactDetails.getNameLastFirst() %>"><%=ContactDetails.getNameLastFirst()%> has a user account</dhv:label></td>
+        <td><dhv:label name="account.contact.hasUserAccount" param='<%= "contactName="+ContactDetails.getNameLastFirst() %>'><%=ContactDetails.getNameLastFirst()%> has a user account</dhv:label></td>
       </tr>
       </dhv:evaluate>
     </table>

@@ -13,9 +13,9 @@
     document.forms['orderNumberForm'].id.focus();
   }
 </script>
-<dhv:evaluate if="<%= request.getParameter("productId") == null && request.getParameter("paymentId") == null %>"><body onLoad="javascript:document.forms['orderNumberForm'].id.focus();"></dhv:evaluate>
-<dhv:evaluate if="<%= request.getParameter("productId") != null %>"><body onLoad="javascript:document.forms['orderItemNumberForm'].productId.focus();"></dhv:evaluate>
-<dhv:evaluate if="<%= request.getParameter("paymentId") != null %>"><body onLoad="javascript:document.forms['orderPaymentNumberForm'].paymentId.focus();"></dhv:evaluate>
+<dhv:evaluate if='<%= request.getParameter("productId") == null && request.getParameter("paymentId") == null %>'><body onLoad="javascript:document.forms['orderNumberForm'].id.focus();"></dhv:evaluate>
+<dhv:evaluate if='<%= request.getParameter("productId") != null %>'><body onLoad="javascript:document.forms['orderItemNumberForm'].productId.focus();"></dhv:evaluate>
+<dhv:evaluate if='<%= request.getParameter("paymentId") != null %>'><body onLoad="javascript:document.forms['orderPaymentNumberForm'].paymentId.focus();"></dhv:evaluate>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
   <tr>

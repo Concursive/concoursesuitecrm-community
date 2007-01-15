@@ -82,8 +82,8 @@
  </td></tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="history" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="history" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="history" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="history" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <form name="history" action="AccountContactsHistory.do?command=View&contactId=<%= ContactDetails.getId() %>" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="searchcodeContactId" value="<%= ContactDetails.getId() %>"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="empty">
@@ -103,8 +103,8 @@
             <td><input type="checkbox" name="searchcodeTasks" value="true" <%= accountContactHistoryListInfo.getSearchOptionValue("searchcodeTasks").equals("true")?"checked":"" %> /> <dhv:label name="calendar.Tasks">Tasks</dhv:label></td>
             <td><input type="checkbox" name="searchcodeServiceContracts" value="true" <%= accountContactHistoryListInfo.getSearchOptionValue("searchcodeServiceContracts").equals("true")?"checked":"" %> /> <dhv:label name="accounts.servicecontracts.long_html">Service Contracts</dhv:label></td>
             <td><input type="checkbox" name="searchcodeOpportunities" value="true" <%= accountContactHistoryListInfo.getSearchOptionValue("searchcodeOpportunities").equals("true")?"checked":"" %> /> <dhv:label name="accounts.accounts_contacts_oppcomponent_add.Opportunities">Opportunities</dhv:label></td>
-            <zeroio:debug value="<%= "JSP:"+ accountContactHistoryListInfo.getSearchOptionValue("searchcodeNotes") %>" />
-            <zeroio:debug value="<%= "JSP:"+ historyList.getNotes() %>" />
+            <zeroio:debug value='<%= "JSP:"+ accountContactHistoryListInfo.getSearchOptionValue("searchcodeNotes") %>' />
+            <zeroio:debug value='<%= "JSP:"+ historyList.getNotes() %>' />
             <td>
               <input type="submit" value="<dhv:label name="button.refresh">Refresh</dhv:label>" />
             </td>
@@ -114,7 +114,7 @@
     </tr>
   </table>
 </form>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountContactHistoryListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="accountContactHistoryListInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="8" nowrap>&nbsp;</th>

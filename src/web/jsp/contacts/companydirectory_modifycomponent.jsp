@@ -115,7 +115,7 @@ function reopenOpportunity(id) {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -160,7 +160,7 @@ function reopenOpportunity(id) {
   <input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
   <input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
   <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
-  <dhv:evaluate if="<%= request.getParameter("return") != null %>">
+  <dhv:evaluate if='<%= request.getParameter("return") != null %>'>
     <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
   </dhv:evaluate>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>

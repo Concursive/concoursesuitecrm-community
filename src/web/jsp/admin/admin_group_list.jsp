@@ -45,7 +45,7 @@
 <dhv:permission name="admin-users-add"><a href="UserGroups.do?command=Add"><dhv:label name="actionPlan.addNewGroup">Add New Group</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="userGroupListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="userGroupListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="userGroupListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th align="center">

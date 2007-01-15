@@ -51,7 +51,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !serviceContract.isTrashed() %>">
     <dhv:permission name="accounts-service-contracts-edit">
      <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
@@ -84,7 +84,7 @@
       <dhv:label name="account.sc.contractValue">Contract Value</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= serviceContract.getContractValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= serviceContract.getContractValue() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
      <tr class="containerBody">

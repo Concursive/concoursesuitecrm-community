@@ -73,7 +73,7 @@
       &nbsp;
     </td>
     <td>
-      <dhv:pagedListStatus label="Accounts" title="<%= showError(request, "actionError") %>" object="projectAccountsInfo"/>
+      <dhv:pagedListStatus label="Accounts" title='<%= showError(request, "actionError") %>' object="projectAccountsInfo"/>
     </td>
     </form>
   </tr>

@@ -96,7 +96,7 @@
         <%= TypeSelect.getHtmlSelect("listFilter1", AccountListInfo.getFilterKey("listFilter1")) %>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountListInfo" showHiddenParams="true" enableJScript="true" form="acctListView"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AccountListInfo" showHiddenParams="true" enableJScript="true" form="acctListView"/>
       </td>
     </tr>
   </table>

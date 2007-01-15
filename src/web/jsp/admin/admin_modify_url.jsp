@@ -57,7 +57,7 @@
          <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.modifyTimeout.url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
          <%= showAttribute(request, "urlError") %>
          <br />
-         <dhv:label name="admin.serverURL.example" param="<%= "contextPath="+request.getContextPath() %>">(ex: www.yourcompany.com<%= request.getContextPath() %> or crm.yourcompany.com)</dhv:label>
+         <dhv:label name="admin.serverURL.example" param='<%= "contextPath="+request.getContextPath() %>'>(ex: www.yourcompany.com<%= request.getContextPath() %> or crm.yourcompany.com)</dhv:label>
       </td>
     </tr>
   </table>

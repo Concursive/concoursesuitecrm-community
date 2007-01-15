@@ -174,14 +174,14 @@
           <td>
             <div id="changeowner">
             <%if (SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner")) && !"-1".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner"))) {%>
-              <dhv:username id="<%= SalesListInfo.getSearchOptionValue("searchcodeOwner") %>" lastFirst="true" />
+              <dhv:username id='<%= SalesListInfo.getSearchOptionValue("searchcodeOwner") %>' lastFirst="true" />
             <%} else {%>
               <dhv:label name="pipeline.any">Any</dhv:label>
             <%}%>
             </div>
           </td>
           <td>
-<%--          <zeroio:debug value="<%= "JSP:: is the owner value not null? "+(SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner")))+" the value is "+SalesListInfo.getSearchOptionValue("searchcodeOwner") %>" /> --%>
+<%--          <zeroio:debug value='<%= "JSP:: is the owner value not null? "+(SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner")))+" the value is "+SalesListInfo.getSearchOptionValue("searchcodeOwner") %>' /> --%>
             <input type="hidden" name="searchcodeOwner" id="ownerid" value="<%= SalesListInfo.getSearchOptionValue("searchcodeOwner") != null && !"".equals(SalesListInfo.getSearchOptionValue("searchcodeOwner"))? SalesListInfo.getSearchOptionValue("searchcodeOwner"):"-1" %>" />
             &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true<%= User.getUserRecord().getSiteId() == -1 ? "&includeAllSites=true&siteId=-1":"&mySiteOnly=true&siteId="+ User.getUserRecord().getSiteId() %>&hierarchy=<%= User.getUserId() %>');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             &nbsp; [<a href="javascript:changeDivContent('changeowner',label('label.any','Any'));javascript:resetNumericFieldValue('ownerid');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
@@ -277,10 +277,10 @@
   <tr>
     <td class="formLabel" valign="top" nowrap><dhv:label name="ticket.enteredDateBetween">Date Entered between</dhv:label></td>
     <td nowrap>
-      <zeroio:dateSelect form="searchLeads" field="searchdateEnteredStart" timestamp="<%= SalesListInfo.getSearchOptionValue("searchdateEnteredStart") %>" timeZone="<%= User.getTimeZone() %>" />
+      <zeroio:dateSelect form="searchLeads" field="searchdateEnteredStart" timestamp='<%= SalesListInfo.getSearchOptionValue("searchdateEnteredStart") %>' timeZone="<%= User.getTimeZone() %>" />
       &nbsp;<dhv:label name="admin.and.lowercase">and</dhv:label>
       <%=showAttribute(request,"searchdateEnteredStartError")%><br />
-      <zeroio:dateSelect form="searchLeads" field="searchdateEnteredEnd" timestamp="<%= SalesListInfo.getSearchOptionValue("searchdateEnteredEnd") %>" timeZone="<%= User.getTimeZone() %>" />
+      <zeroio:dateSelect form="searchLeads" field="searchdateEnteredEnd" timestamp='<%= SalesListInfo.getSearchOptionValue("searchdateEnteredEnd") %>' timeZone="<%= User.getTimeZone() %>" />
       <%=showAttribute(request,"searchdateEnteredEndError")%>
     </td>
   </tr>

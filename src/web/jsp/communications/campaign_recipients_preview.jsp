@@ -50,13 +50,13 @@ function continueAddRecipient(contactId, allowDuplicates) {
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="recipients" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="recipients" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 	<table cellpadding="4" cellspacing="0" width="100%" class="empty">
   <tr><td nowrap><a href="javascript:addRecipient();"><dhv:label name="campaigns.addRecipient">Add Recipient</dhv:label></a></td>
   <td width="100%"><center><dhv:pagedListAlphabeticalLinks object="CampaignDashboardRecipientInfo"/></dhv:include></center></td>
   </tr></table>
-  <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDashboardRecipientInfo"/>
+  <dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="CampaignDashboardRecipientInfo"/>
 	<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	  <tr>
 	    <th colspan="6">

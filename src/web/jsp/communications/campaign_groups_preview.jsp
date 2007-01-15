@@ -22,7 +22,7 @@
 <jsp:useBean id="CampaignGroupsPreviewInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="scl" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<dhv:evaluate if="<%= !"true".equals(request.getParameter("popup")) %>">
+<dhv:evaluate if='<%= !"true".equals(request.getParameter("popup")) %>'>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -89,11 +89,11 @@
 <%} else {%>
   <tr bgcolor="white">
     <td colspan="4">
-      <dhv:evaluate if="<%= request.getAttribute("textError") != null && !"".equals((String)request.getAttribute("textError")) %>">
+      <dhv:evaluate if='<%= request.getAttribute("textError") != null && !"".equals((String)request.getAttribute("textError")) %>'>
         <%= toHtml((String) request.getAttribute("errorString")) %><br />
         <%= showAttribute(request, "textError") %>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= request.getAttribute("textError") == null && "".equals((String) request.getAttribute("textError")) %>">
+      <dhv:evaluate if='<%= request.getAttribute("textError") == null && "".equals((String) request.getAttribute("textError")) %>'>
         <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
       </dhv:evaluate>
     </td>
@@ -101,9 +101,9 @@
 </table>
 <%}%>
 <br>
-<dhv:evaluate if="<%= !"true".equals(request.getParameter("popup")) %>">
+<dhv:evaluate if='<%= !"true".equals(request.getParameter("popup")) %>'>
 <input type="button" name="cmd" value="<dhv:label name="campaign.backToCriteria">Back to Criteria</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
 </dhv:evaluate>
-<dhv:evaluate if="<%= "true".equals(request.getParameter("popup")) %>">
+<dhv:evaluate if='<%= "true".equals(request.getParameter("popup")) %>'>
 <input type="button" name="cmd" value="<dhv:label name="button.close">Close</dhv:label>" onClick="window.close()">
 </dhv:evaluate>

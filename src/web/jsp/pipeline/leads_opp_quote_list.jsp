@@ -67,12 +67,12 @@ function reopenOpportunity(id) {
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="quotes" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+<dhv:container name="opportunities" selected="quotes" object="opportunityHeader" param='<%= "id=" + opportunityHeader.getId() %>' appendToUrl='<%= addLinkParams(request, "viewSource") %>'>
   <dhv:permission name="pipeline-opportunities-add"><a href="LeadsQuotes.do?command=AddQuoteForm&headerId=<%= opportunityHeader.getId()%><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsQuoteListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="LeadsQuoteListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th width="10">

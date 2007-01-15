@@ -213,7 +213,7 @@
             <%if("".equals(TicListInfo.getSearchOptionValue("searchcodeAssignedTo")) || "-1".equals(TicListInfo.getSearchOptionValue("searchcodeAssignedTo"))){ %>
                 &nbsp;<dhv:label name="tickets.anyone">Anyone</dhv:label>&nbsp;
               <% }else{ %>
-                <dhv:username id="<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>"/>
+                <dhv:username id='<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>'/>
               <% } %>
             </div>
           </td>

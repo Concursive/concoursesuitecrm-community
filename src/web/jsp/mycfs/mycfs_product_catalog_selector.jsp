@@ -87,7 +87,7 @@
 	</table>
 	&nbsp;<br>	
   <input type="hidden" name="letter">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ProductListInfo" showHiddenParams="true" enableJScript="true" form="productListView"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ProductListInfo" showHiddenParams="true" enableJScript="true" form="productListView"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th align="center" width="8">

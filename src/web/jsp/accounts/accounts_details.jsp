@@ -53,7 +53,7 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
 <%-- End Trails --%>
 </dhv:evaluate>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>' hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() %>">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <dhv:evaluate if="<%=OrgDetails.isTrashed()%>">
     <dhv:permission name="accounts-accounts-edit">
@@ -69,7 +69,7 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
       <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
     </dhv:permission>
   </dhv:evaluate>
-  <dhv:evaluate if="<%= (request.getParameter("actionplan") == null) %>">
+  <dhv:evaluate if='<%= (request.getParameter("actionplan") == null) %>'>
     <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
   </dhv:evaluate>
 </dhv:evaluate>
@@ -214,7 +214,7 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
       <dhv:label name="accounts.accounts_add.potential">Potential</dhv:label>
     </td>
     <td>
-       <zeroio:currency value="<%= OrgDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+       <zeroio:currency value="<%= OrgDetails.getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
   </dhv:evaluate>
@@ -226,7 +226,7 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
         <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
       </td>
       <td>
-         <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+         <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
   </dhv:evaluate>
@@ -622,7 +622,7 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
       <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
     </dhv:permission>
   </dhv:evaluate>
-  <dhv:evaluate if="<%= (request.getParameter("actionplan") == null) %>">
+  <dhv:evaluate if='<%= (request.getParameter("actionplan") == null) %>'>
     <dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
   </dhv:evaluate>
 </dhv:evaluate>

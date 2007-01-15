@@ -64,7 +64,7 @@
     </td>
     <td>
       <select name="scope" onChange="this.form.query.focus()">
-      <dhv:evaluate if="<%= request.getAttribute("DocumentStore") != null && ((DocumentStore) request.getAttribute("DocumentStore")).getId() > -1 %>">
+      <dhv:evaluate if='<%= request.getAttribute("DocumentStore") != null && ((DocumentStore) request.getAttribute("DocumentStore")).getId() > -1 %>'>
           <option value="this" <%= selected(documentsSearchBean, SearchBean.THIS, SearchBean.UNDEFINED) %>><dhv:label name="documents.search.thisDocumentStore">This Document Store</dhv:label></option>
           <option value="thisDocuments" <%= selected(documentsSearchBean, SearchBean.THIS, SearchBean.DOCUMENTS) %>>&nbsp; <dhv:label name="documents.search.documents">Documents</dhv:label></option>
           <option value="thisDetails" <%= selected(documentsSearchBean, SearchBean.THIS, SearchBean.DETAILS) %>>&nbsp; <dhv:label name="documents.search.details">Details</dhv:label></option>
@@ -73,10 +73,10 @@
           <option value="allDocuments" <%= selected(documentsSearchBean, SearchBean.ALL, SearchBean.DOCUMENTS) %>>&nbsp; <dhv:label name="documents.search.documents">Documents</dhv:label></option>
           <option value="allDetails" <%= selected(documentsSearchBean, SearchBean.ALL, SearchBean.DETAILS) %>>&nbsp; <dhv:label name="documents.search.details">Details</dhv:label></option>
       </select>
-      <dhv:evaluate if="<%= request.getAttribute("DocumentStore") != null && ((DocumentStore) request.getAttribute("DocumentStore")).getId() > -1 %>">
-          <input type="hidden" name="documentStoreId" value="<%= ((DocumentStore) request.getAttribute("DocumentStore")).getId() %>" />
+      <dhv:evaluate if='<%= request.getAttribute("DocumentStore") != null && ((DocumentStore) request.getAttribute("DocumentStore")).getId() > -1 %>'>
+          <input type="hidden" name="documentStoreId" value='<%= ((DocumentStore) request.getAttribute("DocumentStore")).getId() %>' />
       </dhv:evaluate>
-      <dhv:evaluate if="<%= request.getAttribute("DocumentStore") == null || ((DocumentStore) request.getAttribute("DocumentStore")).getId() == -1 %>">
+      <dhv:evaluate if='<%= request.getAttribute("DocumentStore") == null || ((DocumentStore) request.getAttribute("DocumentStore")).getId() == -1 %>'>
         <input type="hidden" name="documentStoreId" value="-1" />
       </dhv:evaluate>
     </td>

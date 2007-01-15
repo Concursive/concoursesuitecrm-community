@@ -72,9 +72,9 @@ Search Form
       End Date between
     </td>
     <td>
-      <zeroio:dateSelect form="searchForm" field="searchdateEndDateStart" timestamp="<%= ExpirationContractListInfo.getSearchOptionValue("searchdateEndDateStart") %>" />
+      <zeroio:dateSelect form="searchForm" field="searchdateEndDateStart" timestamp='<%= ExpirationContractListInfo.getSearchOptionValue("searchdateEndDateStart") %>' />
       &nbsp;and <%=showAttribute(request,"searchdateEndDateStartError")%><br />
-      <zeroio:dateSelect form="searchForm" field="searchdateEndDateEnd" timestamp="<%= ExpirationContractListInfo.getSearchOptionValue("searchdateEndDateEnd") %>" />
+      <zeroio:dateSelect form="searchForm" field="searchdateEndDateEnd" timestamp='<%= ExpirationContractListInfo.getSearchOptionValue("searchdateEndDateEnd") %>' />
       &nbsp;<%=showAttribute(request,"searchdateEndDateEndError")%>
     </td>
   </tr>

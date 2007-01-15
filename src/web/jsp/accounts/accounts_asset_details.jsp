@@ -55,7 +55,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <%
   if (asset.getParentList() != null && asset.getParentList().size() > 0) {
     Iterator iter = (Iterator) asset.getParentList().iterator();
@@ -63,10 +63,10 @@
       Asset parentAsset = (Asset) iter.next();
       String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
 %>
-    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>"/>
+    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'/>
 <% }} %>
 <% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
-<dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !asset.isTrashed()%>">
     <dhv:permission name="accounts-assets-edit"><input type=submit value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
     <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
@@ -332,7 +332,7 @@
           <dhv:label name="accounts.accountasset_include.PurchaseCost">Purchase Cost</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= asset.getPurchaseCost() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= asset.getPurchaseCost() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </tr>
       <tr class="containerBody">

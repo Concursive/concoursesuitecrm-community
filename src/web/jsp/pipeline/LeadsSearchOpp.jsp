@@ -209,9 +209,9 @@
       <dhv:label name="pipeline.estimatedCloseDateBetween">Estimated Close Date between</dhv:label>
     </td>
     <td>
-      <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateStart" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>" />
+      <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateStart" timestamp='<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>' />
       &nbsp;<dhv:label name="admin.and.lowercase">and</dhv:label> <%=showAttribute(request,"searchdateCloseDateStartError")%><br>
-      <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateEnd" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>" />
+      <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateEnd" timestamp='<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>' />
       &nbsp;<%=showAttribute(request,"searchdateCloseDateEndError")%>
     </td>
   </tr>

@@ -39,7 +39,7 @@
 <%-- End Trails --%>
 <% String param1 = "catalogId=" + ProductCatalog.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param='<%= param1 + "|" + param2 %>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">

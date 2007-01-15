@@ -56,7 +56,7 @@
   </tr>
 </table>
 <br />
-<dhv:container name="productcatalogs" selected="details" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="details" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
@@ -68,7 +68,7 @@
       <input type="hidden" name="thumbnailImageId" value="<%= productCatalog.getThumbnailImageId() %>"/>
       <input type="hidden" name="smallImageId" value="<%= productCatalog.getSmallImageId() %>"/>
       <input type="hidden" name="largeImageId" value="<%= productCatalog.getLargeImageId() %>"/>
-      <dhv:evaluate if="<%= (request.getParameter("return") != null) %>">
+      <dhv:evaluate if='<%= (request.getParameter("return") != null) %>'>
         <input type="hidden" name="return" value="<%= request.getParameter("return") %>"/>
       </dhv:evaluate>  
       <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">

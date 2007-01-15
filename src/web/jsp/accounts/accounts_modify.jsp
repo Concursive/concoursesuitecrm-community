@@ -378,7 +378,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="details" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
       <input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">

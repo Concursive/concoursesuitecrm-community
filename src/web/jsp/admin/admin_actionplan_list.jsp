@@ -67,7 +67,7 @@
 <a href="ActionPlanEditor.do?command=AddMappings&moduleId=<%= permissionCategory.getId() %>&constantId=<%= constantId %>"><dhv:label name="actionPlan.configureMappings">Configure Mappings</dhv:label></a>
 </dhv:permission> --%>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true"><center><dhv:pagedListAlphabeticalLinks object="planListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="planListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="planListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th align="center">

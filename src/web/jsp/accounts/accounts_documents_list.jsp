@@ -36,7 +36,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="OrgDetails" hideContainer="<%= "true".equals(request.getParameter("actionplan")) %>" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="documents" object="OrgDetails" hideContainer='<%= "true".equals(request.getParameter("actionplan")) %>' param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <%
     String permission_doc_folders_add ="accounts-accounts-documents-add";
     String permission_doc_files_upload = "accounts-accounts-documents-add";

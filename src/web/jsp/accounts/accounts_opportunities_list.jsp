@@ -57,7 +57,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer='<%="true".equals(request.getParameter("actionplan")) %>' object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>'>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>" >
     <dhv:permission name="accounts-accounts-opportunities-add">
       <a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %><%= isPopup(request)?"&popup=true&popupType=inline":"" %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a>
@@ -76,7 +76,7 @@
         </select>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityPagedInfo"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="OpportunityPagedInfo"/>
       </td>
       </form>
     </tr>
@@ -173,7 +173,7 @@
           <% } %>
         </td>
         <td valign="top" align="right" nowrap>
-          <zeroio:currency value="<%= oppHeader.getComponent().getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= oppHeader.getComponent().getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </dhv:evaluate>
       <dhv:include name="pipeline-custom1Integer" none="true">

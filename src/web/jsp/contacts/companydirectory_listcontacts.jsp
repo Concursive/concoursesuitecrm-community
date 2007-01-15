@@ -58,7 +58,7 @@
 <table width="100%" border="0">
   <tr>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchContactsInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SearchContactsInfo"/>
     </td>
   </tr>
 </table>
@@ -73,7 +73,7 @@
       <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.org_name"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
       <%= SearchContactsInfo.getSortIcon("c.org_name") %>
     </th>
-<dhv:evaluate if="<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+<dhv:evaluate if='<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>'>
     <th nowrap>
       <strong><a href="ExternalContacts.do?command=SearchContacts&column=lsi.description"><dhv:label name="accounts.site">Site</dhv:label></a></strong>
       <%= SearchContactsInfo.getSortIcon("lsi.description") %>
@@ -82,7 +82,7 @@
     <th>
       <strong><dhv:label name="account.phones">Phone(s)</dhv:label></strong>
     </th>
-    <dhv:evaluate if="<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>">
+    <dhv:evaluate if='<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>'>
       <th>
         <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
@@ -155,7 +155,7 @@
             <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <%}%>
         </td>
-<dhv:evaluate if="<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>">
+<dhv:evaluate if='<%= SearchContactsInfo.getSearchOptionValue("searchcodeSiteId").equals(String.valueOf(Constants.INVALID_SITE)) %>'>
         <td valign="top"><%= SiteIdList.getSelectedValue(thisContact.getSiteId()) %></td>
 </dhv:evaluate>
         <td nowrap>
@@ -164,7 +164,7 @@
             while (phoneItr.hasNext()) {
               PhoneNumber phoneNumber = (PhoneNumber)phoneItr.next(); %>
               <%= phoneNumber.getPhoneNumber() %> (<%=phoneNumber.getTypeName()%>)
-              <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+              <dhv:evaluate if='<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>'>
                 <dhv:evaluate if="<%= hasText(phoneNumber.getPhoneNumber()) %>">
                   <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(phoneNumber.getPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
                 </dhv:evaluate>
@@ -172,7 +172,7 @@
               <%=(phoneItr.hasNext()?"<br />":"")%>
            <%}%>&nbsp;
           </td>
-        <dhv:evaluate if="<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>">
+        <dhv:evaluate if='<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>'>
           <td nowrap>
             <dhv:username id="<%= thisContact.getOwner() %>"/>
           </td>

@@ -211,14 +211,14 @@
     </table>
 </td></tr></table>
 </dhv:evaluate>
-<dhv:evaluate if="<%= request.getAttribute("canAddCategory") != null && "true".equals((String)request.getAttribute("canAddCategory")) %>">
+<dhv:evaluate if='<%= request.getAttribute("canAddCategory") != null && "true".equals((String)request.getAttribute("canAddCategory")) %>'>
 <dhv:evaluate if="<%= kbList.getCategoryId() > 0 %>"><dhv:permission name="tickets-knowledge-base-add">
 <a href="javascript:addKB();" ><dhv:label name="campaign.addADocument">Add a Document</dhv:label></a>
 </dhv:permission></dhv:evaluate></dhv:evaluate>
 <dhv:evaluate if="<%= isPopup(request) %>">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="kbListInfoPopup"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="kbListInfoPopup"/>
 </dhv:evaluate><dhv:evaluate if="<%= !isPopup(request) %>">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="kbListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="kbListInfo"/>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

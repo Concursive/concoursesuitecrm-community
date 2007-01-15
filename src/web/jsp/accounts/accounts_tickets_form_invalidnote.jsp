@@ -40,8 +40,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param='<%= "id=" + ticketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <dhv:label name="ticket.noAssetProvided.text" param="break=<br />">An asset was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.</dhv:label>
   </dhv:container>

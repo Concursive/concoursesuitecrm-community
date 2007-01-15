@@ -52,7 +52,7 @@
 <% String param1 = "productId=" + productCatalog.getId(); %>
 <% String param2 = "moduleId=" + permissionCategory.getId(); %>
 <% String param3 = "categoryId=" + productCategory.getId(); %>
-<dhv:container name="productcatalogs" selected="price" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="price" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
@@ -81,7 +81,7 @@
           <dhv:label name="product.msrp">MSRP</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= Pricing.getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+          <zeroio:currency value="<%= Pricing.getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
         </td>
       </tr>
       <tr class="containerBody">
@@ -89,7 +89,7 @@
           <dhv:label name="quotes.Price">Price</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= Pricing.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+          <zeroio:currency value="<%= Pricing.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
         </td>
       </tr>
       <tr class="containerBody">
@@ -97,7 +97,7 @@
           <dhv:label name="product.cost">Cost</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= Pricing.getCostAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+          <zeroio:currency value="<%= Pricing.getCostAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
         </td>
       </tr>
       <tr class="containerBody">
@@ -105,7 +105,7 @@
           <dhv:label name="product.recurringAmount">Recurring Amount</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= Pricing.getRecurringAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+          <zeroio:currency value="<%= Pricing.getRecurringAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
         </td>
       </tr>
       <tr class="containerBody">

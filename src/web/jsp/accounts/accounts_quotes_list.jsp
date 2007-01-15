@@ -64,11 +64,11 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
   <dhv:permission name="accounts-quotes-add"><a href="AccountQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %><%= isPopup(request)?"&popup=true&popupType=true":"" %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
 </dhv:evaluate>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountQuoteListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="accountQuoteListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 <tr>
   <th width="8">

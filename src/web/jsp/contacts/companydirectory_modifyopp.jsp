@@ -57,7 +57,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="modified" value="<%= opportunityHeader.getModified() %>">
   <% if (request.getParameter("return") != null) {%>

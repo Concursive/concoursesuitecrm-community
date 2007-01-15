@@ -110,7 +110,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
       <dhv:evaluate if="<%= listType %>"><a class="search" href="ProjectManagementLists.do?command=Details&pid=<%= document.get("projectId") %>&id=<%= document.get("listId") %>"><dhv:label name="project.listItem">List Item</dhv:label></a></dhv:evaluate>
       <dhv:evaluate if="<%= ticketType %>"><a class="search" href="ProjectManagementTickets.do?command=Details&pid=<%= document.get("projectId") %>&id=<%= document.get("ticketId") %>&return=details"><dhv:label name="project.ticket">Ticket</dhv:label></a></dhv:evaluate>
       <%--<dhv:evaluate if="<%= hasFilename %>">[<%= document.get("filename") %>]</dhv:evaluate>--%>
-      <dhv:evaluate if="<%= hasText(document.get("title")) %>">
+      <dhv:evaluate if='<%= hasText(document.get("title")) %>'>
         [<%= toHtml(document.get("title")) %>]
       </dhv:evaluate>
     </td>
@@ -122,7 +122,7 @@ for (int i = searchBeanInfo.getCurrentOffset() ; i < searchBeanInfo.getPageSize(
     String highlightedText = SearchHTMLUtils.highlightText(searchBean.getTerms(), document.get("contents"));
     boolean hasHighlightedText = hasText(highlightedText);
 %>
-     <dhv:evaluate if="<%=!"".equals(document.get("trashed"))%>">
+     <dhv:evaluate if='<%=!"".equals(document.get("trashed"))%>'>
        <font color="red">(<%= toHtml(document.get("trashed")) %>)</font><br />
      </dhv:evaluate>
       <dhv:evaluate if="<%= hasHighlightedText %>">

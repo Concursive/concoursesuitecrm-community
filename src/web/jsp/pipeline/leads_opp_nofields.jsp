@@ -46,7 +46,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param="<%= "id=" + OpportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="opportunities" selected="folders" object="OpportunityHeader" param='<%= "id=" + OpportunityHeader.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:label name="accounts.accounts_nofields.NoCustomFoldersConfigured">There are currently no custom folders configured for this module.</dhv:label><br>
   <dhv:label name="accounts.accounts_nofields.CustomfoldersConfiguredAdministrator">Custom folders can be configured by an administrator.</dhv:label><br>
 </dhv:container>

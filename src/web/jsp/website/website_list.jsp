@@ -45,7 +45,7 @@
 <dhv:permission name="site-editor-add">
 <a href="Sites.do?command=TemplateList&fromList=true&popup=true"><dhv:label name="">Add Site</dhv:label></a><br />
 </dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="siteListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="siteListInfo"/>
 <%-- TODO:: modify the code to display the break properly based on the permissions --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

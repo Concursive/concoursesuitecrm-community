@@ -12,7 +12,7 @@
 <%@ include file="../../initPage.jsp" %>
 <center>
 <%-- Login Link --%>
-<dhv:evaluate if="<%= "true".equals(portal) %>">
+<dhv:evaluate if='<%= "true".equals(portal) %>'>
 <table width="768" border="0" cellpadding="0" cellspacing="0" class="portalLogin">
 	<tr>
     <td>
@@ -64,7 +64,7 @@
     </td>
     <c:set var="pageGroupList" value="${site.tabToDisplay.pageGroupList}"/>
     <jsp:useBean id="pageGroupList" type="org.aspcfs.modules.website.base.PageGroupList" />
-    <dhv:evaluate if="<%= pageGroupList.canDisplay() || !"true".equals(portal) %>">
+    <dhv:evaluate if='<%= pageGroupList.canDisplay() || !"true".equals(portal) %>'>
       <%-- PageGroup along the right --%>
       <td width="200" class="portalPageGroupsColumn" valign="top" nowrap>
         <table cellpadding="0" cellspacing="0" width="100%" class="portalPageGroups">

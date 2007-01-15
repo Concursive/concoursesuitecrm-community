@@ -55,7 +55,7 @@
 <% if("accounts".equals(trailSource)){ %>
 <a href="AccountsCalls.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
 <% } %>
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
 <a href="AccountsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "view") %>"><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></a> >
 </dhv:evaluate>
 <dhv:label name="accounts.accounts_contacts_calls_forward.ForwardActivity">Forward Activity</dhv:label>
@@ -64,7 +64,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="activities" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
     <% if("list".equals(request.getParameter("return"))){ %>
       <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">

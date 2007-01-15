@@ -112,7 +112,7 @@
       <tr class="containerBody">
         <input type="hidden" name="part<%= icount %>Id" value="<%= thisPart.getId() %>">
         <td class="formLabel" nowrap>
-          <dhv:label name="tickets.part" param="<%= "number="+icount %>">Part <%= icount %></dhv:label>
+          <dhv:label name="tickets.part" param='<%= "number="+icount %>'>Part <%= icount %></dhv:label>
         </td>
         <td>
           <input type="text" size="20" maxlength="50" name="partNumber<%= icount %>" value="<%= toHtmlValue(thisPart.getPartNumber()) %>">
@@ -130,7 +130,7 @@
     %>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        <dhv:label name="tickets.part" param="<%= "number="+icount %>">Part <%= icount %></dhv:label>
+        <dhv:label name="tickets.part" param='<%= "number="+icount %>'>Part <%= icount %></dhv:label>
       </td>
       <td>
         <input type="text" size="20" name="partNumber<%= icount %>" maxlength="50"/>

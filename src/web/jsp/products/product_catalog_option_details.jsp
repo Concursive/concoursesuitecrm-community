@@ -57,7 +57,7 @@
   </tr>
 </table>
 <br />
-<dhv:container name="productcatalogs" selected="options" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="options" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
@@ -99,14 +99,14 @@
             <tr class="containerBody">
               <td class="formLabel"><%= toHtml(property.getDisplay()) %></td>
               <td class="empty">
-                  <dhv:evaluate if="<%= property.getName().startsWith("boolean_") %>">
+                  <dhv:evaluate if='<%= property.getName().startsWith("boolean_") %>'>
                     <% if ("true".equals(property.getValue())) { %> 
                           <dhv:label name="account.yes">Yes</dhv:label>
                     <% } else { %>
                           <dhv:label name="account.no">No</dhv:label>
                     <% } %>
                   </dhv:evaluate>
-                  <dhv:evaluate if="<%= !property.getName().startsWith("boolean_") %>">
+                  <dhv:evaluate if='<%= !property.getName().startsWith("boolean_") %>'>
                     <%= toHtml(property.getValue()) %>
                   </dhv:evaluate>
                   &nbsp;&nbsp;<font color="green"><%= toHtml(property.getNote()) %></font>
@@ -123,7 +123,7 @@
       </dhv:evaluate>
     </table>
     &nbsp;<br />
-    <dhv:evaluate if="<%= !("true".equals(allowMultiplePrices)) %>">
+    <dhv:evaluate if='<%= !("true".equals(allowMultiplePrices)) %>'>
     <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <th colspan="2">
@@ -144,7 +144,7 @@
                 <table cellspacing="1" cellpadding="1" border="0">
                   <tr>
                     <td class="empty">
-                        <zeroio:currency value="<%= Double.parseDouble(property.getValue()) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>  
+                        <zeroio:currency value="<%= Double.parseDouble(property.getValue()) %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
                         &nbsp;&nbsp;<font color="green"><%= toHtml(property.getNote()) %></font>
                      </td>
                   </tr>
@@ -163,7 +163,7 @@
     </table>
     </dhv:evaluate>
     <%-- Lookup List configurator --%>
-    <dhv:evaluate if="<%= "true".equals(allowMultiplePrices) %>">
+    <dhv:evaluate if='<%= "true".equals(allowMultiplePrices) %>'>
     <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <th><strong><dhv:label name="quotes.item">Item</dhv:label></strong></th>
@@ -195,20 +195,20 @@
               <td class="empty"  align="right" valign="top" nowrap>
                 <table cellspacing="1" cellpadding="1" border="0">
                   <tr>
-                    <td align="right"><zeroio:currency value="<%= Double.parseDouble(property.getValue()) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/></td>
+                    <td align="right"><zeroio:currency value="<%= Double.parseDouble(property.getValue()) %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/></td>
                   </tr>
                 </table>
               </td>
           </dhv:evaluate>
           <dhv:evaluate if="<%= (property.getIsForPrompting() && property.getType() == property.LOOKUP_PROPERTY) %>">
-            <dhv:evaluate if="<%= property.getName().startsWith("boolean_") %>">
+            <dhv:evaluate if='<%= property.getName().startsWith("boolean_") %>'>
                 <% if ("true".equals(property.getValue())) { %> 
                       <td class="empty" width="100%" align="center"><dhv:label name="account.yes">Yes</dhv:label></td>
                 <% } else { %>
                       <td class="empty" width="100%" align="center"><dhv:label name="account.no">No</dhv:label></td>
                 <% } %>
             </dhv:evaluate>
-            <dhv:evaluate if="<%= !property.getName().startsWith("boolean_") %>">
+            <dhv:evaluate if='<%= !property.getName().startsWith("boolean_") %>'>
                 <td class="empty" width="100%"><%= toHtml(property.getValue()) %></td>
             </dhv:evaluate>
           </dhv:evaluate>

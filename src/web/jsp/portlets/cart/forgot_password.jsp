@@ -22,7 +22,7 @@
 <portlet:defineObjects />
 <jsp:useBean id="result" class="java.lang.String" scope="request" />
 <jsp:useBean id="username" class="java.lang.String" scope="request" />
-<dhv:evaluate if="<%=("userNotExists".equals(result))%>"><font color="red">
+<dhv:evaluate if='<%=("userNotExists".equals(result))%>'><font color="red">
 Sorry, name does not exist. Try to use another email or</font>
  <portlet:renderURL var="urlCreate">
 		<portlet:param name="viewType" value="createAccount" />

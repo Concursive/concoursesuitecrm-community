@@ -55,7 +55,7 @@ function updateList() {
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
@@ -77,8 +77,8 @@ function updateList() {
     </td>
     <td valign="center">
     <SELECT SIZE="1" name="ListView" onChange="javascript:updateList();">
-      <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>><dhv:label name="campaign.mySurveys">My Surveys</dhv:label></OPTION>
-      <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>><dhv:label name="campaign.allSurveys">All Surveys</dhv:label></OPTION>
+      <OPTION VALUE="my"<dhv:evaluate if='<%= "my".equals((String) request.getAttribute("listView")) %>'> selected</dhv:evaluate>><dhv:label name="campaign.mySurveys">My Surveys</dhv:label></OPTION>
+      <OPTION VALUE="all"<dhv:evaluate if='<%= "all".equals((String) request.getAttribute("listView")) %>'> selected</dhv:evaluate>><dhv:label name="campaign.allSurveys">All Surveys</dhv:label></OPTION>
     </SELECT>
     <% SurveyList.setJsEvent("onChange=\"javascript:fillFrame(this);\""); %>
       <%= SurveyList.getHtmlSelect("surveyId", Campaign.getSurveyId()) %>

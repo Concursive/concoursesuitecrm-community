@@ -35,7 +35,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="details" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="details" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
         <tr>
           <th colspan="2">
@@ -71,7 +71,7 @@
             <dhv:label name="admin.schedule">Schedule</dhv:label>
           </td>
           <td>
-            <font color="green"><dhv:label name="campaign.scheduledToRunOn" param="<%= "time="+getTime(pageContext,Campaign.getActiveDate(),Campaign.getActiveDateTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;")%>">Scheduled to run on <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
+            <font color="green"><dhv:label name="campaign.scheduledToRunOn" param='<%= "time="+getTime(pageContext,Campaign.getActiveDate(),Campaign.getActiveDateTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;")%>'>Scheduled to run on <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
             <% if(!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())){%>
             <br />
             <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>

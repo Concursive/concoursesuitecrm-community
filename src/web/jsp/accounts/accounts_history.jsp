@@ -78,7 +78,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="history" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="history" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:evaluate if="<%= OrgDetails.getTrashedDate() == null %>"><dhv:permission name="accounts-accounts-history-add">
 <a href=" javascript:popURL('AccountsHistory.do?command=AddNote&orgId=<%= OrgDetails.getOrgId() %>','Note','575','200','yes','yes');" ><dhv:label name="accounts.accountHistory.addANote">Add a Note</dhv:label></a><br /><br />
 </dhv:permission></dhv:evaluate>
@@ -143,7 +143,7 @@
 </td></tr></table>
 </form>
 </span>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="orgHistoryListInfo" externalJScript="flipFilterForm();" externalText="<dhv:label name=\"pagedListInfo.filters\">Filters</dhv:label>"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="orgHistoryListInfo" externalJScript="flipFilterForm();" externalText="<dhv:label name=\"pagedListInfo.filters\">Filters</dhv:label>"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="8" nowrap>&nbsp;</th>

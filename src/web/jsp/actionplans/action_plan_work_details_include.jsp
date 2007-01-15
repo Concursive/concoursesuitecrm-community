@@ -379,16 +379,16 @@
               >
               <dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.USER_GROUP %>">
                 <dhv:label name="usergroups.userGroup">User Group</dhv:label>: 
-                <dhv:evaluate if="<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>">
+                <dhv:evaluate if='<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>'>
                   <%= toHtml(thisItemWork.getUserGroupName()) %>
-                </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>">
+                </dhv:evaluate><dhv:evaluate if='<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>'>
                   <dhv:label name="usergroups.notSet">Not set</dhv:label>
                 </dhv:evaluate>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.SPECIFIC_USER_GROUP %>">
                 <dhv:label name="usergroups.userGroup">User Group</dhv:label>: 
-                <dhv:evaluate if="<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>">
+                <dhv:evaluate if='<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>'>
                   <%= toHtml(thisItemWork.getUserGroupName()) %>
-                </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>">
+                </dhv:evaluate><dhv:evaluate if='<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>'>
                   <dhv:label name="usergroups.notSet">Not set</dhv:label>
                 </dhv:evaluate>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.DEPARTMENT %>">

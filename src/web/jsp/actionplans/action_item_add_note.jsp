@@ -39,13 +39,13 @@
     </dhv:evaluate>
   }
 </script>
-<dhv:evaluate if="<%= status != null && "true".equals(status) %>">
+<dhv:evaluate if='<%= status != null && "true".equals(status) %>'>
   <body onLoad="javascript:setActionPlanDetails();document.actionStep.description.focus();">
 </dhv:evaluate>
-<dhv:evaluate if="<%= status != null && !"true".equals(status) %>">
+<dhv:evaluate if='<%= status != null && !"true".equals(status) %>'>
   <body onLoad="document.actionStep.description.focus();">
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" hideContainer="true" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="documents" object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' hideContainer="true" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:evaluate if="<%= actionItemWork.getActionId() == ActionStep.ATTACH_NOTE_SINGLE %>">
   <%-- Single Note Allowed --%>
   <table class="note" cellspacing="0">
@@ -125,7 +125,7 @@
 <form name="actionStep" action="ActionPlans.do?command=AttachNote&auto-populate=true" method="post">
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
-    <zeroio:debug value="<%= "actionId = " + actionItemWork.getActionId() %>" />
+    <zeroio:debug value='<%= "actionId = " + actionItemWork.getActionId() %>' />
     <dhv:evaluate if="<%= actionItemWork.getActionId() == ActionStep.ATTACH_NOTE_SINGLE && actionItemWork.getNote() != null %>">
       <th colspan="2"><strong>Modify Note</strong></th>
     </dhv:evaluate>
@@ -198,9 +198,9 @@
 <input type="hidden" name="source" value="<%= request.getParameter("source") %>" />
 </form>
 </dhv:container>
-<dhv:evaluate if="<%= status != null && !"true".equals(status) %>">
+<dhv:evaluate if='<%= status != null && !"true".equals(status) %>'>
   </body>
 </dhv:evaluate>
-<dhv:evaluate if="<%= status != null && "true".equals(status) %>">
+<dhv:evaluate if='<%= status != null && "true".equals(status) %>'>
   </body>
 </dhv:evaluate>

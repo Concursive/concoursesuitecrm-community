@@ -149,8 +149,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= isPopup(request) || !OrgDetails.getEnabled() || OrgDetails.isTrashed()%>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= isPopup(request) || !OrgDetails.getEnabled() || OrgDetails.isTrashed() || !ContactDetails.getEnabled() || ContactDetails.isTrashed()%>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' hideContainer="<%= isPopup(request) || !OrgDetails.getEnabled() || OrgDetails.isTrashed()%>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' hideContainer="<%= isPopup(request) || !OrgDetails.getEnabled() || OrgDetails.isTrashed() || !ContactDetails.getEnabled() || ContactDetails.isTrashed()%>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save" onClick="return checkForm(this.form)">
     <% if (request.getParameter("return") != null) {%>
       <% if (request.getParameter("return").equals("list")) {%>

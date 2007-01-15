@@ -43,7 +43,7 @@ function downloadMessage(campaignId){
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="message" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="message" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
    <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
         <th colspan="2" valign="center" align="left">
@@ -52,8 +52,8 @@ function downloadMessage(campaignId){
       </tr>
       <tr class="containerBody">
           <td valign="top" align="left">
-             <dhv:label name="campaign.from.colon" param="<%= "from="+toHtml(Campaign.getReplyTo()) %>"><strong>From:</strong> <%= toHtml(Campaign.getReplyTo()) %></dhv:label><br />
-             <dhv:label name="mail.label.subject" param="<%= "subject="+toHtml(Campaign.getSubject()) %>"><strong>Subject:</strong> <%= toHtml(Campaign.getSubject()) %></dhv:label><br />
+             <dhv:label name="campaign.from.colon" param='<%= "from="+toHtml(Campaign.getReplyTo()) %>'><strong>From:</strong> <%= toHtml(Campaign.getReplyTo()) %></dhv:label><br />
+             <dhv:label name="mail.label.subject" param='<%= "subject="+toHtml(Campaign.getSubject()) %>'><strong>Subject:</strong> <%= toHtml(Campaign.getSubject()) %></dhv:label><br />
              &nbsp;<br />
              <%= (Campaign.getMessage()) + "*" %><br />
              <br />

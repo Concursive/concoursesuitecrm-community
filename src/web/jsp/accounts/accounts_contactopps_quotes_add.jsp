@@ -67,9 +67,9 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <dhv:container name="accountcontactopportunities" selected="quotes" object="opportunity" param="<%= "headerId=" + quoteBean.getHeaderId() + "|" + "orgId=" + OrgDetails.getOrgId() + "|" + "contactId=" + ContactDetails.getId()%>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+    <dhv:container name="accountcontactopportunities" selected="quotes" object="opportunity" param='<%= "headerId=" + quoteBean.getHeaderId() + "|" + "orgId=" + OrgDetails.getOrgId() + "|" + "contactId=" + ContactDetails.getId()%>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>"/>
   <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountContactsOppQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quoteBean.getHeaderId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"/>
   <br />

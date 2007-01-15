@@ -91,7 +91,7 @@ Media
 <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle"/>
 <a href="<%= documentFolderAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId()%><%=addLinkParams(request,"popup|row|siteId|forEmail")%>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
 </dhv:permission>
-<dhv:permission name="<%= permission_doc_folders_add+","+ permission_doc_files_upload %>" all="true">
+<dhv:permission name='<%= permission_doc_folders_add+","+ permission_doc_files_upload %>' all="true">
 |
 </dhv:permission>
 <dhv:permission name="<%= permission_doc_files_upload %>">
@@ -100,14 +100,14 @@ Media
 </dhv:permission>
 <dhv:evaluate if="<%= fileItemList.getFolderId() != -1 %>">
 <dhv:permission name="<%= permission_doc_folders_edit %>">
-  <dhv:permission name="<%= permission_doc_folders_add +","+permission_doc_files_upload %>" all="false">
+  <dhv:permission name='<%= permission_doc_folders_add +","+permission_doc_files_upload %>' all="false">
 |
   </dhv:permission>
 <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle">
 <a href="<%= documentFolderModify %>&folderId=<%= fileItemList.getFolderId() %>&id=<%= fileItemList.getFolderId() %>&parentId=<%= fileItemList.getFolderId() %><%=addLinkParams(request,"popup|row|siteId||forEmail")%>"><dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label></a>
 </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="<%= permission_doc_folders_add +","+ permission_doc_files_upload +","+ permission_doc_folders_edit %>" all="false">
+<dhv:permission name='<%= permission_doc_folders_add +","+ permission_doc_files_upload +","+ permission_doc_folders_edit %>' all="false">
 <br>
 &nbsp;<br>
 </dhv:permission>

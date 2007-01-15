@@ -120,10 +120,10 @@
             <%if (1==1) { %>
               <div id="<%= "changeproduct_"+rowColumn.getId()+"_"+property.getTypeConstant() %>">
             <%  IceletProperty iceletProperty = (rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null ? (IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) : null); %>  
-                <dhv:evaluate if="<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>'>
                   <%= toHtml(iceletProperty.getValueString()) %>
                 </dhv:evaluate>
-                <dhv:evaluate if="<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>'>
                   <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
                 </dhv:evaluate>
               </div>
@@ -146,10 +146,10 @@
             <%if (1==1) { %>
               <div id="<%= "changeportfolio_"+rowColumn.getId()+"_"+property.getTypeConstant() %>">
             <%  IceletProperty iceletProperty = (rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null ? (IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) : null); %>
-                <dhv:evaluate if="<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>'>
                   <%= toHtml(iceletProperty.getValueString()) %>
                 </dhv:evaluate>
-                <dhv:evaluate if="<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>'>
                   <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
                 </dhv:evaluate>
               </div>
@@ -195,12 +195,12 @@
       <dhv:evaluate if="<%= property.getType().equals(property.CHECKBOX) %>">
         <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr><td>
-            <dhv:checkbox name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="true" checked="<%= (rowColumn.getIceletPropertyMap() != null ? (rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null): "true".equals(property.getDefaultValue())) %>" />
+            <dhv:checkbox name='<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>' value="true" checked='<%= (rowColumn.getIceletPropertyMap() != null ? (rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null): "true".equals(property.getDefaultValue())) %>' />
             <%= toHtml(property.getDescription()) %>
           </td></tr>
         </table>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= property.getAdditionalText() != null && !"".equals(property.getAdditionalText().trim()) %>">
+      <dhv:evaluate if='<%= property.getAdditionalText() != null && !"".equals(property.getAdditionalText().trim()) %>'>
         <br /><%= toHtml(property.getAdditionalText()) %>
       </dhv:evaluate>      
     </td>

@@ -126,7 +126,7 @@ function page_init() {
   }
 %>
 </dhv:evaluate>
-<dhv:evaluate if="<%= from != null && "kblist".equals(from.trim()) %>">
+<dhv:evaluate if='<%= from != null && "kblist".equals(from.trim()) %>'>
   var catCodeElement = parent.document.forms['<%= form %>'].elements['searchcodeCatCode'];
   var subCat1Element = parent.document.forms['<%= form %>'].elements['searchcodeSubCat1']
   var subCat2Element = parent.document.forms['<%= form %>'].elements['searchcodeSubCat2']

@@ -40,7 +40,7 @@
 <%@ include file="product_category_header_include.jsp" %>
 <% String param1 = "categoryId=" + ProductCategory.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcategories" selected="details" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcategories" selected="details" object="ProductCategory" param='<%= param1 + "|" + param2 %>'>
       <input type="hidden" name="categoryId" value="<%= ProductCategory.getId() %>">
       <dhv:permission name="product-catalog-product-edit">
         <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductCategories.do?command=Modify&categoryId=<%= ProductCategory.getId() %>&moduleId=<%= PermissionCategory.getId() %>'">

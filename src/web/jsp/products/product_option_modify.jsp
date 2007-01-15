@@ -42,7 +42,7 @@
 <%@ include file="product_option_header_include.jsp" %>
 <% String param1 = "optionId=" + ProductOption.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productoptions" selected="details" object="ProductOption" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productoptions" selected="details" object="ProductOption" param='<%= param1 + "|" + param2 %>'>
       <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>"/>
       <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick=""/><br /><br />
       <input type="hidden" name="id" value="<%= ProductOption.getId() %>"/>

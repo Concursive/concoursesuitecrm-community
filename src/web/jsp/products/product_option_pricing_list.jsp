@@ -52,7 +52,7 @@
 <%@ include file="product_option_header_include.jsp" %>
 <% String param1 = "optionId=" + ProductOption.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productoptions" selected="values" object="ProductOption" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productoptions" selected="values" object="ProductOption" param='<%= param1 + "|" + param2 %>'>
   <dhv:evaluate if="<%= ProductOption.getHasMultiplier() %>">
     <a href="ProductOptionPricings.do?command=Add&moduleId=<%= PermissionCategory.getId() %>&optionId=<%= ProductOption.getId() %>"><dhv:label name="product.addNewMultiplierValue">Add new multiplier - value</dhv:label></a>
   </dhv:evaluate>
@@ -122,11 +122,11 @@
           <dhv:evaluate if="<%= !ProductOption.getHasMultiplier() %>">
             <%-- <td class="row<%= rowid %>"><%= toHtml(thisPricing.getMsrpCurrencyName()) %></td> --%>
             <td class="row<%= rowid %>">
-              <zeroio:currency value="<%= thisPricing.getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+              <zeroio:currency value="<%= thisPricing.getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
             </td>
             <%-- <td class="row<%= rowid %>"><%= toHtml(thisPricing.getPriceCurrencyName()) %></td> --%>
             <td class="row<%= rowid %>">
-              <zeroio:currency value="<%= thisPricing.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+              <zeroio:currency value="<%= thisPricing.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
             </td>
             <td class="row<%= rowid %>"><%= toHtml(thisPricing.getDescription()) %></td>
           </dhv:evaluate>

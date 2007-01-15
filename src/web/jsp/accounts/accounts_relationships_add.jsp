@@ -72,7 +72,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-  <dhv:container name="accounts" selected="relationships" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:container name="accounts" selected="relationships" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:formMessage showSpace="false" />
     <table cellpadding="4" cellspacing="0" border="0" class="details">
       <tr>

@@ -26,7 +26,7 @@
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="LookupSingleSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <br />
 <center><%= LookupSingleSelectorInfo.getAlphabeticalPageLinks() %></center>
@@ -34,7 +34,7 @@
 <table width="100%" border="0">
   <tr>
       <td align="right">
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LookupSingleSelectorInfo"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="LookupSingleSelectorInfo"/>
       </td>
   </tr>
 </table>

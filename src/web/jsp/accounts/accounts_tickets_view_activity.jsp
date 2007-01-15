@@ -49,8 +49,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param='<%= "id=" + ticketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%@ include file="accounts_ticket_header_include.jsp" %>
     <dhv:permission name="accounts-accounts-tickets-activity-log-edit">
       <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />

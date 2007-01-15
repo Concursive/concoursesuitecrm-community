@@ -110,7 +110,7 @@
 <td>
 <a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> > 
 <a href="CampaignManager.do?command=View"><dhv:label name="campaign.campaignList">Campaign List</dhv:label></a> >
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
   <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
 </dhv:evaluate>
 <dhv:label name="button.modify">Modify</dhv:label>

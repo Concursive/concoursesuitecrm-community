@@ -33,7 +33,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="contacts" selected="relationships" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="relationships" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:permission name="demo-add"><a href="ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_add.jsp&contactId=<%= ContactDetails.getId() %>">Build New Relationship</a></dhv:permission><br>
   &nbsp;<br>
   <input type="BUTTON" value="<dhv:label name="button.relationshipWith">Relationship with...</dhv:label>" onclick="javascript:window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
@@ -52,7 +52,7 @@
     </tr>
     <tr class="containerBody">
       <td width="100%" valign="center" class="row1">
-        <dhv:label name="contact.name.spouseTo.text" param="<%= "linkStart=<a href=\"test\">|linkEnd=</a>|contact.fullName="+toHtml(ContactDetails.getNameFull()) %>"><a href="#"><dhv:label name="contacts.name">Name</dhv:label></a> (Spouse) to <%= toHtml(ContactDetails.getNameFull()) %></dhv:label>
+        <dhv:label name="contact.name.spouseTo.text" param='<%= "linkStart=<a href=\"test\">|linkEnd=</a>|contact.fullName="+toHtml(ContactDetails.getNameFull()) %>'><a href="#"><dhv:label name="contacts.name">Name</dhv:label></a> (Spouse) to <%= toHtml(ContactDetails.getNameFull()) %></dhv:label>
       </td>
       <td width="10" valign="center" align="right" nowrap class="row1">
         1.00
@@ -60,7 +60,7 @@
     </tr>
     <tr class="row2">
       <td width="100%" valign="center">
-        <dhv:label name="contact.name.friendTo.text" param="<%= "linkStart=<a href=\"test\">|linkEnd=</a>|contact.fullName="+toHtml(ContactDetails.getNameFull()) %>"><a href="#"><dhv:label name="contacts.name">Name</dhv:label></a> (Friend) to <%= toHtml(ContactDetails.getNameFull()) %></dhv:label>
+        <dhv:label name="contact.name.friendTo.text" param='<%= "linkStart=<a href=\"test\">|linkEnd=</a>|contact.fullName="+toHtml(ContactDetails.getNameFull()) %>'><a href="#"><dhv:label name="contacts.name">Name</dhv:label></a> (Friend) to <%= toHtml(ContactDetails.getNameFull()) %></dhv:label>
       </td>
       <td width="10" valign="center" align="right" nowrap>
         .90
@@ -68,7 +68,7 @@
     </tr>
     <tr class="row1">
       <td width="100%" valign="center">
-        <dhv:label name="contact.name.coworkerTo.text" param="<%= "linkStart=<a href=\"test\">|linkEnd=</a>|contact.fullName="+toHtml(ContactDetails.getNameFull()) %>"><a href="#"><dhv:label name="contacts.name">Name</dhv:label></a> (Co-Worker) to <%= toHtml(ContactDetails.getNameFull()) %></dhv:label>
+        <dhv:label name="contact.name.coworkerTo.text" param='<%= "linkStart=<a href=\"test\">|linkEnd=</a>|contact.fullName="+toHtml(ContactDetails.getNameFull()) %>'><a href="#"><dhv:label name="contacts.name">Name</dhv:label></a> (Co-Worker) to <%= toHtml(ContactDetails.getNameFull()) %></dhv:label>
       </td>
       <td width="10" valign="center" align="right" nowrap>
         .60

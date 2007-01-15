@@ -38,8 +38,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="tickets" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="folders" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="folders" object="ticketDetails" param='<%= "id=" + ticketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%@ include file="accounts_ticket_header_include.jsp" %>
     &nbsp;<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

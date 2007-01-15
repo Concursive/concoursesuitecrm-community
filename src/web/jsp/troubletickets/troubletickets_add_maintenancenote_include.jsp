@@ -110,7 +110,7 @@
 %>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        <dhv:label name="tickets.part" param="<%= "number="+i %>">Part <%= i %></dhv:label>
+        <dhv:label name="tickets.part" param='<%= "number="+i %>'>Part <%= i %></dhv:label>
       </td>
       <td>
         <input type="text" size="20" maxlength="50" name="partNumber<%= i %>" value="<%= toHtmlValue(thisPart.getPartNumber())%>"/> 
@@ -133,7 +133,7 @@
   for(;i<=3;i++) { %>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        <dhv:label name="tickets.part" param="<%= "number="+i %>">Part <%= i %></dhv:label>
+        <dhv:label name="tickets.part" param='<%= "number="+i %>'>Part <%= i %></dhv:label>
       </td>
       <td>
         <input type="text" size="20" maxlength="50" name="partNumber<%= i %>" /> &nbsp; <%= showAttribute(request, "partNumber"+i+"Error") %>

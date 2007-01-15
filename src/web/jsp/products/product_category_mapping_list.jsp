@@ -49,7 +49,7 @@
 <%@ include file="product_category_header_include.jsp" %>
 <% String param1 = "categoryId=" + ProductCategory.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcategories" selected="categorylinks" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcategories" selected="categorylinks" object="ProductCategory" param='<%= param1 + "|" + param2 %>'>
   <a href="ProductCategories.do?command=AddMapping&moduleId=<%= PermissionCategory.getId() %>&categoryId=<%= ProductCategory.getId() %>"><dhv:label name="product.addCategoryLink">Add Category Link</dhv:label></a>
   <br>&nbsp;
   <%

@@ -19,7 +19,7 @@
   }
 </script>
 &nbsp;<br />
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="campaignSelectorListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="campaignSelectorListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	<tr>
     <th width="8" align="left" nowrap>

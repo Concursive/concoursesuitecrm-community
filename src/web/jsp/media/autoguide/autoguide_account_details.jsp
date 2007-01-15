@@ -38,7 +38,7 @@ Vehicle Details
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>'>
   <dhv:permission name="accounts-autoguide-inventory-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';submit();"></dhv:permission>
   <dhv:permission name="accounts-autoguide-inventory-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';confirmSubmit(this.form);"></dhv:permission>
   <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete"><br>&nbsp;</dhv:permission>

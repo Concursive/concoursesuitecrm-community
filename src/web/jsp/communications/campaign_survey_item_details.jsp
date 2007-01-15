@@ -31,16 +31,16 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communicationitemdetails" selected="details" object="ItemDetails.item" item="<%= ItemDetails.getItem() %>" param="<%= "name=" + toHtml(ItemDetails.getItem().getDescription()) %>">
+<dhv:container name="communicationitemdetails" selected="details" object="ItemDetails.item" item="<%= ItemDetails.getItem() %>" param='<%= "name=" + toHtml(ItemDetails.getItem().getDescription()) %>'>
 <%--<table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr class="containerHeader">
   <th colspan="2" valign="center">
-    <dhv:label name="campaign.item.colon" param="<%= "description="+toHtml(ItemDetails.getItem().getDescription()) %>"><strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %></dhv:label>
+    <dhv:label name="campaign.item.colon" param='<%= "description="+toHtml(ItemDetails.getItem().getDescription()) %>'><strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %></dhv:label>
   </th>
 </tr>
 <tr>
   <td class="containerBack"> --%>
-  <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
+  <dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="ItemDetailsListInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
        <th>

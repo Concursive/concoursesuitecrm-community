@@ -34,7 +34,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="schedule" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="schedule" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">

@@ -82,7 +82,7 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="details" object="TicketDetails" param="<%= param1 %>" hideContainer="<%= (isPopup(request) || (defectCheck != null && !"".equals(defectCheck.trim()))) %>">
+<dhv:container name="tickets" selected="details" object="TicketDetails" param="<%= param1 %>" hideContainer='<%= (isPopup(request) || (defectCheck != null && !"".equals(defectCheck.trim()))) %>'>
   <%@ include file="ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
@@ -91,15 +91,15 @@
   </dhv:evaluate>
     <% if (TicketDetails.getClosed() != null) { %>
       <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&ticketId=<%= TicketDetails.getId()%><%= (defectCheck != null && !"".equals(defectCheck.trim()) ?"&defectCheck="+defectCheck:"") %>';submit();">
-      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId() +"'":"javascript:window.close();") %>" />
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId() +"'":"javascript:window.close();") %>' />
     <%} else {%>
       <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)">
       <% if ("list".equals(request.getParameter("return"))) {%>
-        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Home'":"javascript:window.close();") %>" />
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Home'":"javascript:window.close();") %>' />
       <%} else if ("searchResults".equals(request.getParameter("return"))){%>
-        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=SearchTickets'":"javascript:window.close();") %>" />
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=SearchTickets'":"javascript:window.close();") %>' />
       <% }else {%>
-        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId() +"'":"javascript:window.close();") %>" />
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId() +"'":"javascript:window.close();") %>' />
       <%}%>
   <%}%>
   <br />
@@ -108,15 +108,15 @@
   <%@ include file="troubletickets_modify_include.jsp" %>
     <% if (TicketDetails.getClosed() != null) { %>
       <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&ticketId=<%= TicketDetails.getId()%><%= defectCheck != null && !"".equals(defectCheck.trim()) ?"&defectCheck="+defectCheck:"" %>';submit();">
-      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId() +(defectCheck != null && !"".equals(defectCheck.trim()) ?"&defectCheck="+defectCheck:"")+"'":"javascript:window.close();") %>" />
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId() +(defectCheck != null && !"".equals(defectCheck.trim()) ?"&defectCheck="+defectCheck:"")+"'":"javascript:window.close();") %>' />
     <%} else {%>
       <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)">
       <% if ("list".equals(request.getParameter("return"))) {%>
-        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Home'":"javascript:window.close();") %>" />
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Home'":"javascript:window.close();") %>' />
       <%} else if ("searchResults".equals(request.getParameter("return"))){%>
-        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=SearchTickets'":"javascript:window.close();") %>" />
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=SearchTickets'":"javascript:window.close();") %>' />
       <%} else {%>
-        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId()+(defectCheck != null && !"".equals(defectCheck.trim()) ?"&defectCheck="+defectCheck:"") +"'":"javascript:window.close();") %>" />
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (!isPopup(request)?"javascript:this.form.action='TroubleTickets.do?command=Details&id="+ TicketDetails.getId()+(defectCheck != null && !"".equals(defectCheck.trim()) ?"&defectCheck="+defectCheck:"") +"'":"javascript:window.close();") %>' />
       <%}%>
   <%}%>
 </dhv:container>

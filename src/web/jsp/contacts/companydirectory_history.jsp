@@ -80,7 +80,7 @@ function reopen() {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="history" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= param2 %>">
+<dhv:container name="contacts" selected="history" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl="<%= param2 %>">
 <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>"><dhv:permission name="contacts-external_contacts-history-add">
 <a href=" javascript:popURL('ExternalContactsHistory.do?command=AddNote&contactId=<%= ContactDetails.getId() %>','Note','575','200','yes','yes');" ><dhv:label name="accounts.accountHistory.addANote">Add a Note</dhv:label></a><br /><br />
 </dhv:permission></dhv:evaluate>
@@ -139,7 +139,7 @@ function reopen() {
 </td></tr></table>
 </form>
 </span>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="contactHistoryListInfo" externalJScript="flipFilterForm();" externalText="<dhv:label name=\"pagedListInfo.filters\">Filters</dhv:label>"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="contactHistoryListInfo" externalJScript="flipFilterForm();" externalText="<dhv:label name=\"pagedListInfo.filters\">Filters</dhv:label>"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="8" nowrap>&nbsp;</th>

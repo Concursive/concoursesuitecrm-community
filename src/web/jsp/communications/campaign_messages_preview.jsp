@@ -20,8 +20,8 @@
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <font size="-1" face="Arial, Helvetica, sans-serif">
-<dhv:label name="campaign.from.colon" param="<%= "from="+toHtml(Message.getReplyTo()) %>"><strong>From:</strong> <%= toHtml(Message.getReplyTo()) %></dhv:label><br />
-<dhv:label name="mail.label.subject" param="<%= "subject="+toHtml(Message.getMessageSubject()) %>"><strong>Subject:</strong> <%= toHtml(Message.getMessageSubject()) %></dhv:label>
+<dhv:label name="campaign.from.colon" param='<%= "from="+toHtml(Message.getReplyTo()) %>'><strong>From:</strong> <%= toHtml(Message.getReplyTo()) %></dhv:label><br />
+<dhv:label name="mail.label.subject" param='<%= "subject="+toHtml(Message.getMessageSubject()) %>'><strong>Subject:</strong> <%= toHtml(Message.getMessageSubject()) %></dhv:label>
 <br />&nbsp;<br />
 <%= Message.getMessageText() %> 
 </font>

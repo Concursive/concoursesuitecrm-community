@@ -32,7 +32,7 @@
     popURL('CalendarCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&popup=true','CONTACT_HISTORY','650','500','yes','yes');
   }
 </script>
-<dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= isPopup(request) %>">
+<dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' hideContainer="<%= isPopup(request) %>">
   <%-- include contact menu --%>
   <% 
     int i = 0;
@@ -77,7 +77,7 @@
         Call thisCall = (Call) jc.next();
 %>
     <tr class="row<%= rowid %>">
-      <td valign="top" nowrap <dhv:evaluate if="<%= CalAccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>"> rowspan="2"</dhv:evaluate>>
+      <td valign="top" nowrap <dhv:evaluate if='<%= CalAccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>'> rowspan="2"</dhv:evaluate>>
         <%= thisCall.getStatusString() %>
       </td>
       <td valign="top" nowrap>
@@ -99,7 +99,7 @@
         <dhv:tz timestamp="<%= thisCall.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
       </td>
     </tr>
-    <dhv:evaluate if="<%= CalAccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
+    <dhv:evaluate if='<%= CalAccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>'>
     <tr class="row<%= rowid %>">
       <td colspan="7" valign="top">
         <%= toHtmlValue(thisCall.getNotes()) %>

@@ -35,33 +35,33 @@
     </th>
   </tr>
   <tr>
-    <td nowrap valign="top"><dhv:evaluate if="<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td nowrap valign="top"><dhv:evaluate if='<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>'><%= image %></dhv:evaluate></td>
     <td valign="top" width="100%"><dhv:label name="Welcome">Welcome</dhv:label></td>
   </tr>
   <tr>
-    <td nowrap valign="top"><dhv:evaluate if="<%= "Register".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td nowrap valign="top"><dhv:evaluate if='<%= "Register".equals(ModuleBean.getCurrentAction()) %>'><%= image %></dhv:evaluate></td>
     <td valign="top">Registration</td>
   </tr>
   <tr>
-    <td nowrap valign="top"><dhv:evaluate if="<%= "Storage".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td nowrap valign="top"><dhv:evaluate if='<%= "Storage".equals(ModuleBean.getCurrentAction()) %>'><%= image %></dhv:evaluate></td>
     <td valign="top">Configure Storage</td>
   </tr>
   <tr>
-    <td nowrap valign="top"><dhv:evaluate if="<%= "Servers".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td nowrap valign="top"><dhv:evaluate if='<%= "Servers".equals(ModuleBean.getCurrentAction()) %>'><%= image %></dhv:evaluate></td>
     <td valign="top">Configure Servers</td>
   </tr>
   <tr>
-    <td nowrap valign="top"><dhv:evaluate if="<%= "Database".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td nowrap valign="top"><dhv:evaluate if='<%= "Database".equals(ModuleBean.getCurrentAction()) %>'><%= image %></dhv:evaluate></td>
     <td valign="top">Configure Database</td>
   </tr>
   <tr>
-    <td nowrap valign="top"><dhv:evaluate if="<%= "CRMSetup".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td nowrap valign="top"><dhv:evaluate if='<%= "CRMSetup".equals(ModuleBean.getCurrentAction()) %>'><%= image %></dhv:evaluate></td>
     <td valign="top">Configure CRM</td>
   </tr>
 </table>
 <br>
 <%-- info tab --%>
-<dhv:evaluate if="<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>">
+<dhv:evaluate if='<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>'>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
@@ -80,7 +80,7 @@
 </table>
 </dhv:evaluate>
 <%-- info tab --%>
-<dhv:evaluate if="<%= "Register".equals(ModuleBean.getCurrentAction()) %>">
+<dhv:evaluate if='<%= "Register".equals(ModuleBean.getCurrentAction()) %>'>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
@@ -99,7 +99,7 @@
 </table>
 </dhv:evaluate>
 <%-- info tab --%>
-<dhv:evaluate if="<%= "Storage".equals(ModuleBean.getCurrentAction()) %>">
+<dhv:evaluate if='<%= "Storage".equals(ModuleBean.getCurrentAction()) %>'>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
@@ -118,7 +118,7 @@
 </table>
 </dhv:evaluate>
 <%-- info tab --%>
-<dhv:evaluate if="<%= "Servers".equals(ModuleBean.getCurrentAction()) %>">
+<dhv:evaluate if='<%= "Servers".equals(ModuleBean.getCurrentAction()) %>'>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
@@ -137,7 +137,7 @@
 </table>
 </dhv:evaluate>
 <%-- info tab --%>
-<dhv:evaluate if="<%= "Database".equals(ModuleBean.getCurrentAction()) %>">
+<dhv:evaluate if='<%= "Database".equals(ModuleBean.getCurrentAction()) %>'>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
@@ -154,7 +154,7 @@
 </table>
 </dhv:evaluate>
 <%-- info tab --%>
-<dhv:evaluate if="<%= "CRMSetup".equals(ModuleBean.getCurrentAction()) %>">
+<dhv:evaluate if='<%= "CRMSetup".equals(ModuleBean.getCurrentAction()) %>'>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>

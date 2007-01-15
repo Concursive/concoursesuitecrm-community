@@ -53,10 +53,10 @@
 <a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
 <a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-<dhv:evaluate if="<%= "AdminObjectEvents".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= "AdminObjectEvents".equals(request.getParameter("return")) %>'>
 <a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.objectEvents">Object Events</dhv:label></a> >
 </dhv:evaluate>
-<dhv:evaluate if="<%= "AdminScheduledEvents".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= "AdminScheduledEvents".equals(request.getParameter("return")) %>'>
 <a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.scheduledEvents">Scheduled Events</dhv:label></a> >
 </dhv:evaluate>
 <dhv:label name="admin.processDetails">Process Details</dhv:label>

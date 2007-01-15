@@ -66,7 +66,7 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= documentStore.getCloseDate() != null %>">
         <font color="blue">
-        <dhv:label name="documents.details.archivedMessage" param="<%= "time="+getTime(pageContext,documentStore.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">This document store was archived on&nbsp;<zeroio:tz timestamp="<%= documentStore.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+        <dhv:label name="documents.details.archivedMessage" param='<%= "time="+getTime(pageContext,documentStore.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>This document store was archived on&nbsp;<zeroio:tz timestamp="<%= documentStore.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
         </font>
       </dhv:evaluate>
       <dhv:evaluate if="<%= documentStore.getCloseDate() == null%>">
@@ -75,7 +75,7 @@
         </dhv:evaluate>
         <dhv:evaluate if="<%= documentStore.getApprovalDate() != null %>">
           <font color="darkgreen">
-            <dhv:label name="documents.details.approvedMessage" param="<%= "time="+getTime(pageContext,documentStore.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>">This document store was approved on&nbsp; <zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+            <dhv:label name="documents.details.approvedMessage" param='<%= "time="+getTime(pageContext,documentStore.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>'>This document store was approved on&nbsp; <zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
           </font>
         </dhv:evaluate>
       </dhv:evaluate>

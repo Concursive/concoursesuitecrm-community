@@ -46,7 +46,7 @@
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
@@ -68,10 +68,10 @@
     </td>
     <td width="100%" valign="center">
       <SELECT SIZE="1" name="ListView" onChange="javascript:updateMessageList();">
-        <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>><dhv:label name="accounts.accounts_contacts_messages_view.MyMessages">My Messages</dhv:label></OPTION>
-        <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>><dhv:label name="accounts.accounts_contacts_messages_view.AllMessages">All Messages</dhv:label></OPTION>
-        <OPTION VALUE="hierarchy"<dhv:evaluate if="<%= "hierarchy".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>><dhv:label name="actionList.controlledHierarchyMessages">Controlled Hierarchy Messages</dhv:label></OPTION>
-        <OPTION VALUE="personal"<dhv:evaluate if="<%= "personal".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>><dhv:label name="actionList.personalMessages">Personal Messages</dhv:label></OPTION>
+        <OPTION VALUE="my"<dhv:evaluate if='<%= "my".equals((String) request.getAttribute("listView")) %>'> selected</dhv:evaluate>><dhv:label name="accounts.accounts_contacts_messages_view.MyMessages">My Messages</dhv:label></OPTION>
+        <OPTION VALUE="all"<dhv:evaluate if='<%= "all".equals((String) request.getAttribute("listView")) %>'> selected</dhv:evaluate>><dhv:label name="accounts.accounts_contacts_messages_view.AllMessages">All Messages</dhv:label></OPTION>
+        <OPTION VALUE="hierarchy"<dhv:evaluate if='<%= "hierarchy".equals((String) request.getAttribute("listView")) %>'> selected</dhv:evaluate>><dhv:label name="actionList.controlledHierarchyMessages">Controlled Hierarchy Messages</dhv:label></OPTION>
+        <OPTION VALUE="personal"<dhv:evaluate if='<%= "personal".equals((String) request.getAttribute("listView")) %>'> selected</dhv:evaluate>><dhv:label name="actionList.personalMessages">Personal Messages</dhv:label></OPTION>
       </SELECT>
 			<% MessageList.setJsEvent("onChange=\"javascript:window.frames['edit'].location.href='CampaignManagerMessage.do?command=PreviewMessage&id=' + this.options[this.selectedIndex].value + '&inline=true';\""); %>
       <%= MessageList.getHtmlSelect("messageId", Campaign.getMessageId()) %>

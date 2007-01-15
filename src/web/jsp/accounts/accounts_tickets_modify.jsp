@@ -229,18 +229,18 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="details" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="details" object="TicketDetails" param='<%= "id=" + TicketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%@ include file="accounts_ticket_header_include.jsp" %>
      <dhv:evaluate if="<%= !TicketDetails.isTrashed() %>" >
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>" >
           <dhv:permission name="accounts-accounts-tickets-edit">
             <input type="submit" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'">
            </dhv:permission>
-           <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
+           <dhv:evaluate if='<%= "list".equals(request.getParameter("return"))%>' >
             <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
            </dhv:evaluate>
-           <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
+           <dhv:evaluate if='<%= !"list".equals(request.getParameter("return"))%>' >
             <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
            </dhv:evaluate>
       </dhv:evaluate>
@@ -248,10 +248,10 @@
           <dhv:permission name="accounts-accounts-tickets-edit">
             <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
           </dhv:permission>
-           <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
+           <dhv:evaluate if='<%= "list".equals(request.getParameter("return"))%>' >
             <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
            </dhv:evaluate>
-           <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
+           <dhv:evaluate if='<%= !"list".equals(request.getParameter("return"))%>' >
             <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
            </dhv:evaluate>
           <%= showAttribute(request, "closedError") %>
@@ -679,10 +679,10 @@
         <dhv:permission name="accounts-accounts-tickets-edit">
           <input type="submit" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'">
          </dhv:permission>
-         <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
+         <dhv:evaluate if='<%= "list".equals(request.getParameter("return"))%>' >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
          </dhv:evaluate>
-         <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
+         <dhv:evaluate if='<%= !"list".equals(request.getParameter("return"))%>' >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
          </dhv:evaluate>
     </dhv:evaluate>
@@ -690,10 +690,10 @@
         <dhv:permission name="accounts-accounts-tickets-edit">
           <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
         </dhv:permission>
-         <dhv:evaluate if="<%= "list".equals(request.getParameter("return"))%>" >
+         <dhv:evaluate if='<%= "list".equals(request.getParameter("return"))%>' >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
          </dhv:evaluate>
-         <dhv:evaluate if="<%= !"list".equals(request.getParameter("return"))%>" >
+         <dhv:evaluate if='<%= !"list".equals(request.getParameter("return"))%>' >
           <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'" />
          </dhv:evaluate>
         <%= showAttribute(request, "closedError") %>

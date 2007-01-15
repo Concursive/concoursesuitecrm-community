@@ -108,7 +108,7 @@
       <th><img src="images/icons/stock_about-16.gif" border="0"
                align="absmiddle"/></th>
       <td><dhv:label name="admin.licenseLimit.text"
-                     param="<%= "appsize="+APP_SIZE %>">The installed license
+                     param='<%= "appsize="+APP_SIZE %>'>The installed license
         limits this system to <%= APP_SIZE %> active users.</dhv:label></td>
     </tr>
   </table>

@@ -54,13 +54,13 @@ function reopen() {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" hideContainer="<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() || "true".equals(request.getParameter("actionplan")) %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' hideContainer='<%= !OrgDetails.getEnabled() || OrgDetails.isTrashed() || "true".equals(request.getParameter("actionplan")) %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>'>
   <dhv:evaluate if="<%=!OrgDetails.isTrashed()%>">
     <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")+ (isPopup(request)?"&popup=true":"")+("true".equals(request.getParameter("actionplan"))?"&actionplan=true":"") %>"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a></dhv:permission>
   </dhv:evaluate>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="ContactListInfo"/></center></dhv:include>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ContactListInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="8">
@@ -110,7 +110,7 @@ function reopen() {
              PhoneNumber thisNumber = (PhoneNumber) thisContact.getPhoneNumberList().get(0);
          %>
             <%= String.valueOf(thisNumber.getTypeName().charAt(0)) + ":" + toHtml(thisContact.getPrimaryPhoneNumber()) %>
-            <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+            <dhv:evaluate if='<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>'>
               <dhv:evaluate if="<%= hasText(thisContact.getPrimaryPhoneNumber()) %>">
                 <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(thisContact.getPrimaryPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
               </dhv:evaluate>

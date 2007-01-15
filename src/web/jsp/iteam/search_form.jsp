@@ -77,7 +77,7 @@
     </td>
     <td>
       <select name="scope" onChange="this.form.query.focus()">
-      <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
+      <dhv:evaluate if='<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>'>
           <option value="this" <%= selected(searchBean, SearchBean.THIS, SearchBean.UNDEFINED) %>><dhv:label name="project.thisProject">This Project</dhv:label></option>
           <option value="thisNews" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.NEWS) %>>&nbsp; <dhv:label name="project.news">News</dhv:label></option>
           <option value="thisDiscussion" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DISCUSSION) %>>&nbsp; <dhv:label name="project.discussion">Discussion</dhv:label></option>
@@ -96,10 +96,10 @@
           <option value="allTickets" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.TICKETS) %>>&nbsp; <dhv:label name="dependency.tickets">Tickets</dhv:label></option>
           <option value="allDetails" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DETAILS) %>>&nbsp; <dhv:label name="accounts.details.long_html">Details</dhv:label></option>
       </select>
-      <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
+      <dhv:evaluate if='<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>'>
           <input type="hidden" name="projectId" value="<%= ((Project) request.getAttribute("Project")).getId() %>" />
       </dhv:evaluate>
-      <dhv:evaluate if="<%= request.getAttribute("Project") == null || ((Project) request.getAttribute("Project")).getId() == -1 %>">
+      <dhv:evaluate if='<%= request.getAttribute("Project") == null || ((Project) request.getAttribute("Project")).getId() == -1 %>'>
         <input type="hidden" name="projectId" value="-1" />
       </dhv:evaluate>
     </td>

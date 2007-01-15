@@ -65,9 +65,9 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:formMessage showSpace="false" />
-<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer='<%="true".equals(request.getParameter("actionplan")) %>' object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
@@ -77,7 +77,7 @@
     <%= thisFile.getImageTag("-23") %>
   </dhv:evaluate>
   <br>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="componentHistoryListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="componentHistoryListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th align="center" nowrap>
@@ -125,7 +125,7 @@
         OpportunityComponentLog thisComponentLog = (OpportunityComponentLog)j.next();
         boolean hasPermission = false;
 %>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponentLog.getOwner()?"":","+thisComponentLog.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponentLog.getOwner()?"":","+thisComponentLog.getOwner())) %>'>
     <% hasPermission = true;%>
   </dhv:hasAuthority>
     <tr class="row<%= rowid %>">

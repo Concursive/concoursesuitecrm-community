@@ -39,7 +39,7 @@
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
-      <zeroio:folderHierarchy showLastLink="<%= request.getParameter("details") != null %>"/>
+      <zeroio:folderHierarchy showLastLink='<%= request.getParameter("details") != null %>'/>
     </td>
   </tr>
 </table>

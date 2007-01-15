@@ -36,8 +36,7 @@
 <table border="0" width="100%">
   <tr>
     <td valign="top">
-<% String includeModule = (String) request.getAttribute("IncludeModule"); %>
-<jsp:include page="<%= includeModule %>" flush="true"/>
+<jsp:include page='<%= (String) request.getAttribute("IncludeModule") %>' flush="true"/>
     </td>
   </tr>
 </table>

@@ -60,7 +60,7 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= Project.getClosed() %>">
         <font color="blue">
-          <dhv:label name="project.projectClosedOn" param="<%= "time="+ getTime(pageContext,Project.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>">This project was closed on <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+          <dhv:label name="project.projectClosedOn" param='<%= "time="+ getTime(pageContext,Project.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>'>This project was closed on <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
         </font>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !Project.getClosed() %>">
@@ -68,7 +68,7 @@
           <font color="red"><dhv:label name="project.projectUnderReview.text">This project is currently under review and has not been approved</dhv:label></font>
         </dhv:evaluate>
         <dhv:evaluate if="<%= Project.getApprovalDate() != null %>">
-          <font color="darkgreen"><dhv:label name="project.projectApprovedOn" param="<%= "time="+getTime(pageContext,Project.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font>
+          <font color="darkgreen"><dhv:label name="project.projectApprovedOn" param='<%= "time="+getTime(pageContext,Project.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>

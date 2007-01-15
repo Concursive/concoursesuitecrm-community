@@ -50,8 +50,8 @@
 <%@ include file="product_catalog_header_include.jsp" %>
 <% String param1 = "catalogId=" + ProductCatalog.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param="<%= param1 + "|" + param2 %>">
-		<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ProductCatalogOptionListInfo" showHiddenParams="true" enableJScript="true" form="optionListView"/>
+<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param='<%= param1 + "|" + param2 %>'>
+		<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ProductCatalogOptionListInfo" showHiddenParams="true" enableJScript="true" form="optionListView"/>
 		<% int columnCount = 0; %>
 		<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
 			<tr>

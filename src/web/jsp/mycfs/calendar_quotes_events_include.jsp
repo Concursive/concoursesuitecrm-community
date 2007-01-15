@@ -31,7 +31,7 @@
     <td>&nbsp;</td>
     <td colspan="3" nowrap class="eventName">
       <img border="0" src="images/box.gif" align="absmiddle" title="Quotes" />
-      <dhv:label name="calendar.quotesPendingApproval" param="<%= "size="+quoteEventList.getTodaysQuotes().size() %>">Quotes pending your approval (<%= quoteEventList.getTodaysQuotes().size() %>)</dhv:label>
+      <dhv:label name="calendar.quotesPendingApproval" param='<%= "size="+quoteEventList.getTodaysQuotes().size() %>'>Quotes pending your approval (<%= quoteEventList.getTodaysQuotes().size() %>)</dhv:label>
     </td>
   </tr>
   <%-- include quote details --%>

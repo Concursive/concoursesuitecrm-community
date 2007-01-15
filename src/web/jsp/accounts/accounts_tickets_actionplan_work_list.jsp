@@ -58,8 +58,8 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <% String param1 = "id=" + ticket.getId(); %>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param='<%= "id=" + ticket.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <%@ include file="accounts_ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
@@ -84,7 +84,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountTicketPlanWorkListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="accountTicketPlanWorkListInfo"/>
     </td>
   </tr>
 </table>
@@ -162,10 +162,10 @@
     </td>
     <td align="center">
       <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
-        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisWork.getOrganization() == null && thisWork.getContact() != null %>">
-        <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </dhv:evaluate>
     </td>
     <td align="center">

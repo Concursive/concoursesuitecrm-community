@@ -68,7 +68,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="documents" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="documents" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
   <dhv:formMessage showSpace="false"/>
 	<table cellpadding="4" cellspacing="0" width="100%" class="details">
 	  <tr>

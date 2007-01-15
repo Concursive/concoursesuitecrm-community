@@ -26,10 +26,10 @@
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.addCatalog.name.focus();"> 
-<dhv:evaluate if="<%= (request.getParameter("actionReq") == null) || (request.getParameter("actionReq") != null && "".equals(request.getParameter("actionReq"))) %>">
+<dhv:evaluate if='<%= (request.getParameter("actionReq") == null) || (request.getParameter("actionReq") != null && "".equals(request.getParameter("actionReq"))) %>'>
   <form name="addCatalog" action="ProductCatalogs.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 </dhv:evaluate>
-<dhv:evaluate if="<%= (request.getParameter("actionReq") != null && "clone".equals(request.getParameter("actionReq"))) %>">
+<dhv:evaluate if='<%= (request.getParameter("actionReq") != null && "clone".equals(request.getParameter("actionReq"))) %>'>
   <form name="addCatalog" action="ProductCatalogs.do?command=SaveClone&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 </dhv:evaluate>
 <%-- Trails --%>

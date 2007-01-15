@@ -53,7 +53,7 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <% int i = 0; %>
-<dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="activities" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:permission name="accounts-accounts-contacts-calls-add">
   <a href="AccountsCalls.do?command=Log&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list&trailSource=accounts"><dhv:label name="accounts.accounts_contacts_calls_list.LogAnActivity">Log an Activity</dhv:label></a>
 |
@@ -121,7 +121,7 @@
         </a>
       </td>
     </tr>
-    <dhv:evaluate if="<%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>">
+    <dhv:evaluate if='<%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>'>
         <tr class="row<%= rowid %>">
           <td colspan="5" valign="top">
             <%= toHtmlValue(thisCall.getFollowupNotes()) %>
@@ -203,7 +203,7 @@
         <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-    <dhv:evaluate if="<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
+    <dhv:evaluate if='<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>'>
     <tr class="row<%= rowid %>">
       <td colspan="7" valign="top">
         <%= toHtmlValue(thisCall.getNotes()) %>

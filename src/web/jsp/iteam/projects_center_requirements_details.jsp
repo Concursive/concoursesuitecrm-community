@@ -27,7 +27,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
-      <strong><dhv:label name="project.outline.colon" param="<%= "outline="+toHtml(Requirement.getShortDescription()) %>">Outline: <%= toHtml(Requirement.getShortDescription()) %></dhv:label></strong>
+      <strong><dhv:label name="project.outline.colon" param='<%= "outline="+toHtml(Requirement.getShortDescription()) %>'>Outline: <%= toHtml(Requirement.getShortDescription()) %></dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">

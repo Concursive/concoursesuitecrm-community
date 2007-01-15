@@ -35,7 +35,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate if="<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>">
+<dhv:evaluate if='<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>'>
 <input type="button" name="btn" value="<dhv:label name="project.reply">Reply</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>&forwardType=<%= Constants.CFSNOTE %>'">
 <% if(NoteDetails.getStatus() != 2) {%>
   <input type="button" value="<dhv:label name="accounts.accounts_list_menu.Archive">Archive</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
@@ -78,7 +78,7 @@
   </tr>
 </table>
 <br>
-<dhv:evaluate if="<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>">
+<dhv:evaluate if='<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>'>
 <input type="button" name="btn" value="<dhv:label name="project.reply">Reply</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>&forwardType=<%= Constants.CFSNOTE %>'">
 <% if(NoteDetails.getStatus() != 2) {%>
   <input type="button" value="<dhv:label name="accounts.accounts_list_menu.Archive">Archive</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">

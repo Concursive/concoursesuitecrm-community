@@ -46,7 +46,7 @@
         <dhv:label name="admin.asterisk.inbound">Inbound:</dhv:label>
       </td>
       <td>
-        <dhv:checkbox name="asteriskInbound" value="true" checked="<%= "true".equals(getPref(getServletConfig().getServletContext(), "ASTERISK.INBOUND.ENABLED")) %>"/>Monitor inbound calls
+        <dhv:checkbox name="asteriskInbound" value="true" checked='<%= "true".equals(getPref(getServletConfig().getServletContext(), "ASTERISK.INBOUND.ENABLED")) %>'/>Monitor inbound calls
       </td>
     </tr>
     <tr>
@@ -54,7 +54,7 @@
         <dhv:label name="admin.asterisk.outbound">Outbound:</dhv:label>
       </td>
       <td>
-        <dhv:checkbox name="asteriskOutbound" value="true" checked="<%= "true".equals(getPref(getServletConfig().getServletContext(), "ASTERISK.OUTBOUND.ENABLED")) %>"/>Enable outbound call dialing
+        <dhv:checkbox name="asteriskOutbound" value="true" checked='<%= "true".equals(getPref(getServletConfig().getServletContext(), "ASTERISK.OUTBOUND.ENABLED")) %>'/>Enable outbound call dialing
       </td>
     </tr>
     <tr>
@@ -62,7 +62,7 @@
         <dhv:label name="admin.asterisk.server">Asterisk Server:</dhv:label>
       </td>
       <td>
-        <input type="text" size="30" name="asteriskUrl" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "ASTERISK.URL")) %>"/>
+        <input type="text" size="30" name="asteriskUrl" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "ASTERISK.URL")) %>'/>
       </td>
     </tr>
     <tr>

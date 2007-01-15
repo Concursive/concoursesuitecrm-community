@@ -42,7 +42,7 @@ function newOpt(param, value) {
   return newOpt;
 }
 function page_init() {
-<dhv:evaluate if="<%= "true".equals(populateResourceAssigned) %>">
+<dhv:evaluate if='<%= "true".equals(populateResourceAssigned) %>'>
   <dhv:evaluate if="<%= ((resourceAssignedList.size() > 0) || (resourceAssignedDepartmentCode != null)) %>">
     var resourceAssignedWidget = parent.document.<%= form %>.assignedTo;
     resourceAssignedWidget.options.length = 0;
@@ -61,7 +61,7 @@ function page_init() {
   %>
   </dhv:evaluate>
 </dhv:evaluate>
-<dhv:evaluate if="<%= "true".equals(populateResolvedBy) %>">
+<dhv:evaluate if='<%= "true".equals(populateResolvedBy) %>'>
   <dhv:evaluate if="<%= ((resolvedByList.size() > 0) || (resolvedByDepartmentCode != null)) %>">
     var resolvedByWidget = parent.document.<%= form %>.resolvedBy;
     resolvedByWidget.options.length = 0;

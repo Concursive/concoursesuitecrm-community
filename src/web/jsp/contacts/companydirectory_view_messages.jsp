@@ -66,8 +66,8 @@
   <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:container name="contacts" selected="messages" object="ContactDetails"
-               param="<%= "id=" + ContactDetails.getId() %>"
-               appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+               param='<%= "id=" + ContactDetails.getId() %>'
+               appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:evaluate
     if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
   <dhv:permission name="contacts-external_contacts-messages-view">
@@ -93,7 +93,7 @@
 <% if ((request.getParameter("pagedListSectionId") == null && !contactReceivedMessageListInfo.getExpandedSelection()) || contactSentMessageListInfo.getExpandedSelection()) { %>
 <%-- Sent Messages --%>
 <dhv:pagedListStatus showExpandLink="true"
-                     title="<%= User.getSystemStatus(getServletConfig()).getLabel("", "Sent Messages") %>"
+                     title='<%= User.getSystemStatus(getServletConfig()).getLabel("", "Sent Messages") %>'
                      object="contactSentMessageListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%"
        class="pagedList">
@@ -158,7 +158,7 @@
     </td>
   </tr>
   <dhv:evaluate
-      if="<%= contactSentMessageListInfo.getExpandedSelection() && !"".equals(toString(campaign.getMessage())) %>">
+      if='<%= contactSentMessageListInfo.getExpandedSelection() && !"".equals(toString(campaign.getMessage())) %>'>
     <tr class="row<%= rowid %>">
       <td colspan="5" valign="top">
         <%= (campaign.getMessage()) %>
@@ -181,7 +181,7 @@
 <% if ((request.getParameter("pagedListSectionId") == null && !contactSentMessageListInfo.getExpandedSelection()) || contactReceivedMessageListInfo.getExpandedSelection()) { %>
 <%-- Received Messages--%>
 <dhv:pagedListStatus showExpandLink="true"
-                     title="<%= User.getSystemStatus(getServletConfig()).getLabel("", "Received Messages") %>"
+                     title='<%= User.getSystemStatus(getServletConfig()).getLabel("", "Received Messages") %>'
                      object="contactReceivedMessageListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%"
        class="pagedList">
@@ -233,7 +233,7 @@
     </td>
   </tr>
   <dhv:evaluate
-      if="<%= contactReceivedMessageListInfo.getExpandedSelection()  && !"".equals(toString(contactMessage.getContactMessage().getMessageText()))%>">
+      if='<%= contactReceivedMessageListInfo.getExpandedSelection()  && !"".equals(toString(contactMessage.getContactMessage().getMessageText()))%>'>
     <tr class="row<%= rowid %>">
       <td colspan="7" valign="top">
         <%= (contactMessage.getContactMessage().getMessageText()) %>

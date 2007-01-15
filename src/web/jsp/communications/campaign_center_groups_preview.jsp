@@ -35,7 +35,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <dhv:label name="campaign.groupPreview.colon" param="<%= "scl.groupName="+toHtml(SCL.getGroupName()) %>"><strong>Group Preview:</strong> <%= toHtml(SCL.getGroupName()) %></dhv:label> 
+      <dhv:label name="campaign.groupPreview.colon" param='<%= "scl.groupName="+toHtml(SCL.getGroupName()) %>'><strong>Group Preview:</strong> <%= toHtml(SCL.getGroupName()) %></dhv:label>
     </td>
   </tr>
   <tr>

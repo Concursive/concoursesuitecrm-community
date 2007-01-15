@@ -50,7 +50,7 @@
     %>
       <tr class="containerBody">
         <td class="formLabel" nowrap>
-          <dhv:label name="tickets.part" param="<%= "number="+icount %>">Part <%= icount %></dhv:label>
+          <dhv:label name="tickets.part" param='<%= "number="+icount %>'>Part <%= icount %></dhv:label>
         </td>
         <td>
           <%= toHtml(thisPart.getPartNumber()) %>

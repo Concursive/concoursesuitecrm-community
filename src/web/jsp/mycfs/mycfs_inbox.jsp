@@ -56,7 +56,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="InboxInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="InboxInfo"/>
     </td>
     </form>
   </tr>
@@ -66,7 +66,7 @@
     <th>
       &nbsp;
     </th>
-    <dhv:evaluate if="<%= InboxInfo.getListView().equalsIgnoreCase("new") %>">
+    <dhv:evaluate if='<%= InboxInfo.getListView().equalsIgnoreCase("new") %>'>
       <th>
         <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
       </th>

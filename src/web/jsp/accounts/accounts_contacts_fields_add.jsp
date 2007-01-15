@@ -48,8 +48,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>"  appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="folders" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>"  appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>'  appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="folders" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>'  appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%-- include contact menu --%>
   <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>

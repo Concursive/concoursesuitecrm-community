@@ -49,7 +49,7 @@
     <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteContact();"><br /><br />
   </dhv:evaluate>
 </dhv:permission>
-<dhv:evaluate if="<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role") %>">
+<dhv:evaluate if='<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role") %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

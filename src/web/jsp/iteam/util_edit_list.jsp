@@ -118,17 +118,17 @@
   <tr class="containerBody">
     <td colspan="3">
       <input type="hidden" name="selectNames" value="" />
-      <dhv:evaluate if="<%= request.getParameter("popup") != null %>">
+      <dhv:evaluate if='<%= request.getParameter("popup") != null %>'>
         <input type="hidden" name="popup" value="true" />
       </dhv:evaluate>
-      <dhv:evaluate if="<%= request.getParameter("form") != null %>">
+      <dhv:evaluate if='<%= request.getParameter("form") != null %>'>
         <input type="hidden" name="form" value="<%= request.getParameter("form") %>" />
       </dhv:evaluate>
-      <dhv:evaluate if="<%= request.getParameter("field") != null %>">
+      <dhv:evaluate if='<%= request.getParameter("field") != null %>'>
         <input type="hidden" name="field" value="<%= request.getParameter("field") %>" />
       </dhv:evaluate>
       <input type="submit" value="<dhv:label name="button.saveChanges">Save Changes</dhv:label>" />
-      <dhv:evaluate if="<%= request.getParameter("popup") != null %>">
+      <dhv:evaluate if='<%= request.getParameter("popup") != null %>'>
         <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()" />
       </dhv:evaluate>
     </td>

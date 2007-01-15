@@ -66,7 +66,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr class="containerHeader">
     <td>
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
@@ -101,7 +101,7 @@
       <dhv:label name="campaign.deliveryMethod">Delivery Method</dhv:label>
     </td>
     <td>
-        <dhv:evaluate if="<%= "".equals(toString(FaxEnabled)) || "false".equals(toString(FaxEnabled)) %>">
+        <dhv:evaluate if='<%= "".equals(toString(FaxEnabled)) || "false".equals(toString(FaxEnabled)) %>'>
           <% DeliveryList.setJsEvent("onChange=\"javascript:checkDelivery();\""); 
           %>
         </dhv:evaluate>

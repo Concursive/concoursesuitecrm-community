@@ -78,7 +78,7 @@
        <%= toString(alertOpp.getDescription()) %>
      </td>
      <td nowrap valign="top">
-       <zeroio:currency value="<%= alertOpp.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/> 
+       <zeroio:currency value="<%= alertOpp.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
      </td>
      <td nowrap valign="top">
        <zeroio:tz timestamp="<%= alertOpp.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>

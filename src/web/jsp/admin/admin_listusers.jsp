@@ -48,7 +48,7 @@
   <table class="note" cellspacing="0">
     <tr>
       <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-      <td><dhv:label name="admin.installedLicenseLimits.text" param="<%= "appsize="+APP_SIZE %>">The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label></td></tr>
+      <td><dhv:label name="admin.installedLicenseLimits.text" param='<%= "appsize="+APP_SIZE %>'>The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label></td></tr>
   </table>
 </dhv:evaluate>
 <dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm"><dhv:label name="admin.addNewUser">Add New User</dhv:label></a></dhv:permission>
@@ -68,7 +68,7 @@
       <%= roleList.getHtmlSelect("listFilter1", UserList.getRoleId()) %>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="UserListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="UserListInfo"/>
     </td>
     </form>
   </tr>
@@ -118,7 +118,7 @@
       <tr class="row<%= rowid %>" width="8">
         <td valign="center" align="center" nowrap>
           <dhv:batchInput object="userListBatchInfo" value="<%= thisUser.getId() %>" hiddenParams="userId|roleId" 
-                    hiddenValues="<%= thisUser.getId() + "|" + thisUser.getRoleId() %>"/>
+                    hiddenValues='<%= thisUser.getId() + "|" + thisUser.getRoleId() %>'/>
           <% int status = thisUser.getEnabled() ? 1 : 0; %>
           <dhv:permission name="admin-users-edit" none="true"><% status = -1; %></dhv:permission>
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
@@ -176,13 +176,13 @@
 <br>
 <dhv:pagedListControl object="UserListInfo" tdClass="row1">
   <dhv:batchList object="userListBatchInfo" returnURL="Users.do?command=ListUsers">
-    <dhv:batchItem display="<%= systemStatus.getLabel("batch.enable.webdavaccess", "Enable Webdav Access") %>" 
+    <dhv:batchItem display='<%= systemStatus.getLabel("batch.enable.webdavaccess", "Enable Webdav Access") %>' 
             link="Users.do?command=ProcessBatch&action=Webdav&status=Enable" />
-    <dhv:batchItem display="<%= systemStatus.getLabel("batch.enable.httpapiaccess", "Enable HTTP-API Access") %>" 
+    <dhv:batchItem display='<%= systemStatus.getLabel("batch.enable.httpapiaccess", "Enable HTTP-API Access") %>' 
             link="Users.do?command=ProcessBatch&action=HttpAPI&status=Enable" />
-    <dhv:batchItem display="<%= systemStatus.getLabel("batch.disable.webdavaccess", "Disable Webdav Access") %>" 
+    <dhv:batchItem display='<%= systemStatus.getLabel("batch.disable.webdavaccess", "Disable Webdav Access") %>' 
             link="Users.do?command=ProcessBatch&action=Webdav&status=Disable" />
-    <dhv:batchItem display="<%= systemStatus.getLabel("batch.disable.httpapiaccess", "Disable HTTP-API Access") %>" 
+    <dhv:batchItem display='<%= systemStatus.getLabel("batch.disable.httpapiaccess", "Disable HTTP-API Access") %>' 
             link="Users.do?command=ProcessBatch&action=HttpAPI&status=Disable" />
   </dhv:batchList>
 </dhv:pagedListControl>

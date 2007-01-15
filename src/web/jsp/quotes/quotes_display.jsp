@@ -45,7 +45,7 @@
     <td>
       <a href="Quotes.do"><dhv:label name="dependency.quotes">Quotes</dhv:label></a> >
       <a href="Quotes.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
-      <dhv:label name="quotes.symbol.number" param="<%= "number="+quote.getGroupId() %>">Quote #<%= quote.getGroupId() %></dhv:label>
+      <dhv:label name="quotes.symbol.number" param='<%= "number="+quote.getGroupId() %>'>Quote #<%= quote.getGroupId() %></dhv:label>
     </td>
   </tr>
 </table>
@@ -55,22 +55,22 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="4">
-        <strong><dhv:label name="quotes.symbol.number" param="<%= "number="+quote.getGroupId() %>">Quote #<%= quote.getGroupId() %></dhv:label></strong>
+        <strong><dhv:label name="quotes.symbol.number" param='<%= "number="+quote.getGroupId() %>'>Quote #<%= quote.getGroupId() %></dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
     <td class="formLabel"> Description </td>
       <td>
   <% if(quote.getIssuedDate() != null){ %>
-        <dhv:label name="quotes.preparedFor.and.on" param="<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName())+"|time="+getTime(pageContext,quote.getIssuedDate(),"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>">Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %> on <zeroio:tz timestamp="<%= quote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/></dhv:label>
+        <dhv:label name="quotes.preparedFor.and.on" param='<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName())+"|time="+getTime(pageContext,quote.getIssuedDate(),"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>'>Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %> on <zeroio:tz timestamp="<%= quote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/></dhv:label>
   <% } else { %>
-        <dhv:label name="quotes.preparedFor" param="<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName()) %>">Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %></dhv:label>
+        <dhv:label name="quotes.preparedFor" param='<%= "name="+toHtml(quote.getNameFirst() +" "+ quote.getNameLast())+"|company="+toHtml(quote.getName()) %>'>Prepared for <%= toHtml(quote.getNameFirst() +" "+ quote.getNameLast()) %> and <%= toHtml(quote.getName()) %></dhv:label>
   <% } %>
   <br />
   <%
   if(quote.getShortDescription() != null && !"".equals(quote.getShortDescription())){
   %>
-  <dhv:label name="quotes.thisQuoteIsFor.colon" param="<%= "description="+toHtml(quote.getShortDescription()) %>">This quote is for: <%= toHtml(quote.getShortDescription()) %></dhv:label>
+  <dhv:label name="quotes.thisQuoteIsFor.colon" param='<%= "description="+toHtml(quote.getShortDescription()) %>'>This quote is for: <%= toHtml(quote.getShortDescription()) %></dhv:label>
   <br />
   <%
   }

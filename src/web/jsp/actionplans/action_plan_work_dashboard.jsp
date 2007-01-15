@@ -198,7 +198,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="actionPlanWorkDashboardInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="actionPlanWorkDashboardInfo"/>
     </td>
   </tr>
 </table>
@@ -294,11 +294,11 @@
     </td>
     <td align="center">
       <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
-        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
         <dhv:evaluate if="<%= thisWork.getContact() != null %>">
-          <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>

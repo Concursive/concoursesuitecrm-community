@@ -39,7 +39,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="users" selected="viewpoints" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+<dhv:container name="users" selected="viewpoints" object="UserRecord" param='<%= "id=" + UserRecord.getId() %>'>
   <input type="submit" value="<dhv:label name="button.add">Add</dhv:label>" name="Save">
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
   <br />
@@ -60,10 +60,10 @@
           <tr>
             <td>
               <div id="changecontact">
-                <dhv:evaluate if="<%= vpUserId != null && !"".equals(vpUserId) %>">
+                <dhv:evaluate if='<%= vpUserId != null && !"".equals(vpUserId) %>'>
                   <dhv:username id="<%= vpUserId %>" lastFirst="true" />
                 </dhv:evaluate>
-                <dhv:evaluate if="<%= vpUserId == null || "".equals(vpUserId) %>">
+                <dhv:evaluate if='<%= vpUserId == null || "".equals(vpUserId) %>'>
                   <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label>
                 </dhv:evaluate>
               </div>

@@ -51,7 +51,7 @@
   <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
   <a href="TroubleTicketDefects.do?command=View"><dhv:label name="tickets.defects.viewDefects">View Defects</dhv:label></a> > 
 <dhv:evaluate if="<%= defect.getId() > -1 %>">
-  <dhv:evaluate if="<%= request.getParameter("return") == null || !request.getParameter("return").equals("list") %>">
+  <dhv:evaluate if='<%= request.getParameter("return") == null || !request.getParameter("return").equals("list") %>'>
     <a href="TroubleTicketDefects.do?command=Details&defectId=<%= defect.getId() %>"><dhv:label name="tickets.defects.defectDetails">Defect Details</dhv:label></a> > 
   </dhv:evaluate>
   <dhv:label name="tickets.defects.modifyDefect">Modify Defect</dhv:label>

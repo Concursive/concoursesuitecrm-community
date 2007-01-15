@@ -96,7 +96,7 @@
          </select>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo" showHiddenParams="true" enableJScript="true" form="assetListView"/>
+        <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AssetListInfo" showHiddenParams="true" enableJScript="true" form="assetListView"/>
       </td>
     </tr>
   </table>

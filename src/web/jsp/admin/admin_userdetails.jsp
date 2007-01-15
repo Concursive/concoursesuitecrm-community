@@ -34,7 +34,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="users" selected="details" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+<dhv:container name="users" selected="details" object="UserRecord" param='<%= "id=" + UserRecord.getId() %>'>
   <dhv:evaluate if="<%= UserRecord.getContact().getEnabled() && !UserRecord.getContact().isTrashed() %>">
     <dhv:evaluate if="<%=(UserRecord.getEnabled())%>">
     <dhv:permission name="admin-users-edit">

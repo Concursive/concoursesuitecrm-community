@@ -38,7 +38,7 @@ Vehicle Inventory List
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>'>
   <dhv:permission name="accounts-autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
   <dhv:permission name="accounts-autoguide-inventory-add" none="true"><br></dhv:permission>
   <center><dhv:formMessage /></center>

@@ -29,7 +29,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <body onLoad="document.actionPlan.description.focus();">
-<dhv:container name="<%= (ticket != null && ticket.getId() != -1 ?"tickets":"accounts") %>" selected="documents" object="<%= (ticket != null && ticket.getId() != -1 ?"ticket":"orgDetails") %>" param="<%= (ticket != null && ticket.getId() != -1 ?"id=" + ticket.getId():"orgId=" + orgDetails.getOrgId()) %>" hideContainer="true">
+<dhv:container name='<%= (ticket != null && ticket.getId() != -1 ?"tickets":"accounts") %>' selected="documents" object='<%= (ticket != null && ticket.getId() != -1 ?"ticket":"orgDetails") %>' param='<%= (ticket != null && ticket.getId() != -1 ?"id=" + ticket.getId():"orgId=" + orgDetails.getOrgId()) %>' hideContainer="true">
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList"> 
   <tr>
     <th align="center"><strong><dhv:label name="documents.documents.submitted">Submitted</dhv:label></strong></th>

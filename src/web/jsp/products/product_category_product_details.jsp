@@ -41,7 +41,7 @@
 <%@ include file="product_category_header_include.jsp" %>
 <% String param1 = "categoryId=" + ProductCategory.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcategories" selected="products" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcategories" selected="products" object="ProductCategory" param='<%= param1 + "|" + param2 %>'>
   <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProductCategoryProducts.do?command=List&moduleId=<%= PermissionCategory.getId() %>&categoryId=<%= ProductCategory.getId() %>'"/>
   <br><br>
   <% boolean primaryInfoExists = false;%>

@@ -54,7 +54,7 @@
 <%}%>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") + showAttribute(request, "oneContactRequired") %>" object="ContactListInfo" showHiddenParams="true" enableJScript="true" form="contactListView"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") + showAttribute(request, "oneContactRequired") %>' object="ContactListInfo" showHiddenParams="true" enableJScript="true" form="contactListView"/>
     </td>
   </tr>
 </table>

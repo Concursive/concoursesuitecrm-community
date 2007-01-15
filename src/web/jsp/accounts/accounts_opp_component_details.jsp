@@ -56,14 +56,14 @@ function reopenOpportunity(id) {
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin container --%>
 <% String param1 = "id=" + opportunityHeader.getId(); 
    String param2 = addLinkParams(request, "viewSource|popup|popupType");
 %>
-<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer='<%="true".equals(request.getParameter("actionplan")) %>' object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>'>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -111,7 +111,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= accountsComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= accountsComponentDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     </dhv:include>
@@ -120,7 +120,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= accountsComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= accountsComponentDetails.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -128,7 +128,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= accountsComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= accountsComponentDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <dhv:include name="opportunity.termsAndUnits" none="true">
@@ -137,9 +137,9 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
       </td>
       <td><%= accountsComponentDetails.getTerms() %>
-        <dhv:evaluate if="<%= accountsComponentDetails.getUnits().equals("M") %>">
+        <dhv:evaluate if='<%= accountsComponentDetails.getUnits().equals("M") %>'>
            <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-        </dhv:evaluate><dhv:evaluate if="<%= accountsComponentDetails.getUnits().equals("W") %>">
+        </dhv:evaluate><dhv:evaluate if='<%= accountsComponentDetails.getUnits().equals("W") %>'>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
         </dhv:evaluate>
       </td>

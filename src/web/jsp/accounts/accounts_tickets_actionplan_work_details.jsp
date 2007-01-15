@@ -172,8 +172,8 @@
 </dhv:evaluate>
 <dhv:formMessage />
 <% String param1 = "id=" + ticket.getId(); %>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param="<%= "id=" + ticket.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" selected="actionplans" object="ticket" param='<%= "id=" + ticket.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <%@ include file="accounts_ticket_header_include.jsp" %>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
     <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>

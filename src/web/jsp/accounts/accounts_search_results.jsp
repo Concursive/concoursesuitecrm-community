@@ -50,7 +50,7 @@
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SearchOrgListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 <tr>
   <th width="8">
@@ -67,7 +67,7 @@
     <strong><a href="Accounts.do?command=Search&column=c.org_name"><dhv:label name="organization.name">Account Name</dhv:label></a></strong>
     <%= SearchOrgListInfo.getSortIcon("c.org_name") %>
   </th>
-  <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeSiteId") == String.valueOf(Constants.INVALID_SITE) %>">
+  <dhv:evaluate if='<%= SearchOrgListInfo.getSearchOptionValue("searchcodeSiteId") == String.valueOf(Constants.INVALID_SITE) %>'>
   <th width="10%">
     <strong><dhv:label name="accounts.site">Site</dhv:label></strong>
   </th>
@@ -104,7 +104,7 @@
       <td valign="center" nowrap>
         <a href="Accounts.do?command=Details&orgId=<%= thisContact.getOrgId() %>"><%= toHtml(thisContact.getOrgName()) %></a>
       </td>
-      <dhv:evaluate if="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeSiteId") == String.valueOf(Constants.INVALID_SITE) %>">
+      <dhv:evaluate if='<%= SearchOrgListInfo.getSearchOptionValue("searchcodeSiteId") == String.valueOf(Constants.INVALID_SITE) %>'>
         <td valign="top"><%= SiteIdList.getSelectedValue(thisContact.getSiteId()) %></td>
       </dhv:evaluate>
       <td valign="center" nowrap>

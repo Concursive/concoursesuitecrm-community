@@ -21,9 +21,9 @@
 <dhv:evaluate if="<%= ticket.getId() > -1 %>">
 <input type="hidden" name="projectTicketCount" value="<%=ticket.getProjectTicketCount()%>" />
   <br>
-  <strong><dhv:label name="tickets.symbol.number" param="<%= "number="+ticket.getProjectTicketCount() %>">Ticket #<%= ticket.getProjectTicketCount() %></dhv:label></strong>
+  <strong><dhv:label name="tickets.symbol.number" param='<%= "number="+ticket.getProjectTicketCount() %>'>Ticket #<%= ticket.getProjectTicketCount() %></dhv:label></strong>
   <dhv:evaluate if="<%= ticket.getClosed() != null %>">
-    (<font color="red"><dhv:label name="project.ticketClosedOn" param="<%= "time="+toHtml(ticket.getClosedString()) %>">This ticket was closed on <%= toHtml(ticket.getClosedString()) %></dhv:label></font>)
+    (<font color="red"><dhv:label name="project.ticketClosedOn" param='<%= "time="+toHtml(ticket.getClosedString()) %>'>This ticket was closed on <%= toHtml(ticket.getClosedString()) %></dhv:label></font>)
   </dhv:evaluate>
   <dhv:evaluate if="<%= ticket.getClosed() == null %>">
     (<font color="green"><dhv:label name="quotes.open">Open</dhv:label></font>)

@@ -57,7 +57,7 @@ function reopenOpportunity(id) {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="opportunities" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="opportunities" hideContainer='<%="true".equals(request.getParameter("actionplan")) %>' object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -67,7 +67,7 @@ function reopenOpportunity(id) {
   <input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
   <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
   <input type="hidden" name="orgId" value="<%= OrgDetails.getId() %>">
-  <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>'>
     <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
       <dhv:evaluate if="<%= !OppComponentDetails.isTrashed() %>" >
         <dhv:permission name="accounts-accounts-opportunities-edit">
@@ -142,7 +142,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= OppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= OppComponentDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     </dhv:include>
@@ -161,7 +161,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= OppComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= OppComponentDetails.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -169,7 +169,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= OppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= OppComponentDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <dhv:include name="opportunity.termsAndUnits,pipeline-terms" none="true">
@@ -179,9 +179,9 @@ function reopenOpportunity(id) {
         </td>
         <td>
           <%= OppComponentDetails.getTerms() %>
-          <dhv:evaluate if="<%= OppComponentDetails.getUnits().equals("M") %>">
+          <dhv:evaluate if='<%= OppComponentDetails.getUnits().equals("M") %>'>
              <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-          </dhv:evaluate><dhv:evaluate if="<%= OppComponentDetails.getUnits().equals("W") %>">
+          </dhv:evaluate><dhv:evaluate if='<%= OppComponentDetails.getUnits().equals("W") %>'>
             <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
           </dhv:evaluate>
         </td>
@@ -314,7 +314,7 @@ function reopenOpportunity(id) {
     </tr>
     </dhv:include>
   </table>
-  <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>'>
     <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
       <dhv:evaluate if="<%= !OppComponentDetails.isTrashed() %>" >
         <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br></dhv:permission>

@@ -217,7 +217,7 @@ var menu_init = false;
     <td valign="top" nowrap>
       <dhv:evaluate if="<%= thisCategory.getChildCategories() != null && thisCategory.getChildCategories().size() > 0 %>">
         <dhv:evaluate if="<%= thisCategory.getChildCategories().size() > 1 %>">
-          <dhv:label name="website.portfolio.numberOfCategories" param="<%= "categories="+thisCategory.getChildCategories().size() %>"><%= thisCategory.getChildCategories().size() %> Categories</dhv:label>
+          <dhv:label name="website.portfolio.numberOfCategories" param='<%= "categories="+thisCategory.getChildCategories().size() %>'><%= thisCategory.getChildCategories().size() %> Categories</dhv:label>
         </dhv:evaluate>
         <dhv:evaluate if="<%= thisCategory.getChildCategories().size() == 1 %>">
           <dhv:label name="website.portfolio.oneCategory">1 Category</dhv:label>
@@ -226,7 +226,7 @@ var menu_init = false;
       <dhv:evaluate if="<%= thisCategory.getItems() != null && thisCategory.getItems().size() > 0 %>">
         <dhv:evaluate if="<%= thisCategory.getChildCategories() != null && thisCategory.getChildCategories().size() > 0 %>"><br /></dhv:evaluate>
         <dhv:evaluate if="<%= thisCategory.getItems().size() > 1 %>">
-          <dhv:label name="website.portfolio.numberOfItems" param="<%= "items="+thisCategory.getItems().size() %>"><%= thisCategory.getItems().size() %> Items</dhv:label>
+          <dhv:label name="website.portfolio.numberOfItems" param='<%= "items="+thisCategory.getItems().size() %>'><%= thisCategory.getItems().size() %> Items</dhv:label>
         </dhv:evaluate>
         <dhv:evaluate if="<%= thisCategory.getItems().size() == 1 %>">
           <dhv:label name="website.portfolio.oneItem">1 Item</dhv:label>

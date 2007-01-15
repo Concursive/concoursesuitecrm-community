@@ -242,7 +242,7 @@
       rowid = (rowid != 1?1:2);
       Assignment thisAssignment = (Assignment) assignmentIterator.next();
 %>
-    <zeroio:debug value="<%= "Assignment: " + thisAssignment.getId() %>" />
+    <zeroio:debug value='<%= "Assignment: " + thisAssignment.getId() %>' />
     <tr class="row<%= rowid %>">
       <td width="90%">
         <table border="0" cellpadding="2" cellspacing="0">

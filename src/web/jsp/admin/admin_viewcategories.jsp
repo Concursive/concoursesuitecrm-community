@@ -237,7 +237,7 @@ function activate(){
 <% String param2 = "constantId=" + request.getParameter("constantId"); %>
 <% String param3 = "popup=" + (isPopup(request)?"true":"false"); %>
 <% String param4 = "siteId="+(siteId != null?siteId:String.valueOf(User.getUserRecord().getSiteId())); %>
-<dhv:container name="categories" selected="draft categories" param="<%= param1 + "|" + param2 + "|" + param3 + "|" + param4 %>" style="tabs">
+<dhv:container name="categories" selected="draft categories" param='<%= param1 + "|" + param2 + "|" + param3 + "|" + param4 %>' style="tabs">
   <table border="0" cellpadding="2" cellspacing="0" class="empty">
     <tr>
       <td align="center">
@@ -259,7 +259,7 @@ function activate(){
      }
 %>
       <td align="center">
-        <dhv:label name="admin.level" param="<%= "level="+ (k+1) %>">Level <%= k + 1 %></dhv:label><br>
+        <dhv:label name="admin.level" param='<%= "level="+ (k+1) %>'>Level <%= k + 1 %></dhv:label><br>
 <%
         value = ((selectedCategories.get(new Integer(k)) != null) ? ((Integer) selectedCategories.get(new Integer(k))).intValue() : -1);
         thisSubList.getCatListSelect().setSelectSize(10);

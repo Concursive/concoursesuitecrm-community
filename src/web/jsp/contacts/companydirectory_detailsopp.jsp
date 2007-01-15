@@ -84,7 +84,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
   <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
   <% FileItem thisFile = new FileItem(); %>
@@ -112,7 +112,7 @@
   </dhv:hasAuthority>
   <%= addHiddenParams(request, "popup|popupType|actionId") %>
   <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ComponentListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th width="8">&nbsp;</th>
@@ -148,10 +148,10 @@
           OpportunityComponent oppComponent = (OpportunityComponent)j.next();
           boolean hasPermission = false;
   %>
-    <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) %>">
+    <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) %>'>
       <% hasPermission = true; %>
     </dhv:hasAuthority>
-    <zeroio:debug value="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) + " and the value of hasPermission is "+hasPermission %>"/>
+    <zeroio:debug value='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == oppComponent.getOwner()?"":","+oppComponent.getOwner())) + " and the value of hasPermission is "+hasPermission %>'/>
     <tr class="containerBody">
       <td width="8" valign="top" nowrap class="row<%= rowid %>">
         <%-- check if user has edit or delete based on the type of contact --%>
@@ -190,7 +190,7 @@
         <%}%>
       </td>
       <td valign="top" align="right" nowrap class="row<%= rowid %>">
-        <zeroio:currency value="<%= oppComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= oppComponent.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
       <td valign="top" align="center" nowrap class="row<%= rowid %>">
         <% if(!User.getTimeZone().equals(oppComponent.getCloseDateTimeZone())){%>

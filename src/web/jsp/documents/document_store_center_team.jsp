@@ -113,9 +113,9 @@
       <dhv:documentPermission name="documentcenter-team-edit-role">
         <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
           <dhv:documentRoleSelect
-            name="<%= "role" + thisMember.getItemId() %>"
+            name='<%= "role" + thisMember.getItemId() %>'
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user', "+ thisMember.getSiteId()+");" %>"/>
+            onChange='<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, user, "+ thisMember.getSiteId()+");" %>'/>
          </dhv:evaluate>
          <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
            <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
@@ -201,9 +201,9 @@
       <dhv:documentPermission name="documentcenter-team-edit-role">
         <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
           <dhv:documentRoleSelect
-            name="<%= "role" + thisMember.getItemId() %>"
+            name='<%= "role" + thisMember.getItemId() %>'
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user',"+thisMember.getSiteId()+");" %>"/>
+            onChange='<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, user,"+thisMember.getSiteId()+");" %>'/>
         </dhv:evaluate>
         <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
           <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
@@ -270,9 +270,9 @@
       </dhv:documentPermission>
       <dhv:documentPermission name="documentcenter-team-edit-role">
         <dhv:documentRoleSelect
-          name="<%= "role" + thisMember.getItemId() %>"
+          name='<%= "role" + thisMember.getItemId() %>'
           value="<%= thisMember.getUserLevel() %>"
-          onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'role',"+thisMember.getSiteId()+");" %>"/>
+          onChange='<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, role,"+thisMember.getSiteId()+");" %>'/>
       </dhv:documentPermission>
     </td>
     <td valign="top"><%= toHtml(roleName) %></td>
@@ -322,9 +322,9 @@
       <dhv:documentPermission name="documentcenter-team-edit-role">
         <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
           <dhv:documentRoleSelect
-            name="<%= "role" + thisMember.getItemId() %>"
+            name='<%= "role" + thisMember.getItemId() %>'
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'department',"+thisMember.getSiteId()+");" %>"/>
+            onChange='<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, department,"+thisMember.getSiteId()+");" %>'/>
         </dhv:evaluate>
         <dhv:evaluate if="<%= documentStore.isTrashed() %>" >
           <dhv:documentRole id="<%= thisMember.getUserLevel() %>"/>
@@ -396,9 +396,9 @@
       <dhv:documentPermission name="documentcenter-team-edit-role">
         <dhv:evaluate if="<%= !documentStore.isTrashed() %>" >
           <dhv:documentRoleSelect
-            name="<%= "role" + thisMember.getItemId() %>"
+            name='<%= "role" + thisMember.getItemId() %>'
             value="<%= thisMember.getUserLevel() %>"
-            onChange="<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, 'user',"+thisMember.getSiteId()+");" %>"
+            onChange='<%= "javascript:updateRole(" + thisMember.getDocumentStoreId() + ", " + thisMember.getItemId() + ", this.options[this.selectedIndex].value, user,"+thisMember.getSiteId()+");" %>'
             isPortalUser="true"/>
         </dhv:evaluate>
         <dhv:evaluate if="<%= documentStore.isTrashed() %>" >

@@ -21,7 +21,7 @@
 &nbsp;<br />
 <center><%= groupUsersListInfo.getAlphabeticalPageLinks() %></center>
 &nbsp;<br />
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="groupUsersListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="groupUsersListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th colspan="4" width="100%">

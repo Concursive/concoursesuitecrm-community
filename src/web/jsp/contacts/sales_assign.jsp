@@ -79,10 +79,10 @@
   }
 </script>
 <form name="assignLead">
-<dhv:evaluate if="<%= (readStatus != null && !readStatus.equals("-1") && !readStatus.equals(""+User.getUserRecord().getId())) %>">
+<dhv:evaluate if='<%= (readStatus != null && !readStatus.equals("-1") && !readStatus.equals(""+User.getUserRecord().getId())) %>'>
   <br />
   <img src="images/error.gif" border="0" align="absmiddle"/>
-  <font color="red"><dhv:label name="sales.leadBeingReadBy" param="<%= "username="+getUsername(pageContext,Integer.parseInt(readStatus),false,false,"&nbsp;") %>">This lead is being read by <dhv:username id="<%= readStatus %>" /></dhv:label></font><br />
+  <font color="red"><dhv:label name="sales.leadBeingReadBy" param='<%= "username="+getUsername(pageContext,Integer.parseInt(readStatus),false,false,"&nbsp;") %>'>This lead is being read by <dhv:username id="<%= readStatus %>" /></dhv:label></font><br />
   <br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">

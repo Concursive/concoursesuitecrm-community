@@ -50,14 +50,14 @@
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="productCatalogListCategory">
         <TR>
           <td nowrap>
-            <dhv:evaluate if="<%= "true".equals(searchResults) %>">
+            <dhv:evaluate if='<%= "true".equals(searchResults) %>'>
               Search Results
             </dhv:evaluate>
-            <dhv:evaluate if="<%= !"true".equals(searchResults) %>">
+            <dhv:evaluate if='<%= !"true".equals(searchResults) %>'>
               <dhv:evaluate if="<%= hasText(parentCategory.getName()) %>">
                 <%= StringUtils.toHtml(parentCategory.getName()) %>
               </dhv:evaluate>
-              <dhv:evaluate if="<%= parentCategory.getId() != Integer.parseInt((String)request.getAttribute("preferredCategoryId")) %>">
+              <dhv:evaluate if='<%= parentCategory.getId() != Integer.parseInt((String)request.getAttribute("preferredCategoryId")) %>'>
                 <portlet:renderURL var="parentUrl">
                   <portlet:param name="viewType" value="summary"/>
                   <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getParentId()) %>"/>
@@ -84,7 +84,7 @@
               </dhv:evaluate>
             </dhv:evaluate>
           </td>
-          <dhv:evaluate if="<%= "true".equals(PRODUCT_SEARCH)%>">
+          <dhv:evaluate if='<%= "true".equals(PRODUCT_SEARCH)%>'>
             <td align="right" nowrap>
               <portlet:renderURL portletMode="view" var="searchUrl">
                 <portlet:param name="viewType" value="search"/>
@@ -98,7 +98,7 @@
   </tr>
   <tr>
     <th>
-      <dhv:pagedListStatus label="Items" title="<%= ((PagedListInfo)renderRequest.getPortletSession().getAttribute("productCatalogListInfo")).getMaxRecords() + " item" + (((PagedListInfo)renderRequest.getPortletSession().getAttribute("productCatalogListInfo")).getMaxRecords() == 1 ? "" : "s") + " found" %>" object="productCatalogListInfo" tableClass="productCatalogListStatus" />
+      <dhv:pagedListStatus label="Items" title='<%= ((PagedListInfo)renderRequest.getPortletSession().getAttribute("productCatalogListInfo")).getMaxRecords() + " item" + (((PagedListInfo)renderRequest.getPortletSession().getAttribute("productCatalogListInfo")).getMaxRecords() == 1 ? "" : "s") + " found" %>' object="productCatalogListInfo" tableClass="productCatalogListStatus" />
     </th>
   </tr>
 <dhv:evaluate if="<%= productCatalogList.size() > 0 %>">
@@ -127,9 +127,9 @@
                   <dhv:evaluate if="<%= productCatalog.getThumbnailImageId() > -1 %>"><dhv:fileItemImage id="<%=  productCatalog.getThumbnailImageId() %>" path="products" thumbnail="true" name="<%=  productCatalog.getName() %>" /></dhv:evaluate>
                   <dhv:evaluate if="<%= productCatalog.getThumbnailImageId() == -1 && productCatalog.getLargestImageId() > -1 %>"><dhv:fileItemImage id="<%=  productCatalog.getLargestImageId() %>" path="products" thumbnail="true" name="<%=  productCatalog.getName() %>" /></dhv:evaluate>
 									<div><%=  StringUtils.toHtml(productCatalog.getName()) %></div></a>
-                  <dhv:evaluate if="<%= "true".equals(SHOW_PRICE) %>">
+                  <dhv:evaluate if='<%= "true".equals(SHOW_PRICE) %>'>
                     <dhv:evaluate if="<%= productCatalog.getActivePrice() != null && productCatalog.getActivePrice().getPriceAmount() > 0 %>">
-                      <zeroio:currency value="<%= productCatalog.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>" default="&nbsp;"/>
+                      <zeroio:currency value="<%= productCatalog.getActivePrice().getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale='<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>' default="&nbsp;"/>
                     </dhv:evaluate>
                   </dhv:evaluate>
               </td>

@@ -49,14 +49,14 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
     <dhv:permission name="accounts-service-contracts-add">
       <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="account.sc.addServiceContract">Add Service Contract</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
   <dhv:permission name="accounts-service-contracts-add" none="true"></dhv:permission>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ServiceContractListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th>

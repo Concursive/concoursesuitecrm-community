@@ -108,8 +108,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountsQuotes" selected="details" object="quote" param="<%= "quoteId=" + quote.getId() + "|version=" + version %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountsQuotes" selected="details" object="quote" param='<%= "quoteId=" + quote.getId() + "|version=" + version %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%String status = quoteStatusList.getValueFromId(quote.getStatusId());%>
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <dhv:evaluate if="<%= !quote.isTrashed() %>" >

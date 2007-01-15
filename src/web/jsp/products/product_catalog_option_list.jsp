@@ -75,7 +75,7 @@
   </tr>
 </table>
 <br />
-<dhv:container name="productcatalogs" selected="options" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="options" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
@@ -84,7 +84,7 @@
           <a href="ProductCatalogOptions.do?command=Add&productId=<%= productCatalog.getId() %>&categoryId=<%= productCategory.getId() %>&moduleId=<%= permissionCategory.getId() %>"><dhv:label name="product.addProductOption">Add Product Option</dhv:label></a>
         </dhv:permission>
       </dhv:evaluate>
-    <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ProductCatalogOptionListInfo"/>
+    <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ProductCatalogOptionListInfo"/>
 		<% int columnCount = 0; %>
 		<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
 			<tr>

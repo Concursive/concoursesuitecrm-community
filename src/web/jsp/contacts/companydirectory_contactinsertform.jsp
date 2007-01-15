@@ -160,7 +160,7 @@
 <dhv:formMessage showSpace="false"/>
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
 <dhv:evaluate if="<%= !isPopup(request) %>"><input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';"></dhv:evaluate>
-<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>'>
 <br /><br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -380,7 +380,7 @@
   <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="hidden" name="dosubmit" value="true">
   </dhv:evaluate>
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (isPopup(request)  && !isInLinePopup(request)) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= (isPopup(request)  && !isInLinePopup(request)) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>'>
   <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

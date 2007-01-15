@@ -51,7 +51,7 @@
       <input type="radio" name="doReg" value="need" <%= !"true".equals(found) ? "checked" : "" %> />
       <dhv:label name="setup.requestNewLicense.text">Request a <b>new</b> license for this installation<br /></dhv:label>
       <input type="radio" name="doReg" value="have" <%= !"true".equals(found) ? "disabled" : "checked" %> />
-      <dhv:evaluate if="<%= !"true".equals(found) %>"><font color="#888888"></dhv:evaluate><dhv:label name="setup.continueSetupFromPreviousSession.text">Continue setup from a previously started session</dhv:label><dhv:evaluate if="<%= !"true".equals(found) %>"></font></dhv:evaluate><br />
+      <dhv:evaluate if='<%= !"true".equals(found) %>'><font color="#888888"></dhv:evaluate><dhv:label name="setup.continueSetupFromPreviousSession.text">Continue setup from a previously started session</dhv:label><dhv:evaluate if='<%= !"true".equals(found) %>'></font></dhv:evaluate><br />
       <input type="radio" name="doReg" value="restore" />
       <dhv:label name="setup.restoreBackup">Restore an existing backup<br /></dhv:label>
       <br />

@@ -46,7 +46,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="revenue" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="accounts.accounts_revenue_add.AddRevenue">Add Revenue</dhv:label></a></dhv:permission>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="RevenueListInfo"/></center></dhv:include>
@@ -60,7 +60,7 @@
         </select>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="RevenueListInfo"/>
+        <dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="RevenueListInfo"/>
       </td>
       </form>
     </tr>
@@ -86,7 +86,7 @@
       <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount"><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></a></strong>
       <%= RevenueListInfo.getSortIcon("amount") %>
     </th>
-    <dhv:evaluate if="<%= "all".equals(RevenueListInfo.getListView()) %>">
+    <dhv:evaluate if='<%= "all".equals(RevenueListInfo.getListView()) %>'>
     <th align="center" nowrap>
       <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=owner"><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></a></strong>
       <%= RevenueListInfo.getSortIcon("owner") %>
@@ -119,9 +119,9 @@
         <%= thisRevenue.getYear() %>
       </td>
       <td valign="center" align="right" class="row<%= rowid %>">
-        <zeroio:currency value="<%= thisRevenue.getAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisRevenue.getAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
-      <dhv:evaluate if="<%= "all".equals(RevenueListInfo.getListView()) %>">
+      <dhv:evaluate if='<%= "all".equals(RevenueListInfo.getListView()) %>'>
       <td valign="center" align="right" class="row<%= rowid %>">
         <dhv:username id="<%= thisRevenue.getOwner()%>" />
       </td>

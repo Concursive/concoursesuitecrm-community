@@ -346,10 +346,10 @@
     }
   }
 </script>
-<dhv:evaluate if="<%= (request.getParameter("form_type") == null || "organization".equals((String) request.getParameter("form_type"))) %>">
+<dhv:evaluate if='<%= (request.getParameter("form_type") == null || "organization".equals((String) request.getParameter("form_type"))) %>'>
   <body onLoad="javascript:document.addAccount.name.focus();updateFormElements(0);">
 </dhv:evaluate>
-<dhv:evaluate if="<%= ("individual".equals((String) request.getParameter("form_type"))) %>">
+<dhv:evaluate if='<%= ("individual".equals((String) request.getParameter("form_type"))) %>'>
   <body onLoad="javascript:document.addAccount.name.focus();updateFormElements(1);">
 </dhv:evaluate>
 <form name="addAccount" action="Accounts.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
@@ -592,7 +592,7 @@
         <dhv:label name="organization.employees">No. of Employees</dhv:label>
       </td>
       <td>
-        <input type="text" size="10" name="employees" value="<%= OrgDetails.getEmployees() == 0 ? "" : String.valueOf(OrgDetails.getEmployees()) %>">
+        <input type="text" size="10" name="employees" value='<%= OrgDetails.getEmployees() == 0 ? "" : String.valueOf(OrgDetails.getEmployees()) %>'>
       </td>
     </tr>
   </dhv:include>
@@ -941,12 +941,12 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(thisAddress.getCountry())? "" : " display:none" %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style='<%= StateSelect.hasCountry(thisAddress.getCountry())? "" : " display:none" %>'>
         <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>">
-        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style='<%= !StateSelect.hasCountry(thisAddress.getCountry()) ? "" : " display:none" %>'>
+        <input type="text" size="25" name='<%= "address" + acount + "otherState" %>'  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
     </td>
   </tr>
@@ -976,11 +976,11 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>1<dhv:label name="accounts.address.latitude">Latitude</dhv:label></td>
-    <td><input type="text" name="address<%= acount %>latitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? "" + thisAddress.getLatitude() : "") %>"></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value='<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? "" + thisAddress.getLatitude() : "") %>'></td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap><dhv:label name="accounts.address.longitude">Longitude</dhv:label></td>
-    <td><input type="text" name="address<%= acount %>longitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? "" + thisAddress.getLongitude() : "") %>"></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value='<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? "" + thisAddress.getLongitude() : "") %>'></td>
   </tr>
   <tr class="containerBody">
     <td colspan="2">
@@ -1045,12 +1045,12 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>                                                         
-      <span name="state1<%= acount %>" ID="state1<%= acount %>"  style="<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>"  style='<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
         <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>"  style="<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
-        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>"  style='<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
+        <input type="text" size="25" name='<%= "address" + acount + "otherState" %>'>
       </span>
     </td>
   </tr>
@@ -1156,12 +1156,12 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style='<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
         <%= StateSelect.getHtmlSelect("address" + acount + "state", thisAddress.getCountry(), thisAddress.getState()) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
-        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style='<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
+        <input type="text" size="25" name='<%= "address" + acount + "otherState" %>'  value="<%= toHtmlValue(thisAddress.getState()) %>">
       </span>
     </td>
   </tr>
@@ -1191,11 +1191,11 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap><dhv:label name="accounts.address.latitude">Latitude</dhv:label></td>
-    <td><input type="text" name="address<%= acount %>latitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLatitude()) : "") %>"></td>
+    <td><input type="text" name="address<%= acount %>latitude" size="10" value='<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLatitude()) : "") %>'></td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap><dhv:label name="accounts.address.longitude">Longitude</dhv:label></td>
-    <td><input type="text" name="address<%= acount %>longitude" size="10" value="<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLongitude()) : "") %>"></td>
+    <td><input type="text" name="address<%= acount %>longitude" size="10" value='<%= ((thisAddress.getLatitude() != 0.0 || thisAddress.getLongitude() != 0.0) ? String.valueOf(thisAddress.getLongitude()) : "") %>'></td>
   </tr>
   <tr class="containerBody">
     <td colspan="2">
@@ -1260,12 +1260,12 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style='<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
         <%= StateSelect.getHtmlSelect("address" + acount + "state", applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
-        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>" >
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style='<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
+        <input type="text" size="25" name='<%= "address" + acount + "otherState" %>' >
       </span>
     </td>
   </tr>
@@ -1365,12 +1365,12 @@
       <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
-      <span name="state11" ID="state11" style="<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
+      <span name="state11" ID="state11" style='<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
         <%= StateSelect.getHtmlSelect("address1state",applicationPrefs.get("SYSTEM.COUNTRY")) %>
       </span>
       <%-- If selected country is not US/Canada use textfield --%>
-      <span name="state21" ID="state21" style="<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
-        <input type="text" size="25" name="<%= "address1otherState" %>" >
+      <span name="state21" ID="state21" style='<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
+        <input type="text" size="25" name='<%= "address1otherState" %>' >
       </span>
     </td>
   </tr>
@@ -1464,12 +1464,12 @@
         <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
       </td>
       <td>
-        <span name="state12" ID="state12" style="<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
+        <span name="state12" ID="state12" style='<%= StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
           <%= StateSelect.getHtmlSelect("address2state",applicationPrefs.get("SYSTEM.COUNTRY")) %>
         </span>
         <%-- If selected country is not US/Canada use textfield --%>
-        <span name="state22" ID="state22" style="<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>">
-          <input type="text" size="25" name="<%= "address2otherState" %>" >
+        <span name="state22" ID="state22" style='<%= !StateSelect.hasCountry(applicationPrefs.get("SYSTEM.COUNTRY")) ? "" : " display:none" %>'>
+          <input type="text" size="25" name='<%= "address2otherState" %>' >
         </span>
       </td>
     </tr>
@@ -1654,7 +1654,7 @@
 <input type="checkbox" id="copyAddress" name="copyAddress" value="true"  disabled="true" /><dhv:label name="accounts.accounts_add.copyEmailPhoneAddress">Copy email, phone and postal address</dhv:label>
 </dhv:evaluate>  
 <br />
-<input type="hidden" name="onlyWarnings" value="<%=(OrgDetails.getOnlyWarnings()?"on":"off")%>" />
+<input type="hidden" name="onlyWarnings" value='<%=(OrgDetails.getOnlyWarnings()?"on":"off")%>' />
 <%= addHiddenParams(request, "actionSource|popup") %>
 <input type="submit" value="<dhv:label name="global.button.insert">Insert</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';" />
 <dhv:evaluate if="<%= !popUp %>">

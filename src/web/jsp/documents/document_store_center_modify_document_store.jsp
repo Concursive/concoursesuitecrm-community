@@ -142,7 +142,7 @@
   </tr>
 </table>
 <br />
-<input type="hidden" name="onlyWarnings" value="<%=(documentStore.getOnlyWarnings()?"on":"off")%>" />
+<input type="hidden" name="onlyWarnings" value='<%=(documentStore.getOnlyWarnings()?"on":"off")%>' />
 <input type="submit" value="<dhv:label name="documents.modify.update">Update</dhv:label>" />
 <input type="button" value="<dhv:label name="documents.modify.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='DocumentManagement.do?command=DocumentStoreCenter&section=Details&documentStoreId=<%= documentStore.getId() %>'" />
 </form>

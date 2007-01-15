@@ -36,10 +36,10 @@
 <form name="addActionPhase" action="ActionPhaseEditor.do?command=SavePhase&&planId=<%= actionPlan.getId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="id" value="<%= actionPhase.getId() %>"/>
 <input type="hidden" name="planId" value="<%= actionPlan.getId() %>"/>
-<dhv:evaluate if="<%= nextPhaseId != null && !"".equals(nextPhaseId) %>">
+<dhv:evaluate if='<%= nextPhaseId != null && !"".equals(nextPhaseId) %>'>
   <input type="hidden" name="nextPhaseId" value="<%= nextPhaseId %>"/>
 </dhv:evaluate>
-<dhv:evaluate if="<%= previousPhaseId != null && !"".equals(previousPhaseId) %>">
+<dhv:evaluate if='<%= previousPhaseId != null && !"".equals(previousPhaseId) %>'>
   <input type="hidden" name="previousPhaseId" value="<%= previousPhaseId %>"/>
 </dhv:evaluate>
 <dhv:formMessage showSpace="false"/>

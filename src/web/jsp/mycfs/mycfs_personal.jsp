@@ -115,7 +115,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><dhv:label name="calendar.detailsFor.colon" param="<%= "employee.name="+toHtml(EmployeeBean.getNameFirstLast()) %>">Details for: <%= toHtml(EmployeeBean.getNameFirstLast()) %></dhv:label></strong>
+      <strong><dhv:label name="calendar.detailsFor.colon" param='<%= "employee.name="+toHtml(EmployeeBean.getNameFirstLast()) %>'>Details for: <%= toHtml(EmployeeBean.getNameFirstLast()) %></dhv:label></strong>
     </th>
   </tr>
   <tr>

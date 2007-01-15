@@ -77,11 +77,11 @@ function reopenOpportunity(id) {
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="<%= (opportunityComponent.getId() != -1 ? "details" : "history") %>" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="componentHistoryListInfo"/>
+<dhv:container name="opportunities" selected='<%= (opportunityComponent.getId() != -1 ? "details" : "history") %>' object="opportunityHeader" param='<%= "id=" + opportunityHeader.getId() %>' appendToUrl='<%= addLinkParams(request, "viewSource") %>'>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="componentHistoryListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th align="center" nowrap>
@@ -129,7 +129,7 @@ function reopenOpportunity(id) {
         OpportunityComponentLog thisComponentLog = (OpportunityComponentLog)j.next();
         boolean hasPermission = false;
 %>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponentLog.getOwner()?"":","+thisComponentLog.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponentLog.getOwner()?"":","+thisComponentLog.getOwner())) %>'>
     <% hasPermission = true;%>
   </dhv:hasAuthority>
     <tr class="row<%= rowid %>">

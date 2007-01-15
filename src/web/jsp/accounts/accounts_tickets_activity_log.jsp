@@ -54,8 +54,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountstickets" object="ticketDetails" selected="activitylog" param='<%= "id=" + ticketDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%@ include file="accounts_ticket_header_include.jsp" %>
 <dhv:permission name="accounts-accounts-tickets-activity-log-add,tickets-activity-log-view" all="false">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
@@ -68,7 +68,7 @@
   </tr>
 </table>
 </dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TMListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="TMListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>

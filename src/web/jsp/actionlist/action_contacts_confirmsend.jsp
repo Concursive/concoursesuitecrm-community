@@ -40,14 +40,14 @@
       (<%= Recipient.getPrimaryEmailAddress() %>)
     </td>
   </tr>
-  <dhv:evaluate if="<%= cc != null && !"".equals(cc) %>">
+  <dhv:evaluate if='<%= cc != null && !"".equals(cc) %>'>
   <tr class="row2">
     <td>
       <dhv:label name="quotes.cc">CC</dhv:label>: <%= toHtml(cc) %>
     </td>
   </tr>
   </dhv:evaluate>
-  <dhv:evaluate if="<%= bcc != null && !"".equals(bcc) %>">
+  <dhv:evaluate if='<%= bcc != null && !"".equals(bcc) %>'>
   <tr class="row2">
     <td>
       <dhv:label name="quotes.bcc">BCC</dhv:label>: <%= toHtml(bcc) %>

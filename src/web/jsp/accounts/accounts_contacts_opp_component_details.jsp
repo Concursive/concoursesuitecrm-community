@@ -48,9 +48,9 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="contacts" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="contactDetails" param="<%= "id=" + contactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param="<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + orgDetails.getOrgId() +"|" + "contactId=" + contactDetails.getId() %>">
+<dhv:container name="accounts" selected="contacts" object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="contactDetails" param='<%= "id=" + contactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+    <dhv:container name="accountcontactopportunities" selected="details" object="opportunityHeader" param='<%= "headerId=" + opportunityHeader.getId() + "|" + "orgId=" + orgDetails.getOrgId() +"|" + "contactId=" + contactDetails.getId() %>'>
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
@@ -96,7 +96,7 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= componentLogDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= componentLogDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     </dhv:include>
@@ -105,7 +105,7 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= componentLogDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= componentLogDetails.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -113,7 +113,7 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= componentLogDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= componentLogDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <dhv:include name="opportunity.termsAndUnits" none="true">
@@ -122,9 +122,9 @@
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
       </td>
       <td><%= componentLogDetails.getTerms() %>
-        <dhv:evaluate if="<%= componentLogDetails.getUnits().equals("M") %>">
+        <dhv:evaluate if='<%= componentLogDetails.getUnits().equals("M") %>'>
            <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-        </dhv:evaluate><dhv:evaluate if="<%= componentLogDetails.getUnits().equals("W") %>">
+        </dhv:evaluate><dhv:evaluate if='<%= componentLogDetails.getUnits().equals("W") %>'>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
         </dhv:evaluate>
       </td>

@@ -19,7 +19,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
 <%@ page import="org.aspcfs.modules.website.base.IceletProperty" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
-<zeroio:debug value="<%= "\n\n\nJSP::the clientType.showApplet() is "+clientType.showApplet() %>"/>
+<zeroio:debug value='<%= "\n\n\nJSP::the clientType.showApplet() is "+clientType.showApplet() %>'/>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
   <script language="javascript" type="text/javascript">
     initEditor('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>');

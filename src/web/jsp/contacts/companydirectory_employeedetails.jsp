@@ -75,7 +75,7 @@ function reopenContact(id) {
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="employees" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
+<dhv:container name="employees" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>' hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
 <dhv:evaluate if="<%= ContactDetails.getEnabled()  && !ContactDetails.isTrashed() %>">
   <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
   <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true<%= isPopup(request) ? "&sourcePopup=true":"" %>','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>

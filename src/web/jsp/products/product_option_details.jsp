@@ -37,7 +37,7 @@
 <%@ include file="product_option_header_include.jsp" %>
 <% String param1 = "optionId=" + ProductOption.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productoptions" selected="details" object="ProductOption" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productoptions" selected="details" object="ProductOption" param='<%= param1 + "|" + param2 %>'>
   <input type="hidden" name="optionId" value="<%= ProductOption.getId() %>">
   <input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='ProductOptions.do?command=Modify&optionId=<%= ProductOption.getId() %>&moduleId=<%= PermissionCategory.getId() %>'">
   <input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ProductOptions.do?command=ConfirmDelete&optionId=<%=ProductOption.getId()%>&popup=true','ProductOptions.do?command=List&moduleId=<%=PermissionCategory.getId()%>', 'Delete_option','320','200','yes','no');">

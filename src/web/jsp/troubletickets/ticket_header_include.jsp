@@ -29,7 +29,7 @@
 <table width="100%" border="0">
   <tr>
     <td nowrap width="100%"><table width="100%" class="empty">
-        <dhv:evaluate if="<%= thisTicket.getCompanyNameHierarchy() != null && !"".equals(thisTicket.getCompanyNameHierarchy().trim()) %>">
+        <dhv:evaluate if='<%= thisTicket.getCompanyNameHierarchy() != null && !"".equals(thisTicket.getCompanyNameHierarchy().trim()) %>'>
         <tr><td nowrap width="100%" align="left"><strong><dhv:label name="tickets.parentAccounts.colon">Parent Accounts:</dhv:label></strong> <%= toHtml(thisTicket.getCompanyNameHierarchy()) %></td></tr>
         </dhv:evaluate>
         <tr><td nowrap colspan="2" align="left"><strong><dhv:label name="accounts.organization.colon">Organization:</dhv:label></strong> <%= toHtml(thisTicket.getCompanyName()) %></td></tr>

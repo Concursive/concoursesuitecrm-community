@@ -64,7 +64,7 @@ function reopenOpportunity(id) {
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin container --%>
@@ -72,7 +72,7 @@ function reopenOpportunity(id) {
    String param2 = addLinkParams(request, "viewSource");
 %>
 <dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == LeadsComponentDetails.getOwner() ? "":","+LeadsComponentDetails.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == LeadsComponentDetails.getOwner() ? "":","+LeadsComponentDetails.getOwner())) %>'>
   <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
     <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>';submit();"></dhv:permission>
     <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= LeadsComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
@@ -136,7 +136,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= LeadsComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= LeadsComponentDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     </dhv:include>
@@ -155,7 +155,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= LeadsComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= LeadsComponentDetails.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -163,7 +163,7 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
       </td>
       <td>
-        <zeroio:currency value="<%= LeadsComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= LeadsComponentDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
     <dhv:include name="opportunity.termsAndUnits,pipeline-terms" none="true">
@@ -172,9 +172,9 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
       </td>
       <td><%= LeadsComponentDetails.getTerms() %>
-        <dhv:evaluate if="<%= LeadsComponentDetails.getUnits().equals("M") %>">
+        <dhv:evaluate if='<%= LeadsComponentDetails.getUnits().equals("M") %>'>
            <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
-        </dhv:evaluate><dhv:evaluate if="<%= LeadsComponentDetails.getUnits().equals("W") %>">
+        </dhv:evaluate><dhv:evaluate if='<%= LeadsComponentDetails.getUnits().equals("W") %>'>
           <dhv:label name="accounts.accounts_contacts_oppcomponent_details.weeks">weeks</dhv:label>
         </dhv:evaluate>
       </td>
@@ -186,10 +186,10 @@ function reopenOpportunity(id) {
         <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
       </td>
       <td>
-        <dhv:evaluate if="<%= "Closed".equals(LeadsComponentDetails.getStageName()) %>">
+        <dhv:evaluate if='<%= "Closed".equals(LeadsComponentDetails.getStageName()) %>'>
           <dhv:label name="quotes.closed">Closed</dhv:label>&nbsp;
         </dhv:evaluate>
-        <dhv:evaluate if="<%= !"Closed".equals(LeadsComponentDetails.getStageName()) %>">
+        <dhv:evaluate if='<%= !"Closed".equals(LeadsComponentDetails.getStageName()) %>'>
           <%= toHtml(LeadsComponentDetails.getStageName()) %>&nbsp;
         </dhv:evaluate>
       </td>
@@ -212,7 +212,7 @@ function reopenOpportunity(id) {
         <dhv:label name="pipeline.environment">Environment</dhv:label>
       </td>
       <td>
-      <zeroio:debug value="<%= "JSP:: the environment is "+ LeadsComponentDetails.getEnvironment() %>"/>
+      <zeroio:debug value='<%= "JSP:: the environment is "+ LeadsComponentDetails.getEnvironment() %>'/>
       <%= toHtml(environmentSelect.getSelectedValue(LeadsComponentDetails.getEnvironment())) %>
       </td>
     </tr>
@@ -315,7 +315,7 @@ function reopenOpportunity(id) {
     </tr>
     </dhv:include>
   </table>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == LeadsComponentDetails.getOwner() ? "":","+LeadsComponentDetails.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == LeadsComponentDetails.getOwner() ? "":","+LeadsComponentDetails.getOwner())) %>'>
   <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
     <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete"><br></dhv:permission>
     <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%= LeadsComponentDetails.getId() %>';submit();"></dhv:permission>

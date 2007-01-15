@@ -44,7 +44,7 @@
 <%@ include file="product_option_header_include.jsp" %>
 <% String param1 = "optionId=" + ProductOption.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productoptions" selected="values" object="ProductOption" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productoptions" selected="values" object="ProductOption" param='<%= param1 + "|" + param2 %>'>
   <input type="hidden" name="moduleId" value="<%= toHtmlValue(PermissionCategory.getId()) %>"/>
   <input type="hidden" name="optionId" value="<%= ProductOption.getId() %>"/>
   <input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="this.form.dosubmit.value='true';">

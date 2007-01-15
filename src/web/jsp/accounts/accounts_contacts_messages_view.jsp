@@ -45,8 +45,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-<dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+<dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
     <dhv:permission name="accounts-accounts-contacts-messages-view">
       <a href="AccountContactsMessages.do?command=PrepareMessage&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType") %>"><dhv:label name="actionList.newMessage">New Message</dhv:label></a>
@@ -64,7 +64,7 @@
           </form>
         </td>
         <td>
-          <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountContactMessageListInfo"/>
+          <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AccountContactMessageListInfo"/>
         </td>
       </tr>
     </table>

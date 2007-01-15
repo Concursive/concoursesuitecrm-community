@@ -60,7 +60,7 @@ function page_init() {
 <%
   }
 %>
-<dhv:evaluate if="<%= "true".equals(populateResourceAssigned) %>">
+<dhv:evaluate if='<%= "true".equals(populateResourceAssigned) %>'>
   <dhv:evaluate if="<%= ((resourceAssignedList.size() > 0) || (resourceAssignedDepartmentCode != null)) %>">
     var resourceAssignedWidget = parent.document.forms['addticket'].assignedTo;
     resourceAssignedWidget.options.length = 0;
@@ -79,7 +79,7 @@ function page_init() {
   %>
   </dhv:evaluate>
 </dhv:evaluate>
-<dhv:evaluate if="<%= "true".equals(populateResolvedBy) %>">
+<dhv:evaluate if='<%= "true".equals(populateResolvedBy) %>'>
   <dhv:evaluate if="<%= ((resolvedByList.size() > 0) || (resolvedByDepartmentCode != null)) %>">
     var resolvedByWidget = parent.document.forms['addticket'].resolvedBy;
     resolvedByWidget.options.length = 0;
@@ -98,7 +98,7 @@ function page_init() {
   %>
   </dhv:evaluate>
 </dhv:evaluate>
-<dhv:evaluate if="<%= "true".equals(populateDefects) %>">
+<dhv:evaluate if='<%= "true".equals(populateDefects) %>'>
   <dhv:evaluate if="<%= (defectList.size() > 0) %>">
     var defectWidget = parent.document.forms['addticket'].defectId;
     defectWidget.options.length = 0;

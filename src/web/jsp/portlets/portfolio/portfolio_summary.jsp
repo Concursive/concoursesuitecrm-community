@@ -75,7 +75,7 @@
   <br />
   </dhv:evaluate>
 </dhv:evaluate>
-<dhv:evaluate if="<%= portfolioItemList.size() > 0 || parentCategory.getId() != Integer.parseInt((String)request.getAttribute("preferredCategoryId")) %>">
+<dhv:evaluate if='<%= portfolioItemList.size() > 0 || parentCategory.getId() != Integer.parseInt((String)request.getAttribute("preferredCategoryId")) %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <th>
@@ -84,12 +84,12 @@
 	</tr>
   <tr>
     <td style="text-align:left;">
-      <dhv:evaluate if="<%=!(parentCategory.getId() == Integer.parseInt((String)request.getAttribute("preferredCategoryId")))%>">
+      <dhv:evaluate if='<%=!(parentCategory.getId() == Integer.parseInt((String)request.getAttribute("preferredCategoryId")))%>'>
         <portlet:renderURL var="parentUrl">
           <portlet:param name="viewType" value="summary"/>
           <portlet:param name="categoryId" value="<%= String.valueOf(parentCategory.getParentId()) %>"/>
         </portlet:renderURL>
-        [<a href="<%= pageContext.getAttribute("parentUrl") %>">Back to Parent Category</a>]
+        [<a href='<%= pageContext.getAttribute("parentUrl") %>'>Back to Parent Category</a>]
       </dhv:evaluate>
     </td>
   </tr>

@@ -43,7 +43,7 @@
 <dhv:permission name="admin-roles-add"><a href="Roles.do?command=InsertRoleForm"><dhv:label name="admin.addNewRole">Add New Role</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="RoleListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="RoleListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>

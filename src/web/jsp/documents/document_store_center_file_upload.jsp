@@ -62,7 +62,7 @@
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="documentStoreId" value="<%= documentStore.getId() %>">
 <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
-  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+  <input type="hidden" name="folderId" value='<%= request.getParameter("folderId") %>'>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>

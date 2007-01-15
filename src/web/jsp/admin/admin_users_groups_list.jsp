@@ -60,11 +60,11 @@ var currentUserGroupNames = '';
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="users" selected="groups" object="thisUser" param="<%= "id=" + thisUser.getId() %>">
+<dhv:container name="users" selected="groups" object="thisUser" param='<%= "id=" + thisUser.getId() %>'>
 <dhv:permission name="admin-users-view"><a href="javascript:popUserGroupsSelectMultiple('groups','1','lookup_quote_remarks','<%= thisUser.getId() %>',currentUserGroupIDs, currentUserGroupNames,'UserGroups');"><dhv:label name="actionPlan.editGroups">Edit Groups</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="groupListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="groupListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="groupListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th nowrap>

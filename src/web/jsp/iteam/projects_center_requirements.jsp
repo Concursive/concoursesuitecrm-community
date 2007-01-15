@@ -62,7 +62,7 @@
       </select>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="projectRequirementsInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="projectRequirementsInfo"/>
     </td>
     </form>
   </tr>
@@ -156,19 +156,19 @@
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() > 0 %>">
         <% if(thisRequirement.getPlanActivityCount() == 1) {%>
-          <dhv:label name="project.numberOfActivityComplete" param="<%= "complete="+thisRequirement.getPlanClosedCount() +"|total="+ thisRequirement.getPlanActivityCount() %>">(<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %> activity is complete)</dhv:label>
+          <dhv:label name="project.numberOfActivityComplete" param='<%= "complete="+thisRequirement.getPlanClosedCount() +"|total="+ thisRequirement.getPlanActivityCount() %>'>(<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %> activity is complete)</dhv:label>
         <%} else {%>
-          <dhv:label name="project.numberOfActivitiesComplete" param="<%= "complete="+thisRequirement.getPlanClosedCount() +"|total="+ thisRequirement.getPlanActivityCount() %>">(<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %> activities are complete)</dhv:label>
+          <dhv:label name="project.numberOfActivitiesComplete" param='<%= "complete="+thisRequirement.getPlanClosedCount() +"|total="+ thisRequirement.getPlanActivityCount() %>'>(<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %> activities are complete)</dhv:label>
         <%}%>
       </dhv:evaluate>
     </td>
     <td valign="top" nowrap>
       <% if(!User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
-        <dhv:label name="project.due.colon" param="<%= "date="+getTime(pageContext,thisRequirement.getDeadline(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
+        <dhv:label name="project.due.colon" param='<%= "date="+getTime(pageContext,thisRequirement.getDeadline(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
       <% } else { %>
-        <dhv:label name="project.due.colon" param="<%= "date="+getTime(pageContext,thisRequirement.getDeadline(),thisRequirement.getDeadlineTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
+        <dhv:label name="project.due.colon" param='<%= "date="+getTime(pageContext,thisRequirement.getDeadline(),thisRequirement.getDeadlineTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
       <% } %><br />
-      <dhv:label name="project.loe.colon" param="<%= "date="+thisRequirement.getEstimatedLoeString() %>">LOE: <%= thisRequirement.getEstimatedLoeString() %></dhv:label>
+      <dhv:label name="project.loe.colon" param='<%= "date="+thisRequirement.getEstimatedLoeString() %>'>LOE: <%= thisRequirement.getEstimatedLoeString() %></dhv:label>
     </td>
   </tr>
 <%    
@@ -188,8 +188,8 @@
       (<dhv:username id="<%= thisAssignment.getUserAssignedId() %>"/>)
     </td>
     <td valign="top" nowrap>
-      <dhv:label name="project.due.colon" param="<%= "date="+thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %>">Due: <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %></dhv:label><br />
-      <dhv:label name="project.loe.colon" param="<%= "date="+thisAssignment.getEstimatedLoeString() %>">LOE: <%= thisAssignment.getEstimatedLoeString() %></dhv:label>
+      <dhv:label name="project.due.colon" param='<%= "date="+thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %>'>Due: <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %></dhv:label><br />
+      <dhv:label name="project.loe.colon" param='<%= "date="+thisAssignment.getEstimatedLoeString() %>'>LOE: <%= thisAssignment.getEstimatedLoeString() %></dhv:label>
     </td>
   </tr>
 <%

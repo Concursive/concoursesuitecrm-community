@@ -66,7 +66,7 @@ function setField(formField,thisValue,thisForm) {
     <input type="hidden" id="comment_<%= i %>" name="comment_<%= i %>"  value="<%=(quoteProduct.getComment() == null || "".equals(quoteProduct.getComment())) ? "" : toHtml(quoteProduct.getComment()) %>" />
     <td><b><%= product.getName() %></b></td>
     <td align="center"><b><%= quoteProduct.getQuantity() %></b></td>
-    <td align="right"><b><zeroio:currency value="<%= quoteProduct.getQuantity() * quoteProduct.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></b></td>
+    <td align="right"><b><zeroio:currency value="<%= quoteProduct.getQuantity() * quoteProduct.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></b></td>
   </tr>
   <tr>
     <td colspan="3" class="empty">

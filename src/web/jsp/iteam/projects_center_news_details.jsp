@@ -49,7 +49,7 @@
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
         <tr>
           <td width="100%">
-            <dhv:label name="project.by.postedOn" param="<%= "username="+getUsername(pageContext,newsArticle.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,newsArticle.getStartDate(),newsArticle.getStartDateTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">By <dhv:username id="<%= newsArticle.getEnteredBy() %>"/> - Posted on <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
+            <dhv:label name="project.by.postedOn" param='<%= "username="+getUsername(pageContext,newsArticle.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,newsArticle.getStartDate(),newsArticle.getStartDateTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>'>By <dhv:username id="<%= newsArticle.getEnteredBy() %>"/> - Posted on <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
             <% if(!User.getTimeZone().equals(newsArticle.getStartDateTimeZone())){%>
             <br />
             <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>

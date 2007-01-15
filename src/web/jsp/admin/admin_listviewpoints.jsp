@@ -44,11 +44,11 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="users" selected="viewpoints" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+<dhv:container name="users" selected="viewpoints" object="UserRecord" param='<%= "id=" + UserRecord.getId() %>'>
   <dhv:permission name="admin-roles-add"><a href="Viewpoints.do?command=InsertViewpointForm&userId=<%= UserRecord.getId() %>"><dhv:label name="admin.addNewViewpoint">Add New Viewpoint</dhv:label></a></dhv:permission>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="ViewpointListInfo"/></center></dhv:include>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ViewpointListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ViewpointListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th width="8" nowrap>

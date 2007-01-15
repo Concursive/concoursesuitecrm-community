@@ -46,8 +46,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="messages" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr>
         <th colspan="2">
@@ -78,7 +78,7 @@
           <%= toHtml(Campaign.getMessageName()) %>
         </td>
       </tr>
-    <dhv:evaluate if="<%= Campaign.getBcc() != null && !"".equals(Campaign.getCc()) %>">
+    <dhv:evaluate if='<%= Campaign.getBcc() != null && !"".equals(Campaign.getCc()) %>'>
       <tr class="containerBody">
         <td class="formLabel">
           <dhv:label name="quotes.cc">CC</dhv:label>
@@ -88,7 +88,7 @@
         </td>
       </tr>
     </dhv:evaluate>
-    <dhv:evaluate if="<%= Campaign.getBcc() != null && !"".equals(Campaign.getBcc()) %>">
+    <dhv:evaluate if='<%= Campaign.getBcc() != null && !"".equals(Campaign.getBcc()) %>'>
       <tr class="containerBody">
         <td class="formLabel">
           <dhv:label name="quotes.bcc">BCC</dhv:label>

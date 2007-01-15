@@ -84,7 +84,7 @@
                 <option value="my|closed"><dhv:label name="project.closedProjects">Closed projects</dhv:label></option>
                 <option value="dept|all"><dhv:label name="project.departmentList">Department list</dhv:label></option>
                 <option value="acct|all">Accounts</option>
-                 <%--<dhv:evaluate if="<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>"><option value="email|one">Email address</option></dhv:evaluate> --%>
+                 <%--<dhv:evaluate if='<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>'><option value="email|one">Email address</option></dhv:evaluate> --%>
                 <%--<option value="groups|all">My custom groups</option>--%>
               </select>
             </td>

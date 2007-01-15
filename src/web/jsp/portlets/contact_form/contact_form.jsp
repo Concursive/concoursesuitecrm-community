@@ -66,12 +66,12 @@
         --%>
       </td>
     </tr>
-    <dhv:evaluate if="<%= "true".equals(showEmail) %>">
+    <dhv:evaluate if='<%= "true".equals(showEmail) %>'>
     <tr>
       <td class="formLabel" nowrap><dhv:label name="quotes.emailAddress">Email Address</dhv:label></td>
       <td>
         <input type="text" name="email1address" size="25"/>
-        <dhv:evaluate if="<%= "true".equals(emailRequired) %>">
+        <dhv:evaluate if='<%= "true".equals(emailRequired) %>'>
           <font color="red">*</font>
         </dhv:evaluate>
       </td>

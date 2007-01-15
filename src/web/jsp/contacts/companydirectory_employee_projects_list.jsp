@@ -52,8 +52,8 @@
     colspanDecrement = 1;
   }
 %>
-<dhv:container name="employees" selected="projects" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryProjectsInfo"/>
+<dhv:container name="employees" selected="projects" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="CompanyDirectoryProjectsInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <dhv:evaluate if="<%= colspanDecrement != 1 %>">
@@ -140,12 +140,12 @@
         </dhv:evaluate>
         <dhv:evaluate if="<%= requirements.getPlanActivityCount() > 0 %>">
           <% if (requirements.getPlanActivityCount() == 1) { %>
-          <dhv:label name="project.oneOfOneActivityComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"|activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activity is complete)</dhv:label>
+          <dhv:label name="project.oneOfOneActivityComplete.text" param='<%= "closedCount="+requirements.getPlanClosedCount()+"|activityCount="+requirements.getPlanActivityCount() %>'>(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activity is complete)</dhv:label>
           <%} else {%>
             <% if (requirements.getPlanClosedCount() == 1) { %>
-          <dhv:label name="project.oneOfSeveralActivitiesComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"|activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activities is complete)</dhv:label>
+          <dhv:label name="project.oneOfSeveralActivitiesComplete.text" param='<%= "closedCount="+requirements.getPlanClosedCount()+"|activityCount="+requirements.getPlanActivityCount() %>'>(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activities is complete)</dhv:label>
             <%} else {%>
-          <dhv:label name="project.numberofSeveralActivitiesComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"|activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activities are complete)</dhv:label>
+          <dhv:label name="project.numberofSeveralActivitiesComplete.text" param='<%= "closedCount="+requirements.getPlanClosedCount()+"|activityCount="+requirements.getPlanActivityCount() %>'>(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activities are complete)</dhv:label>
             <%}%>
           <%}%>
         </dhv:evaluate>

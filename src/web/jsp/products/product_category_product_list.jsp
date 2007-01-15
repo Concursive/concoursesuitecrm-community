@@ -66,10 +66,10 @@
 <%@ include file="product_category_header_include.jsp" %>
 <% String param1 = "categoryId=" + ProductCategory.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcategories" selected="products" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcategories" selected="products" object="ProductCategory" param='<%= param1 + "|" + param2 %>'>
   <a href="javascript:popProductCatalogsListMultipleCategory(existingIds, 'categoryId=<%= ProductCategory.getId() %>&moduleId=<%= PermissionCategory.getId() %>');"><dhv:label name="product.addProduct">Add Product</dhv:label></a>
   <center><%= ProductCatalogListInfo.getAlphabeticalPageLinks() %></center>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ProductCatalogListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ProductCatalogListInfo"/>
   <% int columnCount = 0; %>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>

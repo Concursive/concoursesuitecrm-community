@@ -56,7 +56,7 @@
   --%>
   <tr>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ExpirationContractListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ExpirationContractListInfo"/>
     </td>
   </tr>
 </table>

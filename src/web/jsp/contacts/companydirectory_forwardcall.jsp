@@ -53,7 +53,7 @@ function hideSendButton() {
 <a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
 <a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId() %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
-<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<dhv:evaluate if='<%= !"list".equals(request.getParameter("return")) %>'>
   <a href="ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>"><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></a> >
 </dhv:evaluate>
 <dhv:label name="accounts.accounts_contacts_calls_forward.ForwardActivity">Forward Activity</dhv:label>
@@ -62,7 +62,7 @@ function hideSendButton() {
 </table>
 </dhv:evaluate>
 <%-- End Trails --%>
-<dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="calls" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <input type="submit" id="send1" value="<dhv:label name="global.button.send">Send</dhv:label>" />
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|view|popupType") %>'">

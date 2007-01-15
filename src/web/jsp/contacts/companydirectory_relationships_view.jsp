@@ -33,7 +33,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="contacts" selected="relationships" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="contacts" selected="relationships" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:permission name="demo-add"><a href="ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_add.jsp&contactId=<%= ContactDetails.getId() %>">Build New Relationship</a><br /></dhv:permission>
   <br>
   <input type="BUTTON" value="<dhv:label name="button.relationshipWith">Relationship with...</dhv:label>" onclick="javascript:window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">

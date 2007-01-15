@@ -40,7 +40,7 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr>
   <th colspan="2">
-    <strong><dhv:label name="help.moduleDescription.colon" param="<%= "helpModule.relatedAction="+helpModule.getRelatedAction() %>">Module Description: <%= helpModule.getRelatedAction() %></dhv:label></strong>
+    <strong><dhv:label name="help.moduleDescription.colon" param='<%= "helpModule.relatedAction="+helpModule.getRelatedAction() %>'>Module Description: <%= helpModule.getRelatedAction() %></dhv:label></strong>
   </th>
 </tr>
 <tr class="containerBody">

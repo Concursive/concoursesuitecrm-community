@@ -38,7 +38,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="response" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="response" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
   <dhv:evaluate if="<%= !Campaign.getHasSurvey() && !Campaign.getHasAddressRequest()%>">
     <table cellpadding="4" cellspacing="0" width="100%" border="0">
       <tr>
@@ -60,7 +60,7 @@
   <br />
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="SurveyResponseListInfo"/></center></dhv:include>
-  <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="SurveyResponseListInfo"/>
+  <dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="SurveyResponseListInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="20%" nowrap>
@@ -126,7 +126,7 @@
   </table>
   <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
   <center><dhv:pagedListAlphabeticalLinks object="AddressUpdateResponseListInfo"/></center></dhv:include>
-  <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="AddressUpdateResponseListInfo"/>
+  <dhv:pagedListStatus title='<%= showAttribute(request, "actionError") %>' object="AddressUpdateResponseListInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th width="20%" nowrap>

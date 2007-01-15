@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Dialog" class="org.aspcfs.utils.web.HtmlDialog" scope="session"/>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <html>
   <jsp:include page="templates/cssInclude.jsp" flush="true"/>
   <title><%= Dialog.getTitle() %></title>

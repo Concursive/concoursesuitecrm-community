@@ -29,10 +29,10 @@
         alert(label("actionstep.attachment.alert", "This step requires an attachment before it can be completed"));
       } else { 
         <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-          <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
+          <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
             popURLReturn('AccountTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
           </dhv:evaluate>
-          <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
+          <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
             popURLReturn('TroubleTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
           </dhv:evaluate>
         </dhv:evaluate>
@@ -45,10 +45,10 @@
       }
     } else {
       <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-        <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
+        <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
           popURLReturn('AccountTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
         </dhv:evaluate>
-        <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
+        <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
           popURLReturn('TroubleTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
         </dhv:evaluate>
       </dhv:evaluate>
@@ -63,10 +63,10 @@
   
   function reviewNotes() {
     <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-      <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
+      <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
         popURL('AccountTicketActionPlans.do?command=ViewNotes&ticketId=<%= ticket.getId() %>&planWorkId=<%= actionPlanWork.getId() %>','Action_Plan',700,425,'yes','yes');
       </dhv:evaluate>
-      <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
+      <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
         popURL('TroubleTicketActionPlans.do?command=ViewNotes&ticketId=<%= ticket.getId() %>&planWorkId=<%= actionPlanWork.getId() %>','Action_Plan',700,425,'yes','yes');
       </dhv:evaluate>
     </dhv:evaluate>
@@ -84,10 +84,10 @@
 
   function restartPlan() {
     <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-      <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
+      <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
         confirmForward('AccountTicketActionPlans.do?command=Restart&ticketId=<%= ticket.getId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
-      <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
+      <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
         confirmForward('TroubleTicketActionPlans.do?command=Restart&ticketId=<%= ticket.getId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
     </dhv:evaluate>
@@ -101,10 +101,10 @@
   
   function deletePlan() {
     <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-      <dhv:evaluate if="<%= moduleName != null && moduleName.equals("accountticket") %>">
+      <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
         confirmDelete('AccountTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
-      <dhv:evaluate if="<%= moduleName == null || "".equals(moduleName) %>">
+      <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
         confirmDelete('TroubleTicketActionPlans.do?command=Delete&ticketId=<%= ticket.getId() %>&planId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
       </dhv:evaluate>
     </dhv:evaluate>
@@ -621,16 +621,16 @@
               >
               <dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.USER_GROUP %>">
                 <dhv:label name="usergroups.userGroup">User Group</dhv:label>: 
-                <dhv:evaluate if="<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>">
+                <dhv:evaluate if='<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>'>
                   <%= toHtml(thisItemWork.getUserGroupName()) %>
-                </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>">
+                </dhv:evaluate><dhv:evaluate if='<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>'>
                   <dhv:label name="usergroups.notSet">Not set</dhv:label>
                 </dhv:evaluate>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.SPECIFIC_USER_GROUP %>">
                 <dhv:label name="usergroups.userGroup">User Group</dhv:label>: 
-                <dhv:evaluate if="<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>">
+                <dhv:evaluate if='<%= thisItemWork.getUserGroupName() != null && !"".equals(thisItemWork.getUserGroupName()) %>'>
                   <%= toHtml(thisItemWork.getUserGroupName()) %>
-                </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>">
+                </dhv:evaluate><dhv:evaluate if='<%= thisItemWork.getUserGroupName() == null || "".equals(thisItemWork.getUserGroupName()) %>'>
                   <dhv:label name="usergroups.notSet">Not set</dhv:label>
                 </dhv:evaluate>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.DEPARTMENT %>">
@@ -638,9 +638,9 @@
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.ROLE %>">
                 <dhv:label name="accounts.accounts_add.Role">Role</dhv:label>: <%= toHtml(thisItemWork.getRoleName()) %>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.WITHIN_USER_HIERARCHY %>">
-                <dhv:label name="actionPlan.assignedUserHierarchy.withName" param="<%= "username="+ getUsername(pageContext, thisItemWork.getOwnerId(), false,true,"&nbsp;") %>">Within the hierarchy of <%= getUsername(pageContext, thisItemWork.getOwnerId(),false,true,"&nbsp;") %></dhv:label>
+                <dhv:label name="actionPlan.assignedUserHierarchy.withName" param='<%= "username="+ getUsername(pageContext, thisItemWork.getOwnerId(), false,true,"&nbsp;") %>'>Within the hierarchy of <%= getUsername(pageContext, thisItemWork.getOwnerId(),false,true,"&nbsp;") %></dhv:label>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.UP_USER_HIERARCHY %>">
-                <dhv:label name="actionPlan.upTheUserHierarchy.withName" param="<%= "username="+ getUsername(pageContext, thisItemWork.getOwnerId(), false,true,"&nbsp;") %>">Up the hierarchy of <%= getUsername(pageContext, thisItemWork.getOwnerId(), false,true,"&nbsp;") %></dhv:label>
+                <dhv:label name="actionPlan.upTheUserHierarchy.withName" param='<%= "username="+ getUsername(pageContext, thisItemWork.getOwnerId(), false,true,"&nbsp;") %>'>Up the hierarchy of <%= getUsername(pageContext, thisItemWork.getOwnerId(), false,true,"&nbsp;") %></dhv:label>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.MANAGER %>">
                 <dhv:username id="<%= actionPlanWork.getManagerId() %>"/>
               </dhv:evaluate><dhv:evaluate if="<%= thisItemWork.getStep().getPermissionType() == ActionStep.ASSIGNED_USER_AND_MANAGER %>">

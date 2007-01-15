@@ -58,9 +58,9 @@
 <%@ include file="product_catalog_header_include.jsp" %>
 <% String param1 = "catalogId=" + ProductCatalog.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param="<%= param1 + "|" + param2 %>">
+<dhv:container name="productcatalogs" selected="options" object="ProductCatalog" param='<%= param1 + "|" + param2 %>'>
   <% String param3 = "optionId=" + ProductOption.getId(); %>
-  <dhv:container name="productcatalogoptions" selected="values" object="ProductOption" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+  <dhv:container name="productcatalogoptions" selected="values" object="ProductOption" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
   <%
     Iterator results = ResultMap.keySet().iterator();
     while (results.hasNext()) {
@@ -127,14 +127,14 @@
           </td>
           <%-- <td class="row<%= rowid %>"><%= toHtml(thisPricing.getMsrpCurrencyName()) %></td> --%>
           <td class="row<%= rowid %>">
-            <zeroio:currency value="<%= thisPricing.getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+            <zeroio:currency value="<%= thisPricing.getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
           </td>
           <%-- <td class="row<%= rowid %>"><%= toHtml(thisPricing.getPriceCurrencyName()) %></td> --%>
           <td class="row<%= rowid %>">
-            <zeroio:currency value="<%= thisPricing.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+            <zeroio:currency value="<%= thisPricing.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
           </td>
           <td class="row<%= rowid %>">
-            <zeroio:currency value="<%= thisPricing.getCostAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+            <zeroio:currency value="<%= thisPricing.getCostAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
           </td>
           <td class="row<%= rowid %>">
           <%= toHtml(thisPricing.getDescription()) %>

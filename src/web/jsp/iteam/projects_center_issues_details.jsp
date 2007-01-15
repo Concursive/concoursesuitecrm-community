@@ -46,7 +46,7 @@
 <a href="ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>"><dhv:label name="project.postReply">Post Reply</dhv:label></a><br>
 </zeroio:permission>
 </dhv:evaluate>
-<dhv:pagedListStatus label="Replies" title="<%= showError(request, "actionError") %>" object="projectIssueRepliesInfo"/>
+<dhv:pagedListStatus label="Replies" title='<%= showError(request, "actionError") %>' object="projectIssueRepliesInfo"/>
 <%
   int rowid = 1;
 %>
@@ -63,14 +63,14 @@
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
         <tr>
           <td width="100%">
-            <dhv:label name="project.by.postedOn" param="<%= "username="+getUsername(pageContext,Issue.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,Issue.getEntered(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">
+            <dhv:label name="project.by.postedOn" param='<%= "username="+getUsername(pageContext,Issue.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,Issue.getEntered(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>
             By <dhv:username id="<%= Issue.getEnteredBy() %>"/>
             -
             Posted on
             <zeroio:tz timestamp="<%= Issue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
             <dhv:evaluate if="<%= !(Issue.getModified().equals(Issue.getEntered())) %>">
             <dhv:evaluate if="<%= Issue.getModifiedBy() != Issue.getEnteredBy() %>">
-              <dhv:label name="project.editedby.braces" param="<%= "username="+getUsername(pageContext,Issue.getModifiedBy(),false,false,"&nbsp;") %>">(edited by <dhv:username id="<%= Issue.getModifiedBy() %>" />)</dhv:label>
+              <dhv:label name="project.editedby.braces" param='<%= "username="+getUsername(pageContext,Issue.getModifiedBy(),false,false,"&nbsp;") %>'>(edited by <dhv:username id="<%= Issue.getModifiedBy() %>" />)</dhv:label>
             </dhv:evaluate>
             <dhv:evaluate if="<%= Issue.getModifiedBy() == Issue.getEnteredBy() %>">
               <dhv:label name="project.edited.braces">(edited)</dhv:label>
@@ -150,15 +150,15 @@
           <strong><%= toHtml(thisReply.getSubject()) %></strong>&nbsp;
         </td>
         <td valign="top" align="right" nowrap>
-          <dhv:label name="project.replyNumberofTotal" param="<%= "number="+ (projectIssueRepliesInfo.getCurrentOffset()+replyCount) +"|total="+ projectIssueRepliesInfo.getMaxRecords() %>">Reply <%= replyCount %> of <%= replyList.size() %></dhv:label>&nbsp;
+          <dhv:label name="project.replyNumberofTotal" param='<%= "number="+ (projectIssueRepliesInfo.getCurrentOffset()+replyCount) +"|total="+ projectIssueRepliesInfo.getMaxRecords() %>'>Reply <%= replyCount %> of <%= replyList.size() %></dhv:label>&nbsp;
         </td>
       </table>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <td width="100%">
-          <dhv:label name="project.by.postedOn" param="<%= "username="+getUsername(pageContext,thisReply.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,thisReply.getEntered(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">By <dhv:username id="<%= thisReply.getEnteredBy() %>"/> - Posted on <zeroio:tz timestamp="<%= thisReply.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+          <dhv:label name="project.by.postedOn" param='<%= "username="+getUsername(pageContext,thisReply.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,thisReply.getEntered(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>'>By <dhv:username id="<%= thisReply.getEnteredBy() %>"/> - Posted on <zeroio:tz timestamp="<%= thisReply.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
           <dhv:evaluate if="<%= !(thisReply.getModified().equals(thisReply.getEntered())) %>">
             <dhv:evaluate if="<%= thisReply.getModifiedBy() != thisReply.getEnteredBy() %>">
-              <dhv:label name="project.editedby.braces" param="<%= "username="+getUsername(pageContext,thisReply.getModifiedBy(),false,false,"&nbsp;") %>">(edited by <dhv:username id="<%= thisReply.getModifiedBy() %>" />)</dhv:label>
+              <dhv:label name="project.editedby.braces" param='<%= "username="+getUsername(pageContext,thisReply.getModifiedBy(),false,false,"&nbsp;") %>'>(edited by <dhv:username id="<%= thisReply.getModifiedBy() %>" />)</dhv:label>
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisReply.getModifiedBy() == thisReply.getEnteredBy() %>">
               <dhv:label name="project.edited.braces">(edited)</dhv:label>

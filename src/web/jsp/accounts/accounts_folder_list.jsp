@@ -38,7 +38,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="folders" hideContainer="<%="true".equals(request.getParameter("actionplan")) %>"object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+<dhv:container name="accounts" selected="folders" hideContainer='<%="true".equals(request.getParameter("actionplan")) %>'object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th>

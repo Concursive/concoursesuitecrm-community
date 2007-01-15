@@ -57,11 +57,11 @@
     self.close();
   }
 </script>
-<dhv:evaluate if="<%= status != null && "true".equals(status) %>">
+<dhv:evaluate if='<%= status != null && "true".equals(status) %>'>
   <body onLoad="javascript:setActionPlanDetails();">
 </dhv:evaluate>
-<dhv:evaluate if="<%= status != null && !"true".equals(status) %>">
-<dhv:container name="accounts" selected="documents" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" hideContainer="true" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:evaluate if='<%= status != null && !"true".equals(status) %>'>
+<dhv:container name="accounts" selected="documents" object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' hideContainer="true" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <table class="note" cellspacing="0">
   <tr class="containerBody">
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>

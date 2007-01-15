@@ -47,7 +47,7 @@
     <a href="ProjectManagementIssueCategories.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newForum">New Forum</dhv:label></a><br>
   </zeroio:permission>
 </dhv:evaluate>
-<dhv:pagedListStatus label="Forums" title="<%= showError(request, "actionError") %>" object="projectIssueCategoryInfo"/>
+<dhv:pagedListStatus label="Forums" title='<%= showError(request, "actionError") %>' object="projectIssueCategoryInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="8" nowrap>&nbsp;</th>

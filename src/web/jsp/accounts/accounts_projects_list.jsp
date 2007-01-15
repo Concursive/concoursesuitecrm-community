@@ -47,8 +47,8 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="projects" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountProjectInfo"/>
+<dhv:container name="accounts" selected="projects" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AccountProjectInfo"/>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
 <dhv:evaluate if="<%= !isPopup(request) %>">

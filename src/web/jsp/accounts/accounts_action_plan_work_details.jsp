@@ -187,7 +187,7 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:formMessage />
-<dhv:container name="accounts" selected="actionplans" object="orgDetails" param="<%= "orgId=" + orgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="actionplans" object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <%@ include file="../troubletickets/troubletickets_actionplan_work_details_include.jsp" %>
 <%--  <%@ include file="../actionplans/action_plan_work_details_include.jsp" %> --%>
 </dhv:container>

@@ -134,10 +134,10 @@
             <%if (1==1) { %>
               <div id="<%= "changeportfolio_"+rowColumn.getId()+"_"+property.getTypeConstant() %>">
             <%  IceletProperty iceletProperty = (rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null ? (IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) : null); %>  
-                <dhv:evaluate if="<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>'>
                   <%= toHtml(iceletProperty.getValueString()) %>
                 </dhv:evaluate>
-                <dhv:evaluate if="<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>'>
                   <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
                 </dhv:evaluate>
               </div>
@@ -159,10 +159,10 @@
             <%if (1==1) { %>
               <div id="<%= "changeproduct_"+rowColumn.getId()+"_"+property.getTypeConstant() %>">
             <%  IceletProperty iceletProperty = (rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null ? (IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) : null); %>  
-                <dhv:evaluate if="<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>'>
                   <%= toHtml(iceletProperty.getValueString()) %>
                 </dhv:evaluate>
-                <dhv:evaluate if="<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>">
+                <dhv:evaluate if='<%= iceletProperty == null || iceletProperty.getValueString() == null || "".equals(iceletProperty.getValueString()) %>'>
                   <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
                 </dhv:evaluate>
               </div>
@@ -184,7 +184,7 @@
         <input type="text" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="<%= toHtmlValue(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>"/>
       </dhv:evaluate>
       <dhv:evaluate if="<%= property.getType().equals(property.CHECKBOX) %>">
-        <dhv:checkbox name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="true" checked="<%= "true".equals(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>" />
+        <dhv:checkbox name='<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>' value="true" checked='<%= "true".equals(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>' />
       </dhv:evaluate>
     </td>
   </tr>

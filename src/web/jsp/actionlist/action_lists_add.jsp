@@ -86,7 +86,7 @@ function checkForm(form) {
 </dhv:evaluate>
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='<%= cancelURL %>'" />
-<dhv:evaluate if="<%= request.getParameter("return") != null %>">
+<dhv:evaluate if='<%= request.getParameter("return") != null %>'>
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
 <input type="hidden" name="linkModuleId" value="<%= Constants.ACTIONLISTS_CONTACTS %>">

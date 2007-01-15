@@ -41,7 +41,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="tickets" selected="folders" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+<dhv:container name="tickets" selected="folders" object="ticketDetails" param='<%= "id=" + ticketDetails.getId() %>'>
   <%@ include file="ticket_header_include.jsp" %>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

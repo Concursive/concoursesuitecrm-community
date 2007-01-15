@@ -23,7 +23,7 @@
 <%@ include file="../../initPage.jsp"%>
 <jsp:useBean id="result" class="java.lang.String" scope="request"/>
 <portlet:defineObjects />
-<dhv:evaluate if="<%= ("newPasswordSent".equals(result)) %>" >
+<dhv:evaluate if='<%= ("newPasswordSent".equals(result)) %>' >
 New password has been sent to your address. 
 </dhv:evaluate>
 

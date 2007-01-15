@@ -32,10 +32,10 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr>
     <td>
-      <dhv:evaluate if="<%= status.equals("OK") %>">
+      <dhv:evaluate if='<%= status.equals("OK") %>'>
         <dhv:label name="campaign.receipt.confirmation.thankyoutext">Thank you for the campaign confirmation. Your confirmation was received on:</dhv:label> <%= scheduledRecipient.getReplyDate() %>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= status.equals("EXISTS") %>">
+      <dhv:evaluate if='<%= status.equals("EXISTS") %>'>
         <dhv:label name="campaign.receipt.confirmation.text">Your confirmation has already been received on:</dhv:label> <%= scheduledRecipient.getReplyDate() %>
       </dhv:evaluate>
     </td>

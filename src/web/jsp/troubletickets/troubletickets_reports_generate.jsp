@@ -280,9 +280,9 @@
       <dhv:label name="tickets.enteredDateBetween">Entered Date between</dhv:label>
     </td>
     <td colspan="4">
-      <zeroio:dateSelect form="generate" field="searchdateEnteredDateStart" timestamp="<%= exportListInfo.getSearchOptionValue("searchdateEnteredDateStart") %>" />
+      <zeroio:dateSelect form="generate" field="searchdateEnteredDateStart" timestamp='<%= exportListInfo.getSearchOptionValue("searchdateEnteredDateStart") %>' />
       &nbsp;<dhv:label name="admin.and.lowercase">and</dhv:label> <%=showAttribute(request,"searchdateEnteredDateStartError")%><br>
-      <zeroio:dateSelect form="generate" field="searchdateEnteredDateEnd" timestamp="<%= exportListInfo.getSearchOptionValue("searchdateEnteredDateEnd") %>" />
+      <zeroio:dateSelect form="generate" field="searchdateEnteredDateEnd" timestamp='<%= exportListInfo.getSearchOptionValue("searchdateEnteredDateEnd") %>' />
       &nbsp;<%=showAttribute(request,"searchdateEnteredDateEndError")%>
     </td>
   </tr>

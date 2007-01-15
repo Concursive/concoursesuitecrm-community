@@ -46,7 +46,7 @@
         <dhv:label name="admin.ldap.enabled">LDAP Enabled:</dhv:label>
       </td>
       <td>
-        <dhv:checkbox name="ldapEnabled" value="true" checked="<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.ENABLED")) %>" />
+        <dhv:checkbox name="ldapEnabled" value="true" checked='<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.ENABLED")) %>' />
         <dhv:label name="admin.ldap.authenticateUsers">Authenticate users against LDAP server</dhv:label>
       </td>
     </tr>
@@ -110,8 +110,8 @@
                     <dhv:label name="admin.ldap.container">Container:</dhv:label>
                   </td>
                   <td nowrap>
-                    <input type="text" size="30" name="ldapSearchContainer" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.CONTAINER")) %>"/>
-                    <dhv:checkbox name="ldapSearchSubtree" value="true" checked="<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.SUBTREE")) %>"/>Search subtree
+                    <input type="text" size="30" name="ldapSearchContainer" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.CONTAINER")) %>'/>
+                    <dhv:checkbox name="ldapSearchSubtree" value="true" checked='<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.SUBTREE")) %>'/>Search subtree
                   </td>
                 </tr>
                 <tr>
@@ -119,7 +119,7 @@
                     <dhv:label name="admin.ldap.objectClass">Object Class:</dhv:label>
                   </td>
                   <td>
-                    <input type="text" size="30" name="ldapSearchOrgPerson" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.ORGPERSON")) %>"/>
+                    <input type="text" size="30" name="ldapSearchOrgPerson" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.ORGPERSON")) %>'/>
                   </td>
                 </tr>
                 <tr>
@@ -127,7 +127,7 @@
                     <dhv:label name="admin.ldap.attribute">Attribute:</dhv:label>
                   </td>
                   <td>
-                    <input type="text" size="30" name="ldapSearchAttribute" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.ATTRIBUTE")) %>"/>
+                    <input type="text" size="30" name="ldapSearchAttribute" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.ATTRIBUTE")) %>'/>
                   </td>
                 </tr>
               </table>
@@ -144,7 +144,7 @@
                     <dhv:label name="admin.ldap.compositePrefix">Composite DN Prefix:</dhv:label>
                   </td>
                   <td>
-                    <input type="text" size="30" name="ldapSearchPrefix" value="<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.PREFIX")) %>" />
+                    <input type="text" size="30" name="ldapSearchPrefix" value='<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.PREFIX")) %>' />
                   </td>
                 </tr>
                 <tr>
@@ -152,7 +152,7 @@
                     <dhv:label name="admin.ldap.compositePostfix">Composite DN Postfix:</dhv:label>
                   </td>
                   <td>
-                    <input type="text" size="30" name="ldapSearchPostfix" value="<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.POSTFIX")) %>" />
+                    <input type="text" size="30" name="ldapSearchPostfix" value='<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.POSTFIX")) %>' />
                   </td>
                 </tr>
               </table>

@@ -155,9 +155,9 @@ currentRemarkNames = '';
     <td class="formLabel" valign="top" nowrap><dhv:label name="quotes.quoteRelatedTicket">Related Ticket</dhv:label></td>
     <td width="100%">
     <dhv:permission name="<%= ticketPermission %>">
-      <a href="<%= ticketLink %>"><dhv:label name="tickets.symbol.number" param="<%= "number="+quote.getTicketId() %>">Ticket #<%= quote.getTicketId() %></dhv:label></a>
+      <a href="<%= ticketLink %>"><dhv:label name="tickets.symbol.number" param='<%= "number="+quote.getTicketId() %>'>Ticket #<%= quote.getTicketId() %></dhv:label></a>
     </dhv:permission><dhv:permission name="<5= ticketPermission %>" none="true">
-      <dhv:label name="tickets.symbol.number" param="<%= "number="+quote.getTicketId() %>">Ticket #<%= quote.getTicketId() %></dhv:label>
+      <dhv:label name="tickets.symbol.number" param='<%= "number="+quote.getTicketId() %>'>Ticket #<%= quote.getTicketId() %></dhv:label>
     </dhv:permission>
     </td>
   </tr>
@@ -165,7 +165,7 @@ currentRemarkNames = '';
 <% if (quote.getParentId() != -1) { %>
   <tr class="containerBody">
     <td class="formLabel" valign="top" nowrap><dhv:label name="quotes.quoteNextVersion">Next Version</dhv:label></td>
-    <td width="100%"><a href="<%= quoteNextVersionLink %>"><dhv:label name="quotes.symbol.number" param="<%= "number="+quote.getGroupId() %>">Quote #<%= quote.getGroupId() %></dhv:label></a></td>
+    <td width="100%"><a href="<%= quoteNextVersionLink %>"><dhv:label name="quotes.symbol.number" param='<%= "number="+quote.getGroupId() %>'>Quote #<%= quote.getGroupId() %></dhv:label></a></td>
   </tr>
 <% } if (order.getId() != -1) { %>
   <tr class="containerBody">
@@ -351,10 +351,10 @@ if(quote.getProductList().size() != 0){
     <td valign="top"><%= toHtml(product.getComment()) %></td>
     <td width="8" valign="top" align="right"><%= product.getQuantity() %></td>
     <td nowrap valign="top" align="right">
-      <zeroio:currency value="<%= product.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+      <zeroio:currency value="<%= product.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
     </td>
     <td nowrap valign="top" align="center"><%= toHtml(product.getEstimatedDelivery()) %></td>
-    <td nowrap valign="top" align="right" id="subTotal<%= rowCounter++ %>"><span name="subTotal<%= rowCounter %>" id="subTotal<%= rowCounter %>" <%= (quote.getShowSubtotal() == true) ? "" : "style=\"display:none\"" %>><zeroio:currency value="<%= (product.getTotalPrice()) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/></span></td>
+    <td nowrap valign="top" align="right" id="subTotal<%= rowCounter++ %>"><span name="subTotal<%= rowCounter %>" id="subTotal<%= rowCounter %>" <%= (quote.getShowSubtotal() == true) ? "" : "style=\"display:none\"" %>><zeroio:currency value="<%= (product.getTotalPrice()) %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/></span></td>
   </tr>
 <%
   if (options.hasNext()) {
@@ -376,7 +376,7 @@ if(quote.getProductList().size() != 0){
         <tr class="row<%= rowid %>">
           <td colspan="2" class="empty"><%= toHtml(productOption.getLabel()) %></td>
           <td colspan="2"><%= toHtml(option.getQuoteUserInput()) %></td>
-          <td align="right"><zeroio:currency value="<%= option.getQuotePriceAdjust() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+          <td align="right"><zeroio:currency value="<%= option.getQuotePriceAdjust() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
           <td>&nbsp;</td>
           <td align="right" id="subTotal<%= rowCounter++ %>"><span name="subTotal<%= rowCounter %>" id="subTotal<%= rowCounter%>" <%= (quote.getShowSubtotal() == true) ? "" : "style=\"display:none\"" %>>&nbsp;</span></td>
         </tr>
@@ -402,7 +402,7 @@ rowCounter = '<%= rowCounter %>';
     <td nowrap align="right">&nbsp;
       <span name="grandTotal" id="grandTotal" <%= (quote.getShowTotal() == true) ? "" : "style=\"display:none\"" %>>
         <strong>
-          <zeroio:currency value="<%= quote.getGrandTotal() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= quote.getGrandTotal() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </strong>
       </span>
     </td>

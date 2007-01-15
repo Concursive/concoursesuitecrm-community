@@ -57,7 +57,7 @@ function reopenContact(id) {
   }
 }
 </script>
-<dhv:container name="contacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= param2 %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
+<dhv:container name="contacts" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl="<%= param2 %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
   <dhv:evaluate if="<%= ContactDetails.getEnabled()  && !ContactDetails.isTrashed() %>">
     <dhv:sharing primaryBean="ContactDetails" action="edit" all="true"><input type="button" name="cmd" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:sharing>
     <dhv:evaluate if="<%= !isPopup(request) %>">
@@ -78,7 +78,7 @@ function reopenContact(id) {
         <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=Restore&id=<%= ContactDetails.getId() %>';submit();"><br>&nbsp;
       </dhv:permission>
   </dhv:evaluate> --%>
-<dhv:evaluate if="<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role") %>">  
+<dhv:evaluate if='<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role") %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -275,7 +275,7 @@ function reopenContact(id) {
         </td>
         <td>
           <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
-          <dhv:evaluate if="<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>">
+          <dhv:evaluate if='<%= "true".equals(applicationPrefs.get("ASTERISK.OUTBOUND.ENABLED")) %>'>
             <dhv:evaluate if="<%= hasText(thisPhoneNumber.getPhoneNumber()) %>">
               <a href="javascript:popURL('OutboundDialer.do?command=Call&auto-populate=true&number=<%= StringUtils.jsStringEscape(thisPhoneNumber.getPhoneNumber()) %>','OUTBOUND_CALL','400','200','yes','yes');"><img src="images/icons/stock_call-16.gif" align="absMiddle" title="Call number" border="0"/></a>
             </dhv:evaluate>

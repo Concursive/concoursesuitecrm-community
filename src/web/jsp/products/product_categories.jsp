@@ -60,7 +60,7 @@
   <tr class="containerBody">
     <td>
       <% if(parentCategory.getName() != null ){ %>
-        <dhv:label name="product.noItemsFoundIn" param="<%= "catalog="+parentCategory.getName() %>">No items found in <%= parentCategory.getName() %></dhv:label>
+        <dhv:label name="product.noItemsFoundIn" param='<%= "catalog="+parentCategory.getName() %>'>No items found in <%= parentCategory.getName() %></dhv:label>
       <% } else { %>
         <dhv:label name="product.noItemsFoundInCatalog">No items found in catalog</dhv:label>
       <%}%>.

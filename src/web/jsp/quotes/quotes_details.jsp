@@ -93,7 +93,7 @@
     <td>
       <a href="Quotes.do"><dhv:label name="dependency.quotes">Quotes</dhv:label></a> >
       <a href="Quotes.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
-      <dhv:evaluate if="<%=  (version != null && !"".equals(version)) %>" > 
+      <dhv:evaluate if='<%=  (version != null && !"".equals(version)) %>' >
         <a href="Quotes.do?command=Search&version=<%= quote.getId() %>"><dhv:label name="quotes.versionResults">Version Results</dhv:label></a> >
       </dhv:evaluate>
       <dhv:label name="quotes.quoteDetails">Quote Details</dhv:label>

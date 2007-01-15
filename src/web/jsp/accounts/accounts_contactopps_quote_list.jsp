@@ -70,15 +70,15 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <dhv:container name="accountcontactopportunities" selected="quotes" object="opportunity" param="<%= "headerId=" + quoteList.getHeaderId() + "|" + "orgId=" + OrgDetails.getOrgId() + "|" + "contactId=" + ContactDetails.getId()%>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+    <dhv:container name="accountcontactopportunities" selected="quotes" object="opportunity" param='<%= "headerId=" + quoteList.getHeaderId() + "|" + "orgId=" + OrgDetails.getOrgId() + "|" + "contactId=" + ContactDetails.getId()%>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:permission name="accounts-accounts-contacts-opportunities-quotes-add">
-    <dhv:evaluate if="<%= (allowMultipleQuote) || (quoteList.size() == 0)%>" >    
+    <dhv:evaluate if='<%= (allowMultipleQuote) || (quoteList.size() == 0)%>' >    
       <a href="AccountContactsOppQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %>&headerId=<%=quoteList.getHeaderId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a>
     </dhv:evaluate>
   </dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountQuoteListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="accountQuoteListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 <tr>
   <th width="8">

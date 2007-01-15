@@ -78,7 +78,7 @@
       <% } %>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ActionListInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="ActionListInfo"/>
     </td>
     </form>
   </tr>

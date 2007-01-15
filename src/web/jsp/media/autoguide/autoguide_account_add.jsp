@@ -109,7 +109,7 @@ Add Vehicle
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>'>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
   <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
   <input type="hidden" name="dosubmit" value="true">

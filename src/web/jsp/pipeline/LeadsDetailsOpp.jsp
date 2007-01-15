@@ -74,10 +74,10 @@ function reopenOpportunity(id) {
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  <dhv:label name="pipeline.viewpoint.colon" param='<%= "username="+PipelineViewpointInfo.getVpUserName() %>'><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+<dhv:container name="opportunities" selected="details" object="opportunityHeader" param='<%= "id=" + opportunityHeader.getId() %>' appendToUrl='<%= addLinkParams(request, "viewSource") %>'>
   <dhv:hasAuthority owner="<%= opportunityHeader.getManager() %>">
     <dhv:evaluate if="<%= !opportunityHeader.isTrashed() %>">
       <dhv:evaluate if="<%= !opportunityHeader.getLock() %>">
@@ -89,7 +89,7 @@ function reopenOpportunity(id) {
       </dhv:evaluate>
     </dhv:evaluate>
   </dhv:hasAuthority>
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="LeadsComponentListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th align="center" nowrap>
@@ -144,7 +144,7 @@ function reopenOpportunity(id) {
         OpportunityComponent thisComponent = (OpportunityComponent)j.next();
         boolean hasPermission = false;
 %>
-  <dhv:hasAuthority owner="<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponent.getOwner()?"":","+thisComponent.getOwner())) %>">
+  <dhv:hasAuthority owner='<%= String.valueOf(opportunityHeader.getManager()+(opportunityHeader.getManager() == thisComponent.getOwner()?"":","+thisComponent.getOwner())) %>'>
     <% hasPermission = true;%>
   </dhv:hasAuthority>
     <tr class="row<%= rowid %>">
@@ -173,11 +173,11 @@ function reopenOpportunity(id) {
       </dhv:include>
       <dhv:include name="opportunity.singleComponent">
         <td valign="top" align="right" nowrap>
-          <zeroio:currency value="<%= thisComponent.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= thisComponent.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </dhv:include>
       <td valign="top" align="right" nowrap>
-        <zeroio:currency value="<%= thisComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisComponent.getGuess() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
       <td valign="top" align="center" nowrap>
         <% if(!User.getTimeZone().equals(thisComponent.getCloseDateTimeZone())){%>

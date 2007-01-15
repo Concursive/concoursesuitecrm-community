@@ -172,7 +172,7 @@
       <dhv:label name="accounts.accounts_add.potential">Potential</dhv:label>
     </td>
     <td>
-       <zeroio:currency value="<%= ContactDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+       <zeroio:currency value="<%= ContactDetails.getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
   </dhv:evaluate>
@@ -184,7 +184,7 @@
         <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
       </td>
       <td>
-         <zeroio:currency value="<%= ContactDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+         <zeroio:currency value="<%= ContactDetails.getRevenue() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
     </tr>
   </dhv:evaluate>

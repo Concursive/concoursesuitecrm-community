@@ -48,7 +48,7 @@
 <%-- End Trails --%>
 <a href="ProductOptions.do?command=Add&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.addNewOption">Add New Option</dhv:label></a>
 <center><%= SearchProductOptionListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchProductOptionListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SearchProductOptionListInfo"/>
 <% int columnCount = 0; %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>

@@ -77,7 +77,7 @@
 <% String param1 = "productId=" + productCatalog.getId(); %>
 <% String param2 = "moduleId=" + permissionCategory.getId(); %>
 <% String param3 = "categoryId=" + productCategory.getId(); %>
-<dhv:container name="productcatalogs" selected="images" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="images" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th><dhv:label name="product.fileType">File Type</dhv:label></th>

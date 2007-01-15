@@ -63,7 +63,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
+      <dhv:label name="campaign.campaign.colon" param='<%= "name="+toHtml(Campaign.getName()) %>'><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
@@ -83,7 +83,7 @@
     </td>
     <td valign="top">
       <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
-        <dhv:label name="campaign.attached.colon" param="<%= "survey.name="+ toHtml(Survey.getName()) %>">Attached: <%= toHtml(Survey.getName()) %></dhv:label><br>
+        <dhv:label name="campaign.attached.colon" param='<%= "survey.name="+ toHtml(Survey.getName()) %>'>Attached: <%= toHtml(Survey.getName()) %></dhv:label><br>
       </dhv:evaluate>
       [<a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>"><dhv:label name="campaign.changeSurvey">Change survey</dhv:label></a>]
     </td>
@@ -96,9 +96,9 @@
     <td valign="top">
       <dhv:evaluate if="<%= fileItemList.size() > 0 %>">
         <% if(fileItemList.size() != 1) {%>
-          <dhv:label name="campaign.filesAdded.colon" param="<%= "number="+fileItemList.size() %>">Files Added: <%= fileItemList.size() %> files</dhv:label>
+          <dhv:label name="campaign.filesAdded.colon" param='<%= "number="+fileItemList.size() %>'>Files Added: <%= fileItemList.size() %> files</dhv:label>
         <%} else {%>
-          <dhv:label name="campaign.filesAdded.colon.file" param="<%= "number="+fileItemList.size() %>">Files Added: <%= fileItemList.size() %> file</dhv:label>
+          <dhv:label name="campaign.filesAdded.colon.file" param='<%= "number="+fileItemList.size() %>'>Files Added: <%= fileItemList.size() %> file</dhv:label>
         <%}%><br />
       </dhv:evaluate>
       [<a href="CampaignManager.do?command=ManageFileAttachments&id=<%= Campaign.getId() %>"><dhv:label name="campaign.changeFileAttachments">Change file attachments</dhv:label></a>]

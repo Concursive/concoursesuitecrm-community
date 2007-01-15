@@ -43,7 +43,7 @@
 <dhv:permission name="admin-roles-add"><a href="PortalRoleEditor.do?command=Add"><dhv:label name="admin.addNewPortalRole">Add New Portal Role</dhv:label></a></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="portalRoleListInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="portalRoleListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="portalRoleListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>

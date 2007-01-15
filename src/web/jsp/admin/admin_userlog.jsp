@@ -34,7 +34,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="users" selected="history" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+<dhv:container name="users" selected="history" object="UserRecord" param='<%= "id=" + UserRecord.getId() %>'>
   <dhv:pagedListStatus object="AccessLogInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>

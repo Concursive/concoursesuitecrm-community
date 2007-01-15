@@ -306,10 +306,10 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate if="<%= (readStatus != null && !readStatus.equals("-1") && !readStatus.equals(""+User.getUserRecord().getId())) %>">
+<dhv:evaluate if='<%= (readStatus != null && !readStatus.equals("-1") && !readStatus.equals(""+User.getUserRecord().getId())) %>'>
   <br />
   <img src="images/error.gif" border="0" align="absmiddle"/>
-  <font color="red"><dhv:label name="sales.leadBeingReadBy" param="<%= "username="+getUsername(pageContext,Integer.parseInt(readStatus),false,false,"&nbsp;") %>">This lead is being read by <dhv:username id="<%= readStatus %>" /></dhv:label></font><br />
+  <font color="red"><dhv:label name="sales.leadBeingReadBy" param='<%= "username="+getUsername(pageContext,Integer.parseInt(readStatus),false,false,"&nbsp;") %>'>This lead is being read by <dhv:username id="<%= readStatus %>" /></dhv:label></font><br />
   <br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -321,7 +321,7 @@
   <tr class="containerBody">
     <td class="formLabel" nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
-      <dhv:label name="<%= "sales."+ContactDetails.getLeadStatusString() %>"><%= toHtml(ContactDetails.getLeadStatusString()) %></dhv:label>
+      <dhv:label name='<%= "sales."+ContactDetails.getLeadStatusString() %>'><%= toHtml(ContactDetails.getLeadStatusString()) %></dhv:label>
       <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />&nbsp;&nbsp;
     </td>
   </tr>
@@ -354,7 +354,7 @@
   <dhv:evaluate if="<%= ContactDetails.getOwner() <= 0 %>">
     <input type="hidden" name="owner" id="owner" value="<%= ContactDetails.getOwner() %>"/>
   </dhv:evaluate>
-  <dhv:evaluate if="<%= ContactDetails.getComments() != null && !"".equals(ContactDetails.getComments().trim()) %>">
+  <dhv:evaluate if='<%= ContactDetails.getComments() != null && !"".equals(ContactDetails.getComments().trim()) %>'>
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="sales.assignmentMessage">Assignment Message</dhv:label>
@@ -402,14 +402,14 @@
 	    <strong><dhv:label name="sales.contactInformation">Contact Information</dhv:label></strong>
 	  </th>
   </tr>
-  <dhv:evaluate if="<%= hasText(ContactDetails.getNameLast()) %>">
+  <dhv:evaluate if='<%= hasText(ContactDetails.getNameLast()) %>'>
   <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="reports.accounts.name">Name</dhv:label>
     </td>
     <td>
       <%= toHtml(ContactDetails.getNameFull()) %>
-      <dhv:evaluate if="<%= hasDuplicateLastName != null && "true".equals(hasDuplicateLastName) %>">&nbsp;&nbsp;
+      <dhv:evaluate if='<%= hasDuplicateLastName != null && "true".equals(hasDuplicateLastName) %>'>&nbsp;&nbsp;
       <a href="#" onClick="javascript:popURL('Sales.do?command=ContactList&searchcodeLastName=<%= StringUtils.jsEscape(ContactDetails.getNameLast()) %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
       <span class="duplicate"><dhv:label name="sales.foundDuplicateLastName">Duplicate last name found</dhv:label></span></a></dhv:evaluate>
         &nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getNameFull())+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
@@ -479,7 +479,7 @@
     </td>
     <td>
       <%= toHtml(ContactDetails.getCompany()) %>
-      <dhv:evaluate if="<%= hasDuplicateCompany != null && !"".equals(hasDuplicateCompany) %>">&nbsp;&nbsp;
+      <dhv:evaluate if='<%= hasDuplicateCompany != null && !"".equals(hasDuplicateCompany) %>'>&nbsp;&nbsp;
       <a href="#" onClick="javascript:popURL('Sales.do?command=ContactList&searchcodeCompany=<%= StringUtils.jsEscape(ContactDetails.getCompany()) %>&popup=true&auto-populate=true','Last_Name',600,480,'yes','yes');">
         <span class="duplicate"><dhv:label name="sales.foundDuplicateCompanyName">Duplicate company name found</dhv:label></span></a>
       </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+StringUtils.jsEscape(ContactDetails.getCompany())+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
@@ -497,7 +497,7 @@
       Potential
     </td>
     <td>
-      <zeroio:currency value="<%= ContactDetails.getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      <zeroio:currency value="<%= ContactDetails.getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>

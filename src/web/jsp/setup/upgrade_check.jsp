@@ -68,7 +68,7 @@
         </tr>
       </table>
       <br />
-      <dhv:evaluate if="<%= "0".equals(status) %>">
+      <dhv:evaluate if='<%= "0".equals(status) %>'>
         <table class="highlight" cellspacing="0">
           <tr>
             <td><dhv:label name="setup.systemAlreadyUpgraded.text">This system appears to already have been upgraded. Continuing will mark this system as upgraded, allowing users to login.</dhv:label></td>

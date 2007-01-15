@@ -94,7 +94,7 @@
 <% String param1 = "productId=" + productCatalog.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
 <% String param3 = "categoryId=" + productCatalog.getCategoryId(); %>
-<dhv:container name="productcatalogs" selected="categories" object="productCatalog" param="<%= param1 + "|" + param2 + "|" + param3 %>">
+<dhv:container name="productcatalogs" selected="categories" object="productCatalog" param='<%= param1 + "|" + param2 + "|" + param3 %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
 <tr>
 <td>

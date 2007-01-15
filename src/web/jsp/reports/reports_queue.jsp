@@ -58,7 +58,7 @@
   <tr>
     <td nowrap class="pagedListTab"><img src="images/icons/stock_form-16.gif" align="absMiddle" alt="" />
     <dhv:label name="reports.reportReady.text">Generated reports ready to be retrieved</dhv:label></td>
-    <td width="100%" align="right"><dhv:label name="reports.records.text" param="<%= "size="+completedQueue.size() %>">Records: <%= completedQueue.size() %></dhv:label></td>
+    <td width="100%" align="right"><dhv:label name="reports.records.text" param='<%= "size="+completedQueue.size() %>'>Records: <%= completedQueue.size() %></dhv:label></td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -113,7 +113,7 @@
   <tr>
     <td nowrap class="pagedListTab"><img src="images/icons/stock_form-autopilots-16.gif" align="absMiddle" alt="" />
     <dhv:label name="reports.reportScheduled.text">Reports scheduled to be processed by server</dhv:label></td>
-    <td width="100%" align="right"><dhv:label name="reports.records.text" param="<%= "size="+pendingQueue.size() %>">Records: <%= pendingQueue.size() %></dhv:label></td>
+    <td width="100%" align="right"><dhv:label name="reports.records.text" param='<%= "size="+pendingQueue.size() %>'>Records: <%= pendingQueue.size() %></dhv:label></td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">

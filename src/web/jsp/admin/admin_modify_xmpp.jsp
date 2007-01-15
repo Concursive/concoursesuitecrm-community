@@ -46,7 +46,7 @@
         <dhv:label name="admin.xmpp.status">XMPP Status:</dhv:label>
       </td>
       <td>
-        <dhv:checkbox name="xmppEnabled" value="true" checked="<%= "true".equals(getPref(getServletConfig().getServletContext(), "XMPP.ENABLED")) %>"/>Monitor user presence and send instant messages
+        <dhv:checkbox name="xmppEnabled" value="true" checked='<%= "true".equals(getPref(getServletConfig().getServletContext(), "XMPP.ENABLED")) %>'/>Monitor user presence and send instant messages
       </td>
     </tr>
     <tr>
@@ -54,7 +54,7 @@
         <dhv:label name="admin.xmpp.server">XMPP Server:</dhv:label>
       </td>
       <td>
-        <input type="text" size="30" name="xmppUrl" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "XMPP.CONNECTION.URL")) %>"/>
+        <input type="text" size="30" name="xmppUrl" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "XMPP.CONNECTION.URL")) %>'/>
       </td>
     </tr>
     <tr>
@@ -62,7 +62,7 @@
         <dhv:label name="admin.xmpp.port">XMPP Port:</dhv:label>
       </td>
       <td>
-        <input type="text" size="30" name="xmppPort" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "XMPP.CONNECTION.PORT")) %>"/>
+        <input type="text" size="30" name="xmppPort" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "XMPP.CONNECTION.PORT")) %>'/>
       </td>
     </tr>
     <tr>
@@ -70,7 +70,7 @@
         <dhv:label name="admin.xmpp.ssl">XMPP SSL:</dhv:label>
       </td>
       <td>
-        <dhv:checkbox name="xmppSSL" value="true" checked="<%= "true".equals(getPref(getServletConfig().getServletContext(), "XMPP.CONNECTION.SSL")) %>"/>Use SSL connection to XMPP server
+        <dhv:checkbox name="xmppSSL" value="true" checked='<%= "true".equals(getPref(getServletConfig().getServletContext(), "XMPP.CONNECTION.SSL")) %>'/>Use SSL connection to XMPP server
       </td>
     </tr>
     <tr>
@@ -78,7 +78,7 @@
         <dhv:label name="admin.xmpp.username">XMPP Username:</dhv:label>
       </td>
       <td>
-        <input type="text" size="30" name="xmppUsername" value="<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "XMPP.MANAGER.USERNAME")) %>"/>
+        <input type="text" size="30" name="xmppUsername" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "XMPP.MANAGER.USERNAME")) %>'/>
       </td>
     </tr>
     <tr>

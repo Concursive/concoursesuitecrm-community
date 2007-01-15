@@ -51,8 +51,8 @@
 <%@ include file="product_category_header_include.jsp" %>
 <% String param1 = "categoryId=" + ProductCategory.getId(); %>
 <% String param2 = "moduleId=" + PermissionCategory.getId(); %>
-<dhv:container name="productcategories" selected="subcategories" object="ProductCategory" param="<%= param1 + "|" + param2 %>">
-  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SubCategoryListInfo"/>
+<dhv:container name="productcategories" selected="subcategories" object="ProductCategory" param='<%= param1 + "|" + param2 %>'>
+  <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SubCategoryListInfo"/>
   <% int columnCount = 0; %>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>

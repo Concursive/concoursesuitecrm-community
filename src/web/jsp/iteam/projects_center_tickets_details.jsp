@@ -62,7 +62,8 @@
 <dhv:pagedListStatus object="projectTicketsInfo">
   <strong>Ticket # <%= ticket.getProjectTicketCount() %></strong>
   <dhv:evaluate if="<%= ticket.isClosed() %>">
-    (<font color="red"><dhv:label name="project.ticketClosedOn" param="<%= "time="+toHtml(ticket.getClosedString()) %>">This ticket was closed on <%= toHtml(ticket.getClosedString()) %></dhv:label></font>)
+    (<font color="red">
+    <dhv:label name="project.ticketClosedOn" param='<%= "time="+toHtml(ticket.getClosedString()) %>'>This ticket was closed on <%= toHtml(ticket.getClosedString()) %></dhv:label></font>)
   </dhv:evaluate>
   <dhv:evaluate if="<%= !ticket.isClosed() %>">
     (<font color="green"><dhv:label name="quotes.open">Open</dhv:label></font>)

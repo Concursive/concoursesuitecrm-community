@@ -47,7 +47,7 @@
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
 <center><dhv:pagedListAlphabeticalLinks object="CompanyDirectoryInfo"/></center></dhv:include>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="CompanyDirectoryInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th width="8">&nbsp;</th>

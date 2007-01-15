@@ -48,7 +48,7 @@
   </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="productcatalogimports" selected="details" object="ProductDetails" hideContainer="true" param="<%= "productId=" + ProductDetails.getId() + "|" + "moduleId=" + permissionCategory.getId()%>">
+<dhv:container name="productcatalogimports" selected="details" object="ProductDetails" hideContainer="true" param='<%= "productId=" + ProductDetails.getId() + "|" + "moduleId=" + permissionCategory.getId()%>'>
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td>
@@ -287,16 +287,16 @@
           </tr>
           <tr class="containerBody">
             <td>
-              <zeroio:currency value="<%= Pricing.getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
+              <zeroio:currency value="<%= Pricing.getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
             </td>
             <td>
-              <zeroio:currency value="<%= Pricing.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
+              <zeroio:currency value="<%= Pricing.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
             </td>
             <td>
-              <zeroio:currency value="<%= Pricing.getCostAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
+              <zeroio:currency value="<%= Pricing.getCostAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
             </td>
             <td>
-              <zeroio:currency value="<%= Pricing.getRecurringAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
+              <zeroio:currency value="<%= Pricing.getRecurringAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false" />
             </td>
             <td>
               <%=toHtml(Pricing.getRecurringTypeName())%>

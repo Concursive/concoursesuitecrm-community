@@ -40,7 +40,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:container name="communications" selected="results" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:container name="communications" selected="results" object="Campaign" param='<%= "id=" + Campaign.getId() %>'>
     <table cellpadding="4" cellspacing="0" width="100%" border="0">
       <tr>
         <td>
@@ -64,10 +64,10 @@
                   <%} else {%>
                     <dhv:label name="campaign.recipients.lowercase">recipients</dhv:label>
                   <%}%><br />
-                  <dhv:evaluate if="<%= "".equals(Campaign.getLastAddressResponseString()) %>">
+                  <dhv:evaluate if='<%= "".equals(Campaign.getLastAddressResponseString()) %>'>
                     <dhv:label name="campaign.lastResponseReceived.colon" param="time=--">Last Response Received: --</dhv:label>
                   </dhv:evaluate>
-                  <dhv:evaluate if="<%= !"".equals(Campaign.getLastAddressResponseString()) %>">
+                  <dhv:evaluate if='<%= !"".equals(Campaign.getLastAddressResponseString()) %>'>
                     <dhv:label name="campaign.lastResponseReceived.colon" param="time=">Last Response Received:</dhv:label><zeroio:tz timestamp="<%= Campaign.getLastAddressResponse() %>" timeZone="<%= User.getTimeZone() %>"  showTimeZone="true"/>
                   </dhv:evaluate>
                   <br />
@@ -99,10 +99,10 @@
                   <%} else {%>
                     <dhv:label name="campaign.recipients.lowercase">recipients</dhv:label>
                   <%}%><br />
-                  <dhv:evaluate if="<%= "".equals(Campaign.getLastResponseString()) %>">
+                  <dhv:evaluate if='<%= "".equals(Campaign.getLastResponseString()) %>'>
                     <dhv:label name="campaign.lastResponseReceived.colon" param="time=--">Last Response Received: --</dhv:label>
                   </dhv:evaluate>
-                  <dhv:evaluate if="<%= !"".equals(Campaign.getLastResponseString()) %>">
+                  <dhv:evaluate if='<%= !"".equals(Campaign.getLastResponseString()) %>'>
                     <dhv:label name="campaign.lastResponseReceived.colon" param="time=">Last Response Received:</dhv:label><zeroio:tz timestamp="<%= Campaign.getLastResponse() %>" timeZone="<%= User.getTimeZone() %>"  showTimeZone="true"/>
                   </dhv:evaluate>
                 </td>

@@ -44,7 +44,7 @@
   <br />
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
-  <dhv:evaluate if="<%= "MyActionContacts".equals(request.getParameter("actionSource")) %>"> 
+  <dhv:evaluate if='<%= "MyActionContacts".equals(request.getParameter("actionSource")) %>'>
     <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
   </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true">

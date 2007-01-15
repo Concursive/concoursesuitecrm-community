@@ -64,7 +64,7 @@
     <a href="ProjectManagement.do?command=RejectProject&pid=<%= thisProject.getId() %>"><img src="images/buttons/reject.gif" border="0" align="absmiddle" /></a>
   </td>
   <td valign="top" width="100%">
-    <dhv:label name="project.createdBy.on" param="<%= "project.Title="+toHtml(thisProject.getTitle())+"|username="+getUsername(pageContext,thisProject.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,thisProject.getEntered(),"&nbsp;",DateFormat.SHORT,false,false,false,"&nbsp;")+"|project.shortDescription="+toHtml(thisProject.getShortDescription()) %>"><b><%= toHtml(thisProject.getTitle()) %></b>, created by <dhv:username id="<%= thisProject.getEnteredBy() %>"/> on <zeroio:tz timestamp="<%= thisProject.getEntered() %>" default="&nbsp;"/><br /><%= toHtml(thisProject.getShortDescription()) %></dhv:label>
+    <dhv:label name="project.createdBy.on" param='<%= "project.Title="+toHtml(thisProject.getTitle())+"|username="+getUsername(pageContext,thisProject.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,thisProject.getEntered(),"&nbsp;",DateFormat.SHORT,false,false,false,"&nbsp;")+"|project.shortDescription="+toHtml(thisProject.getShortDescription()) %>'><b><%= toHtml(thisProject.getTitle()) %></b>, created by <dhv:username id="<%= thisProject.getEnteredBy() %>"/> on <zeroio:tz timestamp="<%= thisProject.getEntered() %>" default="&nbsp;"/><br /><%= toHtml(thisProject.getShortDescription()) %></dhv:label>
   </td>
 </tr>
 <%

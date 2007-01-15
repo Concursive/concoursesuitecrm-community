@@ -49,7 +49,7 @@
 <table width="100%" border="0">
   <tr>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountContactsImportResultsInfo"/>
+      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AccountContactsImportResultsInfo"/>
     </td>
   </tr>
 </table>
@@ -65,7 +65,7 @@
     <th>
       <strong><dhv:label name="account.phones.colon">Phone(s):</dhv:label></strong>
     </th>
-    <dhv:evaluate if="<%= !"my".equals(AccountContactsImportResultsInfo.getListView()) && !"".equals(AccountContactsImportResultsInfo.getListView()) %>">
+    <dhv:evaluate if='<%= !"my".equals(AccountContactsImportResultsInfo.getListView()) && !"".equals(AccountContactsImportResultsInfo.getListView()) %>'>
       <th>
         <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
@@ -113,7 +113,7 @@
               <%=(phoneItr.hasNext()?"<br />":"")%>
           <%}%>&nbsp;
         </td>
-        <dhv:evaluate if="<%= !"my".equals(AccountContactsImportResultsInfo.getListView()) && !"".equals(AccountContactsImportResultsInfo.getListView()) %>">
+        <dhv:evaluate if='<%= !"my".equals(AccountContactsImportResultsInfo.getListView()) && !"".equals(AccountContactsImportResultsInfo.getListView()) %>'>
           <td class="row<%= rowid %>" nowrap>
             <dhv:username id="<%= thisOrg.getOwner() %>"/>
           </td>

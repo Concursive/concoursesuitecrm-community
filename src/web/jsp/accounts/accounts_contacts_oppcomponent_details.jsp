@@ -67,14 +67,14 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <form name="componentDetails" action="AccountContactsOpps.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>" method="post">
-<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <dhv:container name="accountcontactopportunities" selected="details" object="OpportunityHeader" param="<%= "headerId=" + OpportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+  <dhv:container name="accountscontacts" selected="opportunities" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+    <dhv:container name="accountcontactopportunities" selected="details" object="OpportunityHeader" param='<%= "headerId=" + OpportunityHeader.getId() + "|" + "orgId=" + OrgDetails.getOrgId() +"|" + "contactId=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <% FileItem thisFile = new FileItem(); %>
     <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
       <%= thisFile.getImageTag("-23") %>
     </dhv:evaluate>
-    <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>">
+    <dhv:hasAuthority owner='<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>'>
       <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
         <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OppComponentDetails.isTrashed()%>">
           <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete"><br /><br /></dhv:permission>
@@ -141,7 +141,7 @@
           <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= OppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= OppComponentDetails.getLow() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </tr>
       </dhv:include>
@@ -168,7 +168,7 @@
           <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
         </td>
         <td>
-          <zeroio:currency value="<%= OppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+          <zeroio:currency value="<%= OppComponentDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </td>
       </tr>
       <dhv:include name="opportunity.termsAndUnits,pipeline-terms" none="true">
@@ -308,7 +308,7 @@
       </tr>
       </dhv:include>
     </table>
-    <dhv:hasAuthority owner="<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>">
+    <dhv:hasAuthority owner='<%= String.valueOf(OpportunityHeader.getManager()+(OpportunityHeader.getManager() == OppComponentDetails.getOwner()?"":","+OppComponentDetails.getOwner())) %>'>
       <dhv:evaluate if="<%= !OpportunityHeader.getLock() %>">
         <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() && !OppComponentDetails.isTrashed()%>">
           <br />

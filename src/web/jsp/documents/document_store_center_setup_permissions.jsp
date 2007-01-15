@@ -78,7 +78,7 @@
     <td>
       <input type="hidden" name="perm<%= permissionCount %>" value="<%= thisPermission.getId() %>">
       <dhv:documentRoleSelect
-          name="<%= "perm" + permissionCount + "level" %>"
+          name='<%= "perm" + permissionCount + "level" %>'
           value="<%= documentStore.getAccessUserLevel(thisPermission.getPermission()) %>"/>
     </td>
   </tr>

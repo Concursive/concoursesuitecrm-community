@@ -60,7 +60,7 @@
 <%-- End Trails --%>
 <%-- Begin the container contents --%>
 <dhv:permission name="quotes-quotes-add"><a href="Quotes.do?command=AddQuoteForm"><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="quoteListInfo"/>
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="quoteListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="8">

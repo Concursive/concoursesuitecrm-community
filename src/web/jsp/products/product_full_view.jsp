@@ -126,8 +126,8 @@ if (currentCategory.getProductList().size() > 0) {
     <td valign="top"><%= product.getId() %></td>
     <td valign="top"><%= toHtml(product.getName()) %></td>
     <td valign="top"><%=(product.getShortDescription().equals("") || product.getShortDescription() == null) ? "-" : toHtml(product.getShortDescription()) %>&nbsp;</td>
-    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
-    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
   </tr>
 <%
 }
@@ -202,8 +202,8 @@ if( categoryList != null && categoryList.size() > 0) {
     <td valign="top"><%= product.getId() %></td>
     <td valign="top"><%= toHtml(product.getName()) %></td>
     <td valign="top"><%=(product.getShortDescription().equals("") || product.getShortDescription() == null) ? "-" : toHtml(product.getShortDescription()) %>&nbsp;</td>
-    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
-    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td valign="top"><zeroio:currency value="<%= product.getActivePrice().getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
   </tr>
 <%
     if (product.getOptionList().size() > 0) {
@@ -281,8 +281,8 @@ if( categoryList != null && categoryList.size() > 0) {
     <td valign="top"><%= value.getId() %></td>
     <td valign="top"><%= value.getResultId() %></td>
     <td valign="top"><%= toHtml(value.getDescription()) %></td>
-    <td valign="top"><zeroio:currency value="<%= value.getMsrpAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
-    <td valign="top"><zeroio:currency value="<%= value.getPriceAmount() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td valign="top"><zeroio:currency value="<%= value.getMsrpAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
+    <td valign="top"><zeroio:currency value="<%= value.getPriceAmount() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></td>
   </tr>
 <%
         }
