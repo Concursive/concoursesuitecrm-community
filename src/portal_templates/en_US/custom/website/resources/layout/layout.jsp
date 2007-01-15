@@ -75,21 +75,21 @@
       |</dhv:permission>
       <img src="images/icons/stock_exit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="Login.do?command=Logout" class="s"><dhv:label name="global.button.Logout">Logout</dhv:label></a>
-      <dhv:evaluate if="<%= !User.getUserRecord().getContact().getNameFirstLast().equals("") %>">
+      <dhv:evaluate if='<%= !User.getUserRecord().getContact().getNameFirstLast().equals("") %>'>
         <br />
         <% if(User.getActualUserId() != User.getUserId()) {%>
-          <dhv:label name="admin.userAliasedTo" param="<%= "contactName="+toHtml(User.getUserRecord().getContact().getNameFirstLast()) %>">User Aliased To <span class="highlight"><%= toHtml(User.getUserRecord().getContact().getNameFirstLast()) %></span> /</dhv:label>
+          <dhv:label name="admin.userAliasedTo" param='<%= "contactName="+toHtml(User.getUserRecord().getContact().getNameFirstLast()) %>'>User Aliased To <span class="highlight"><%= toHtml(User.getUserRecord().getContact().getNameFirstLast()) %></span> /</dhv:label>
         <%} else {%>
-          <dhv:label name="admin.user.colon" param="<%= "contactName="+toHtml(User.getUserRecord().getContact().getNameFirstLast()) %>">User: <span class="highlight"><%= toHtml(User.getUserRecord().getContact().getNameFirstLast()) %></span> /</dhv:label>
+          <dhv:label name="admin.user.colon" param='<%= "contactName="+toHtml(User.getUserRecord().getContact().getNameFirstLast()) %>'>User: <span class="highlight"><%= toHtml(User.getUserRecord().getContact().getNameFirstLast()) %></span> /</dhv:label>
         <%}%>
       </dhv:evaluate>
       <b class="highlight"><%= User.getRole() %></b>
       <dhv:evaluate if="<%= User.getUserRecord().getManagerUser() != null && User.getUserRecord().getManagerUser().getContact() != null %>">
-        <br /><dhv:label name="admin.manager.colon" param="<%= "managerName="+toHtml(User.getUserRecord().getManagerUser().getContact().getNameFull()) %>">Manager: <span class="highlight"><%= toHtml(User.getUserRecord().getManagerUser().getContact().getNameFull()) %></span></dhv:label>
+        <br /><dhv:label name="admin.manager.colon" param='<%= "managerName="+toHtml(User.getUserRecord().getManagerUser().getContact().getNameFull()) %>'>Manager: <span class="highlight"><%= toHtml(User.getUserRecord().getManagerUser().getContact().getNameFull()) %></span></dhv:label>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
+      <dhv:evaluate if='<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>'>
         <br />
-        <dhv:label name="admin.actionTook.colon" param="<%= "time=" + request.getAttribute("debug.action.time") %>">Action took:</dhv:label>
+        <dhv:label name="admin.actionTook.colon" param='<%= "time=" + request.getAttribute("debug.action.time") %>'>Action took:</dhv:label>
       </dhv:evaluate>
     </th>
   </tr>
@@ -166,7 +166,7 @@
 </div>
 <%-- Allow pages have to have a scrollTo... must be at end of html --%>
 <script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>
-<dhv:evaluate if="<%= request.getParameter("scrollTop") != null %>">
+<dhv:evaluate if='<%= request.getParameter("scrollTop") != null %>'>
 <script language="JavaScript" type="text/javascript">
     if (window.scrollTo) window.scrollTo(<%= request.getParameter("scrollLeft") %>, <%= request.getParameter("scrollTop") %>);
 </script>

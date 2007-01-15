@@ -9,8 +9,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../../initPage.jsp" %>
 <c:set var="site" value="${site}"/>
-<jsp:useBean id="site" type="org.aspcfs.modules.website.base.Site" />
-<jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <center>
 <%-- Login Link --%>
 <dhv:evaluate if='<%= "true".equals(portal) %>'>

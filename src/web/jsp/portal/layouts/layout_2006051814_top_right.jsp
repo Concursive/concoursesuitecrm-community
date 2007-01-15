@@ -8,7 +8,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.utils.StringUtils" %>
-<jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%-- Login Link --%>
 <dhv:evaluate if='<%= "true".equals(portal) %>'>
