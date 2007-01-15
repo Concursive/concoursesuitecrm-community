@@ -73,20 +73,6 @@
   </tag>
   
   <tag>
-    <name>username</name> 
-    <tag-class>com.zeroio.taglib.UsernameHandler</tag-class>
-    <body-content>empty</body-content>
-    <display-name>
-      Get the user's name from memory
-    </display-name>
-    <attribute>
-      <name>id</name>
-      <required>yes</required>
-      <rtexprvalue>true</rtexprvalue>
-    </attribute>
-  </tag>
-  
-  <tag>
     <name>project</name> 
     <tag-class>com.zeroio.taglib.ProjectNameHandler</tag-class>
     <body-content>empty</body-content>
