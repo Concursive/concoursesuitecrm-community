@@ -4,6 +4,9 @@
 <%@ page import="org.apache.pluto.driver.url.PortalURL"%>
 <%@ page import="java.util.*"%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="portal" class="java.lang.String" scope="request"/>
+<jsp:useBean id="site" class="org.aspcfs.modules.website.base.Site" scope="request"/>
+<jsp:useBean id="rowsColumns" class="java.util.ArrayList" scope="request"/>
 <%if (rowsColumns.size() > 0) { %>
 <table cellpadding="0" cellspacing="0" width="100%" class="portalPortlets">
 <%
@@ -23,7 +26,7 @@
       if (object instanceof PageRow) {
         PageRow pageRow = (PageRow) object;
 %>
-        <dhv:evaluate if='<%= !"true".equals(portal) %>'>
+        <dhv:evaluate if="<%= !"true".equals(portal) %>">
         <tr>
           <td class="portalRow" valign="top" colspan="<%= (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size()) %>">
             <div class="portalEditorRow">
@@ -46,7 +49,7 @@
         pb_i++;
 %>
                 <td class="portalColumn" width="<%= (rowColumn.getParentRow().getTotalColumnWidth() != 0? String.valueOf((double)(rowColumn.getWidth() * 100)/(double)rowColumn.getParentRow().getTotalColumnWidth())+"%": String.valueOf(rowColumn.getWidth())) %>" valign="top">
-                  <dhv:evaluate if='<%= !"true".equals(portal) %>'>
+                  <dhv:evaluate if="<%= !"true".equals(portal) %>">
                     <div class="portalEditorColumn">
                     Column: <a href="javascript:displayMenuColumn('select<%= pb_i %>','menuColumn','<%= rowColumn.getId() %>','<%= rowColumn.getParentRow().getId() %>','<%= rowColumn.getParentRow().getPageVersionId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>','<%= rowColumn.getIceletId() %>','<%= (rowColumn.getSubRows() != null && rowColumn.getSubRows().size() > 0) %>');"
                     onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuColumn');">
@@ -57,12 +60,8 @@
         if (thisIcelet != null) {
           PortalServletResponse portalResponse =
                   (PortalServletResponse) request.getAttribute("portal_response_" + rowColumn.getId());
-          if (portalResponse != null && portalResponse.getInternalBuffer() != null){
           StringBuffer buffer = portalResponse.getInternalBuffer().getBuffer();
           pageContext.getOut().print(buffer.toString());
-          } else {
-          %>unexpected<%
-          }
         } %>
 
 <%      if(nextObj != null && nextObj instanceof PageRow) {
