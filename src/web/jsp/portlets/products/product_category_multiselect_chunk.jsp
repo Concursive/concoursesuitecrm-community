@@ -16,7 +16,6 @@
  --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv"%>
 <%@ page import="java.util.*,org.aspcfs.modules.products.base.*"%>
-<%@ page import="com.sun.org.apache.bcel.internal.generic.NEW"%>
 <jsp:useBean id="permissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request" />
 <jsp:useBean id="categoryHierarchy" class="org.aspcfs.modules.products.base.ProductCategoryList" scope="request" />
 <jsp:useBean id="productCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request" />
