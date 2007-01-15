@@ -54,7 +54,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:container name="accounts" selected="assets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'/>
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if='<%= asset.getParentList() != null && asset.getParentList().size() > 0 %>'>
 <%
     Iterator iter = asset.getParentList().iterator();
