@@ -36,6 +36,9 @@ public class HtmlSelectDuration extends TagSupport implements TryCatchFinally {
   private String hours = null;
   private String minutes = null;
   private String count = null;
+  private String value = null;
+  private String AMPM = null;
+
 
   public void doCatch(Throwable throwable) throws Throwable {
     // Required but not needed
@@ -47,6 +50,24 @@ public class HtmlSelectDuration extends TagSupport implements TryCatchFinally {
     hours = null;
     minutes = null;
     count = null;
+    value = null;
+    AMPM = null;
+  }
+
+
+  /**
+   * @return the aMPM
+   */
+  public String getAMPM() {
+    return AMPM;
+  }
+
+
+  /**
+   * @param ampm the aMPM to set
+   */
+  public void setAMPM(String ampm) {
+    AMPM = ampm;
   }
 
 
@@ -153,6 +174,30 @@ public class HtmlSelectDuration extends TagSupport implements TryCatchFinally {
    */
   public int doEndTag() {
     return EVAL_PAGE;
+  }
+
+
+  /**
+   * @return the value
+   */
+  public String getValue() {
+    return value;
+  }
+
+
+  /**
+   * @param value the value to set
+   */
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+
+  /**
+   * @return the count
+   */
+  public String getCount() {
+    return count;
   }
 
 }
