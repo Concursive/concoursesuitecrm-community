@@ -73,6 +73,7 @@ public class Organization extends GenericBean {
   private int segmentList = -1;
   private int siteId = -1;
   private int stageId = -1;
+  private String stageName = null; 
   private String siteClient = null;
   public int segmentId = -1;
   private int subSegmentId = -1;
@@ -190,7 +191,8 @@ public class Organization extends GenericBean {
         "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
         "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
         "i.description AS industry_name, a.description AS account_size_name, " +
-        "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county " +
+        "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county, " +
+        "ast.description as stage_name "+
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
@@ -198,6 +200,7 @@ public class Organization extends GenericBean {
         "LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code) " +
         "LEFT JOIN lookup_account_size a ON (o.account_size = a.code) " +
         "LEFT JOIN organization_address oa ON (o.org_id = oa.org_id) " +
+        "LEFT JOIN lookup_account_stage ast ON (o.stage_id = ast.code) " +
         "WHERE o.org_id = ? " +
         " AND (oa.address_id IS NULL OR oa.address_id IN ( "
 		+ "SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "
@@ -1043,7 +1046,15 @@ public class Organization extends GenericBean {
     return stageId;
   }  
 
-
+  /**
+   *  Gets the stageName attribute of the Organization object
+   *
+   * @return    The stageName value
+   */
+  
+  public String getStageName() {
+    return stageName;
+  }
 
   /**
    *  Sets the segmentId attribute of the Organization object
@@ -3981,6 +3992,7 @@ public class Organization extends GenericBean {
     state=rs.getString("o_state");
     postalCode=rs.getString("o_postalcode");
     county=rs.getString("o_county");
+    stageName=rs.getString("stage_name");
 
   }
 

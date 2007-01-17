@@ -304,6 +304,15 @@
       <input type="checkbox" name="allowUpdate" value="true" <%= (actionStep.getAllowUpdate() ? "checked" : "") %> /></td>
   </tr>
 </dhv:evaluate>
+
+  <tr>
+    <td class="formLabel" valign="top"><dhv:label name="actionPlan.displayInPlanList">Display In Plan List</dhv:label></td>
+    <td>
+      <input type="checkbox" name="displayInPlanList" value="true" <%= (actionStep.getDisplayInPlanList() ? "checked" : "") %> /> &nbsp;
+      <input type="text" size="52" name="planListLabel" value="<%= toHtmlValue(actionStep.getPlanListLabel()) %>" />&nbsp;<%= showAttribute(request, "displayInPlanListError") %>
+    </td>
+  </tr>
+
 </table>
 <br />
 <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>"/>

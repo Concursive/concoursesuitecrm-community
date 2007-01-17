@@ -30,6 +30,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="actionPlanWorkListView" class="java.lang.String" scope="session"/>
+<jsp:useBean id="ratingLookup" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -44,11 +45,11 @@
   function reassignPlan(userId, actionPlanWork) {
     window.location.href = "MyActionPlans.do?command=Reassign&actionPlanId=" + actionPlanWork + "&userId=" + userId + "&return=list";
   }
-  
+
   function changeView(view) {
     window.location.href = 'MyActionPlans.do?command=View&planView=' + view;
   }
-  
+
   function updateGraph(select) {
     document.actionPlanDashboardView.submit();
   }
@@ -59,7 +60,7 @@
   <tr>
     <td>
       <a href="MyCFS.do?command=Home"><dhv:label name="My Home Page" mainMenuItem="true">My Home Page</dhv:label></a> >
-      <dhv:label name="sales.actionPlans">Action Plans</dhv:label>  
+      <dhv:label name="sales.actionPlans">Action Plans</dhv:label>
     </td>
   </tr>
 </table>
@@ -102,7 +103,7 @@
               <%= toHtml(currentUser.getContact().getTitle()) %>
             </dhv:evaluate>
           </td>
-          <% 
+          <%
             HashMap phaseMap = (HashMap) userPhaseMap.get(new Integer(currentUser.getId()));
             Iterator v = actionPlan.getPhases().iterator();
             while (v.hasNext()) {
@@ -117,7 +118,7 @@
           %>
             <td align="center" style="<%= (v.hasNext() ? "border-right: 0px;" : "") %><%= shortChildList.size() != 0 ? "background-image: none;" : "" %>"><%= phaseCount %></td>
           <%
-            } 
+            }
           %>
         </tr>
         <%-- Display Child Users in the dashboard graph --%>
@@ -137,7 +138,7 @@
             </a>
             <dhv:evaluate if="<%=!thisRec.getEnabled() || (thisRec.getExpires() != null && thisRec.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))%>"><font color="red">*</font></dhv:evaluate>
           </td>
-          <% 
+          <%
             Iterator z = actionPlan.getPhases().iterator();
             while (z.hasNext()) {
               ActionPhase thisPhase = (ActionPhase) z.next();
@@ -151,7 +152,7 @@
           %>
             <td align="center" style="<%= (z.hasNext() ? "border-right: 0px;" : "") %><%= (p.hasNext() ? "background-image:none;" : "") %>"><%= phaseCount %></td>
           <%
-            } 
+            }
           %>
         </tr>
         <%
@@ -219,9 +220,11 @@
     <th valign="middle" nowrap>
       <strong><dhv:label name="actionPlan.prospectName">Prospect Name</dhv:label></strong>
     </th>
+    <dhv:include name="actionPlan.weeklyPotential" none="true">
     <th style="text-align: center !important">
       <strong><dhv:label name="actionPlan.weeklyPotential">Weekly Potential</dhv:label></strong>
     </th>
+    </dhv:include>
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.currentPhase">Current Phase</dhv:label></strong>
     </th>
@@ -231,6 +234,11 @@
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.daysActive">Days Active</dhv:label></strong>
     </th>
+    <dhv:evaluate if="<%=actionPlanWorkList.getDisplayInPlanStepsCount()>0 %>">
+      <th align="center" nowrap>
+        <strong><dhv:label name="actionPlan.valuesFromPlan">Values from Plan</dhv:label></strong>
+      </th>
+    </dhv:evaluate>
     <th valign="middle" nowrap>
       <strong><a href="MyActionPlans.do?command=View&column=apw.modified"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
       <%= actionPlanWorkDashboardInfo.getSortIcon("apw.modified") %>
@@ -244,83 +252,104 @@
   while (j.hasNext()) {
       i++;
       rowid = (rowid != 1 ? 1 : 2);
-      ActionPlanWork thisWork = (ActionPlanWork) j.next();
+      ActionPlanWork actionPlanWork = (ActionPlanWork) j.next();
 %>
   <tr
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null && thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() != null && actionPlanWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
         class="highlightRed"
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() == null || !thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() == null || !actionPlanWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
         class="row<%= rowid %>"
       </dhv:evaluate>
       >
     <td nowrap>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
-       <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= thisWork.getId() %>','<%= thisWork.getOrganization().getOrgId() %>','<%= thisWork.getManagerId() %>','<%= thisWork.getEnabled() ? 1 : 0 %>', <%= thisWork.getPlanSiteId() %>);" 
+     <dhv:evaluate if="<%= actionPlanWork.getOrganization() != null %>">
+       <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= actionPlanWork.getId() %>','<%= actionPlanWork.getOrganization().getOrgId() %>','<%= actionPlanWork.getManagerId() %>','<%= actionPlanWork.getEnabled() ? 1 : 0 %>', <%= actionPlanWork.getPlanSiteId() %>);"
           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
      </dhv:evaluate>
-     <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+     <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
        &nbsp;
      </dhv:evaluate>
     </td>
-    <td width="100%"><%= toHtml(thisWork.getPlanName()) %></td>
+    <td width="100%"><%= toHtml(actionPlanWork.getPlanName()) %></td>
     <td align="center" nowrap>
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null %>">
-        <dhv:evaluate if="<%= thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() != null %>">
+        <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
           <dhv:label name="account.yes">Yes</dhv:label>
         </dhv:evaluate>
-        <dhv:evaluate if="<%= !thisWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
+        <dhv:evaluate if="<%= !actionPlanWork.getCurrentPhase().requiresUserAttention(User.getUserRecord().getId(), request) %>">
           <dhv:label name="account.no">No</dhv:label>
         </dhv:evaluate>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() == null %>">
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() == null %>">
         <dhv:label name="account.no">No</dhv:label>
       </dhv:evaluate>
     </td>
     <td nowrap>
-      <dhv:username id="<%= thisWork.getAssignedTo() %>"/>
+      <dhv:username id="<%= actionPlanWork.getAssignedTo() %>"/>
     </td>
     <td valign="top">
-      <dhv:evaluate if="<%= thisWork.getOrganization() != null && hasText(thisWork.getOrganization().getName()) %>">
-        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getOrganization().getName()) %></a>
+      <dhv:evaluate if="<%= actionPlanWork.getOrganization() != null && hasText(actionPlanWork.getOrganization().getName()) %>">
+        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>"><%= toHtml(actionPlanWork.getOrganization().getName()) %></a>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getOrganization() == null && thisWork.getContact() != null && hasText(thisWork.getContact().getNameFirstLast()) %>">
-        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getContact().getNameFirstLast()) %></a>
+      <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null && actionPlanWork.getContact() != null && hasText(actionPlanWork.getContact().getNameFirstLast()) %>">
+        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>"><%= toHtml(actionPlanWork.getContact().getNameFirstLast()) %></a>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+      <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
         &nbsp;
       </dhv:evaluate>
     </td>
+    <dhv:include name="actionPlan.weeklyPotential" none="true">
     <td align="center">
-      <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
-        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      <dhv:evaluate if="<%= actionPlanWork.getOrganization() != null %>">
+        <zeroio:currency value="<%= actionPlanWork.getOrganization().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
-        <dhv:evaluate if="<%= thisWork.getContact() != null %>">
-          <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
+        <dhv:evaluate if="<%= actionPlanWork.getContact() != null %>">
+          <zeroio:currency value="<%= actionPlanWork.getContact().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>
+    </dhv:include>
     <td align="center">
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null %>">
-        <%= toHtml(thisWork.getCurrentPhase().getPhaseName()) %>
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() != null %>">
+        <%= toHtml(actionPlanWork.getCurrentPhase().getPhaseName()) %>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() == null %>">
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() == null %>">
         <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
       </dhv:evaluate>
     </td>
     <td nowrap align="center">
       &nbsp;
-      <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null %>">
-        <%= thisWork.getCurrentPhase().getDaysInPhase() %>
+      <dhv:evaluate if="<%= actionPlanWork.getCurrentPhase() != null %>">
+        <%= actionPlanWork.getCurrentPhase().getDaysInPhase() %>
       </dhv:evaluate>
     </td>
     <td nowrap align="center">
-      <%= thisWork.getDaysActive() %>
+      <%= actionPlanWork.getDaysActive() %>
     </td>
+    <dhv:evaluate if="<%=actionPlanWorkList.getDisplayInPlanStepsCount()>0 %>">
+      <td>
+        <%
+            Iterator steps = actionPlanWork.getSteps().iterator();
+            while (steps.hasNext()) {
+              ActionItemWork thisItemWork = (ActionItemWork) steps.next();
+              ActionStep thisStep = thisItemWork.getStep();
+              if (thisStep!=null && thisStep.getDisplayInPlanList()){
+                if (steps.hasNext()) { %>
+                  <%@ include file="action_plan_work_display_in_plan_include.jsp" %> <br />
+                <%}else{%>
+                  <%@ include file="action_plan_work_display_in_plan_include.jsp" %>
+                <%}
+              }
+           }%>
+
+
+      </td>
+    </dhv:evaluate>
     <td nowrap align="center">
-      <zeroio:tz timestamp="<%= thisWork.getModified() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>"/>
+      <zeroio:tz timestamp="<%= actionPlanWork.getModified() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>"/>
     </td>
   </tr>
 <%}

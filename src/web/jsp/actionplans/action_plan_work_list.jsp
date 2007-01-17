@@ -88,9 +88,11 @@
     <th valign="middle" width="100%">
       <strong><dhv:label name="actionPlan.prospectName">Prospect Name</dhv:label></strong>
     </th>
-    <th style="text-align: center !important">
-      <strong><dhv:label name="actionPlan.weeklyPotential">Weekly Potential</dhv:label></strong>
-    </th>
+    <dhv:include name="actionPlan.weeklyPotential" none="true">
+      <th style="text-align: center !important">
+        <strong><dhv:label name="actionPlan.weeklyPotential">Weekly Potential</dhv:label></strong>
+      </th>
+    </dhv:include>
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.currentPhase">Current Phase</dhv:label></strong>
     </th>
@@ -100,6 +102,11 @@
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.daysActive">Days Active</dhv:label></strong>
     </th>
+    <dhv:evaluate if="<%=accountActionPlanWorkList.getDisplayInPlanStepsCount()>0 %>">
+      <th align="center" nowrap>
+        <strong><dhv:label name="actionPlan.valuesFromPlan">Values from Plan</dhv:label></strong>
+      </th>
+    </dhv:evaluate>
     <th valign="middle" nowrap>
       <strong><a href="MyActionPlans.do?command=List&column=apw.modified"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
       <%= actionPlanWorkListInfo.getSortIcon("apw.modified") %>
@@ -148,17 +155,19 @@
     <td nowrap>
       <dhv:username id="<%= thisWork.getAssignedTo() %>"/>
     </td>
-    <td nowrap>
-      <dhv:evaluate if="<%= thisWork.getOrganization() != null && hasText(thisWork.getOrganization().getName()) %>">
-        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getOrganization().getName()) %></a>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getOrganization() == null && thisWork.getContact() != null && hasText(thisWork.getContact().getNameFirstLast()) %>">
-        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getContact().getNameFirstLast()) %></a>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
-        &nbsp;
-      </dhv:evaluate>
-    </td>
+    <dhv:include name="actionPlan.weeklyPotential" none="true">
+      <td nowrap>
+        <dhv:evaluate if="<%= thisWork.getOrganization() != null && hasText(thisWork.getOrganization().getName()) %>">
+          <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getOrganization().getName()) %></a>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= thisWork.getOrganization() == null && thisWork.getContact() != null && hasText(thisWork.getContact().getNameFirstLast()) %>">
+          <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getContact().getNameFirstLast()) %></a>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+          &nbsp;
+        </dhv:evaluate>
+      </td>
+    </dhv:include>
     <td align="center">
       <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
         <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
@@ -184,6 +193,23 @@
     <td nowrap align="center">
       <%= thisWork.getDaysActive() %>
     </td>
+    <dhv:evaluate if="<%=accountActionPlanWorkList.getDisplayInPlanStepsCount()>0 %>">
+      <td>
+        <%
+            Iterator steps = thisWork.getSteps().iterator();
+            while (steps.hasNext()) {
+              ActionItemWork thisItemWork = (ActionItemWork) steps.next();
+              ActionStep thisStep = thisItemWork.getStep();
+              if (thisStep!=null && thisStep.getDisplayInPlanList()){
+                if (steps.hasNext()) { %>         
+                  <%@ include file="action_plan_work_display_in_plan_include.jsp" %>,
+                <%}else{%>
+                  <%@ include file="action_plan_work_display_in_plan_include.jsp" %> 
+                <%} 
+              }
+           }%>
+      </td>
+    </dhv:evaluate>
     <td nowrap align="center">
       <zeroio:tz timestamp="<%= thisWork.getModified() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>"/>
     </td>

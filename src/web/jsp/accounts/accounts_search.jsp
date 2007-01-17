@@ -221,6 +221,7 @@
             </select>
           </td>
         </tr>
+        <dhv:include name="organization.stage" none="true">
         <dhv:evaluate if="<%= StageList.getEnabledElementCount() > 1 %>">
         <tr>
           <td nowrap class="formLabel">
@@ -231,6 +232,7 @@
           </td>
         </tr>
       </dhv:evaluate>  
+      </dhv:include>
       <dhv:evaluate if="<%= SiteList.getEnabledElementCount() <= 1 %>">
         <input type="hidden" name="searchcodeStageId" id="searchcodeStageId" value="-1" />
       </dhv:evaluate>

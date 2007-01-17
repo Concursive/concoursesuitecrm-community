@@ -1700,6 +1700,11 @@ public class ObjectValidator {
       {
         addError(systemStatus, object, "roleId", "object.validation.invalidRoleIdError.text");
       }
+      if ((!step.getDisplayInPlanList() && !(step.getPlanListLabel() == null || "".equals(step.getPlanListLabel()))) || (step.getDisplayInPlanList() && (step.getPlanListLabel() == null || "".equals(step.getPlanListLabel()))))
+      {
+        addError(systemStatus, object, "displayInPlanList", "object.validation.required");
+      }
+      
     }
 
     //User

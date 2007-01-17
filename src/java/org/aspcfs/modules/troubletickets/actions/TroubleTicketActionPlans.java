@@ -108,8 +108,8 @@ public final class TroubleTicketActionPlans extends CFSModule {
       if (user.getSiteId() == -1) {
         planWorkList.setIncludeAllSites(true);
       }
-      planWorkList.setBuildCurrentPhaseOnly(true);
-      planWorkList.setBuildCurrentStepOnly(true);
+      planWorkList.setBuildPhaseWork(true);
+      planWorkList.setBuildStepWork(true);
       planWorkList.setBuildLinkedObject(true);
       planWorkList.buildList(db);
       context.getRequest().setAttribute("actionPlanWorkList", planWorkList);

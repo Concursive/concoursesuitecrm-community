@@ -2820,8 +2820,11 @@
     <param name="actionPlan.attachmentMandatory">
       <value><![CDATA[Attachment Mandatory]]></value>
     </param>
-    <param name="actionPlan.attachmentOptional">
+	<param name="actionPlan.attachmentOptional">
       <value><![CDATA[Attachment Optional]]></value>
+    </param>
+    <param name="actionPlan.displayInPlanList">
+      <value><![CDATA[Display In Plan List]]></value>
     </param>
     <param name="usergroups.addGroup">
       <value><![CDATA[Add Group]]></value>
@@ -3008,6 +3011,9 @@
     </param>
     <param name="actionPlan.activePlans">
       <value><![CDATA[Active Plans]]></value>
+    </param>
+	<param name="actionPlan.valuesFromPlan">
+      <value><![CDATA[Values from Plan]]></value>
     </param>
     <param name="actionPlan.viewActionPlan">
       <value><![CDATA[View Action Plan]]></value>

@@ -199,6 +199,8 @@ public class SetupUtils {
     DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-11-16");
     // Version 4.1 beta 13
     DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2006-12-28");
+    // Version 4.1 beta 14
+    DatabaseVersion.insertVersion(db, DatabaseUtils.getTypeName(db), "2007-01-16");
 
     // Events (last because a check for these is made later)
     // NOTE: no longer used

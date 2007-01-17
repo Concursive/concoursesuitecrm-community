@@ -1394,5 +1394,32 @@ public class ActionPlan extends GenericBean {
   public void setSiteName(String tmp) {
     this.siteName = tmp;
   }
+  /**
+   *  Gets the DisplayInPlanSteps  attribute of the ActionPlanWork object
+   *
+   * @return    The DisplayInPlanSteps value
+   */
+  public String getDisplayInPlanSteps() {
+    String result = "";
+    Iterator actionPlanPhases = phases.iterator();
+    while (actionPlanPhases.hasNext()) {
+      ActionPhase thisPhase = (ActionPhase) actionPlanPhases.next();
+      Iterator steps = thisPhase.getSteps().iterator();
+      while (steps.hasNext()) {
+    	ActionStep step = (ActionStep) steps.next();
+        if (step!=null && step.getDisplayInPlanList()){
+          if (steps.hasNext()) {        	
+            result+=step.getPlanListLabel()+ "\n";
+          }else{
+            result+=step.getPlanListLabel();  
+          }	
+        }
+      }
+			if (actionPlanPhases.hasNext()){
+				result+="\n";  
+			}
+    }
+    return result;
+  }
 }
 

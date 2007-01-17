@@ -1440,7 +1440,32 @@ public class ActionPlanWork extends GenericBean {
     return actionPlanWork;
   }
 
-
+  /**
+   *  Gets the DisplayInPlanSteps  attribute of the ActionPlanWork object
+   *
+   * @return    The DisplayInPlanSteps value
+   */
+  public String getDisplayInPlanSteps() {
+    String steps = "";
+    Iterator phases = phaseWorkList.iterator();
+    while (phases.hasNext()) {
+      ActionPhaseWork thisPhase = (ActionPhaseWork) phases.next();
+      Iterator items = thisPhase.getItemWorkList().iterator();
+      while (items.hasNext()) {
+        ActionItemWork thisItem = (ActionItemWork) items.next();
+        ActionStep step = thisItem.getStep();
+        if (step!=null && step.getDisplayInPlanList()){
+          if (items.hasNext()) {        	
+            steps+=step.getPlanListLabel()+",";
+          }else{
+        	steps+=step.getPlanListLabel();  
+          }	
+        }
+      }
+    }
+    return steps;
+  }
+  
   /**
    *  Gets the steps attribute of the ActionPlanWork object
    *
@@ -1668,5 +1693,26 @@ public class ActionPlanWork extends GenericBean {
     }
     return true;
   }
+  
+  public boolean isCompleted() {
+	boolean completed = true;
+	    Iterator phases = phaseWorkList.iterator();
+		if (phases != null) {		
+			while (phases.hasNext()) {
+				ActionPhaseWork thisPhase = (ActionPhaseWork) phases.next();
+				if (thisPhase != null) {
+					Iterator items = thisPhase.getItemWorkList().iterator();
+					while (items.hasNext()) {
+						ActionItemWork itemWork = (ActionItemWork) items.next();
+						if (itemWork != null && !itemWork.isComplete()) {
+							completed = false;
+						}
+					}
+				}
+			}
+		}
+		return completed;
+	}
+  
 }
 

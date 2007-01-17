@@ -97,7 +97,8 @@ public class ActionStep extends GenericBean {
   protected ActionItemWorkList actionItems = null;
   protected ActionStepLookupList lookupList = null;
   protected String userGroupName = null;
-
+  protected boolean displayInPlanList = false;
+  protected String  planListLabel = null;
 
   /**
    *  Constructor for the ActionStep object
@@ -241,6 +242,8 @@ public class ActionStep extends GenericBean {
     durationTypeIdString = rs.getString("duration");
     // user_group table
     userGroupName = rs.getString("groupname");
+    displayInPlanList = rs.getBoolean("display_in_plan_list");
+    planListLabel = rs.getString("plan_list_label");
   }
 
 
@@ -298,7 +301,7 @@ public class ActionStep extends GenericBean {
       }
       sql.append("enabled, permission_type, role_id, department_id, " +
           " allow_skip_to_here, action_required, label, group_id, target_relationship, allow_update, campaign_id, " +
-          " allow_duplicate_recipient)");
+          " allow_duplicate_recipient, display_in_plan_list, plan_list_label)");
       sql.append(" VALUES (?, ?, ?, ?, ");
       if (parentId > -1) {
         sql.append("?, ");
@@ -318,7 +321,7 @@ public class ActionStep extends GenericBean {
       if (entered != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       DatabaseUtils.setInt(pst, ++i, this.getPhaseId());
@@ -355,6 +358,8 @@ public class ActionStep extends GenericBean {
       pst.setBoolean(++i, this.getAllowUpdate());
       DatabaseUtils.setInt(pst, ++i, this.getCampaignId());
       pst.setBoolean(++i, this.getAllowDuplicateRecipient());
+      pst.setBoolean(++i, displayInPlanList);
+      pst.setString(++i, planListLabel);
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "action_step_step_id_seq", id);
@@ -428,7 +433,9 @@ public class ActionStep extends GenericBean {
           " label = ?, " +
           " allow_update = ?, " +
           " campaign_id = ?, " +
-          " allow_duplicate_recipient = ? " +
+          " allow_duplicate_recipient = ?, " +
+          " display_in_plan_list = ?, " +
+          " plan_list_label = ? " +
           " WHERE step_id = ? ");
 
       int i = 0;
@@ -453,6 +460,8 @@ public class ActionStep extends GenericBean {
       pst.setBoolean(++i, allowUpdate);
       DatabaseUtils.setInt(pst, ++i, this.getCampaignId());
       pst.setBoolean(++i, this.getAllowDuplicateRecipient());
+      pst.setBoolean(++i, displayInPlanList);
+      pst.setString(++i, planListLabel);
       DatabaseUtils.setInt(pst, ++i, this.getId());
       resultCount = pst.executeUpdate();
       pst.close();
@@ -1113,6 +1122,55 @@ public class ActionStep extends GenericBean {
     this.actionRequired = DatabaseUtils.parseBoolean(tmp);
   }
 
+  
+  /**
+   *  Gets the displayInPlanList attribute of the ActionStep object
+   *
+   * @return    The displayInPlanList value
+   */
+  public boolean getDisplayInPlanList() {
+    return displayInPlanList;
+  }
+
+
+  /**
+   *  Sets the displayInPlanList attribute of the ActionStep object
+   *
+   * @param  tmp  The new displayInPlanList value
+   */
+  public void setDisplayInPlanList(boolean tmp) {
+    this.displayInPlanList = tmp;
+  }
+  
+  /**
+   *  Sets the displayInPlanList attribute of the ActionStep object
+   *
+   * @param  tmp  The new displayInPlanList value
+   */
+  public void setDisplayInPlanList(String tmp) {
+    this.displayInPlanList = DatabaseUtils.parseBoolean(tmp);
+  }
+  
+  
+  /**
+   *  Gets the planListLabel attribute of the ActionStep object
+   *
+   * @return    The planListLabel value
+   */
+  public String getPlanListLabel() {
+    return planListLabel;
+  }
+
+
+  /**
+   *  Sets the planListLabel attribute of the ActionStep object
+   *
+   * @param  tmp  The new planListLabel value
+   */
+  public void setPlanListLabel(String tmp) {
+    this.planListLabel = tmp;
+  }
+  
 
   /**
    *  Gets the id attribute of the ActionStep object

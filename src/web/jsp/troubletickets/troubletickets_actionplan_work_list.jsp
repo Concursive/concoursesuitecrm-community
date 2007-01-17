@@ -108,9 +108,11 @@
     <th valign="middle" nowrap>
       <strong><dhv:label name="actionPlan.actionRequired">Action Required</dhv:label></strong>
     </th>
+    <dhv:include name="actionPlan.weeklyPotential" none="true">
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.weeklyPotential">Weekly Potential</dhv:label></strong>
     </th>
+    </dhv:include>
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.currentPhase">Current Phase</dhv:label></strong>
     </th>
@@ -120,6 +122,11 @@
     <th align="center" nowrap>
       <strong><dhv:label name="actionPlan.daysActive">Days Active</dhv:label></strong>
     </th>
+    <dhv:evaluate if="<%=actionPlanWorkList.getDisplayInPlanStepsCount()>0 %>">
+      <th align="center" nowrap>
+        <strong><dhv:label name="actionPlan.valuesFromPlan">Values from Plan</dhv:label></strong>
+      </th>
+    </dhv:evaluate>
     <th valign="middle" nowrap>
       <strong><a href="TroubleTicketActionPlans.do?command=List&ticketId=<%= ticket.getId() %>&column=apw.modified"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
       <%= ticketPlanWorkListInfo.getSortIcon("apw.modified") %>
@@ -165,6 +172,7 @@
         <dhv:label name="account.no">No</dhv:label>
       </dhv:evaluate>
     </td>
+    <dhv:include name="actionPlan.weeklyPotential" none="true">
     <td align="center">
       <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
         <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
@@ -173,6 +181,7 @@
         <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </dhv:evaluate>
     </td>
+    </dhv:include>
     <td align="center">
       <dhv:evaluate if="<%= thisWork.getCurrentPhase() != null %>">
         <%= toHtml(thisWork.getCurrentPhase().getPhaseName()) %>
@@ -190,6 +199,26 @@
     <td align="center">
       <%= thisWork.getDaysActive() %>
     </td>
+    <dhv:evaluate if="<%=actionPlanWorkList.getDisplayInPlanStepsCount()>0 %>">
+      <td>
+        <%
+          
+            Iterator steps = thisWork.getSteps().iterator();
+            while (steps.hasNext()) {
+              ActionItemWork thisItemWork = (ActionItemWork) steps.next();
+              ActionStep thisStep = thisItemWork.getStep();
+              if (thisStep!=null && thisStep.getDisplayInPlanList()){
+                if (steps.hasNext()) { %>         
+                  <%@ include file="../actionplans/action_plan_work_display_in_plan_include.jsp" %> <br />
+                <%}else{%>
+                  <%@ include file="../actionplans/action_plan_work_display_in_plan_include.jsp" %> 
+                <%} 
+              }
+           }%>
+               
+        
+      </td>
+    </dhv:evaluate>
     <td align="center">
       <zeroio:tz timestamp="<%= thisWork.getModified() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>"/>
     </td>

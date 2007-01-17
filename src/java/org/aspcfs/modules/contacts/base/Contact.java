@@ -19,7 +19,6 @@ import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
@@ -185,11 +184,11 @@ public class Contact extends GenericBean {
 
   //Logger
   private static long milies = -1;
-  private static Logger logger = Logger.getLogger(ProductCatalog.class);
+  //private static Logger logger = Logger.getLogger(Contact.class);
 
   static {
     if (System.getProperty("DEBUG") != null) {
-      logger.setLevel(Level.DEBUG);
+    //  logger.setLevel(Level.DEBUG);
     }
   }
 
@@ -443,12 +442,12 @@ public class Contact extends GenericBean {
     pst.setBoolean(3, true);
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+    //  logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       buildRecord(rs);
@@ -1454,12 +1453,12 @@ public class Contact extends GenericBean {
     pst.setBoolean(2, true);
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+   //   logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       this.setHasEnabledOwnerAccount(true);
@@ -4050,12 +4049,12 @@ public class Contact extends GenericBean {
     pst.setString(1, "Contact ID");
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+     // logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+     // logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       fieldId = rs.getInt("id");
@@ -4241,12 +4240,12 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       userId = rs.getInt("user_id");
@@ -4281,12 +4280,12 @@ public class Contact extends GenericBean {
     pst.setInt(++i, id);
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     while (rs.next()) {
       LookupElement thisType = new LookupElement();
@@ -4324,12 +4323,12 @@ public class Contact extends GenericBean {
     pst.setBoolean(2, true);
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       setHasEnabledAccount(true);
@@ -4361,12 +4360,12 @@ public class Contact extends GenericBean {
     pst.setInt(2, campaignId);
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       setExcludedFromCampaign(true);
@@ -4780,12 +4779,12 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       excludedCount = rs.getInt("excludedcount");
@@ -4807,12 +4806,12 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       messageCount = rs.getInt("messagecount");
@@ -4837,12 +4836,12 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       actionItemLogCount = rs.getInt("actionitemlogcount");
@@ -4862,12 +4861,12 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       actionItemCount = rs.getInt("actionitemcount");
@@ -4952,7 +4951,24 @@ public class Contact extends GenericBean {
     return out.toString().trim();
   }
 
-
+  /**
+   * Combines the first and last name of a contact and the title, depending on the length of
+   * the strings
+   *
+   * @param nameLast  Description of the Parameter
+   * @param nameFirst Description of the Parameter
+   * @title nameFirst Description of the Parameter
+   * @return The nameLastFirst value
+   */
+  public static String getNameLastFirstAndTitle(String nameLast, String nameFirst, String title) {
+		if (title != null && !"".equals(title)) {
+			return Contact.getNameLastFirst(nameLast, nameFirst) + " - " + title;
+		}
+		
+		return Contact.getNameLastFirst(nameLast, nameFirst);
+	}
+	
+	
   /**
    * Gets the nameFirstLast attribute of the Contact class
    *
@@ -5029,12 +5045,12 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
+//        logger.debug(pst.toString());
       }
       rs = pst.executeQuery();
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
+//        logger.debug(String.valueOf(milies) + " ms");
       }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
@@ -5055,12 +5071,12 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
+//        logger.debug(pst.toString());
       }
       rs = pst.executeQuery();
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
+//        logger.debug(String.valueOf(milies) + " ms");
       }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
@@ -5082,12 +5098,12 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
+//        logger.debug(pst.toString());
       }
       rs = pst.executeQuery();
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
+//        logger.debug(String.valueOf(milies) + " ms");
       }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
@@ -5107,12 +5123,12 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
+//        logger.debug(pst.toString());
       }
       rs = pst.executeQuery();
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
+//        logger.debug(String.valueOf(milies) + " ms");
       }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
@@ -5133,12 +5149,12 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
+//        logger.debug(pst.toString());
       }
       rs = pst.executeQuery();
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
+//        logger.debug(String.valueOf(milies) + " ms");
       }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
@@ -5159,12 +5175,12 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
+//        logger.debug(pst.toString());
       }
       rs = pst.executeQuery();
       if (System.getProperty("DEBUG") != null) {
         milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
+//        logger.debug(String.valueOf(milies) + " ms");
       }
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
@@ -5307,12 +5323,12 @@ public class Contact extends GenericBean {
     pst.setInt(++i, tmpContactId);
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       contactSiteId = DatabaseUtils.getInt(rs, "site_id");
@@ -5376,12 +5392,12 @@ public class Contact extends GenericBean {
         pst.setString(1, "Contact ID");
         if (System.getProperty("DEBUG") != null) {
           milies = System.currentTimeMillis();
-          logger.debug(pst.toString());
+//          logger.debug(pst.toString());
         }
         ResultSet rs = pst.executeQuery();
         if (System.getProperty("DEBUG") != null) {
           milies = System.currentTimeMillis() - milies;
-          logger.debug(String.valueOf(milies) + " ms");
+//          logger.debug(String.valueOf(milies) + " ms");
         }
         if (rs.next()) {
           fieldId = rs.getInt("id");
@@ -5570,12 +5586,12 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
+//      logger.debug(pst.toString());
     }
     ResultSet rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
       milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
+//      logger.debug(String.valueOf(milies) + " ms");
     }
     if (rs.next()) {
       oldId = rs.getInt("owner");

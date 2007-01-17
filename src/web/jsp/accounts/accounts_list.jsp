@@ -81,6 +81,12 @@
         </th>
       </dhv:evaluate>
 <%--    </dhv:include> --%>
+	  <dhv:include name="organization.stage" none="true">
+        <th nowrap <% ++columnCount; %>>
+           <strong><a href="Accounts.do?command=Search&column=ast.description"><dhv:label name="accounts.stage">Stage</dhv:label></a></strong>
+	 	   <%= SearchOrgListInfo.getSortIcon("ast.description") %> 
+	 	</th>
+	  </dhv:include>
       <dhv:include name="organization.addresses" none="true">
         <th nowrap <% ++columnCount; %>>
            <strong><a href="Accounts.do?command=Search&column=oa.city"><dhv:label name="accounts.accounts_add.City">City</dhv:label></a></strong>
@@ -143,6 +149,11 @@
         <td valign="top"><%= SiteIdList.getSelectedValue(thisOrg.getSiteId()) %></td>
       </dhv:evaluate>
 <%--    </dhv:include> --%>
+	  <dhv:include name="organization.stage" none="true">
+	  	<td>
+     	 <%= toHtml(thisOrg.getStageName()) %>
+	 	</td>
+	  </dhv:include>	
       <dhv:include name="organization.addresses" none="true">
 		<td valign="center" nowrap>
 		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">

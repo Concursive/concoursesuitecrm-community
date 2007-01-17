@@ -1,0 +1,69 @@
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.actionplans.base.ActionPlanWork;
+import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.utils.web.LookupList;
+import java.util.Iterator;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+print("Upgrade account stage start"); 
+LookupList stageList = new LookupList(db, "lookup_account_stage");
+ 	  
+ArrayList orgIdList = new ArrayList();
+PreparedStatement pst = null;
+StringBuffer sqlSelect = new StringBuffer();
+sqlSelect.append("SELECT o.org_id "+
+	"FROM organization o " +
+	"WHERE o.org_id > 0 " );  
+pst = db.prepareStatement(sqlSelect.toString());
+ResultSet rs = pst.executeQuery();
+while (rs.next()){ 
+	orgIdList.add(new Integer(rs.getInt("org_id")));
+}
+rs.close();
+pst.close();
+Iterator it = orgIdList.iterator();
+while (it.hasNext()){
+	Organization org = new Organization(db,((Integer)it.next()).intValue());  	
+	print("Upgrade account stage for Account - " + org.getName()); 
+	ActionPlanWorkList planList = new ActionPlanWorkList();
+	planList.setLinkItemId(org.getOrgId());
+	planList.setLinkModuleId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
+	planList.setBuildPhaseWork(true);
+	planList.setBuildStepWork(true);
+	planList.buildList(db);
+	if(planList.size()==0){
+		int stageId = stageList.getIdFromValue("New");
+		if (stageId>0){
+			org.setStageId(stageId);
+			org.update(db);
+		}
+	}else{
+		boolean completed = false;
+		Iterator iterPlanWork = planList.iterator();
+		while (iterPlanWork.hasNext()){
+			ActionPlanWork planWork = (ActionPlanWork)iterPlanWork.next();
+			if (planWork.isCompleted()){ 
+				completed = true;
+			}
+		}
+		if(completed){ 
+			int stageId = stageList.getIdFromValue("Complete");
+			if (stageId>0){
+				org.setStageId(stageId);
+				org.update(db);
+			}
+		}else{
+			int stageId = stageList.getIdFromValue("Working");
+			if (stageId>0){
+				org.setStageId(stageId);
+				org.update(db);
+			}
+		}
+	}
+} 
+print("Upgrade account stage end");

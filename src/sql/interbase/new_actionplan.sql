@@ -127,7 +127,9 @@ CREATE TABLE action_step (
   action_id INTEGER REFERENCES lookup_step_actions(constant_id),
   allow_update BOOLEAN DEFAULT TRUE NOT NULL,
   campaign_id INTEGER REFERENCES campaign(campaign_id),
-  allow_duplicate_recipient BOOLEAN DEFAULT FALSE NOT NULL
+  allow_duplicate_recipient BOOLEAN DEFAULT FALSE NOT NULL,
+  display_in_plan_list BOOLEAN DEFAULT FALSE NOT NULL,
+  plan_list_label VARCHAR(300)
 );
 
 CREATE GENERATOR step_action_map_map_id_seq;

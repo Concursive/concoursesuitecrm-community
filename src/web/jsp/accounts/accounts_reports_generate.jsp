@@ -135,6 +135,9 @@
         <dhv:include name="organization.ticker" none="true">
           <option value="ticker" ><dhv:label name="accounts.accounts_reports_generate.Ticker">Ticker</dhv:label></option>
         </dhv:include>
+        <dhv:include name="organization.stage" none="true">
+          <option value="stage" ><dhv:label name="accounts.stage">Stage</dhv:label></option>
+        </dhv:include>
         <dhv:include name="organization.employees" none="true">
           <option value="employees" ><dhv:label name="accounts.accounts_reports_generate.Employees">Employees</dhv:label></option>
         </dhv:include>

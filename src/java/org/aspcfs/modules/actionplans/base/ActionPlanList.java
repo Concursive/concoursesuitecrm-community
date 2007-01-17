@@ -1622,5 +1622,30 @@ public class ActionPlanList extends ArrayList {
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
   }
+  /**
+   * Gets the DisplayInPlanStepsCount attribute of the ActionPlanWorkList object
+   *
+   * @return The DisplayInPlanStepsCount value
+   */
+  public int getDisplayInPlanStepsCount() {
+    int result = 0;
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionPlan actionPlan = (ActionPlan) iter.next();
+      Iterator phases = actionPlan.getPhases().iterator();
+      while (phases.hasNext()) {
+        ActionPhase thisPhase = (ActionPhase) phases.next();
+        Iterator steps = thisPhase.getSteps().iterator();
+        while (steps.hasNext()) {
+          ActionStep  step = (ActionStep) steps.next();       
+          if (step!=null && step.getDisplayInPlanList()){
+           result++;	
+          }
+        }
+      }
+    }
+    return result;
+  }
+
 }
 

@@ -90,6 +90,11 @@
       <strong><a href="ActionPlanEditor.do?command=ListPlans&column=ap.approved&moduleId=<%= permissionCategory.getId() %>&constantId=<%= constantId %>"><dhv:label name="admin.activeDate">Active Date</dhv:label></a></strong>
       <%= planListInfo.getSortIcon("ap.approved") %>
     </th>
+    <dhv:evaluate if="<%=actionPlanList.getDisplayInPlanStepsCount()>0 %>">
+      <th align="center" nowrap>
+        <strong><dhv:label name="actionPlan.valuesFromPlan">Values from Plan</dhv:label></strong>
+      </th>
+    </dhv:evaluate>
     <th nowrap>
       <strong><a href="ActionPlanEditor.do?command=ListPlans&column=ap.enabled&moduleId=<%= permissionCategory.getId() %>&constantId=<%= constantId %>"><dhv:label name="documents.details.archived">Archived</dhv:label></a></strong>
       <%= planListInfo.getSortIcon("ap.enabled") %>
@@ -144,6 +149,11 @@
     <td valign="top" align="center" nowrap>
       <zeroio:tz timestamp="<%= plan.getApproved() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
     </td>
+    <dhv:evaluate if="<%=actionPlanList.getDisplayInPlanStepsCount()>0 %>">
+      <td valign="top">
+        <%= plan.getDisplayInPlanSteps() %>
+      </td>
+    </dhv:evaluate>
     <td valign="top" align="center" nowrap>
       <%if(plan.getEnabled()) { %>
         <dhv:label name="account.no">No</dhv:label>

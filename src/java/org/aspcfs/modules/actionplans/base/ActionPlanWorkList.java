@@ -863,8 +863,10 @@ public class ActionPlanWorkList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       ActionPlanWork actionPlanWork = (ActionPlanWork) i.next();
+			//TODO: needs to be optimized
       if (buildPhaseWork) {
         actionPlanWork.setBuildStepWork(buildStepWork);
+				actionPlanWork.setBuildLinkedObject(buildLinkedObject);
         actionPlanWork.buildPhaseWork(db);
       }
       if (buildCurrentPhaseOnly) {
@@ -1175,6 +1177,32 @@ public class ActionPlanWorkList extends ArrayList {
         result = work;
       } else {
         result = work;
+      }
+    }
+    return result;
+  }
+  
+  /**
+   * Gets the DisplayInPlanStepsCount attribute of the ActionPlanWorkList object
+   *
+   * @return The DisplayInPlanStepsCount value
+   */
+  public int getDisplayInPlanStepsCount() {
+    int result = 0;
+    Iterator iter = (Iterator) this.iterator();
+    while (iter.hasNext()) {
+      ActionPlanWork work = (ActionPlanWork) iter.next();
+      Iterator phases = work.getPhaseWorkList().iterator();
+      while (phases.hasNext()) {
+        ActionPhaseWork thisPhase = (ActionPhaseWork) phases.next();
+        Iterator items = thisPhase.getItemWorkList().iterator();
+        while (items.hasNext()) {
+          ActionItemWork thisItem = (ActionItemWork) items.next();
+          ActionStep step = thisItem.getStep();
+          if (step!=null && step.getDisplayInPlanList()){
+           result++;	
+          }
+        }
       }
     }
     return result;

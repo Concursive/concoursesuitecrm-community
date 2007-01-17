@@ -86,3 +86,9 @@
 
 # enable product module
 2007-01-08-script01-mr.sql
+
+# Action plans
+2007-01-08-script01-vadim.sql
+
+# Upgrade account stage (not required)
+#2007-01-15-script01-vadim.bsh

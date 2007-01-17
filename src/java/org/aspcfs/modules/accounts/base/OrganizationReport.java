@@ -361,6 +361,9 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("url")) {
         rep.addColumn("URL");
       }
+      if (param.equals("stage")) {
+          rep.addColumn("Stage");
+        }
       if (param.equals("ticker")) {
         rep.addColumn("Ticker");
       }
@@ -462,6 +465,9 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("accountNumber")) {
         passedReport.addColumn("Account No.");
       }
+      if (param.equals("stage")) {
+    	passedReport.addColumn("Stage");
+        }
       if (param.equals("url")) {
         passedReport.addColumn("URL");
       }
@@ -708,6 +714,9 @@ public class OrganizationReport extends OrganizationList {
       if (param.equals("url")) {
         thisRow.addCell(thisOrg.getUrl());
       }
+      if (param.equals("stage")) {
+    	  thisRow.addCell(thisOrg.getStageName());
+        }
       if (param.equals("ticker")) {
         thisRow.addCell(thisOrg.getTicker());
       }

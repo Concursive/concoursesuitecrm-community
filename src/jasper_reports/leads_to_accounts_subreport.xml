@@ -61,6 +61,7 @@
   o.name, 
   own.namefirst as owner_namefirst,
   own.namelast as owner_namelast,
+  own.title as owner_title,
   cfr.modified as conversion_date
 FROM action_plan_work apw
 LEFT JOIN action_phase_work aphw ON (apw.plan_work_id = aphw.plan_work_id)
@@ -85,6 +86,7 @@ ORDER BY name]]></queryString>
 	<field name="conversion_date" class="java.sql.Timestamp"/>
 	<field name="owner_namefirst" class="java.lang.String"/>
 	<field name="owner_namelast" class="java.lang.String"/>
+	<field name="owner_title" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
 		<group  name="accounts" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
@@ -811,7 +813,7 @@ ORDER BY name]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{owner_namelast},$F{owner_namefirst})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirstAndTitle($F{owner_namelast},$F{owner_namefirst}, $F{owner_title})]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

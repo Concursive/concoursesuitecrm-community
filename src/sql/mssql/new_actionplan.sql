@@ -121,7 +121,9 @@ CREATE TABLE action_step (
   action_id INTEGER REFERENCES lookup_step_actions(constant_id),
   allow_update BIT NOT NULL DEFAULT 1,
   campaign_id INTEGER REFERENCES campaign(campaign_id),
-  allow_duplicate_recipient BIT NOT NULL DEFAULT 0
+  allow_duplicate_recipient BIT NOT NULL DEFAULT 0,
+  display_in_plan_list BIT NOT NULL DEFAULT 0,
+  plan_list_label varchar(300)
 );
 
 CREATE TABLE step_action_map (

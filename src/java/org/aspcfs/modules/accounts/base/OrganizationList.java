@@ -1651,7 +1651,8 @@ public class OrganizationList extends Vector implements SyncableList {
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
         "i.description as industry_name, a.description AS account_size_name, " +
-        "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county " +
+        "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county, " +
+        "ast.description as stage_name "+
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
@@ -1659,6 +1660,7 @@ public class OrganizationList extends Vector implements SyncableList {
         "LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code) " +
         "LEFT JOIN lookup_account_size a ON (o.account_size = a.code) " +
         "LEFT JOIN organization_address oa ON (o.org_id = oa.org_id) " +
+        "LEFT JOIN lookup_account_stage ast ON (o.stage_id = ast.code) " +
         "WHERE o.org_id >= 0 " );
 
    sqlFilter.append(
