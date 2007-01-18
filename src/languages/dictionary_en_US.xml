@@ -71,6 +71,18 @@
     <param name="calendar.noItemsPending">
       <value><![CDATA[There are currently no items pending for you.]]></value>
     </param>
+    <param name="note.unread">
+      <value><![CDATA[Unread]]></value>
+    </param>
+    <param name="note.read">
+      <value><![CDATA[Read]]></value>
+    </param>
+    <param name="note.archived">
+      <value><![CDATA[Archived]]></value>
+    </param>
+    <param name="note.deleted">
+      <value><![CDATA[Deleted]]></value>
+    </param>
     <param name="accounts.search.includeContactsInSearchResults">
       <value><![CDATA[Include contacts in search results]]></value>
     </param>
@@ -290,6 +302,42 @@
     <param name="accounts.accounts_contacts.noIMPlease">
       <value><![CDATA[No Instant Messages Please]]></value>
     </param>
+    <param name="accounts.accounts_contacts.noMail">
+      <value><![CDATA[Do Not Mail]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.noEmail">
+      <value><![CDATA[Do Not Email]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.noPhone">
+      <value><![CDATA[Do Not Call]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.noFax">
+      <value><![CDATA[Do Not Fax]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.noTextMessage">
+      <value><![CDATA[Do Not Text Message]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.noIM">
+      <value><![CDATA[Do Not Instant Message]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.mailPreference">
+      <value><![CDATA[Mail Preference]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.emailPreference">
+      <value><![CDATA[Email Preference]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.phonePreference">
+      <value><![CDATA[Phone Call Preference]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.fax">
+      <value><![CDATA[Fax Preference]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.textMessagePreference">
+      <value><![CDATA[Text Messages Preference]]></value>
+    </param>
+    <param name="accounts.accounts_contacts.IMPreference">
+      <value><![CDATA[Instant Message Preference]]></value>
+    </param>   
     <param name="accounts.AddContact">
       <value><![CDATA[Add Contact]]></value>
     </param>

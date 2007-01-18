@@ -306,6 +306,15 @@ public class ProductCatalogPortlet extends GenericPortlet {
     }
     // Get Paged List handler for product catalog list
     PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo", false);
+    String offset = request.getParameter("offset");
+    
+    ProductCatalogList productCatalogList = new ProductCatalogList();
+    if (!productCatalogListInfo.hasListFilters() && productCatalogListInfo.getSavedCriteria().size() == 0) {
+        productCatalogList.setId(request.getParameter("productId"));
+        productCatalogListInfo.setCurrentOffset(0);
+        offset = "0";
+    }
+    
     productCatalogListInfo.setMode(PagedListInfo.DETAILS_VIEW);
     productCatalogListInfo.setCurrentOffset(request.getParameter("offset"));
     // setting the URL
@@ -313,12 +322,12 @@ public class ProductCatalogPortlet extends GenericPortlet {
     renderParams.put("viewType", new String[]{"details"});
     renderParams.put("productId", new String[]{request.getParameter("productId")});
     renderParams.put("categoryId", new String[]{request.getParameter("categoryId")});
-    renderParams.put("offset", new String[]{request.getParameter("offset")});
+    renderParams.put("offset", new String[]{offset});
     renderParams.put("page", new String[]{request.getParameter("page")});
     renderParams.put("searchResults", new String[]{request.getParameter("searchResults")});
     request.setAttribute("searchResults", request.getParameter("searchResults"));
     request.setAttribute("page", request.getParameter("page"));
-    request.setAttribute("offset", request.getParameter("offset"));
+    request.setAttribute("offset", offset);
     request.setAttribute("parentOffset", request.getParameter("parentOffset"));
     productCatalogListInfo.setRenderParameters(renderParams);
 
@@ -326,7 +335,6 @@ public class ProductCatalogPortlet extends GenericPortlet {
     request.setAttribute("preferredCategoryId", preferredCategoryId);
 
     // building a single item as a list
-    ProductCatalogList productCatalogList = new ProductCatalogList();
     if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
       productCatalogList.setBuildActivePrice(true);
     }

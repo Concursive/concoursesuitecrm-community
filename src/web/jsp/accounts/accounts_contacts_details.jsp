@@ -182,6 +182,18 @@ function reopen() {
   </tr>
 <%    
     }
+   if(ContactDetails.getNoEmail()){
+   %>
+		<tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.emailPreference">Email Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noEmail">Do Not Email</dhv:label>
+        </td>
+      </tr>
+   <%
+   }
   } else {
 %>
   <tr class="containerBody">
@@ -223,6 +235,18 @@ function reopen() {
   </tr>
 <%
     }
+        if(ContactDetails.getNoInstantMessage()){
+   %>
+		<tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.IMPreference">Instant Messages Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noIM">Do Not Instant Message</dhv:label>
+        </td>
+      </tr>
+   <%
+   }
   } else {
 %>
   <tr class="containerBody">
@@ -260,6 +284,18 @@ function reopen() {
   </tr>
 <%    
     }
+       if(ContactDetails.getNoTextMessage()){
+   %>
+		<tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.textMessagePreference">Text Messages Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noIM">Do Not Text Message</dhv:label>
+        </td>
+      </tr>
+   <%
+   }
   } else {
 %>
   <tr class="containerBody">
@@ -304,6 +340,30 @@ function reopen() {
   </tr>
 <%    
     }
+            if(ContactDetails.getNoPhone()){
+   %>
+		<tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.phonePreference">Phone Calls Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noPhone">Do Not Phone Call</dhv:label>
+        </td>
+      </tr>
+   <%
+   }
+       if(ContactDetails.getNoFax()){
+   %>
+		<tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.faxPreference">Fax Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noFax">Do Not Fax</dhv:label>
+        </td>
+      </tr>
+   <%
+   }
   } else {
 %>
   <tr class="containerBody">
@@ -343,6 +403,18 @@ function reopen() {
   </tr>
 <%
     }
+           if(ContactDetails.getNoMail()){
+   %>
+		<tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.mailPreference">Mail Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noMail">Do Not Mail</dhv:label>
+        </td>
+      </tr>
+   <%
+   } 
   } else {
 %>
   <tr class="containerBody">
