@@ -12,7 +12,8 @@
   
   <!-- NOTE: by setting enabled="false" the config entry is completely ignored -->
   
-  <!-- The following fields are set to be hidden from the application -->
+  <!-- The following fields are set to be hidden or shown from the application -->
+  <!-- depending on whether the application defaults to hiding or showing them -->
   <config name="system.fields.ignore" enabled="true">
     <!-- An unlimited number of parameters can exist under each config -->
     <!--
@@ -43,7 +44,7 @@
     <param name="opportunity.details.entered"/>
     <param name="opportunity.details.modified"/>
     <param name="opportunity.componentTypes"/>
-    <param name="opportunity.singleComponent"/>
+    <param name="opportunity.singleComponent" show="true"/>
     <param name="opportunity.termsAndUnits"/>
     <param name="opportunity.openOrClosed"/>
     <param name="opportunity.highEstimateDisabled"/>

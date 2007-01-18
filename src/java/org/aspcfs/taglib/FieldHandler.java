@@ -72,17 +72,19 @@ public class FieldHandler extends TagSupport implements TryCatchFinally {
   }
 
 
-  /**
-   * Sets the None attribute of the PermissionHandler object
-   *
-   * @param tmp The new None value
-   * @since 1.1
-   */
+  public void setAll(boolean tmp) {
+    allRequired = tmp;
+  }
+
+
   public void setNone(boolean tmp) {
+    hasNone = tmp;
+  }
+
+  public void setNone(String tmp) {
     Boolean checkNone = new Boolean(tmp);
     this.hasNone = checkNone.booleanValue();
   }
-
 
   /**
    * Checks the SystemStatus preference for the section name. A comma-separated
@@ -98,14 +100,14 @@ public class FieldHandler extends TagSupport implements TryCatchFinally {
     int checks = 0;
     ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
         "ConnectionElement");
-		SystemStatus systemStatus = null;
+    SystemStatus systemStatus = null;
     if (ce == null) {
       System.out.println("FieldHandler-> ConnectionElement is null");
-			systemStatus = (SystemStatus)pageContext.getRequest().getAttribute("systemStatus");
+      systemStatus = (SystemStatus) pageContext.getRequest().getAttribute("systemStatus");
     } else {
-			systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-					"SystemStatus")).get(ce.getUrl());
-		}
+      systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
+          "SystemStatus")).get(ce.getUrl());
+    }
     if (systemStatus == null) {
       System.out.println("FieldHandler-> SystemStatus is null");
     }
@@ -118,17 +120,33 @@ public class FieldHandler extends TagSupport implements TryCatchFinally {
           ++matches;
         }
       }
-      if ((allRequired && matches > 0 && matches == checks) ||
-          (!allRequired && matches > 0)) {
-        result = true;
+      // Determine if none=true
+      if (hasNone) {
+        // Show the field unless it is listed in system.xml
+        if (matches == 0) {
+          result = true;
+        } else {
+          // Each value must match
+          if (allRequired && matches == checks) {
+            result = true;
+          } else {
+            result = false;
+          }
+        }
+      } else {
+        // Show the field only if it is listed in system.xml
+        if (matches > 0) {
+          // Each value must match
+          if (allRequired && matches == checks) {
+            result = true;
+          } else {
+            result = false;
+          }
+        } else {
+          result = false;
+        }
       }
     }
-
-    //The request wants to know if the user does not have the permissions
-    if (hasNone) {
-      result = !result;
-    }
-
     if (result) {
       return EVAL_BODY_INCLUDE;
     } else {
