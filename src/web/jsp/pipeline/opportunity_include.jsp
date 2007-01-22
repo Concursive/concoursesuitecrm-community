@@ -213,7 +213,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="reports.contacts.manager">Manager<</dhv:label>
+      <dhv:label name="reports.contacts.manager">Manager</dhv:label>
     </td>
     <td valign="center">
       <table class="empty">
@@ -228,7 +228,7 @@
             </div>
           </td>
           <td>
-            <input type="hidden" name='<%= (opportunityHeader.getId() > -1 ? "manager" : "header_manager") %>" id="managerid" value="<%= opportunityHeader.getManager()== -1? User.getUserId():opportunityHeader.getManager() %>'><font color="red">*</font>
+            <input type='hidden' name='<%= (opportunityHeader.getId() > -1 ? "manager" : "header_manager") %>' id='managerid' value='<%= opportunityHeader.getManager()== -1? User.getUserId():opportunityHeader.getManager() %>'><font color="red">*</font>
             <% String managerFilters = "listView=employees&usersOnly=true&searchcodePermission=pipeline-opportunities-edit,accounts-accounts-contacts-opportunities-edit,accounts-accounts-opportunities-edit,contacts-external_contacts-opportunities-edit&reset=true"; %>
 <%--        <dhv:evaluate if="<%= accessTypeList.getRuleId(opportunityHeader.getAccessType() != -1?opportunityHeader.getAccessType():accessTypeList.getDefaultItem()) == AccessType.CONTROLLED_HIERARCHY %>">
               <% managerFilters = "listView=employees&usersOnly=true&searchcodePermission=pipeline-opportunities-edit,accounts-accounts-contacts-opportunities-edit,accounts-accounts-opportunities-edit,contacts-external_contacts-opportunities-edit&reset=true"; %>
@@ -255,7 +255,7 @@
 <dhv:evaluate if="<%= opportunityHeader.getId() == -1 %>">
   <input type="hidden" name="header_description" value="<%= toHtmlValue(opportunityHeader.getDescription()) %>" />
   <input type="hidden" name="header_accessType" id="header_accessType" value="<%= (opportunityHeader.getAccessType() != -1?opportunityHeader.getAccessType():accessTypeList.getDefaultItem()) %>" />
-  <input type="hidden" name="header_manager" id="managerid" value="<%= opportunityHeader.getManager()== -1? User.getUserId():opportunityHeader.getManager() %>">
+  <input type='hidden' name='header_manager' id='managerid' value='<%= opportunityHeader.getManager()== -1? User.getUserId():opportunityHeader.getManager() %>'>
   <input type="hidden" name="header_siteId" id="siteId" value="<%= opportunityHeader.getSiteId() > -1 ? opportunityHeader.getSiteId(): (ContactDetails.getId() > -1? ContactDetails.getSiteId(): (OrgDetails.getOrgId() > -1? OrgDetails.getSiteId() : User.getUserRecord().getSiteId())) %>" />
 </dhv:evaluate>
 </dhv:include>
@@ -457,17 +457,20 @@
     <td>
       <dhv:evaluate if="<%= ComponentDetails.getHigh() == 0 %>">
         <dhv:include name="opportunity.highEstimateDisabled" none="true">
-        <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
-        <input type="text" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" size="15" value="<zeroio:number value="<%= OrgDetails.getPotential() %>" locale="<%= User.getLocale() %>" />" /></dhv:include>
+          <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+          <input type="text" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" size="15" value="<zeroio:number value="<%= OrgDetails.getPotential() %>" locale="<%= User.getLocale() %>" />" />
+        </dhv:include>
         <dhv:include name="opportunity.highEstimateDisabled">
-        <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" value="<%= OrgDetails.getPotential() %>" /><zeroio:currency value="<%= OrgDetails.getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/></dhv:include>
+          <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" value="<%= OrgDetails.getPotential() %>" /><zeroio:currency value="<%= OrgDetails.getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
+        </dhv:include>
       </dhv:evaluate>
       <dhv:evaluate if="<%= ComponentDetails.getHigh() != 0 %>">
         <dhv:include name="opportunity.highEstimateDisabled" none="true">
-        <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
-        <input type="text" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" size="15" value="<zeroio:number value="<%= ComponentDetails.getHigh() %>" locale="<%= User.getLocale() %>" />" /></dhv:include>
+          <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+          <input type="text" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" size="15" value="<zeroio:number value="<%= ComponentDetails.getHigh() %>" locale="<%= User.getLocale() %>" />" />
+        </dhv:include>
         <dhv:include name="opportunity.highEstimateDisabled">
-        <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" value="<%= ComponentDetails.getHigh() %>" />
+          <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "high" : "component_high" %>" value="<%= ComponentDetails.getHigh() %>" />
           <zeroio:currency value="<%= ComponentDetails.getHigh() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;" truncate="false"/>
         </dhv:include>
       </dhv:evaluate>
