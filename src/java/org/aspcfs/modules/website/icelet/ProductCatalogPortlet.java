@@ -30,14 +30,11 @@ import org.aspcfs.utils.web.PagedListInfo;
 
 import javax.portlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -268,393 +265,402 @@ public class ProductCatalogPortlet extends GenericPortlet {
 
   /**
    * Description of the Method
-   *
-   * @param request  Description of the Parameter
-   * @param response Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private boolean buildProduct(RenderRequest request, RenderResponse response)
-      throws Exception {
+         *
+         * @param request  Description of the Parameter
+         * @param response Description of the Parameter
+         * @throws Exception Description of the Exception
+         */
+        private boolean buildProduct(RenderRequest request, RenderResponse response)
+            throws Exception {
 
-    // Retrieve the product preferences
-    request.setAttribute("SHOW_SKU", request.getPreferences().getValue(SHOW_SKU, "true"));
-    request.setAttribute("SKU_TEXT", request.getPreferences().getValue(SKU_TEXT, "Item #"));
-    request.setAttribute("PRICE_TEXT", request.getPreferences().getValue(PRICE_TEXT, ""));
-    request.setAttribute("SHOW_PRICE_SAVINGS", request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "true"));
-    request.setAttribute("ORIGINAL_PRICE_TEXT", request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
-    request.setAttribute("PRICE_SAVINGS_TEXT", request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Instant Savings:"));
-    request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
-    request.setAttribute("INCLUDE_EMAIL", request.getPreferences().getValue(INCLUDE_EMAIL, "false"));
-    request.setAttribute("ADD_QUOTE", request.getPreferences().getValue(ADD_QUOTE, "false"));
-    request.setAttribute("EMAIL_SUBJECT", request.getPreferences().getValue(EMAIL_SUBJECT, "A product from our catalog"));
-    request.setAttribute("ADDED_TO_QUOTE_MESSAGE", (String) request.getPreferences().getValue(ADDED_TO_QUOTE_MESSAGE, "This product has been added to the quote."));
-    // Compose a url for emailing
-    StringBuffer completeProductURL = new StringBuffer();
-    completeProductURL.append(((HttpServletRequest) request).getRequestURL());
-    if (((HttpServletRequest) request).getQueryString() != null) {
-      completeProductURL.append("?");
-      completeProductURL.append(((HttpServletRequest) request).getQueryString());
-    }
-    request.setAttribute("productURL", completeProductURL.toString());
+          // Retrieve the product preferences
+          request.setAttribute("SHOW_SKU", request.getPreferences().getValue(SHOW_SKU, "true"));
+          request.setAttribute("SKU_TEXT", request.getPreferences().getValue(SKU_TEXT, "Item #"));
+          request.setAttribute("PRICE_TEXT", request.getPreferences().getValue(PRICE_TEXT, ""));
+          request.setAttribute("SHOW_PRICE_SAVINGS", request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "true"));
+          request.setAttribute("ORIGINAL_PRICE_TEXT", request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
+          request.setAttribute("PRICE_SAVINGS_TEXT", request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Instant Savings:"));
+          request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
+          request.setAttribute("INCLUDE_EMAIL", request.getPreferences().getValue(INCLUDE_EMAIL, "false"));
+          request.setAttribute("ADD_QUOTE", request.getPreferences().getValue(ADD_QUOTE, "false"));
+          request.setAttribute("EMAIL_SUBJECT", request.getPreferences().getValue(EMAIL_SUBJECT, "A product from our catalog"));
+          request.setAttribute("ADDED_TO_QUOTE_MESSAGE", (String) request.getPreferences().getValue(ADDED_TO_QUOTE_MESSAGE, "This product has been added to the quote."));
+          // Compose a url for emailing
+          StringBuffer completeProductURL = new StringBuffer();
+          completeProductURL.append(((HttpServletRequest) request).getRequestURL());
+          if (((HttpServletRequest) request).getQueryString() != null) {
+            completeProductURL.append("?");
+            completeProductURL.append(((HttpServletRequest) request).getQueryString());
+            if ((((HttpServletRequest) request).getQueryString()).indexOf("&reset=true") == -1) {
+              completeProductURL.append("&reset=true");
+            }
+          }
+          request.setAttribute("productURL", completeProductURL.toString());
+          // Remove the productCatalogListInfo if reset is used
+          if ((((HttpServletRequest) request).getQueryString()).indexOf("&reset=true") > -1) {
+            request.getPortletSession().removeAttribute("productCatalogListInfo");
+          }
 
-    Connection db = PortletUtils.getConnection(request);
-    boolean checkProductId = false;
-    //determine if this page was reached directly (e.g., via a link in the email)
-    PagedListInfo tmpInfo = (PagedListInfo) request.getPortletSession().getAttribute("productCatalogListInfo");
-    if (tmpInfo == null || tmpInfo.getId() == null) {
-      checkProductId = true;
-    }
-    // Get Paged List handler for product catalog list
-    PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo", false);
-    String offset = request.getParameter("offset");
-    
-    ProductCatalogList productCatalogList = new ProductCatalogList();
-    if (!productCatalogListInfo.hasListFilters() && productCatalogListInfo.getSavedCriteria().size() == 0) {
-        productCatalogList.setId(request.getParameter("productId"));
-        productCatalogListInfo.setCurrentOffset(0);
-        offset = "0";
-    }
-    
-    productCatalogListInfo.setMode(PagedListInfo.DETAILS_VIEW);
-    productCatalogListInfo.setCurrentOffset(request.getParameter("offset"));
-    // setting the URL
-    HashMap renderParams = new HashMap();
-    renderParams.put("viewType", new String[]{"details"});
-    renderParams.put("productId", new String[]{request.getParameter("productId")});
-    renderParams.put("categoryId", new String[]{request.getParameter("categoryId")});
-    renderParams.put("offset", new String[]{offset});
-    renderParams.put("page", new String[]{request.getParameter("page")});
-    renderParams.put("searchResults", new String[]{request.getParameter("searchResults")});
-    request.setAttribute("searchResults", request.getParameter("searchResults"));
-    request.setAttribute("page", request.getParameter("page"));
-    request.setAttribute("offset", offset);
-    request.setAttribute("parentOffset", request.getParameter("parentOffset"));
-    productCatalogListInfo.setRenderParameters(renderParams);
+          Connection db = PortletUtils.getConnection(request);
+          boolean checkProductId = false;
+          //determine if this page was reached directly (e.g., via a link in the email)
+          PagedListInfo tmpInfo = (PagedListInfo) request.getPortletSession().getAttribute("productCatalogListInfo");
+          if (tmpInfo == null || tmpInfo.getId() == null) {
+            checkProductId = true;
+          }
+          // Get Paged List handler for product catalog list
+          PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo", false);
+          String offset = request.getParameter("offset");
 
-    String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
-    request.setAttribute("preferredCategoryId", preferredCategoryId);
+          ProductCatalogList productCatalogList = new ProductCatalogList();
+          if (checkProductId) {
+            // If a url is copied or emailed, use the id because the pagedListInfo is null
+            productCatalogList.setId(request.getParameter("productId"));
+          }
 
-    // building a single item as a list
-    if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
-      productCatalogList.setBuildActivePrice(true);
-    }
-    //if (!"searchResult".equals(request.getPortletSession().getAttribute("previousPage"))) {
-    if (!"true".equals(request.getParameter("searchResults"))) {
-      productCatalogList.setCategoryId(request.getParameter("categoryId"));
-      if (productCatalogList.getCategoryId() == -1) {
-        productCatalogList.setHasCategories(Constants.FALSE);
-      }
-    } else {
-      ProductCategoryList productCategoryList = new ProductCategoryList();
-      String searchCategoryListIds = productCatalogListInfo.getSearchOptionValue("searchCategoryListIds");
-      if (searchCategoryListIds.equals("") || searchCategoryListIds == null) {
-        productCategoryList = productCategoryList.buildListFromIds(db, preferredCategoryId);
-      } else {
-        productCategoryList = productCategoryList.buildListFromIds(db, searchCategoryListIds);
-      }
-      ProductCategoryList.buildHierarchy(db, productCategoryList);
-      productCategoryList.buildCompleteHierarchy();
-      productCatalogListInfo.setSearchCriteria(productCatalogList, (HttpServletRequest) request, PortletUtils.getSystemStatus(request), null);
-      productCatalogList.setProductCategoryList(productCategoryList);
-			if (productCatalogList.getCategoryId() == -1) {
-				productCatalogList.setHasCategories(Constants.UNDEFINED);
-			}
-    }
-    productCatalogList.setPagedListInfo(productCatalogListInfo);
-    productCatalogList.buildList(db);
-    request.setAttribute("productCatalogList", productCatalogList);
-    ProductCatalog productCatalog = null;
-    if (productCatalogList.size() > 0) {
-      productCatalog = (ProductCatalog) productCatalogList.get(0);
-      if (checkProductId && productCatalog.getId() != Integer.parseInt(request.getParameter("productId"))){
-        return false;
-      }
-      request.setAttribute("productCatalog", productCatalog);
-    }
-    // fetching parent category for the specified product/category
-    ProductCategory parentCategory = null;
-    if (Integer.parseInt(request.getParameter("categoryId")) != -1) {
-      parentCategory = new ProductCategory(db, Integer.parseInt(request.getParameter("categoryId")));
-    } else {
-      parentCategory = new ProductCategory();
-    }
-    request.setAttribute("parentCategory", parentCategory);
+          productCatalogListInfo.setMode(PagedListInfo.DETAILS_VIEW);
+          productCatalogListInfo.setCurrentOffset(offset);
+          // setting the URL
+          HashMap renderParams = new HashMap();
+          renderParams.put("viewType", new String[]{"details"});
+          renderParams.put("productId", new String[]{request.getParameter("productId")});
+          renderParams.put("categoryId", new String[]{request.getParameter("categoryId")});
+          renderParams.put("offset", new String[]{offset});
+          renderParams.put("page", new String[]{request.getParameter("page")});
+          renderParams.put("searchResults", new String[]{request.getParameter("searchResults")});
+          request.setAttribute("searchResults", request.getParameter("searchResults"));
+          request.setAttribute("page", request.getParameter("page"));
+          request.setAttribute("offset", offset);
+          request.setAttribute("parentOffset", request.getParameter("parentOffset"));
+          productCatalogListInfo.setRenderParameters(renderParams);
 
-    // get previous page: ex. searchResult, etc.
-    request.setAttribute("previousPage", request.getPortletSession().getAttribute("previousPage"));
+          String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
+          request.setAttribute("preferredCategoryId", preferredCategoryId);
 
-    //Add Product Access log
-    UserBean userBean = PortletUtils.getUser(request);
-    if (productCatalog != null && userBean.getUserId() == -2) {
-      WebProductAccessLog webProductAccessLog = new WebProductAccessLog();
-      webProductAccessLog.setSiteLogId(Integer.parseInt(userBean.getSessionId()));
-      webProductAccessLog.setProductId(productCatalog.getId());
-      PortletUtils.addLogItem(request, "webProductAccessLog", webProductAccessLog);
-    }
-    return true;
-  }
+          // building a single item as a list
+          if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
+            productCatalogList.setBuildActivePrice(true);
+          }
+          //if (!"searchResult".equals(request.getPortletSession().getAttribute("previousPage"))) {
+          if (!"true".equals(request.getParameter("searchResults"))) {
+            productCatalogList.setCategoryId(request.getParameter("categoryId"));
+            if (productCatalogList.getCategoryId() == -1) {
+              productCatalogList.setHasCategories(Constants.FALSE);
+            }
+          } else {
+            ProductCategoryList productCategoryList = new ProductCategoryList();
+            String searchCategoryListIds = productCatalogListInfo.getSearchOptionValue("searchCategoryListIds");
+            if (searchCategoryListIds.equals("") || searchCategoryListIds == null) {
+              productCategoryList = productCategoryList.buildListFromIds(db, preferredCategoryId);
+            } else {
+              productCategoryList = productCategoryList.buildListFromIds(db, searchCategoryListIds);
+            }
+            ProductCategoryList.buildHierarchy(db, productCategoryList);
+            productCategoryList.buildCompleteHierarchy();
+            productCatalogListInfo.setSearchCriteria(productCatalogList, (HttpServletRequest) request, PortletUtils.getSystemStatus(request), null);
+            productCatalogList.setProductCategoryList(productCategoryList);
+            if (productCatalogList.getCategoryId() == -1) {
+              productCatalogList.setHasCategories(Constants.UNDEFINED);
+            }
+          }
+          productCatalogList.setPagedListInfo(productCatalogListInfo);
+          productCatalogList.buildList(db);
+          request.setAttribute("productCatalogList", productCatalogList);
+          ProductCatalog productCatalog = null;
+          if (productCatalogList.size() > 0) {
+            productCatalog = (ProductCatalog) productCatalogList.get(0);
+            if (checkProductId && productCatalog.getId() != Integer.parseInt(request.getParameter("productId"))) {
+              return false;
+            }
+            request.setAttribute("productCatalog", productCatalog);
+          }
+          // fetching parent category for the specified product/category
+          ProductCategory parentCategory = null;
+          if (Integer.parseInt(request.getParameter("categoryId")) != -1) {
+            parentCategory = new ProductCategory(db, Integer.parseInt(request.getParameter("categoryId")));
+          } else {
+            parentCategory = new ProductCategory();
+          }
+          request.setAttribute("parentCategory", parentCategory);
 
+          // get previous page: ex. searchResult, etc.
+          request.setAttribute("previousPage", request.getPortletSession().getAttribute("previousPage"));
 
-  /**
-   * Description of the Method
-   *
-   * @param request  Description of the Parameter
-   * @param response Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private void buildProductCategoryList(RenderRequest request, RenderResponse response) throws Exception {
-    Connection db = PortletUtils.getConnection(request);
-
-    String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
-    request.setAttribute("preferredCategoryId", preferredCategoryId);
-
-    // fetching sub categories for the specified category
-    ProductCategoryList productCategoryList = new ProductCategoryList();
-    productCategoryList.setParentId(preferredCategoryId);
-    if (StringUtils.hasText(request.getParameter("categoryId"))) {
-      productCategoryList.setParentId(request.getParameter("categoryId"));
-    }
-    if (productCategoryList.getParentId() == -1) {
-      productCategoryList.setTopOnly(Constants.TRUE);
-    }
-    productCategoryList.buildList(db);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ProductCatalogPortlet.doView() + productCategoryList.size()  ==> " + productCategoryList.size());
-    }
-    request.setAttribute("productCategoryList", productCategoryList);
-
-    // fetching parent category for the specified category
-    ProductCategory parentCategory = null;
-    if (productCategoryList.getParentId() != -1) {
-      parentCategory = new ProductCategory(db, productCategoryList.getParentId());
-    } else {
-      parentCategory = new ProductCategory();
-    }
-    request.setAttribute("parentCategory", parentCategory);
-
-    // Set parent category offset
-    this.setProductCatalogOffset(String.valueOf(parentCategory.getId()), request.getParameter("parentOffset"), request.getPortletSession());
-
-    // Get Paged List handler for product catalog list
-    PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
-    productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
-    // Setting URL
-    HashMap renderParams = new HashMap();
-    renderParams.put("viewType", new String[]{"list"});
-    renderParams.put("categoryId", new String[]{String.valueOf(productCategoryList.getParentId())});
-    productCatalogListInfo.setRenderParameters(renderParams);
-
-    // fetching products for the specified category
-    ProductCatalogList productCatalogList = new ProductCatalogList();
-    productCatalogList.setPagedListInfo(productCatalogListInfo);
-    productCatalogList.setCategoryId(preferredCategoryId);
-    if (StringUtils.hasText(request.getParameter("categoryId"))) {
-      productCatalogList.setCategoryId(request.getParameter("categoryId"));
-    }
-    if (productCatalogList.getCategoryId() == -1) {
-      productCatalogList.setHasCategories(Constants.FALSE);
-    }
-    if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
-      productCatalogList.setBuildActivePrice(true);
-    }
-    productCatalogList.buildList(db);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ProductCatalogPortlet.doView() + productCatalogList.size()  ==> " + productCatalogList.size());
-    }
-
-    // Set previous page
-    request.getPortletSession().setAttribute("previousPage", "summary");
-    request.setAttribute("parentOffset",
-          this.getProductCatalogOffset(request.getParameter("categoryId"),
-                                       request.getPortletSession()));
-    request.setAttribute("productCatalogList", productCatalogList);
-    request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param request  Description of the Parameter
-   * @param response Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private void buildSearchResult(RenderRequest request, RenderResponse response) throws Exception {
-
-    Connection db = PortletUtils.getConnection(request);
-
-    // fetching products for the specified category
-    String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
-    // Get Paged List handler for product catalog list
-    PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
-    productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
-    productCatalogListInfo.setItemsPerPage(request.getParameter("items"));
-        // Setting URL
-    HashMap renderParams = new HashMap();
-    renderParams.put("viewType", new String[]{"searchResult"});
-    productCatalogListInfo.setRenderParameters(renderParams);
-    // Category Hierarchy
-    ProductCatalogList productCatalogList = new ProductCatalogList();
-    ProductCategoryList productCategoryList = new ProductCategoryList();
-    String searchCategoryListIds = productCatalogListInfo.getSearchOptionValue("searchCategoryListIds");
-    if (searchCategoryListIds.equals("") || searchCategoryListIds == null) {
-      productCategoryList = productCategoryList.buildListFromIds(db, preferredCategoryId);
-    } else {
-      productCategoryList = productCategoryList.buildListFromIds(db, searchCategoryListIds);
-    }
-    ProductCategoryList.buildHierarchy(db, productCategoryList);
-    productCategoryList.buildCompleteHierarchy();
-    productCatalogList.setProductCategoryList(productCategoryList);
-    // paging
-    productCatalogList.setPagedListInfo(productCatalogListInfo);
-    productCatalogListInfo.setSearchCriteria(productCatalogList, (HttpServletRequest) request, PortletUtils.getSystemStatus(request), null);
-
-    // All products
-    if (productCatalogList.getCategoryId() == -1) {
-      productCatalogList.setHasCategories(Constants.UNDEFINED);
-    }
-    productCatalogList.buildList(db);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ProductCatalogPortlet.doView() + productCatalogList.size()  ==> " + productCatalogList.size());
-    }
-    // Set previous page
-    request.getPortletSession().setAttribute("previousPage", "searchResult");
-    request.setAttribute("productCatalogList", productCatalogList);
-    request.setAttribute("searchResults", "true");
-    request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
-  }
-
-  /**
-   * Description of the Method
-   *
-   * @param request  Description of the Parameter
-   * @param response Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private void prepareSearchResult(ActionRequest request, ActionResponse response) throws Exception {
-    forwardParameters(request, response);
-    response.setRenderParameter("viewType", "searchResult");
-  }
-
-  /**
-   * Description of the Method
-   *
-   * @param request  Description of the Parameter
-   * @param response Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  private void sendEmail(ActionRequest request, ActionResponse response) throws Exception {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println(request.getParameter("yourName"));
-      System.out.println(request.getParameter("yourEmailAddress"));
-      System.out.println(request.getParameter("yourFriendsAddress"));
-      System.out.println(request.getParameter("emailSubject"));
-      System.out.println(request.getParameter("comments"));
-      System.out.println(request.getParameter("productId"));
-      System.out.println(request.getParameter("viewType"));
-      System.out.println(PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE"));
-      System.out.println(request.getParameter("requestURL"));
-    }
-
-    Connection db = PortletUtils.getConnection(request);
-    URL url = new URL(request.getParameter("productURL"));
-    String friendlyURL = null;
-    URLMap urlMap = new URLMap();
-    urlMap.setUrl(url.getFile());
-    try{
-      urlMap.insert(db);
-      friendlyURL = urlMap.getURLAlias();
-    }catch (SQLException e) {
-      friendlyURL = url.getFile();
-    }
-    friendlyURL =
-      url.getProtocol()
-      + "://"
-			+ PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL")
-      + friendlyURL;
-
-    ProductEmailFormatter productEmailFormatter = new ProductEmailFormatter();
-    productEmailFormatter.setSiteURL(PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL"));
-    productEmailFormatter.setProductURL(friendlyURL);
-    productEmailFormatter.setFromName(request.getParameter("yourName"));
-    productEmailFormatter.setShowSku(request.getPreferences().getValue(SHOW_SKU, "false"));
-    productEmailFormatter.setSkuText(request.getPreferences().getValue(SKU_TEXT, "Sku:"));
-    productEmailFormatter.setShowPrice(request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "false"));
-    productEmailFormatter.setPriceText(request.getPreferences().getValue(PRICE_TEXT, "Price:"));
-    productEmailFormatter.setShowPriceSavings(request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "false"));
-    productEmailFormatter.setPriceSavingsText(request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Price Savings:"));
-    productEmailFormatter.setOriginalPriceText(request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
-    String systemLanguage = PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE");
-    Locale locale = new Locale(systemLanguage.split("_")[0], systemLanguage.split("_")[1]);
-    productEmailFormatter.setLocale(locale);
-
-    String productId = request.getParameter("productId");
-
-    ProductCatalog productCatalog = new ProductCatalog();
-    productCatalog.setBuildPriceList(true);
-    productCatalog.setBuildActivePrice(true);
-    productCatalog.queryRecord(db, Integer.parseInt(productId));
-    productCatalog.setComments(request.getParameter("comments"));
-    FileItem imageItem = null;
-    if (productCatalog.getLargeImageId() != -1) {
-      imageItem = new FileItem(db, productCatalog.getLargeImageId());
-    }
-
-    SMTPMessage mail = new SMTPMessage();
-    mail.setHost(PortletUtils.getApplicationPrefs(request, "MAILSERVER"));
-    mail.setFrom(request.getParameter("yourEmailAddress"));
-    mail.setType("text/html");
-    mail.setTo(request.getParameter("yourFriendsAddress"));
-    if (imageItem != null) {
-      imageItem.setDirectory(PortletUtils.getDbNamePath(request) + "products" + fs);
-      String imagePath = imageItem.getFullFilePath();
-      mail.addImage("productImage", "file:///" + imagePath);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println(imagePath);
-        File file = new File(imagePath);
-        if (file.isFile()) {
-          System.out.println(" FILE EXISTS ");
+          //Add Product Access log
+          UserBean userBean = PortletUtils.getUser(request);
+          if (productCatalog != null && userBean.getUserId() == -2) {
+            WebProductAccessLog webProductAccessLog = new WebProductAccessLog();
+            webProductAccessLog.setSiteLogId(Integer.parseInt(userBean.getSessionId()));
+            webProductAccessLog.setProductId(productCatalog.getId());
+            PortletUtils.addLogItem(request, "webProductAccessLog", webProductAccessLog);
+          }
+          return true;
         }
-      }
-    }
-    //String templateFilePath = PortletUtils.getDbNamePath(request) + "templates_" + PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE") + ".xml";
-    String productInformation =
-        productEmailFormatter.getProductInformation(productCatalog, request.getPreferences().getValue(EMAIL_BODY,""));
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ProductCatalogPortlet-> Product Information: " + productInformation);
-    }
-    mail.setSubject(request.getPreferences().getValue(EMAIL_SUBJECT, request.getParameter("emailSubject")));
-    mail.setBody(productInformation);
-    int mailReturn = mail.send();
-    if (mailReturn == 2) {
-      System.err.println(mail.getErrorMsg());
-    }
-  }
 
-  private void setProductCatalogOffset(String categogoryId, String offset, PortletSession portletSession){
-    HashMap catalogOffset;
-    if(portletSession.getAttribute("ProductCatalogOffset") != null){ 
-      catalogOffset = (HashMap)portletSession.getAttribute("ProductCatalogOffset");
-    }else{
-      catalogOffset = new HashMap();
-    }
-     catalogOffset.put(categogoryId,offset);
-     portletSession.setAttribute("ProductCatalogOffset",catalogOffset);
-  }
-  
-  private String getProductCatalogOffset(String categogoryId, PortletSession portletSession){
-    HashMap catalogOffset;
-    if(portletSession.getAttribute("ProductCatalogOffset") != null){ 
-      catalogOffset = (HashMap)portletSession.getAttribute("ProductCatalogOffset");
-    }else{
-      return "0";
-    }
-    if(catalogOffset.containsKey(categogoryId)){
-       return (String)catalogOffset.get(categogoryId);
-      }
-    return "0";
-  }
-  
-}
+
+     /**
+      * Description of the Method
+            *
+            * @param request  Description of the Parameter
+            * @param response Description of the Parameter
+            * @throws Exception Description of the Exception
+            */
+           private void buildProductCategoryList(RenderRequest request, RenderResponse response) throws Exception {
+             Connection db = PortletUtils.getConnection(request);
+
+             String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
+             request.setAttribute("preferredCategoryId", preferredCategoryId);
+
+             // fetching sub categories for the specified category
+             ProductCategoryList productCategoryList = new ProductCategoryList();
+             productCategoryList.setParentId(preferredCategoryId);
+             if (StringUtils.hasText(request.getParameter("categoryId"))) {
+               productCategoryList.setParentId(request.getParameter("categoryId"));
+             }
+             if (productCategoryList.getParentId() == -1) {
+               productCategoryList.setTopOnly(Constants.TRUE);
+             }
+             productCategoryList.buildList(db);
+             if (System.getProperty("DEBUG") != null) {
+               System.out.println("ProductCatalogPortlet.doView() + productCategoryList.size()  ==> " + productCategoryList.size());
+             }
+             request.setAttribute("productCategoryList", productCategoryList);
+
+             // fetching parent category for the specified category
+             ProductCategory parentCategory = null;
+             if (productCategoryList.getParentId() != -1) {
+               parentCategory = new ProductCategory(db, productCategoryList.getParentId());
+             } else {
+               parentCategory = new ProductCategory();
+             }
+             request.setAttribute("parentCategory", parentCategory);
+
+             // Set parent category offset
+             this.setProductCatalogOffset(String.valueOf(parentCategory.getId()), request.getParameter("parentOffset"), request.getPortletSession());
+
+             // Get Paged List handler for product catalog list
+             PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
+             productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
+             // Setting URL
+             HashMap renderParams = new HashMap();
+             renderParams.put("viewType", new String[]{"list"});
+             renderParams.put("categoryId", new String[]{String.valueOf(productCategoryList.getParentId())});
+             productCatalogListInfo.setRenderParameters(renderParams);
+
+             // fetching products for the specified category
+             ProductCatalogList productCatalogList = new ProductCatalogList();
+             productCatalogList.setPagedListInfo(productCatalogListInfo);
+             productCatalogList.setCategoryId(preferredCategoryId);
+             if (StringUtils.hasText(request.getParameter("categoryId"))) {
+               productCatalogList.setCategoryId(request.getParameter("categoryId"));
+             }
+             if (productCatalogList.getCategoryId() == -1) {
+               productCatalogList.setHasCategories(Constants.FALSE);
+             }
+             if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
+               productCatalogList.setBuildActivePrice(true);
+             }
+             productCatalogList.buildList(db);
+             if (System.getProperty("DEBUG") != null) {
+               System.out.println("ProductCatalogPortlet.doView() + productCatalogList.size()  ==> " + productCatalogList.size());
+             }
+
+             // Set previous page
+             request.getPortletSession().setAttribute("previousPage", "summary");
+             request.setAttribute("parentOffset",
+                 this.getProductCatalogOffset(request.getParameter("categoryId"),
+                     request.getPortletSession()));
+             request.setAttribute("productCatalogList", productCatalogList);
+             request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
+           }
+
+
+     /**
+      * Description of the Method
+            *
+            * @param request  Description of the Parameter
+            * @param response Description of the Parameter
+            * @throws Exception Description of the Exception
+            */
+           private void buildSearchResult(RenderRequest request, RenderResponse response) throws Exception {
+
+             Connection db = PortletUtils.getConnection(request);
+
+             // fetching products for the specified category
+             String preferredCategoryId = request.getPreferences().getValue(CATEGORY, "-1");
+             // Get Paged List handler for product catalog list
+             PagedListInfo productCatalogListInfo = PortletUtils.getPagedListInfo(request, response, "productCatalogListInfo");
+             productCatalogListInfo.setMode(PagedListInfo.LIST_VIEW);
+             productCatalogListInfo.setItemsPerPage(request.getParameter("items"));
+             // Setting URL
+             HashMap renderParams = new HashMap();
+             renderParams.put("viewType", new String[]{"searchResult"});
+             productCatalogListInfo.setRenderParameters(renderParams);
+             // Category Hierarchy
+             ProductCatalogList productCatalogList = new ProductCatalogList();
+             ProductCategoryList productCategoryList = new ProductCategoryList();
+             String searchCategoryListIds = productCatalogListInfo.getSearchOptionValue("searchCategoryListIds");
+             if (searchCategoryListIds.equals("") || searchCategoryListIds == null) {
+               productCategoryList = productCategoryList.buildListFromIds(db, preferredCategoryId);
+             } else {
+               productCategoryList = productCategoryList.buildListFromIds(db, searchCategoryListIds);
+             }
+             ProductCategoryList.buildHierarchy(db, productCategoryList);
+             productCategoryList.buildCompleteHierarchy();
+             productCatalogList.setProductCategoryList(productCategoryList);
+             // paging
+             productCatalogList.setPagedListInfo(productCatalogListInfo);
+             productCatalogListInfo.setSearchCriteria(productCatalogList, (HttpServletRequest) request, PortletUtils.getSystemStatus(request), null);
+
+             // All products
+             if (productCatalogList.getCategoryId() == -1) {
+               productCatalogList.setHasCategories(Constants.UNDEFINED);
+             }
+             if ("true".equals(request.getAttribute("SHOW_PRICE"))) {
+               productCatalogList.setBuildActivePrice(true);
+             }
+             productCatalogList.buildList(db);
+             if (System.getProperty("DEBUG") != null) {
+               System.out.println("ProductCatalogPortlet.doView() + productCatalogList.size()  ==> " + productCatalogList.size());
+             }
+             // Set previous page
+             request.getPortletSession().setAttribute("previousPage", "searchResult");
+             request.setAttribute("productCatalogList", productCatalogList);
+             request.setAttribute("searchResults", "true");
+             request.setAttribute("PRODUCT_SEARCH", request.getPreferences().getValue(PRODUCT_SEARCH, "false"));
+           }
+
+     /**
+      * Description of the Method
+            *
+            * @param request  Description of the Parameter
+            * @param response Description of the Parameter
+            * @throws Exception Description of the Exception
+            */
+           private void prepareSearchResult(ActionRequest request, ActionResponse response) throws Exception {
+             forwardParameters(request, response);
+             response.setRenderParameter("viewType", "searchResult");
+           }
+
+     /**
+      * Description of the Method
+            *
+            * @param request  Description of the Parameter
+            * @param response Description of the Parameter
+            * @throws Exception Description of the Exception
+            */
+           private void sendEmail(ActionRequest request, ActionResponse response) throws Exception {
+             if (System.getProperty("DEBUG") != null) {
+               System.out.println(request.getParameter("yourName"));
+               System.out.println(request.getParameter("yourEmailAddress"));
+               System.out.println(request.getParameter("yourFriendsAddress"));
+               System.out.println(request.getParameter("emailSubject"));
+               System.out.println(request.getParameter("comments"));
+               System.out.println(request.getParameter("productId"));
+               System.out.println(request.getParameter("viewType"));
+               System.out.println(PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE"));
+               System.out.println(request.getParameter("requestURL"));
+             }
+
+             Connection db = PortletUtils.getConnection(request);
+             URL url = new URL(request.getParameter("productURL"));
+             String friendlyURL = null;
+             URLMap urlMap = new URLMap();
+             urlMap.setUrl(url.getFile());
+             try {
+               urlMap.insert(db);
+               friendlyURL = urlMap.getURLAlias();
+             } catch (SQLException e) {
+               friendlyURL = url.getFile();
+             }
+             friendlyURL =
+                 url.getProtocol()
+                     + "://"
+                     + PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL")
+                     + friendlyURL;
+
+             ProductEmailFormatter productEmailFormatter = new ProductEmailFormatter();
+             productEmailFormatter.setSiteURL(PortletUtils.getApplicationPrefs(request, "WEBSERVER.URL"));
+             productEmailFormatter.setProductURL(friendlyURL);
+             productEmailFormatter.setFromName(request.getParameter("yourName"));
+             productEmailFormatter.setShowSku(request.getPreferences().getValue(SHOW_SKU, "false"));
+             productEmailFormatter.setSkuText(request.getPreferences().getValue(SKU_TEXT, "Sku:"));
+             productEmailFormatter.setShowPrice(request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "false"));
+             productEmailFormatter.setPriceText(request.getPreferences().getValue(PRICE_TEXT, "Price:"));
+             productEmailFormatter.setShowPriceSavings(request.getPreferences().getValue(SHOW_PRICE_SAVINGS, "false"));
+             productEmailFormatter.setPriceSavingsText(request.getPreferences().getValue(PRICE_SAVINGS_TEXT, "Price Savings:"));
+             productEmailFormatter.setOriginalPriceText(request.getPreferences().getValue(ORIGINAL_PRICE_TEXT, "Original Price:"));
+             String systemLanguage = PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE");
+             Locale locale = new Locale(systemLanguage.split("_")[0], systemLanguage.split("_")[1]);
+             productEmailFormatter.setLocale(locale);
+
+             String productId = request.getParameter("productId");
+
+             ProductCatalog productCatalog = new ProductCatalog();
+             productCatalog.setBuildPriceList(true);
+             productCatalog.setBuildActivePrice(true);
+             productCatalog.queryRecord(db, Integer.parseInt(productId));
+             productCatalog.setComments(request.getParameter("comments"));
+             FileItem imageItem = null;
+             if (productCatalog.getLargeImageId() != -1) {
+               imageItem = new FileItem(db, productCatalog.getLargeImageId());
+             }
+
+             SMTPMessage mail = new SMTPMessage();
+             mail.setHost(PortletUtils.getApplicationPrefs(request, "MAILSERVER"));
+             mail.setFrom(request.getParameter("yourEmailAddress"));
+             mail.setType("text/html");
+             mail.setTo(request.getParameter("yourFriendsAddress"));
+             if (imageItem != null) {
+               imageItem.setDirectory(PortletUtils.getDbNamePath(request) + "products" + fs);
+               String imagePath = imageItem.getFullFilePath();
+               mail.addImage("productImage", "file:///" + imagePath);
+               if (System.getProperty("DEBUG") != null) {
+                 System.out.println(imagePath);
+                 File file = new File(imagePath);
+                 if (file.isFile()) {
+                   System.out.println(" FILE EXISTS ");
+                 }
+               }
+             }
+             //String templateFilePath = PortletUtils.getDbNamePath(request) + "templates_" + PortletUtils.getApplicationPrefs(request, "SYSTEM.LANGUAGE") + ".xml";
+             String productInformation =
+                 productEmailFormatter.getProductInformation(productCatalog, request.getPreferences().getValue(EMAIL_BODY, ""));
+             if (System.getProperty("DEBUG") != null) {
+               System.out.println("ProductCatalogPortlet-> Product Information: " + productInformation);
+             }
+             mail.setSubject(request.getPreferences().getValue(EMAIL_SUBJECT, request.getParameter("emailSubject")));
+             mail.setBody(productInformation);
+             int mailReturn = mail.send();
+             if (mailReturn == 2) {
+               System.err.println(mail.getErrorMsg());
+             }
+           }
+
+     private void setProductCatalogOffset(String categogoryId, String offset, PortletSession portletSession) {
+             HashMap catalogOffset;
+             if (portletSession.getAttribute("ProductCatalogOffset") != null) {
+               catalogOffset = (HashMap) portletSession.getAttribute("ProductCatalogOffset");
+             } else {
+               catalogOffset = new HashMap();
+             }
+             catalogOffset.put(categogoryId, offset);
+             portletSession.setAttribute("ProductCatalogOffset", catalogOffset);
+           }
+
+     private String getProductCatalogOffset(String categogoryId, PortletSession portletSession) {
+             HashMap catalogOffset;
+             if (portletSession.getAttribute("ProductCatalogOffset") != null) {
+               catalogOffset = (HashMap) portletSession.getAttribute("ProductCatalogOffset");
+             } else {
+               return "0";
+             }
+             if (catalogOffset.containsKey(categogoryId)) {
+               return (String) catalogOffset.get(categogoryId);
+             }
+             return "0";
+           }
+
+   }
 
  
