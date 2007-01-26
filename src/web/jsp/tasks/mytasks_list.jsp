@@ -167,7 +167,7 @@
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= Constants.TASKS %>', '<%=  thisTask.getId() %>', '<%= thisTask.getTicketId() %>','<%= thisTask.getContactId() %>', '<%= thisTask.getOwner() %>');"
+      <a href="javascript:displayMenu('select<%= count %>','menuTask', '<%= Constants.TASKS %>','<%=  thisTask.getId() %>', '<%= thisTask.getTicketId() %>','<%= thisTask.getContactId() %>', '<%= thisTask.getOwner() %>','<%= hasAuthority(pageContext, String.valueOf(thisTask.getOwner())) %>');"
        onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td nowrap align="center" valign="top">

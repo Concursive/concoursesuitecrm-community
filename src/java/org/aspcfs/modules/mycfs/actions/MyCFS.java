@@ -80,7 +80,7 @@ public final class MyCFS extends CFSModule {
 
     Connection db = null;
     CFSNoteList noteList = new CFSNoteList();
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       noteList.setPagedListInfo(inboxInfo);
@@ -122,6 +122,7 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    context.getRequest().setAttribute("systemStatus", systemStatus);
     context.getRequest().setAttribute("CFSNoteList", noteList);
     addModuleBean(context, "MyInbox", "Inbox Home");
     return ("InboxOK");

@@ -43,7 +43,7 @@
     </param>
     <param name="Attachments.colon">
       <value><![CDATA[Attachments:]]></value>
-		</param>
+	</param>
     <param name="global.trashed">
       <value><![CDATA[Trashed]]></value>
     </param>
@@ -206,10 +206,10 @@
     <param name="tickets.enteredDateBetween">
       <value><![CDATA[Entered Date between]]></value>
     </param>
-		<param name="tickets.resolvable">
-			<value><![CDATA[Resolvable]]></value>
-		</param>
-		<param name="tickets.ticketState">
+	<param name="tickets.resolvable">
+		<value><![CDATA[Resolvable]]></value>
+	</param>
+	<param name="tickets.ticketState">
       <value><![CDATA[Ticket State]]></value>
     </param>
     <param name="tickets.ticketCategoryMappedActionPlans.colon">
@@ -301,7 +301,7 @@
     </param>
     <param name="accounts.accounts_contacts.noIMPlease">
       <value><![CDATA[No Instant Messages Please]]></value>
-    </param>
+	  </param>
     <param name="accounts.accounts_contacts.noMail">
       <value><![CDATA[Do Not Mail]]></value>
     </param>
@@ -337,7 +337,7 @@
     </param>
     <param name="accounts.accounts_contacts.IMPreference">
       <value><![CDATA[Instant Message Preference]]></value>
-    </param>   
+    </param>
     <param name="accounts.AddContact">
       <value><![CDATA[Add Contact]]></value>
     </param>
@@ -647,7 +647,7 @@
     <param name="accounts.accounts_contacts_add.ContactTypes">
       <value><![CDATA[Contact Type(s)]]></value>
     </param>
-       <param name="accounts.accounts_contacts_add.AccountDeatils">
+    <param name="accounts.accounts_contacts_add.AccountDeatils">
       <value><![CDATA[Account Details]]></value>
     </param>
     <param name="accounts.accounts_asset_list.AddAnAsset">

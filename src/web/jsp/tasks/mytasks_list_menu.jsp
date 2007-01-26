@@ -25,18 +25,31 @@
   var thisOwnerId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, typeId, taskId, ticketId, contactId, ownerId) {
+  function displayMenu(loc, id, typeId, taskId, ticketId, contactId, ownerId, hasAuthority) {
     thisTaskId = taskId;
     thisTypeId = typeId;
     thisTicketId = ticketId;
     thisContactId = contactId;
     thisOwnerId = ownerId;
+    updateTaskMenu(hasAuthority);
     document.getElementById('ownerid').value = thisOwnerId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
+  }
+
+  function updateTaskMenu(hasAuthority){
+    if (hasAuthority == 'true') {
+      showSpan('menuTaskModify');
+      showSpan('menuTaskReassign');
+      showSpan('menuTaskDelete');
+    }else{
+      hideSpan('menuTaskModify');
+      hideSpan('menuTaskReassign');
+      showSpan('menuTaskDelete');
+    }
   }
   
   //Menu link functions
@@ -89,7 +102,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-tasks-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuTaskModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -99,7 +112,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-tasks-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign()">
+      <tr id="menuTaskReassign" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="reassign()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -119,7 +132,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-tasks-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTask()">
+      <tr id="menuTaskDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteTask()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

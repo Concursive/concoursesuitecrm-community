@@ -34,11 +34,16 @@
   }
   
   function updateMenu(statusId) {
-    if (statusId == 2) {
-      hideSpan("archive");
-      showSpan("sendToInbox");
+    if (statusId != 0) {
+      if (statusId == 2) {
+        hideSpan("archive");
+        showSpan("sendToInbox");
+      } else {
+        showSpan("archive");
+        hideSpan("sendToInbox");
+      }
     } else {
-      showSpan("archive");
+      hideSpan("archive");
       hideSpan("sendToInbox");
     }
   }
@@ -55,7 +60,7 @@
   function archive() {
     window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id='+ thisNoteId +'&type='+ thisTypeId+'&return=list';
   }
-  
+
   function forward() {
     window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=' + thisTypeId + '&id=' + thisNoteId + '&return=list';
   }

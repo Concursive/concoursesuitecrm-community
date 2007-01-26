@@ -34,7 +34,9 @@
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:formMessage showSpace="false"/>
+<% if (hasAuthority(pageContext, String.valueOf(Task.getOwner()))) { %>
  <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='MyTasks.do?command=Modify&id=<%= Task.getId() %>&return=details';"> 
+<% } %>
  <input type="button" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%= Task.getId() %>&return=details';"> 
 <% if (hasAuthority(pageContext, String.valueOf(Task.getOwner()))) { %>
  <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('MyTasks.do?command=ConfirmDelete&id=<%= Task.getId() %>&popup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');"><br /> 
@@ -47,7 +49,9 @@
 <br />
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 <dhv:evaluate if="<%= !isPopup(request) %>">
+<% if (hasAuthority(pageContext, String.valueOf(Task.getOwner()))) { %>
 <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='MyTasks.do?command=Modify&id=<%= Task.getId() %>&return=details';"> 
+<% } %>
 <input type="button" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%= Task.getId() %>&return=details';"> 
 <% if (hasAuthority(pageContext, String.valueOf(Task.getOwner()))) { %>
 <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('MyTasks.do?command=ConfirmDelete&id=<%= Task.getId() %>&popup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');"><br />&nbsp;

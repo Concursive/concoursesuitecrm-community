@@ -17,10 +17,8 @@ package org.aspcfs.utils.web;
 
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.io.Serializable;
 
 /**
  * Represents an item from a Lookup table, to be used primarily with HtmlSelect
@@ -31,7 +29,7 @@ import java.sql.SQLException;
  *          $
  * @created September 5, 2001
  */
-public class LookupElement {
+public class LookupElement implements Serializable {
 
   protected String tableName = null;
   protected int code = 0;
@@ -386,6 +384,14 @@ public class LookupElement {
   }
 
 
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
   /**
    * Sets the group attribute of the LookupElement object
    *
@@ -528,6 +534,17 @@ public class LookupElement {
     return group;
   }
 
+  public boolean isDefaultItem() {
+    return defaultItem;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public Timestamp getEntered() {
+    return entered;
+  }
 
   /**
    * Description of the Method

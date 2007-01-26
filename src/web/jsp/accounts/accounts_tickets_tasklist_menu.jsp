@@ -25,14 +25,14 @@
   var thisOwnerId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, orgId, ticId, taskId, contactId, ownerId, trashed) {
+  function displayMenu(loc, id, orgId, ticId, taskId, contactId, ownerId, trashed, hasAuthority) {
     thisOrgId = orgId;
     thisTicId = ticId;
     thisTaskId = taskId;
     thisContactId = contactId;
     thisOwnerId = ownerId;
     document.getElementById('ownerid').value = thisOwnerId;
-    updateMenu(trashed);
+    updateMenu(trashed,hasAuthority);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
@@ -40,15 +40,21 @@
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
 
-  function updateMenu(trashed){
-    if (trashed == 'true') {
-      hideSpan('menuAssign');
-      hideSpan('menuModify');
-      hideSpan('menuDelete');
+  function updateMenu(trashed,hasAuthority){
+    if (hasAuthority == 'true') {
+      if (trashed == 'true') {
+        hideSpan('menuAssign');
+        hideSpan('menuDelete');
+        hideSpan('menuModify');
+      } else {
+        showSpan('menuAssign');
+        showSpan('menuDelete');
+        showSpan('menuModify');
+      }
     } else {
-      showSpan('menuAssign');
-      showSpan('menuModify');
-      showSpan('menuDelete');
+      hideSpan('menuAssign');
+      hideSpan('menuDelete');
+      hideSpan('menuModify');
     }
   }
   //Menu link functions

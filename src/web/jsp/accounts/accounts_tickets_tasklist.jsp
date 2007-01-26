@@ -115,7 +115,7 @@
         <td align="center" valign="top">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
           <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-          <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,<%= thisTask.getId() %>,<%= thisTask.getContactId() %>,<%= thisTask.getOwner() %>,'<%= TicketDetails.isTrashed() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          <a href="javascript:displayMenu('select<%= count %>','menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,<%= thisTask.getId() %>,<%= thisTask.getContactId() %>,<%= thisTask.getOwner() %>,'<%= TicketDetails.isTrashed() %>','<%= hasAuthority(pageContext, String.valueOf(thisTask.getOwner())) %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuTask');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td nowrap align="center" valign="top">
           <% if(thisTask.getPriority() != -1) {%>

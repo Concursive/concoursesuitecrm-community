@@ -96,6 +96,8 @@ while (mapItems.hasNext()) {
       baseMap.setSystemId(systemId);
       baseMap.setName(id);
       baseMap.setMappedClassName(className);
+      //all base objects should have getId() and setId()
+      baseMap.setKey("id");
       baseMap.insert(db);
       print("Added Mapping-> ID: " + id + ", CLASS: " + className);
       

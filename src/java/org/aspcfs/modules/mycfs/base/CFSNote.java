@@ -22,6 +22,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.controller.SystemStatus;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -35,38 +36,14 @@ import java.util.HashMap;
  */
 public class CFSNote extends GenericBean {
 
-  /**
-   * Description of the Field
-   */
   public final static int CALL = 1;
-  /**
-   * Description of the Field
-   */
   public final static int NEW = 0;
-  /**
-   * Description of the Field
-   */
   public final static int READ = 1;
-  /**
-   * Description of the Field
-   */
   public final static int OLD = 2;
-  /**
-   * Description of the Field
-   */
   public final static int DELETE = 3;
-  /**
-   * Description of the Field
-   */
   public final static int SENDER = 1;
-  /**
-   * Description of the Field
-   */
   public final static int RECIPIENT = 2;
 
-  /**
-   * Description of the Field
-   */
   public String sentToList = "";
   private int id = -1;
   private String subject = "";
@@ -85,9 +62,6 @@ public class CFSNote extends GenericBean {
   private String currentView = "none";
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-  /**
-   * Description of the Field
-   */
   protected HashMap recipientList;
 
   //action list properties
@@ -596,16 +570,15 @@ public class CFSNote extends GenericBean {
    *
    * @return The statusText value
    */
-  public String getStatusText() {
-    // TODO: Needs to use language dictionary
+  public String getStatusText(SystemStatus systemStatus) {
     if (status == 0) {
-      return ("Unread");
+      return systemStatus.getLabel("note.unread", "Unread");
     } else if (status == 1) {
-      return ("Read");
+      return systemStatus.getLabel("note.read", "Read");
     } else if (status == 2) {
-      return ("Archived");
+      return systemStatus.getLabel("note.archived", "Archived");
     } else {
-      return ("Deleted");
+      return systemStatus.getLabel("note.deleted", "Deleted");
     }
   }
 

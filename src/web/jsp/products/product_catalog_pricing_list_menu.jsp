@@ -51,6 +51,9 @@
   function details() {
 		window.location.href='ProductCatalogPricings.do?command=PricingDetails&productId=<%= productCatalog.getId() %>&pricingId=' + thisPriceId + '&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= productCategory.getId() %>';
 	}
+  function modify() {
+		window.location.href='ProductCatalogPricings.do?command=ModifyPricing&productId=<%= productCatalog.getId() %>&pricingId=' + thisPriceId + '&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= productCategory.getId() %>';
+	}
   function disable() {
     confirmDelete('ProductCatalogPricings.do?command=DisablePricing&productId=<%= productCatalog.getId() %>&pricingId=' + thisPriceId + '&moduleId=<%= permissionCategory.getId() %>&categoryId=<%= productCategory.getId() %>');
   }
@@ -68,6 +71,16 @@
         </th>
         <td>
           <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="product-catalog-product-edit">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16" />
+        </th>
+        <td>
+          <dhv:label name="product.modifyPrice">Modify Price</dhv:label>
         </td>
       </tr>
       </dhv:permission>

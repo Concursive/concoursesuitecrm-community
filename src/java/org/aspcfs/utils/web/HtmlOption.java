@@ -18,6 +18,7 @@ package org.aspcfs.utils.web;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * Represents a Html Option component of a combo box
@@ -26,7 +27,7 @@ import java.util.Set;
  * @version $Id$
  * @created June 9, 2003
  */
-public class HtmlOption {
+public class HtmlOption implements Serializable {
 
   String value = null;
   String text = null;
