@@ -36,6 +36,9 @@ function checkOwnerSite(item) {
   <dhv:evaluate if="<%= User.getUserRecord().getSiteId() == -1 %>">
   try {
     var ownerid = document.getElementById('ownerid').value;
+    // TODO: this action asks the server for parameters that are fed to continueSetSite()
+    // however, because the iframe is invoking the popup, this fails when
+    // popup blocking is turned on
     var url = 'MyActionLists.do?command=GetSiteForUser&userId='+ownerid+'&item='+item;
     window.frames['server_commands'].location.href=url;
   } catch (oException) {
