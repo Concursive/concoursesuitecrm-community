@@ -92,3 +92,11 @@
 
 # Upgrade account stage (not required)
 #2007-01-15-script01-vadim.bsh
+
+# attachments
+2006-12-08-script01-vadim.sql
+2006-12-15-script01-vadim.bsh
+2007-01-04-script01-zhenya.bsh
+
+# sync fix
+2007-01-24-script01-ananth.bsh

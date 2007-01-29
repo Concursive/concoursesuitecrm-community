@@ -133,6 +133,11 @@
       <permission value="contacts-external_contacts-messages-view"/>
       <link value="ExternalContacts.do?command=ViewMessages&amp;contactId=${id}"/>
     </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value="contacts-external_contacts-documents-view"/>
+      <link value="ExternalContactsDocuments.do?command=View&amp;contactId=${id}"/>
+    </submenu>
     <submenu name="opportunities">
       <long_html value="Opportunities"/>
       <permission value="contacts-external_contacts-opportunities-view"/>
@@ -212,6 +217,11 @@
       <long_html value="Messages"/>
       <permission value="accounts-accounts-contacts-messages-view"/>
       <link value="Contacts.do?command=ViewMessages&amp;contactId=${id}"/>
+    </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value="accounts-accounts-contacts-documents-view"/>
+      <link value="AccountsContactsDocuments.do?command=View&amp;contactId=${id}"/>
     </submenu>
     <submenu name="opportunities">
       <long_html value="Opportunities"/>

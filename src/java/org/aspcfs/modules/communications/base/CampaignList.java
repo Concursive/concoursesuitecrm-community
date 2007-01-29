@@ -936,6 +936,7 @@ public class CampaignList extends Vector {
       thisCampaign.buildHasSurvey(db);
       thisCampaign.setGroupList(db);
       thisCampaign.buildFileCount(db);
+      thisCampaign.buildMessageAttachments(db);
     }
   }
 

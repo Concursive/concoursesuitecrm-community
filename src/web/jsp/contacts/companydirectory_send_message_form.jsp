@@ -78,7 +78,7 @@
     }
     hideSpan('send');
     showSpan('sendingEmail');
-    return true;
+    return selectAllOptions(form.selectedList);
   }
 </script>
 <form name="sendMessage" action="ExternalContactsMessages.do?command=SendMessage&auto-populate=true" method="post" onSubmit="return checkForm(this);">

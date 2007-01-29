@@ -16,11 +16,29 @@
   - Version: $Id$
   - Description: 
   --%>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.base.Constants,org.aspcfs.utils.web.LookupElement" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popDocuments.js?1"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript">
 	var imageLibraryURL = "/../WebsiteMedia.do?command=View&forEmail=true&popup=true";
+  indSelected = 0;
+  orgSelected = 1;
+  onLoad = 1;
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
+  
+  function clearSelections() {
+    deleteOptions("selectedList");
+    insertOption("None Selected", "", "selectedList");
+  }
 </script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -29,7 +47,7 @@
     </th>
   </tr>
   <dhv:evaluate if='<%= (request.getParameter("actionId") == null) &&  (!"addressRequest".equals(request.getAttribute("messageType"))) && !(showBcc || showCc)  %>'>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel">
       <dhv:label name="contacts.name">Name</dhv:label>
     </td>
@@ -38,7 +56,7 @@
       <font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td valign="top" class="formLabel">
       <dhv:label name="campaign.initialDesctiption">Internal Description</dhv:label>
     </td>
@@ -46,7 +64,7 @@
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_contacts_validateimport.AccessType">Access Type</dhv:label>
     </td>
@@ -55,7 +73,7 @@
     </td>
   </tr>
   </dhv:evaluate>
-	<tr>
+	<tr class="containerBody">
     <td valign="top" class="formLabel">
       <dhv:label name="project.message">Message</dhv:label>
     </td>
@@ -120,6 +138,74 @@
       </td></tr></table>
     </td>
   </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">
+        <dhv:label name="campaign.attachments">Attachments</dhv:label>
+      </td>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0" class="empty">
+          <tr>
+            <td>
+              <select multiple name="selectedList" id="selectedList" size="5">
+                <dhv:evaluate if="<%=Message.getMessageAttachments().isEmpty() %>">
+                  <option value="-1"><dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label></option>
+                </dhv:evaluate>
+                <dhv:evaluate if="<%=!(Message.getMessageAttachments().isEmpty())%>">
+                <%
+                  Iterator i = Message.getMessageAttachments().iterator();
+                  while (i.hasNext()) {
+                    MessageAttachment thisAttachment = (MessageAttachment)i.next();
+                %>
+                  <option value="<%=thisAttachment.getFileItemId()%>"><%=thisAttachment.getFileName()+" ("+thisAttachment.getRelativeSize()+User.getSystemStatus(getServletConfig()).getLabel("admin.oneThousand.abbreviation", "k")+")"%></option>
+                <%}%>
+                </dhv:evaluate>      
+              </select>
+            </td>
+            <dhv:permission name="<%= "accounts-accounts-documents-view"+","+"accounts-accounts-contacts-documents-view"+","+ "contacts-external_contacts-documents-view" +","+ "documents-view"+","+ "projects-view"%>" all="false">
+            <td valign="top">
+              <input type="hidden" name="previousSelection" value="" />
+              <% String params = "";
+              int moduleId=-1;
+              boolean hasContactPermission = false;
+              boolean hasOrgPermission = false;
+              boolean hasAccountContactPermission = false;
+              %>
+               <dhv:permission name="contacts-external_contacts-documents-view">
+             	 <%hasContactPermission=true;%>           
+              </dhv:permission>	
+              <dhv:permission name="accounts-accounts-documents-view">
+             	 <%hasOrgPermission=true;%>          
+              </dhv:permission>	
+              <dhv:permission name="accounts-accounts-contacts-documents-view">
+             	 <%hasAccountContactPermission=true;%>          
+              </dhv:permission>	
+              <%
+              if(request.getAttribute("ContactDetails")!=null){
+              Contact contact = (Contact)request.getAttribute("ContactDetails");
+              	params = "&contactId="+contact.getId()+"&orgId="+contact.getOrgId();
+              	if (contact.getOrgId()!=-1 && hasOrgPermission){
+              	 moduleId=Constants.ACCOUNTS;}
+              	if (contact.getId()!=-1 && hasContactPermission){
+              	 	moduleId=Constants.CONTACTS;}
+              	if (contact.getOrgId()!=-1 && hasAccountContactPermission) {
+              	  moduleId=Constants.CONTACTS;}
+              	}
+              %>
+              <dhv:permission name="documents-view">
+             	 <%if (moduleId==-1){moduleId=Constants.DOCUMENTS_DOCUMENTS;} %>            
+              </dhv:permission>	
+              <dhv:permission name="projects-view">
+             	 <%if (moduleId==-1){moduleId=Constants.PROJECTS_FILES;} %>            
+              </dhv:permission>	
+              &nbsp;[<a href="javascript:popDocumentsListMultiple('selectedList','selectedList','<%=moduleId %>','<%=params %>');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+              &nbsp;[<a href="javascript:clearSelections();"><dhv:label name="">Clear</dhv:label></a>]
+            </td>
+            </dhv:permission>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId|actionListId") %>
 <dhv:evaluate if="<%= Message.getId() > 0 %>">

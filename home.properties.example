@@ -1,9 +1,26 @@
 
 ## The following properties can be set instead of using environment variables
-#CATALINA_HOME=/path/to/apache-tomcat
-#CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric
-#CENTRIC_FILELIBRARY=/path/to/centric/fileLibrary
-#AXIS_HOME=/path/to/apache-tomcat/webapps/axis
 
-## To skip web based GUI the fileLibrary must be in the WEB-INF folder
+## Declare the webapp server's directory to compile using web app server libraries
+## based on the webapp type configured in build.properties
+#CATALINA_HOME=/path/to/tomcat
+#GERONIMO_HOME=/path/to/geronimo or websphere ce
+#JBOSS_HOME=/path/to/jboss
+#WEBLOGIC_HOME=/path/to/weblogic
+#WEBSPHERE_HOME=/path/to/websphere
+
+## CENTRIC_HOME can be used to compile directly to the webapp's deployment
+## directory (for development), or to any directory for later generating a .war
+#CENTRIC_HOME=/path/to/tomcat/webapps/centric
+#CENTRIC_HOME=/path/to/weblogic/domain/autodeploy/directory
+
+## At times, scripts will need to install or upgrade fileLibrary documents when
+## deploying from source
+#CENTRIC_FILELIBRARY=/path/to/centric/fileLibrary
+## To skip web based GUI the fileLibrary must be in the WEB-INF folder, useful
+## for development
 #CENTRIC_FILELIBRARY=/path/to/apache-tomcat/webapps/centric/WEB-INF/fileLibrary
+
+## If using Axis Web Services, then declare the webapp home so that the
+## Centric CRM descriptors can be installed with "ant ws"
+#AXIS_HOME=/path/to/apache-tomcat/webapps/axis

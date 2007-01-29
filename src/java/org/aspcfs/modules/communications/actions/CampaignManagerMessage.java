@@ -165,6 +165,8 @@ public final class CampaignManagerMessage extends CFSModule {
     String id = (String) context.getRequest().getParameter("id");
     Message newMessage = (Message) context.getFormBean();
     try {
+    	newMessage.setAttachmentList(
+    			context.getRequest().getParameterValues("selectedList"));
       db = this.getConnection(context);
       Message oldMessage = new Message(db, Integer.parseInt(id));
       if (!hasAuthority(db, context, oldMessage)) {
@@ -293,6 +295,8 @@ public final class CampaignManagerMessage extends CFSModule {
     boolean isValid = false;
     Message newMessage = (Message) context.getFormBean();
     try {
+    	newMessage.setAttachmentList(
+    			context.getRequest().getParameterValues("selectedList"));
       newMessage.setEnteredBy(getUserId(context));
       newMessage.setModifiedBy(getUserId(context));
       db = this.getConnection(context);

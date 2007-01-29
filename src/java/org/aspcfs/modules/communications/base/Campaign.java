@@ -109,6 +109,7 @@ public class Campaign extends GenericBean {
   private int approvedBy = -1;
   private java.sql.Timestamp approvalDate = null;
   private LinkedHashMap groups = null;
+  private MessageAttachmentList messageAttachments = new MessageAttachmentList();
   private java.sql.Timestamp lastResponse = null;
   private String messageSubject = null;
   private boolean hasAddressRequest = false;
@@ -569,6 +570,14 @@ public class Campaign extends GenericBean {
   }
 
 
+  public MessageAttachmentList getMessageAttachments() {
+		return messageAttachments;
+	}
+
+
+	public void setMessageAttachments(MessageAttachmentList messageAttachments) {
+		this.messageAttachments = messageAttachments;
+	}
   /**
    * Constructor for the Campaign object
    *
@@ -639,6 +648,7 @@ public class Campaign extends GenericBean {
     buildFileCount(db);
     buildGroups(db);
     buildUserGroupMaps(db);
+    buildMessageAttachments(db);
   }
 
 
@@ -2627,8 +2637,8 @@ public class Campaign extends GenericBean {
           "DELETE FROM active_campaign_groups WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-      pst.close();
-
+      MessageAttachmentList attachmentList = new MessageAttachmentList();
+      attachmentList.delete(db, Constants.COMMUNICATIONS_MESSAGE_FILE_ATTACHMENTS, this.getId());       
       pst = db.prepareStatement("DELETE FROM campaign WHERE campaign_id = ? ");
       //"DELETE FROM campaign WHERE id = ? ");
       pst.setInt(1, this.getId());
@@ -3029,7 +3039,6 @@ public class Campaign extends GenericBean {
     }
 
     int resultCount = 0;
-
     PreparedStatement pst = null;
     int i = 0;
     pst = db.prepareStatement(
@@ -3041,13 +3050,15 @@ public class Campaign extends GenericBean {
             "modifiedby = ?, " +
             "modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = ? ");
-    //"WHERE id = ? ");
     pst.setInt(++i, messageId);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
     resultCount = pst.executeUpdate();
     pst.close();
-
+    // adding message attchment to campaign
+    MessageAttachmentList attachmentList = new MessageAttachmentList(db,Constants.MESSAGE_FILE_ATTACHMENTS,messageId);
+    attachmentList.copyTo(db, Constants.COMMUNICATIONS_MESSAGE_FILE_ATTACHMENTS, this.getId(),true);
+    
     return resultCount;
   }
 
@@ -3518,5 +3529,17 @@ public class Campaign extends GenericBean {
     pst.close();
     return true;
   }
+
+
+  /**
+   * Builds all groups associated with the campaign.
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void buildMessageAttachments(Connection db) throws SQLException {  
+	  messageAttachments= new MessageAttachmentList(db,Constants.COMMUNICATIONS_MESSAGE_FILE_ATTACHMENTS,id);
+  }
+
 }
 

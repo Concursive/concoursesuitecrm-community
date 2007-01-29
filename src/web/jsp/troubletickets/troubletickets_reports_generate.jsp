@@ -313,6 +313,7 @@
         <option value="assignmentDate"><dhv:label name="account.ticket.assignmentDate">Assignment Date</dhv:label></option>
         <option value="estimatedResolutionDate"><dhv:label name="ticket.estimatedResolutionDate">Estimated Resolution Date</dhv:label></option>
         <option value="resolutionDate"><dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label></option>
+        <option value="resolvedBy"><dhv:label name="ticket.resolvedby">Resolved By</dhv:label></option>
       </select>
      </td>
      <td width="25">

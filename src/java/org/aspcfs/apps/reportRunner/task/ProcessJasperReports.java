@@ -97,7 +97,7 @@ public class ProcessJasperReports {
               DateUtils.getDatePath(thisQueue.getEntered());
           File destPath = new File(destDir);
           destPath.mkdirs();
-          String filename = DateUtils.getFilename(thisQueue.getEntered()) + "-" + thisQueue.getId();
+          String filename = DateUtils.getFilename() + "-" + thisQueue.getId();
           long size = processReport(
               thisQueue,
               db,

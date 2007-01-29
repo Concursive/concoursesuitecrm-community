@@ -1490,15 +1490,27 @@ public class FileItem extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
-      //Delete the Account History
+    
+      // Delete the message attachments
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE message_file_attachment " +
+          "SET file_item_id = ? " +
+          "WHERE file_item_id = ? ");
+      pst.setNull(++i, java.sql.Types.INTEGER);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+      
+      // Delete the Account History
       if (this.getLinkModuleId() == Constants.DOCUMENTS_ACCOUNTS) {
         ContactHistory.deleteObject(
             db, OrganizationHistory.ACCOUNT_DOCUMENT, this.getId());
       }
 
-      //Delete the log of downloads
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(
+      // Delete the log of downloads
+      i = 0;
+      pst = db.prepareStatement(
           "DELETE FROM project_files_download " +
           "WHERE item_id = ? ");
       pst.setInt(++i, this.getId());

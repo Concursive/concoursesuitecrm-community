@@ -15,9 +15,10 @@
  */
 package org.aspcfs.apps.notifier;
 
+import com.darkhorseventures.database.ConnectionPool;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
-import com.darkhorseventures.database.ConnectionPool;
+import com.zeroio.iteam.base.FileItemVersion;
 import org.aspcfs.apps.ReportBuilder;
 import org.aspcfs.apps.common.ReportConstants;
 import org.aspcfs.modules.accounts.base.Organization;
@@ -26,10 +27,7 @@ import org.aspcfs.modules.admin.base.Usage;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Notification;
 import org.aspcfs.modules.base.Report;
-import org.aspcfs.modules.communications.base.Campaign;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.communications.base.Recipient;
-import org.aspcfs.modules.communications.base.RecipientList;
+import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.pipeline.base.OpportunityComponent;
 import org.aspcfs.modules.pipeline.base.OpportunityComponentEmail;
@@ -447,6 +445,36 @@ public class Notifier extends ReportBuilder {
         actualItem.setFilename(thisItem.getFilename());
         actualItem.setSize(thisItem.getSize());
         attachments.add(actualItem);
+      }
+      
+      //Adding message attachments 
+      Iterator messageAttachments = thisCampaign.getMessageAttachments().iterator();
+      while (messageAttachments.hasNext()) {
+    	MessageAttachment messageAttachment = (MessageAttachment)messageAttachments.next();
+        FileItem thisItem = messageAttachment.getFileItem(); 
+        if (thisItem!=null) {
+        thisItem.buildVersionList(db);
+        FileItemVersion itemToDownload = thisItem.getVersion(thisItem.getVersion());
+        FileItem actualItem = new FileItem();
+        
+        if (itemToDownload!=null) {           
+        	actualItem.setClientFilename(thisItem.getClientFilename());
+           if (thisItem.getLinkModuleId() == Constants.COMMUNICATIONS_MESSAGE_FILE_ATTACHMENTS) {
+             actualItem.setDirectory((String) config.get("FILELIBRARY") + fs + dbName + fs + "communications" + fs);
+           } else if (thisItem.getLinkModuleId() == Constants.ACCOUNTS) {
+             actualItem.setDirectory((String) config.get("FILELIBRARY") + fs + dbName + fs + "accounts" + fs);
+           } else if (thisItem.getLinkModuleId() == Constants.CONTACTS) {
+             actualItem.setDirectory((String) config.get("FILELIBRARY") + fs + dbName + fs + "contacts" + fs);
+           } else if (thisItem.getLinkModuleId() == Constants.PROJECTS_FILES) {
+             actualItem.setDirectory((String) config.get("FILELIBRARY") + fs + dbName + fs + "projects" + fs);
+           } else if (thisItem.getLinkModuleId() == Constants.DOCUMENTS_DOCUMENTS) {
+             actualItem.setDirectory((String) config.get("FILELIBRARY") + fs + dbName + fs + "documents" + fs);
+         }
+           actualItem.setFilename(itemToDownload.getFilename());
+           actualItem.setSize(thisItem.getSize());
+           attachments.add(actualItem);
+        }  
+        }
       }
 
       //Load in the recipients

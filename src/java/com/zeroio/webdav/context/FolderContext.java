@@ -453,8 +453,7 @@ public class FolderContext
           f.mkdirs();
         }
 
-        String fileName = DateUtils.getFilename(
-            new java.sql.Timestamp((new java.util.Date()).getTime()));
+        String fileName = DateUtils.getFilename();
         //System.out.println("PATH: " + filePath);
         //System.out.println("FILE NAME: " + fileName);
 

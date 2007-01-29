@@ -58,7 +58,7 @@ function reopenContact(id) {
 }
 </script>
 <dhv:container name="contacts" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl="<%= param2 %>" hideContainer="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>">
-  <dhv:evaluate if="<%= ContactDetails.getEnabled()  && !ContactDetails.isTrashed() %>">
+  <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>">
     <dhv:sharing primaryBean="ContactDetails" action="edit" all="true"><input type="button" name="cmd" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:sharing>
     <dhv:evaluate if="<%= !isPopup(request) %>">
       <dhv:permission name="contacts-external_contacts-add"><input type="button" value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
@@ -145,6 +145,16 @@ function reopenContact(id) {
         <strong><dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label></strong>
       </th>
     </tr>
+    <dhv:evaluate if="<%= ContactDetails.getNoEmail() %>">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.emailPreference">Email Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noEmail">Do Not Email</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
   <%
     Iterator iemail = ContactDetails.getEmailAddressList().iterator();
     if (iemail.hasNext()) {
@@ -156,7 +166,7 @@ function reopenContact(id) {
           <%= toHtml(thisEmailAddress.getTypeName()) %>
         </td>
         <td>
-          <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;
+          <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
           <dhv:evaluate if="<%=thisEmailAddress.getPrimaryEmail()%>">
             <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
           </dhv:evaluate>
@@ -164,28 +174,16 @@ function reopenContact(id) {
       </tr>
   <%
       }
-      if(ContactDetails.getNoEmail()){
-   %>
-		<tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts.emailPreference">Email Preference</dhv:label>
-        </td>
-        <td>
-           <dhv:label name="accounts.accounts_contacts.noEmail">Do Not Email</dhv:label>
-        </td>
-      </tr>
-   <%
-   }
     } else {
   %>
       <tr class="containerBody">
-        <td>
+        <td colspan="2">
           <font color="#9E9E9E"><dhv:label name="contacts.NoEmailAdresses">No email addresses entered.</dhv:label></font>
         </td>
       </tr>
   <%}%>
   </table>
-  &nbsp;
+  <br />
   </dhv:include>
   <dhv:include name="contact.instantMessageAddresses" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -194,6 +192,16 @@ function reopenContact(id) {
         <strong><dhv:label name="accounts.accounts_add.InstantMessageAddresses">Instant Message Addresses</dhv:label></strong>
       </th>
     </tr>
+    <dhv:evaluate if="<%= ContactDetails.getNoInstantMessage() %>">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.IMPreference">Instant Messages Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noIM">Do Not Instant Message</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
   <%
     Iterator imAddress = ContactDetails.getInstantMessageAddressList().iterator();
     if (imAddress.hasNext()) {
@@ -217,28 +225,16 @@ function reopenContact(id) {
     </tr>
   <%
       }
-    if(ContactDetails.getNoInstantMessage()){
-   %>
-		<tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts.IMPreference">Instant Messages Preference</dhv:label>
-        </td>
-        <td>
-           <dhv:label name="accounts.accounts_contacts.noIM">Do Not Instant Message</dhv:label>
-        </td>
-      </tr>
-   <%
-   }
     } else {
   %>
     <tr class="containerBody">
-      <td>
+      <td colspan="2">
         <font color="#9E9E9E"><dhv:label name="contacts.NoInstantMessageAdresses">No instant message addresses entered.</dhv:label></font>
       </td>
     </tr>
   <%}%>
   </table>
-  &nbsp;
+  <br />
   </dhv:include>
   <dhv:include name="contact.textMessageAddresses" none="true">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -247,6 +243,16 @@ function reopenContact(id) {
         <strong><dhv:label name="accounts.accounts_add.TextMessageAddresses">Text Message Addresses</dhv:label></strong>
       </th>
     </tr>
+    <dhv:evaluate if="<%= ContactDetails.getNoTextMessage() %>">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.textMessagePreference">Text Messages Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noTextMessage">Do Not Text Message</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
   <%
     Iterator itmAddress = ContactDetails.getTextMessageAddressList().iterator();
     if (itmAddress.hasNext()) {
@@ -259,7 +265,7 @@ function reopenContact(id) {
       </td>
       <td>
         <dhv:evaluate if="<%= hasText(thisTextMessageAddress.getTextMessageAddress()) %>">
-        <a href="mailto:<%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %>"><%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %></a>&nbsp;
+        <a href="mailto:<%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %>"><%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %></a>
           <dhv:evaluate if="<%=thisTextMessageAddress.getPrimaryTextMessageAddress()%>">
             <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
           </dhv:evaluate>
@@ -269,22 +275,10 @@ function reopenContact(id) {
     </tr>
   <%
       }
-     if(ContactDetails.getNoTextMessage()){
-   %>
-		<tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts.textMessagePreference">Text Messages Preference</dhv:label>
-        </td>
-        <td>
-           <dhv:label name="accounts.accounts_contacts.noIM">Do Not Text Message</dhv:label>
-        </td>
-      </tr>
-   <%
-   }
     } else {
   %>
     <tr class="containerBody">
-      <td>
+      <td colspan="2">
         <font color="#9E9E9E"><dhv:label name="contacts.NoTextMessageAdresses">No text message addresses entered.</dhv:label></font>
       </td>
     </tr>
@@ -299,6 +293,26 @@ function reopenContact(id) {
         <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
       </th>
     </tr>
+    <dhv:evaluate if="<%= ContactDetails.getNoPhone() %>">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.phonePreference">Phone Calls Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noPhone">Do Not Phone Call</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= ContactDetails.getNoFax() %>">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.faxPreference">Fax Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noFax">Do Not Fax</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
   <%
     Iterator inumber = ContactDetails.getPhoneNumberList().iterator();
     if (inumber.hasNext()) {
@@ -323,34 +337,10 @@ function reopenContact(id) {
       </tr>
   <%
       }
-          if(ContactDetails.getNoPhone()){
-   %>
-		<tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts.phonePreference">Phone Calls Preference</dhv:label>
-        </td>
-        <td>
-           <dhv:label name="accounts.accounts_contacts.noPhone">Do Not Phone Call</dhv:label>
-        </td>
-      </tr>
-   <%
-   }
-       if(ContactDetails.getNoFax()){
-   %>
-		<tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts.faxPreference">Fax Preference</dhv:label>
-        </td>
-        <td>
-           <dhv:label name="accounts.accounts_contacts.noFax">Do Not Fax</dhv:label>
-        </td>
-      </tr>
-   <%
-   }
     } else {
   %>
     <tr class="containerBody">
-      <td>
+      <td colspan="2">
         <font color="#9E9E9E"><dhv:label name="contacts.NoPhoneNumbers">No phone numbers entered.</dhv:label></font>
       </td>
     </tr>
@@ -365,6 +355,16 @@ function reopenContact(id) {
         <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
       </th>
     </tr>
+    <dhv:evaluate if="<%= ContactDetails.getNoMail() %>">
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <dhv:label name="accounts.accounts_contacts.mailPreference">Mail Preference</dhv:label>
+        </td>
+        <td>
+           <dhv:label name="accounts.accounts_contacts.noMail">Do Not Mail</dhv:label>
+        </td>
+      </tr>
+    </dhv:evaluate>
   <%
     Iterator iaddress = ContactDetails.getAddressList().iterator();
     if (iaddress.hasNext()) {
@@ -384,21 +384,10 @@ function reopenContact(id) {
       </tr>
   <%
       }
-         if(ContactDetails.getNoMail()){
-   %>
-		<tr class="containerBody">
-        <td class="formLabel" nowrap>
-          <dhv:label name="accounts.accounts_contacts.mailPreference">Mail Preference</dhv:label>
-        </td>
-        <td>
-           <dhv:label name="accounts.accounts_contacts.noMail">Do Not Mail</dhv:label>
-        </td>
-      </tr>
-   <%
-   }    } else {
+    } else {
   %>
     <tr class="containerBody">
-      <td>
+      <td colspan="2">
         <font color="#9E9E9E"><dhv:label name="contacts.NoAddresses">No addresses entered.</dhv:label></font>
       </td>
     </tr>
@@ -406,20 +395,22 @@ function reopenContact(id) {
   </table>
   &nbsp;
   </dhv:include>
-  <dhv:include name="contact.additionalDetails" none="true">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-    <tr>
-      <th colspan="2">
-        <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
-      </th>
-    </tr>
-    <tr class="containerBody">
-      <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
-      <td><%= toHtml(ContactDetails.getNotes()) %></td>
-    </tr>
-  </table>
-  &nbsp;
-  </dhv:include>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getNotes()) %>">
+    <dhv:include name="contact.additionalDetails" none="true">
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+        <tr>
+          <th colspan="2">
+            <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
+          </th>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
+          <td><%= toHtml(ContactDetails.getNotes()) %></td>
+        </tr>
+      </table>
+      &nbsp;
+    </dhv:include>
+  </dhv:evaluate>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">

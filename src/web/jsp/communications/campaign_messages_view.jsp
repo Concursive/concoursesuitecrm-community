@@ -67,6 +67,9 @@
     <th>
       &nbsp;
     </th>
+    <th width="2%">
+      <img src="images\icons\stock_insert_bookmark-16.gif">
+    </th>
     <th width="40%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=name"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
@@ -101,7 +104,17 @@
       <a href="javascript:displayMenu('select<%= count %>','menuMsg', '<%= thisMessage.getId() %>');"
       onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuMsg');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
-		<td width="20%" valign="center" class="row<%= rowid %>">
+    <td class="row<%= rowid %>"> 
+      <% if (thisMessage.getMessageAttachments() != null) {%>  
+      <% if (thisMessage.getMessageAttachments().size() > 0) {%>
+        <img src="images\icons\stock_insert_bookmark-16.gif">
+      <% } else {%>
+      	&nbsp;
+      <% }} else { %>
+        &nbsp;
+      <% } %>
+    </td>
+    <td width="20%" valign="center" class="row<%= rowid %>">
       <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>">
         <% if(thisMessage.getName() != null && !"".equals(thisMessage.getName())) {%>
           <%= toHtml(thisMessage.getName()) %>
@@ -109,7 +122,7 @@
           <dhv:label name="account.noNameAvailable.quotes">"No name available"</dhv:label>
         <%}%>
       </a>
-		</td>
+    </td>
     <td width="30%" valign="center" class="row<%= rowid %>"><%= toHtml( thisMessage.getMessageSubject() ) %></td>
 		<td width="50%" valign="center" class="row<%= rowid %>">
       <%= toHtml(thisMessage.getDescription()) %>
@@ -125,7 +138,7 @@
     }
   } else {%>
   <tr class="containerBody">
-    <td colspan="6">
+    <td colspan="7">
       <dhv:label name="accounts.accounts_contacts_messages_view.NoMessagesFound">No messages found.</dhv:label>
     </td>
   </tr>

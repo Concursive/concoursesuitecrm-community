@@ -71,7 +71,7 @@
     }
     hideSpan('send');
     showSpan('sendingEmail');
-    return true;
+    return selectAllOptions(form.selectedList);
   }
 </script>
 <form name="sendMessage" action="AccountContactsMessages.do?command=SendMessage&auto-populate=true<%= addLinkParams(request,"popup|popupType") %>" method="post" onSubmit="return checkForm(this);">

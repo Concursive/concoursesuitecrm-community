@@ -87,7 +87,7 @@
       return false;
     }
     hideSendButton();
-    return true;
+    return selectAllOptions(form.selectedList);
   }
 </script>
 <% if ("addressRequest".equals(request.getAttribute("messageType"))){%>

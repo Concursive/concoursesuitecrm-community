@@ -17,8 +17,12 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,com.zeroio.iteam.base.*,org.aspcfs.modules.base.Constants,org.aspcfs.utils.web.LookupElement" %>
 <jsp:useBean id="MessageDetails" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
+<jsp:useBean id="documentStore" class="org.aspcfs.modules.documents.base.DocumentStore" scope="request"/>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
+<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <form name="details" action="CampaignManagerMessage.do?command=Modify&id=<%= MessageDetails.getId() %>" method="post">
@@ -71,6 +75,38 @@
       &nbsp;<br />
 			<%= (MessageDetails.getMessageText()) %>
     </td>
+  </tr>
+  <tr>
+    <td class="formLabel" valign="top">
+      <dhv:label name="project.attachments">Attachments</dhv:label>
+    </td>
+        <td valign="top">
+          <%
+          if (MessageDetails.getMessageAttachments().size() > 0) { 
+          boolean hasPermissionDownload = false; 
+          Iterator it = MessageDetails.getMessageAttachments().iterator();
+          while (it.hasNext()) {
+            MessageAttachment thisAttachment = (MessageAttachment)it.next();
+            FileItem thisFile= thisAttachment.getFileItem();%>
+            <dhv:evaluate if="<%= thisFile!=null %>">
+              <%hasPermissionDownload = false;%>
+              <%@ include file="message_attachment_download_permissions_include.jsp"%>  
+            </dhv:evaluate>       	
+            <dhv:evaluate if="<%= thisAttachment.getFileExists() && hasPermissionDownload %>">
+              <a href="DocumentSelector.do?command=Download&moduleId=<%=thisFile.getLinkModuleId() %>&linkItemId=<%= thisFile.getLinkItemId() %>&fid=<%= thisAttachment.getFileItemId() %>&ver=<%= thisAttachment.getVersion() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+              <%= toHtml(thisAttachment.getFileName()+" ("+thisAttachment.getRelativeSize()+User.getSystemStatus(getServletConfig()).getLabel("admin.oneThousand.abbreviation", "k")+")") %> 
+              </a>  
+            </dhv:evaluate>  
+            <dhv:evaluate if="<%= !thisAttachment.getFileExists() || !hasPermissionDownload %>">
+              <%= toHtml(thisAttachment.getFileName()+" ("+thisAttachment.getRelativeSize()+User.getSystemStatus(getServletConfig()).getLabel("admin.oneThousand.abbreviation", "k")+")") %> 
+            </dhv:evaluate>
+          <% if (it.hasNext()) { %>
+          <br>
+          <%}}} else { %>
+          <dhv:label name="communications.messageAttachments.none">None</dhv:label>
+        <% } %>
+        </td>
+        
   </tr>
 </table>
 <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete"><br></dhv:permission>

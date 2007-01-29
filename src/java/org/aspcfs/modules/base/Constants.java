@@ -112,7 +112,8 @@ public final class Constants {
   public final static int TASKS = 15;
   public final static int COMMUNICATIONS_FILE_ATTACHMENTS = 16;
   public final static int COMMUNICATIONS_DOCUMENTS = 17;
-
+  public static final int COMMUNICATIONS_MESSAGE_FILE_ATTACHMENTS = 508200600;
+  public static final int MESSAGE_FILE_ATTACHMENTS =100120070;
 
   public final static int SERVICE_CONTRACTS = 209041109;
   public final static int ASSETS = 209041110;

@@ -237,6 +237,10 @@
   </action>
 
   <!-- End of the Website Module -->
+  
+  <action name="DocumentSelector" class="org.aspcfs.modules.actions.DocumentSelector">
+     <forward name="ListDocumentsOK" resource="/mycfs/mycfs_documents_selector.jsp" layout="style"/>
+  </action>
 
   <!-- Accounts Orders-->
   <action name="AccountOrders"
@@ -1877,7 +1881,66 @@
              resource="/contacts/companydirectory_message_confirmation.jsp"
              layout="style"/>
   </action>
+  <!-- Contact Documents Folders -->
+  <action name="ExternalContactsDocumentsFolders"
+          class="org.aspcfs.modules.contacts.actions.ExternalContactsDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder"
+          scope="request"/>
+    <forward name="AddOK"
+             resource="/contacts/contacts_documents_folders_add.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK"
+             resource="/contacts/contacts_documents_folders_add.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="InsertOK" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="MoveOK"
+             resource="/contacts/contacts_documents_folders_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/documents/documents_folders_popclose.jsp"/>
+  </action>
 
+  <action name="ExternalContactsDocuments"
+          class="org.aspcfs.modules.contacts.actions.ExternalContactsDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem"
+          scope="request"/>
+    <forward name="ViewOK" resource="/contacts/contacts_documents_list.jsp"
+             layout="nav"/>
+    <forward name="ViewContactFolderPopupOK"
+             resource="/contacts/contacts_documents_popup_list.jsp"
+             layout="style"/>
+    <forward name="ViewPopupOK" resource="/contacts/contacts_documents_list.jsp"
+             layout="style"/>
+    <forward name="AddOK" resource="/contacts/contacts_documents_upload.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK" resource="/contacts/contacts_documents_upload.jsp"
+             layout="style"/>
+    <forward name="UploadOK" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="AddVersionOK"
+             resource="/contacts/contacts_documents_upload_version.jsp"
+             layout="nav"/>
+    <forward name="AddVersionPopupOK"
+             resource="/contacts/contacts_documents_upload_version.jsp"
+             layout="style"/>
+    <forward name="DetailsOK"
+             resource="/contacts/contacts_documents_details.jsp" layout="nav"/>
+    <forward name="DetailsPopupOK"
+             resource="/contacts/contacts_documents_details.jsp" layout="style"/>
+    <forward name="ModifyOK" resource="/contacts/contacts_documents_modify.jsp"
+             layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/contacts/contacts_documents_modify.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/ExternalContactsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/contacts/contacts_documents_file_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/documents/documents_folders_popclose.jsp"/>
+  </action>
 
   <!-- Leads / Sales Module -->
   <action name="Sales" class="org.aspcfs.modules.contacts.actions.Sales">
@@ -2136,7 +2199,7 @@
     <forward name="MoveOK" resource="/pipeline/leads_documents_folders_move.jsp"
              layout="style"/>
     <forward name="PopupCloseOK"
-             resource="/pipeline/leads_documents_popclose.jsp"/>
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
   <action name="LeadsDocuments"
           class="org.aspcfs.modules.pipeline.actions.LeadsDocuments">
@@ -2160,7 +2223,7 @@
     <forward name="MoveOK" resource="/pipeline/leads_documents_file_move.jsp"
              layout="style"/>
     <forward name="PopupCloseOK"
-             resource="/pipeline/leads_documents_popclose.jsp"/>
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
   <action name="LeadsReports"
           class="org.aspcfs.modules.pipeline.actions.LeadsReports">
@@ -3538,7 +3601,7 @@
              resource="/accounts/accounts_documents_folders_move.jsp"
              layout="style"/>
     <forward name="PopupCloseOK"
-             resource="/accounts/accounts_documents_folders_popclose.jsp"/>
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
 
   <action name="AccountsDocuments"
@@ -3577,13 +3640,71 @@
     <forward name="MoveOK" resource="/accounts/accounts_documents_file_move.jsp"
              layout="style"/>
     <forward name="PopupCloseOK"
-             resource="/accounts/accounts_documents_folders_popclose.jsp"/>
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
   <action name="AccountsPrototype"
           class="org.aspcfs.modules.prototype.actions.Prototype">
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="IncludeStyleContainerOK" resource="/includepage.jsp"
              layout="styleContainer"/>
+  </action>
+  <action name="AccountsContactsDocumentsFolders"
+          class="org.aspcfs.modules.accounts.actions.AccountsContactsDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder"
+          scope="request"/>
+    <forward name="AddOK"
+             resource="/accounts/accounts_contacts_documents_folders_add.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK"
+             resource="/accounts/accounts_contacts_documents_folders_add.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="InsertOK" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="MoveOK"
+             resource="/accounts/accounts_contacts_documents_folders_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/documents/documents_folders_popclose.jsp"/>
+  </action>
+  <action name="AccountsContactsDocuments"
+          class="org.aspcfs.modules.accounts.actions.AccountsContactsDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem"
+          scope="request"/>
+    <forward name="ViewOK" resource="/accounts/accounts_contacts_documents_list.jsp"
+             layout="nav"/>
+    <forward name="ViewContactFolderPopupOK"
+             resource="/accounts/accounts_contacts_documents_popup_list.jsp"
+             layout="style"/>
+    <forward name="ViewPopupOK" resource="/accounts/accounts_contacts_documents_list.jsp"
+             layout="style"/>
+    <forward name="AddOK" resource="/accounts/accounts_contacts_documents_upload.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK" resource="/accounts/accounts_contacts_documents_upload.jsp"
+             layout="style"/>
+    <forward name="UploadOK" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="AddVersionOK"
+             resource="/accounts/accounts_contacts_documents_upload_version.jsp"
+             layout="nav"/>
+    <forward name="AddVersionPopupOK"
+             resource="/accounts/accounts_contacts_documents_upload_version.jsp"
+             layout="style"/>
+    <forward name="DetailsOK"
+             resource="/accounts/accounts_contacts_documents_details.jsp" layout="nav"/>
+    <forward name="DetailsPopupOK"
+             resource="/accounts/accounts_contacts_documents_details.jsp" layout="style"/>
+    <forward name="ModifyOK" resource="/accounts/accounts_contacts_documents_modify.jsp"
+             layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/accounts/accounts_contacts_documents_modify.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/AccountsContactsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/accounts/accounts_contacts_documents_file_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
   <!-- End Account Module -->
 
@@ -4418,7 +4539,7 @@
              resource="/troubletickets/troubletickets_documents_folders_move.jsp"
              layout="style"/>
     <forward name="PopupCloseOK"
-             resource="/troubletickets/troubletickets_documents_popclose.jsp"/>
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
   <action name="TroubleTicketsDocuments"
           class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsDocuments">
@@ -4451,7 +4572,7 @@
              resource="/troubletickets/troubletickets_documents_file_move.jsp"
              layout="style"/>
     <forward name="PopupCloseOK"
-             resource="/troubletickets/troubletickets_documents_popclose.jsp"/>
+             resource="/documents/documents_folders_popclose.jsp"/>
   </action>
   <action name="TroubleTicketTasks"
           class="org.aspcfs.modules.troubletickets.actions.TroubleTicketTasks">

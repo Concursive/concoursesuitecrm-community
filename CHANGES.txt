@@ -1,8 +1,8 @@
 ----------------------------------------------------------------------------
-Centric CRM 4.1 Preview
+Centric CRM 4.1 RC1
 Copyright (C) 2006 Dark Horse Ventures, LLC
 Change Log
-December 28, 2006
+January 29, 2007
 ----------------------------------------------------------------------------
 
 The following is a running list until release...
@@ -11,6 +11,9 @@ Latest information can be found in the Centric CRM 4.1 Community:
 http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
 
 New features:
+- Added Documents to Contacts module
+- Added Documents to Account Contacts module
+- Added file attachments to Communications messages
 - Accounts can now be imported without a contact
 - Additional Account search form fields
 - Added new fields to lead/contact/account: revenue, lat/longitude, business
@@ -39,6 +42,7 @@ Enhancements:
 - Upgraded TinyMCE HTML Editor to 2.0.6.1
 - Email user a password when a user is added, previously only when modified
 - Campaign delivery allows for specifying a date AND time
+- Added "Resolved By" field to Help Desk ticket export listing
 
 Developer changes:
 - JUnit added with tests (minimal)

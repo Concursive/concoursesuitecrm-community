@@ -468,6 +468,7 @@ public class MessageList extends ArrayList {
     }
     while (rs.next()) {
       Message thisMessage = new Message(rs);
+      thisMessage.buildAttachments(db);
       this.add(thisMessage);
     }
     rs.close();

@@ -25,7 +25,9 @@ import org.aspcfs.utils.DateUtils;
 import java.sql.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Represents an HTML message than can be emailed, faxed, or printed. Messages
@@ -56,6 +58,9 @@ public class Message extends GenericBean {
   private boolean disableNameValidation = false;
   private int inactiveCount = -1;
   private HashMap parseElements = new HashMap();
+  private MessageAttachmentList messageAttachments = new MessageAttachmentList();
+  private ArrayList attachmentList = new ArrayList();
+  private boolean buildAttachments = true;
 
 
   /**
@@ -160,6 +165,9 @@ public class Message extends GenericBean {
     if (id == -1) {
       throw new SQLException("Message not found.");
     }
+    if (buildAttachments) {
+      buildAttachments(db);
+    }
   }
 
 
@@ -262,6 +270,36 @@ public class Message extends GenericBean {
     return inactiveCount;
   }
 
+  
+  /**
+   * Sets the buildAttachments attribute of the Message object
+   *
+   * @param tmp The new buildAttachments value
+   */
+  public void setBuildAttachments(boolean tmp) {
+    this.buildAttachments = tmp;
+  }
+  
+  
+  /**
+   * Sets the buildAttachments attribute of the Message object
+   *
+   * @param tmp The new buildAttachments value
+   */
+  public void setBuildAttachments(String tmp) {
+    this.buildAttachments = Boolean.getBoolean(tmp);
+  }  
+
+
+  /**
+   * Gets the buildAttachments attribute of the Message object
+   *
+   * @return The buildAttachments value
+   */
+  public boolean getBuildAttachments() {
+    return buildAttachments;
+  }
+  
 
   /**
    * Gets the disableNameValidation attribute of the Message object
@@ -810,6 +848,85 @@ public class Message extends GenericBean {
 
 
   /**
+   *  Sets the attachmentList attribute of the Message object
+   *
+   * @param  attachmentList  The new attachmentList value
+   */
+  public void setAttachmentList(ArrayList attachmentList) {
+    this.attachmentList = attachmentList;
+  }
+
+
+  /**
+   *  Description of the Method Gets the attachmentList attribute of the Message
+   *  object
+   *
+   * @return    The attachmentList value
+   */
+  public ArrayList getAttachmentList() {
+    return attachmentList;
+  }
+
+
+  /**
+   *  Sets the typeList attribute of the Message object
+   *
+   * @param  criteriaString  The new typeList value
+   */
+  public void setAttachmentList(String[] criteriaString) {
+ 	  if (criteriaString != null) {
+		  messageAttachments = new MessageAttachmentList();
+		  for (int i = 0; i < Arrays.asList(criteriaString).size(); i++) {
+				int fileId = Integer.parseInt((String) Arrays.asList(criteriaString).get(i));
+				messageAttachments.addItem(fileId);
+			}
+    } else {
+    	messageAttachments = new MessageAttachmentList();
+    }
+  }
+
+
+  /**
+   *  Sets the attachmentsList attribute of the Message object
+   *
+   * @param  db                The new attachmentsList value
+   * @param  params            The new attachmentsList value
+   * @exception  SQLException  Description of the Exception
+   */
+  public void setAttachmentsList(Connection db, String[] params) throws SQLException {
+ 	  if (params != null) {
+		  messageAttachments = new MessageAttachmentList();
+		  for (int i = 0; i < Arrays.asList(params).size(); i++) {
+				int fileId = Integer.parseInt((String) Arrays.asList(params).get(i));
+				messageAttachments.addItem(fileId);
+			}
+    } else {
+    	messageAttachments = new MessageAttachmentList();
+    }
+  }
+
+
+  /**
+   *  Gets the MessageAttachments attribute of the Message object
+   *
+   * @return    The MessageAttachments value
+   */
+  public MessageAttachmentList getMessageAttachments() {
+    return messageAttachments;
+  }
+
+
+  /**
+   *  Sets the MessageAttachments attribute of the Message object
+   *
+   * @param  MessageAttachments  The new attachments value
+   */
+  public void setMessageAttachments(MessageAttachmentList attachments) {
+    this.messageAttachments = attachments;
+  }
+
+
+  /**
    * Description of the Method
    *
    * @param db Description of Parameter
@@ -963,6 +1080,8 @@ public class Message extends GenericBean {
         db.setAutoCommit(false);
       }
       st.executeUpdate("DELETE FROM contact_message WHERE message_id = " + this.getId());
+      MessageAttachmentList attachmentList = new MessageAttachmentList();
+      attachmentList.delete(db, Constants.MESSAGE_FILE_ATTACHMENTS, this.getId());
       st.executeUpdate("DELETE FROM " + DatabaseUtils.addQuotes(db, "message") + " WHERE id = " + this.getId());
       st.close();
       if (commit) {
@@ -1080,10 +1199,20 @@ public class Message extends GenericBean {
     if (!override && this.getModified() != null) {
       pst.setTimestamp(++i, modified);
     }
-
+  
     resultCount = pst.executeUpdate();
     pst.close();
-
+    MessageAttachmentList oldAttachmentList= new MessageAttachmentList();
+    oldAttachmentList.delete(db, Constants.MESSAGE_FILE_ATTACHMENTS,this.getId());
+    
+    Iterator ma = messageAttachments.iterator();
+    while (ma.hasNext()) {
+      MessageAttachment thisAttachment = (MessageAttachment) ma.next();
+      thisAttachment.setLinkModuleId(Constants.MESSAGE_FILE_ATTACHMENTS);
+      thisAttachment.setLinkItemId(this.getId());
+      thisAttachment.buildFileItems(db,true);
+      thisAttachment.insert(db);
+    }
     return resultCount;
   }
 
@@ -1132,5 +1261,16 @@ public class Message extends GenericBean {
     accessType = rs.getInt("access_type");
   }
 
-}
 
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   */
+  public void buildAttachments(Connection db) throws SQLException {
+	  messageAttachments = new MessageAttachmentList(db,Constants.MESSAGE_FILE_ATTACHMENTS,this.getId());
+	  attachmentList = new ArrayList();
+	}
+
+}

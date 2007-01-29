@@ -182,4 +182,18 @@ public class PermissionList extends Vector {
       return true;
     }
   }
+
+  public static int retrieveMaxLevel(Connection db, int tmpCategoryId) throws SQLException {
+    int maxLevel = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") AS max_level " +
+        "FROM permission " +
+				"WHERE category_id = ? ");
+    pst.setInt(1, tmpCategoryId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      maxLevel = rs.getInt("max_level");
+    }
+    return maxLevel;
+  }
 }

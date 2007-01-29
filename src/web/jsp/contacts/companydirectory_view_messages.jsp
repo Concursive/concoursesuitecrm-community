@@ -98,7 +98,10 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%"
        class="pagedList">
   <tr>
-    <th width="45%"><strong><dhv:label
+    <th width="2%">
+      <img src="images\icons\stock_insert_bookmark-16.gif">
+    </th>
+    <th width="43%"><strong><dhv:label
         name="accounts.accounts_calls_list.Subject">Subject</dhv:label></strong>
     </th>
     <th width="20%" nowrap>
@@ -127,6 +130,13 @@
         Campaign campaign = (Campaign) j.next();
   %>
   <tr class="row<%= rowid %>">
+    <td> 
+      <% if (campaign.getMessageAttachments().size() > 0) {%>
+        <img src="images\icons\stock_insert_bookmark-16.gif">
+      <% } else { %>
+        &nbsp;
+      <% } %>
+    </td>
     <td><a
         href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getSubject()) %></a>
     </td>
@@ -168,7 +178,7 @@
   <%}%>
   <%} else {%>
   <tr class="containerBody">
-    <td colspan="4">
+    <td colspan="5">
       <dhv:label
           name="accounts.accounts_contacts_messages_view.NoMessagesFound">No
         messages found.</dhv:label>
@@ -186,7 +196,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%"
        class="pagedList">
   <tr>
-    <th width="45%"><strong><dhv:label
+    <th width="43%"><strong><dhv:label
         name="accounts.accounts_calls_list.Subject">Subject</dhv:label></strong>
     </th>
     <th width="20%" nowrap>

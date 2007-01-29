@@ -82,6 +82,7 @@ public class TicketReport extends TicketList {
   protected boolean displayOrganization = true;
   protected boolean displayEstimatedResolutionDate = true;
   protected boolean displayResolutionDate = true;
+  protected boolean displayResolvedBy = true;
   protected boolean displayAssignmentDate = true;
   protected boolean displayComment = true;
   protected boolean displayContactName = true;
@@ -179,6 +180,16 @@ public class TicketReport extends TicketList {
   }
 
 
+  public void setDisplayResolvedBy(boolean displayResolvedBy) {
+    this.displayResolvedBy = displayResolvedBy;
+  }
+
+  public void setDisplayResolvedBy(String tmp) {
+    this.displayResolvedBy = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
   /**
    * Sets the displayAssignmentDate attribute of the TicketReport object
    *
@@ -269,6 +280,10 @@ public class TicketReport extends TicketList {
     return displayResolutionDate;
   }
 
+
+  public boolean getDisplayResolvedBy() {
+    return displayResolvedBy;
+  }
 
   /**
    * Gets the displayAssignmentDate attribute of the TicketReport object
@@ -963,6 +978,9 @@ public class TicketReport extends TicketList {
     if (!(criteria.contains("resolutionDate"))) {
       displayResolutionDate = false;
     }
+    if (!(criteria.contains("resolvedBy"))) {
+      displayResolvedBy = false;
+    }
     if (!(criteria.contains("organization"))) {
       displayOrganization = false;
     }
@@ -1102,6 +1120,9 @@ public class TicketReport extends TicketList {
       if (param.equals("resolutionDate")) {
         rep.addColumn("Resolution Date");
       }
+      if (param.equals("resolvedBy")) {
+        rep.addColumn("Resolved By");
+      }
       if (param.equals("organization")) {
         rep.addColumn("Organization");
       }
@@ -1189,6 +1210,9 @@ public class TicketReport extends TicketList {
       }
       if (param.equals("resolutionDate")) {
         passedReport.addColumn("Resolution Date");
+      }
+      if (param.equals("resolvedBy")) {
+        rep.addColumn("Resolved By");
       }
       if (param.equals("organization")) {
         passedReport.addColumn("Organization");
@@ -1332,6 +1356,15 @@ public class TicketReport extends TicketList {
             thisRow.addCell(
                 DateUtils.getDateAsString(
                     thisTic.getResolutionDate(), context));
+          }
+          if (param.equals("resolvedBy")) {
+            if (thisTic.getResolvedBy() > 0) {
+              thisRow.addCell(
+                  UserList.retrieveUserContact(
+                      context, thisTic.getResolvedBy()).getNameLastFirst());
+            } else {
+              thisRow.addCell(" ");
+            }
           }
           if (param.equals("organization")) {
             thisRow.addCell(thisTic.getCompanyName());

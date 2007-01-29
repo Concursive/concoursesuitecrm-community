@@ -2292,6 +2292,7 @@ public final class ExternalContacts extends CFSModule {
     String contactId = context.getRequest().getParameter("contactId");
     String bcc = context.getRequest().getParameter("bcc");
     String cc = context.getRequest().getParameter("cc");
+    String[] attachments = context.getRequest().getParameterValues("selectedList");
     Message thisMessage = null;
     Connection db = null;
     try {
@@ -2403,6 +2404,7 @@ public final class ExternalContacts extends CFSModule {
         actionCampaign.setModifiedBy(this.getUserId(context));
         actionCampaign.addRecipient(db, Integer.parseInt(contactId));
         actionCampaign.setMessage(thisMessage);
+        actionCampaign.setAttachmentList(context.getRequest().getParameterValues("selectedList"));
         if (bcc != null && !"".equals(bcc)) {
           actionCampaign.setBcc(bcc);
           context.getRequest().setAttribute("bcc", bcc);

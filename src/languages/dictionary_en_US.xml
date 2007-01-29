@@ -29,6 +29,9 @@
     <param name="global.label.allRightsReserved">
       <value><![CDATA[All rights reserved.]]></value>
     </param>
+	<param name="global.button.Attach">
+      <value><![CDATA[Attach]]></value>
+    </param>
     <param name="global.button.Help">
       <value><![CDATA[Help]]></value>
     </param>
@@ -85,6 +88,12 @@
     </param>
     <param name="accounts.search.includeContactsInSearchResults">
       <value><![CDATA[Include contacts in search results]]></value>
+    </param>
+    <param name="contacts.documents">
+      <value><![CDATA[Documents]]></value>
+    </param>
+    <param name="accounts.contacts.documents">
+      <value><![CDATA[Contact Documents]]></value>
     </param>
     <param name="accounts.company.colon">
       <value><![CDATA[Company:]]></value>
@@ -1738,6 +1747,9 @@
     </param>
     <param name="communications.campaign.EachCampaignRequiresMessage">
       <value><![CDATA[Each campaign requires a message that will be sent to selected groups.  Write the message once, then use it in any number of future campaigns. Modified messages will only affect future campaigns.]]></value>
+    </param>
+    <param name="communications.messageAttachments.none">
+      <value><![CDATA[None]]></value>
     </param>
     <param name="accounts.radio.details">
       <value><![CDATA[View this account's details]]></value>
@@ -7691,6 +7703,24 @@ reflect those changes.]]></value>
     <param name="campaign.surveySubmitted">
       <value><![CDATA[Survey Submitted]]></value>
     </param>
+	<param name="message.selected">
+      <value><![CDATA[Selected]]></value>
+    </param>
+	<param name="message.file">
+      <value><![CDATA[File]]></value>
+    </param>
+	<param name="message.type">
+      <value><![CDATA[Type]]></value>
+    </param>
+	<param name="message.size">
+      <value><![CDATA[Size]]></value>
+    </param>
+	<param name="message.version">
+      <value><![CDATA[Version]]></value>
+    </param>
+	<param name="message.dateModified">
+      <value><![CDATA[Date Modified]]></value>
+    </param>
     <param name="contact.call.previousActivityDetails">
       <value><![CDATA[Previous Activity Details]]></value>
     </param>
@@ -7888,6 +7918,9 @@ reflect those changes.]]></value>
     </param>
     <param name="documents.documentStoreDoesNotExist">
       <value><![CDATA[This document store does not belong to you, or does not exist!]]></value>
+    </param>
+	<param name="documents.DocumentStoreList">
+      <value><![CDATA[Document Store List]]></value>
     </param>
     <param name="documents.openDocumentStores">
       <value><![CDATA[Open Document Stores]]></value>

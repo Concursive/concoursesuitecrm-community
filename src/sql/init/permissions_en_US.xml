@@ -67,6 +67,7 @@
       <permission name="contacts-external_contacts-folders" attributes="vaed" description="Folders"/>
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Activities"/>
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
+      <permission name="contacts-external_contacts-documents" attributes="vaed" description="Documents"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
       <permission name="contacts-external_contacts-imports" attributes="vaed" description="Imports"/>
       <permission name="contacts-external-contact-updater" attributes="v---" description="Request contact information update"/>
@@ -118,6 +119,7 @@
       <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Contact Activities"/>
       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" description="Completed Activities"/>
       <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="Contact Messages"/>
+      <permission name="accounts-accounts-contacts-documents" attributes="vaed" description="Contact Documents"/>
       <permission name="accounts-accounts-contacts-move" attributes="v---" description="Move contacts to other accounts"/>
       <permission name="accounts-accounts-contacts-history" attributes="vaed" description="Contact History"/>
       <permission name="accounts-accounts-opportunities" attributes="vaed" description="Opportunities"/>
@@ -343,6 +345,7 @@
       <permission name="contacts-external_contacts-folders" attributes="vaed"/>
       <permission name="contacts-external_contacts-calls" attributes="vaed"/>
       <permission name="contacts-external_contacts-messages" attributes="v---"/>
+      <permission name="contacts-external_contacts-documents" attributes="vaed"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
       <permission name="contacts-external_contacts-history" attributes="vaed"/>
@@ -363,6 +366,7 @@
       <permission name="accounts-accounts-contacts-calls" attributes="vaed" />
       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" />
       <permission name="accounts-accounts-contacts-messages" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-documents" attributes="vaed"/>
       <permission name="accounts-accounts-contacts-move" attributes="v---" />
       <permission name="accounts-accounts-contacts-history" attributes="vaed" />
       <permission name="accounts-accounts-opportunities" attributes="vaed" />

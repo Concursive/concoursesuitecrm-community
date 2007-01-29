@@ -17,9 +17,11 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.communications.base.Campaign" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,com.zeroio.iteam.base.*,org.aspcfs.modules.base.Constants,org.aspcfs.modules.documents.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -79,18 +81,16 @@
         </td>
       </tr>
     </dhv:evaluate>
+    <dhv:evaluate if ="<%= hasText(Campaign.getMessageName()) %>">
     <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="accounts.accounts_contacts_messages_details.MessageName">Message Name</dhv:label>
       </td>
       <td>
-        <% if(Campaign.getMessageName() != null && !"".equals(Campaign.getMessageName())) {%>
           <%= toHtml(Campaign.getMessageName()) %>
-        <%} else {%>
-          <dhv:label name="account.noNameAvailable.quotes">"No name available"</dhv:label>
-        <%}%>
       </td>
     </tr>
+    </dhv:evaluate>
     <tr class="containerBody">
       <td class="formLabel">
         <dhv:label name="accounts.accounts_contacts_messages_details.MessageSubject">Message Subject</dhv:label>
@@ -106,6 +106,37 @@
       <td>
         <%= (Campaign.getMessage()) %>&nbsp;
       </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" valign="top">
+        <dhv:label name="accounts.accounts_contacts_messages_details.Attachments">Attachments</dhv:label>
+      </td>
+        <td>
+          <%
+          if (Campaign.getMessageAttachments().size() > 0) { 
+          boolean hasPermissionDownload = false; 
+          Iterator it = Campaign.getMessageAttachments().iterator();
+          while (it.hasNext()) {
+            MessageAttachment thisAttachment = (MessageAttachment)it.next();
+            FileItem thisFile= thisAttachment.getFileItem();%>
+            <dhv:evaluate if="<%= thisFile!=null %>">
+            <%hasPermissionDownload = false;%>
+              <%@ include file="../communications/message_attachment_download_permissions_include.jsp"%>  
+            </dhv:evaluate>       	
+            <dhv:evaluate if="<%= thisAttachment.getFileExists() && hasPermissionDownload %>">
+              <a href="DocumentSelector.do?command=Download&moduleId=<%=thisFile.getLinkModuleId() %>&linkItemId=<%= thisFile.getLinkItemId() %>&fid=<%= thisAttachment.getFileItemId() %>&ver=<%= thisAttachment.getVersion() %><%= addLinkParams(request, "popup|popupType|actionId|actionplan") %>">
+              <%= toHtml(thisAttachment.getFileName()+" ("+thisAttachment.getRelativeSize()+User.getSystemStatus(getServletConfig()).getLabel("admin.oneThousand.abbreviation", "k")+")") %> 
+              </a>  
+            </dhv:evaluate>  
+            <dhv:evaluate if="<%= !thisAttachment.getFileExists() || !hasPermissionDownload %>">
+              <%= toHtml(thisAttachment.getFileName()+" ("+thisAttachment.getRelativeSize()+User.getSystemStatus(getServletConfig()).getLabel("admin.oneThousand.abbreviation", "k")+")") %> 
+            </dhv:evaluate>
+          <% if (it.hasNext()) { %>
+          <br>
+          <%}}} else { %>
+          <dhv:label name="communications.messageAttachments.none">None</dhv:label>
+        <% } %>
+        </td>
     </tr>
   </table>
 </dhv:container>

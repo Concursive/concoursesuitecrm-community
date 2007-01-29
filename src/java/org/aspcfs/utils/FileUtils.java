@@ -380,5 +380,65 @@ public class FileUtils {
     // Bytes
     return (formatter.format(size) + " bytes");
   }
+
+
+  /**
+   *  Concats the directory and file names
+   *
+   * @param  dir                           Description of the Parameter
+   * @param  fileName                      Description of the Parameter
+   * @return                               The fileName value
+   * @exception  IllegalArgumentException  Description of the Exception
+   */
+  public static String getFileName(String dir, String fileName)
+       throws IllegalArgumentException {
+    String path = null;
+    if (dir == null || fileName == null) {
+      throw new IllegalArgumentException("dir or fileName is null");
+    }
+    int index = fileName.lastIndexOf('/');
+    String name = null;
+    if (index >= 0) {
+      name = fileName.substring(index + 1);
+    } else {
+      name = fileName;
+    }
+    index = name.lastIndexOf('\\');
+    if (index >= 0) {
+      fileName = name.substring(index + 1);
+    }
+    path = dir + File.separator + fileName;
+    if (File.separatorChar == '/') {
+      return path.replace('\\', File.separatorChar);
+    } else {
+      return path.replace('/', File.separatorChar);
+    }
+  }
+
+
+  /**
+   *  Gets the fileName attribute of the FileUtils class
+   *
+   * @param  fileName                      Description of the Parameter
+   * @return                               The fileName value
+   * @exception  IllegalArgumentException  Description of the Exception
+   */
+  public static String getFileName(String fileName) throws IllegalArgumentException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("dir or fileName is null");
+    }
+    int index = fileName.lastIndexOf('/');
+    String name = null;
+    if (index >= 0) {
+      name = fileName.substring(index + 1);
+    } else {
+      name = fileName;
+    }
+    index = name.lastIndexOf('\\');
+    if (index >= 0) {
+      fileName = name.substring(index + 1);
+    }
+    return fileName;
+  }
 }
 

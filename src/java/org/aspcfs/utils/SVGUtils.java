@@ -1457,8 +1457,7 @@ public class SVGUtils {
    * @return The fileName value
    */
   public static String getFileName(int id) {
-    Date d = new java.util.Date();
-    return (DateUtils.getFilename(new java.sql.Timestamp(d.getTime())) + "-" + id);
+    return (DateUtils.getFilename() + "-" + id);
   }
 
 

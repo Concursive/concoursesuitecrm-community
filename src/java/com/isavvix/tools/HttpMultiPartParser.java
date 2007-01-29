@@ -31,6 +31,9 @@
  */
 package com.isavvix.tools;
 
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.FileUtils;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -235,66 +238,6 @@ public class HttpMultiPartParser {
     }
     b = null;
     return line;
-  }
-
-
-  /**
-   * Concats the directory and file names.
-   *
-   * @param dir      Description of Parameter
-   * @param fileName Description of Parameter
-   * @return The FileName value
-   * @throws IllegalArgumentException Description of Exception
-   */
-  private String getFileName(String dir, String fileName)
-      throws IllegalArgumentException {
-    String path = null;
-    if (dir == null || fileName == null) {
-      throw new IllegalArgumentException("dir or fileName is null");
-    }
-    int index = fileName.lastIndexOf('/');
-    String name = null;
-    if (index >= 0) {
-      name = fileName.substring(index + 1);
-    } else {
-      name = fileName;
-    }
-    index = name.lastIndexOf('\\');
-    if (index >= 0) {
-      fileName = name.substring(index + 1);
-    }
-    path = dir + File.separator + fileName;
-    if (File.separatorChar == '/') {
-      return path.replace('\\', File.separatorChar);
-    } else {
-      return path.replace('/', File.separatorChar);
-    }
-  }
-
-
-  /**
-   * Gets the fileName attribute of the HttpMultiPartParser object
-   *
-   * @param fileName Description of the Parameter
-   * @return The fileName value
-   * @throws IllegalArgumentException Description of the Exception
-   */
-  private String getFileName(String fileName) throws IllegalArgumentException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("dir or fileName is null");
-    }
-    int index = fileName.lastIndexOf('/');
-    String name = null;
-    if (index >= 0) {
-      name = fileName.substring(index + 1);
-    } else {
-      name = fileName;
-    }
-    index = name.lastIndexOf('\\');
-    if (index >= 0) {
-      fileName = name.substring(index + 1);
-    }
-    return fileName;
   }
 
 
@@ -504,8 +447,7 @@ public class HttpMultiPartParser {
           f.mkdirs();
           //If specified, store files using a unique name, based on date
           if (useUniqueName) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            filenameToUse = formatter.format(new java.util.Date());
+            filenameToUse = DateUtils.getFilename();
             if (fileCount > 1) {
               filenameToUse += String.valueOf(fileCount);
             }
@@ -513,7 +455,7 @@ public class HttpMultiPartParser {
             filenameToUse = fileInfo.getClientFileName();
           }
           fileInfo.setClientFileName(
-              getFileName(fileInfo.getClientFileName()));
+              FileUtils.getFileName(fileInfo.getClientFileName()));
           //Append a version id for record keeping and uniqueness, prevents
           //multiple uploads from overwriting each other
           filenameToUse +=
@@ -521,7 +463,7 @@ public class HttpMultiPartParser {
                   (extensionId == -1 ? "" : "-" + extensionId);
           //Create the file to a file
           os = new FileOutputStream(
-              path = getFileName(tmpPath, filenameToUse));
+              path = FileUtils.getFileName(tmpPath, filenameToUse));
         } else {
           //Store the file in memory
           os = new ByteArrayOutputStream(ONE_MB);

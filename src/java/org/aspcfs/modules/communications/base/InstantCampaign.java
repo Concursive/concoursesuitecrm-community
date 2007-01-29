@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.communications.base;
 
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.utils.DatabaseUtils;
@@ -23,6 +24,7 @@ import org.aspcfs.utils.Template;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -37,8 +39,28 @@ import java.util.Iterator;
 public class InstantCampaign extends Campaign {
   private Message instantMessage = null;
   private ContactList recipients = null;
+  private MessageAttachmentList messageAttachments = null;
+  
+  public MessageAttachmentList getAttachmentList() { 
+    return messageAttachments; 
+  }
+  
+  public void setAttachmentList(MessageAttachmentList tmp) { 
+    this.messageAttachments = tmp; 
+  }
 
-
+  public void setAttachmentList(String[] params) {
+ 	  if (params != null) {
+		  messageAttachments = new MessageAttachmentList();
+		  for (int i = 0; i < Arrays.asList(params).size(); i++) {
+				int fileId = Integer.parseInt((String) Arrays.asList(params).get(i));
+				messageAttachments.addItem(fileId);
+			}
+    } else {
+    	messageAttachments = new MessageAttachmentList();
+    }
+  }
+  
   /**
    * Sets the instantMessage attribute of the InstantCampaign object
    *
@@ -122,7 +144,15 @@ public class InstantCampaign extends Campaign {
       this.setActiveDate(today);
       this.setType(Campaign.INSTANT);
       this.insert(db);
-
+      
+      Iterator ma = messageAttachments.iterator();
+      while (ma.hasNext()) {
+        MessageAttachment thisAttachment = (MessageAttachment) ma.next();
+        thisAttachment.setLinkModuleId(Constants.COMMUNICATIONS_MESSAGE_FILE_ATTACHMENTS);
+        thisAttachment.setLinkItemId(this.getId());
+        thisAttachment.buildFileItems(db,true);
+        thisAttachment.insert(db);
+      }
       //activate it
       //See if the campaign is not already active
       pst = db.prepareStatement(

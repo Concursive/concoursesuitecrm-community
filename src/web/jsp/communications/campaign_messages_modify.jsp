@@ -49,7 +49,7 @@
 <dhv:evaluate if="<%= clientType.showApplet() %>">
     document.addMessage.messageText.value = document.Kafenio.getDocumentBody();
 </dhv:evaluate>
-    return true;
+    return selectAllOptions(form.selectedList);
   }
 </script>
 <form name="addMessage" action="CampaignManagerMessage.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">

@@ -356,10 +356,9 @@ public class DateUtils {
   /**
    * Returns a string that is suitable for a filename based on a timestamp
    *
-   * @param fileDate Description of the Parameter
    * @return The filename value
    */
-  public static String getFilename(java.sql.Timestamp fileDate) {
+  public static String getFilename() {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
     return formatter.format(new java.util.Date());
   }

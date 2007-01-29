@@ -185,7 +185,12 @@ public class PermissionCategory extends GenericBean {
   public final static int PERMISSION_CAT_ADMIN = 9;
   public final static int MULTIPLE_CATEGORY_ACTIONPLAN = 907051127;
 
-
+  //Communications
+  public final static int PERMISSION_CAT_COMMUNICATIONS = 6;
+  
+  //Projects
+  public final static int PERMISSION_CAT_PROJECTS = 714200712;
+  
   /**
    * Constructor for the PermissionCategory object
    */
