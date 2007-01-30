@@ -432,7 +432,6 @@ public final class Users extends CFSModule {
           }
           return (executeCommandInsertUserForm(context));
         }
-
         thisUser.setEnteredBy(getUserId(context));
         thisUser.setModifiedBy(getUserId(context));
         thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
@@ -447,15 +446,17 @@ public final class Users extends CFSModule {
           addRecentItem(context, insertedUser);
           context.getRequest().setAttribute("UserRecord", insertedUser);
           updateSystemHierarchyCheck(db, context);
-          String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(context) + ".xml";
-          if (!FileUtils.fileExists(templateFile)) {
-            templateFile = getDbNamePath(context) + "templates_en_US.xml";
+          if (generatePassword != null && "true".equals(generatePassword)) {
+            String templateFile = getDbNamePath(context) + "templates_" + getUserLanguage(context) + ".xml";
+            if (!FileUtils.fileExists(templateFile)) {
+              templateFile = getDbNamePath(context) + "templates_en_US.xml";
+            }
+            User modifiedByUser = new User();
+            modifiedByUser.setBuildContact(true);
+            modifiedByUser.setBuildContactDetails(true);
+            modifiedByUser.buildRecord(db, this.getUserId(context));
+            sendEmail(context, insertedUser, modifiedByUser, templateFile, thisUser.getPassword1());
           }
-          User modifiedByUser = new User();
-          modifiedByUser.setBuildContact(true);
-          modifiedByUser.setBuildContactDetails(true);
-          modifiedByUser.buildRecord(db, this.getUserId(context));
-          sendEmail(context, insertedUser, modifiedByUser, templateFile, thisUser.getPassword1());
         } else {
           if (generatePassword != null && "true".equals(generatePassword)) {
             context.getRequest().setAttribute("generatePassword", generatePassword);
