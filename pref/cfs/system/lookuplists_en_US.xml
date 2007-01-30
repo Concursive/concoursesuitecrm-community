@@ -1122,6 +1122,12 @@
     <lookup table="lookup_payment_gateway">
       <attribute name="constant_id" type="integer"/>
       <record constant_id="8110621" enabled="true" level="10"><![CDATA[Authorize.net]]></record>
-      <record constant_id="8110622" enabled="true" level="10"><![CDATA[PPIPaymover]]></record>
+      <record constant_id="8110622" enabled="true" level="20"><![CDATA[PPIPaymover]]></record>
+    </lookup>
+    <lookup table="lookup_report_type">
+      <attribute name="constant" type="integer"/>
+      <record constant="1" enabled="true" default_item="true" level="10"><![CDATA[PDF]]></record>
+      <record constant="2" enabled="true" default_item="false" level="20"><![CDATA[CSV]]></record>
+      <record constant="3" enabled="true" default_item="false" level="30"><![CDATA[HTML]]></record>
     </lookup>
 </lookupLists>

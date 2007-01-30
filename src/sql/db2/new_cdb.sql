@@ -917,6 +917,18 @@ CREATE TABLE report_criteria_parameter(
     PRIMARY KEY(parameter_id)
 );
 
+CREATE SEQUENCE lookup_report_type_code_seq AS DECIMAL(27,0);
+CREATE TABLE lookup_report_type (
+  code INTEGER NOT NULL PRIMARY KEY,
+  description VARGRAPHIC(300) NOT NULL,
+  default_item CHAR(1) DEFAULT '0',
+  "level" INT DEFAULT 0,
+  enabled CHAR(1) DEFAULT '1',
+  constant INT DEFAULT 1 NOT NULL,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE SEQUENCE report_queue_queue_id_seq AS DECIMAL(27,0);
 CREATE TABLE report_queue(
     queue_id INTEGER NOT NULL,
@@ -928,6 +940,8 @@ CREATE TABLE report_queue(
     filename VARGRAPHIC(256),
     filesize INTEGER DEFAULT -1,
     enabled CHAR(1) DEFAULT '1',
+    output_type INT REFERENCES lookup_report_type(code),
+    email CHAR(1) DEFAULT '0',
     PRIMARY KEY(queue_id)
 );
 

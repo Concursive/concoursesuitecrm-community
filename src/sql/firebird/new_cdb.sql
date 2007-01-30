@@ -936,6 +936,17 @@ CREATE TABLE report_criteria_parameter (
   PRIMARY KEY (PARAMETER_ID)
 );
 
+CREATE GENERATOR lookup_report_type_code_seq;
+CREATE TABLE lookup_report_type (
+  code INTEGER NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item CHAR(1) DEFAULT 'N',
+  "level" INT DEFAULT 0,
+  enabled CHAR(1) DEFAULT 'Y',
+  constant INT DEFAULT 1 NOT NULL,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
 
 CREATE GENERATOR report_queue_queue_id_seq;
 CREATE TABLE report_queue (
@@ -948,6 +959,8 @@ CREATE TABLE report_queue (
   filename VARCHAR(256),
   filesize INTEGER DEFAULT -1,
   enabled CHAR(1) DEFAULT 'Y',
+  output_type INT REFERENCES lookup_report_type(code),
+  email CHAR(1) DEFAULT 'N',
   PRIMARY KEY (QUEUE_ID)
 );
 

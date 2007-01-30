@@ -26,6 +26,7 @@
 <jsp:useBean id="criteria" class="org.aspcfs.modules.reports.base.Criteria" scope="request"/>
 <jsp:useBean id="parameterList" class="org.aspcfs.modules.reports.base.ParameterList" scope="request"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
+<jsp:useBean id="reportTypeList" class="org.aspcfs.modules.reports.base.ReportTypeList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -116,6 +117,39 @@
     <td><input type="text" name="criteria_subject" size="35" value="<%= toHtmlValue(criteria.getSubject()) %>"/></td>
   </tr>
 </table>
+</dhv:evaluate>
+<br>
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><dhv:label name="reports.reportTypeAndEmailPreference">Report Type and Email Preference</dhv:label></strong>
+    </th>
+  </tr>
+  <tr>
+    <td class="formLabel"><dhv:label name="reports.reportType">Report Type</dhv:label></td>
+    <td>
+      <% Iterator it = reportTypeList.iterator(); 		  	
+         while (it.hasNext()) {
+           ReportType thisElement = (ReportType) it.next();%>
+           <dhv:evaluate if="<%= thisElement.getEnabled() %>"> 
+             <dhv:evaluate if="<%= thisElement.getDefaultItem() %>">
+               <input type="radio" name="reportType" value=<%=thisElement.getCode()%> checked><%=toHtml(thisElement.getDescription())%> 
+             </dhv:evaluate>
+             <dhv:evaluate if="<%= !thisElement.getDefaultItem() %>">
+               <input type="radio" name="reportType" value=<%=thisElement.getCode()%>><%=toHtml(thisElement.getDescription())%> 
+             </dhv:evaluate>           
+           </dhv:evaluate>     
+      <%}%>
+    </td>
+  </tr>
+  <dhv:evaluate if="<%="true".equals(request.getAttribute("hasEmail")) %>">
+  <tr>
+    <td class="formLabel"><dhv:label name="reports.emailPreference">Email Preference</dhv:label></td>
+    <td><input type="checkbox" name="email" value="true"/>&nbsp;<dhv:label name="reports.emailWhenProcessed">(email report when it is processed)</dhv:label> </td>
+  </tr>
+  </dhv:evaluate>
+</table>
+<dhv:evaluate if="<%= count > 0 %>">
 <%-- No previously saved criteria --%>
 <dhv:evaluate if='<%= "-1".equals(request.getAttribute("criteriaId")) %>'>
 <input type="checkbox" name="save" value="true"> <dhv:label name="reports.saveCriteria.text">Save this criteria for generating future reports</dhv:label><br />

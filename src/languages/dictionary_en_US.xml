@@ -8604,6 +8604,30 @@ were available on a network file share.  Create a shared volume or folder to the
     <param name="reports.downloadAsPDF">
       <value><![CDATA[Download PDF]]></value>
     </param>
+    <param name="reports.viewAsHTML">
+      <value><![CDATA[View as HTML]]></value>
+    </param>
+    <param name="reports.downloadAsHTML">
+      <value><![CDATA[Download HTML]]></value>
+    </param>
+    <param name="reports.viewAsCSV">
+      <value><![CDATA[View as CSV]]></value>
+    </param>
+    <param name="reports.downloadAsCSV">
+      <value><![CDATA[Download CSV]]></value>
+    </param>
+    <param name="reports.type.PDF">
+      <value><![CDATA[PDF]]></value>
+    </param>
+    <param name="reports.emailWhenProcessed">
+      <value><![CDATA[(email report when it is processed)]]></value>
+    </param>		
+    <param name="reports.type.CSV">
+      <value><![CDATA[CSV]]></value>
+    </param>
+    <param name="reports.type.HTML">
+      <value><![CDATA[HTML]]></value>
+    </param>
     <param name="reports.cancelReport">
       <value><![CDATA[Cancel Report]]></value>
     </param>
@@ -12043,6 +12067,15 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="reports.actionplan.activity.title">
       <value><![CDATA[Action Plan Activity]]></value>
+    </param>
+	<param name="reports.reportTypeAndEmailPreference">
+      <value><![CDATA[Report Type and Email Preference]]></value>
+    </param>
+	<param name="reports.reportType">
+      <value><![CDATA[Report Type]]></value>
+    </param>
+	<param name="reports.emailPreference">
+      <value><![CDATA[Email Preference]]></value>
     </param>
     <param name="reports.actionplan.summary.title">
       <value><![CDATA[Action Plan Summary]]></value>

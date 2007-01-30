@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------
 Centric CRM 4.1 RC1
-Copyright (C) 2006 Dark Horse Ventures, LLC
+Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log
 January 29, 2007
 ----------------------------------------------------------------------------
@@ -14,6 +14,7 @@ New features:
 - Added Documents to Contacts module
 - Added Documents to Account Contacts module
 - Added file attachments to Communications messages
+- Added creating reports as HTML or CSV, in addition to PDF, and option to email
 - Accounts can now be imported without a contact
 - Additional Account search form fields
 - Added new fields to lead/contact/account: revenue, lat/longitude, business

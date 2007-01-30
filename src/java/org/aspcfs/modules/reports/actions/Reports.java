@@ -22,6 +22,7 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.PermissionCategoryList;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.reports.base.*;
 import org.aspcfs.utils.DatabaseUtils;
@@ -190,6 +191,11 @@ public final class Reports extends CFSModule {
       criteriaList.setReportId(report.getId());
       criteriaList.setOwner(getUserId(context));
       criteriaList.buildList(db);
+      
+      ReportTypeList reportTypeList = new ReportTypeList();
+      reportTypeList.buildList(db);
+      
+      context.getRequest().setAttribute("reportTypeList", reportTypeList);
       context.getRequest().setAttribute("criteriaList", criteriaList);
       if (criteriaList.size() == 0) {
         return ("CriteriaListSKIP");
@@ -299,6 +305,15 @@ public final class Reports extends CFSModule {
       context.getRequest().setAttribute("parameterList", params);
       context.getRequest().setAttribute(
           "systemStatus", this.getSystemStatus(context));
+      context.getRequest().setAttribute("hasEmail", "false");
+			//Determine if user has email
+			int contactId = this.getUser(context, this.getUserId(context)).getContactId();
+			Contact contact = new Contact();
+			contact.setBuildDetails(true);
+			contact.queryRecord(db, contactId);
+			if (contact.getEmailAddressList().size() > 0){
+				context.getRequest().setAttribute("hasEmail", "true");
+			}
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -435,9 +450,18 @@ public final class Reports extends CFSModule {
             }
           }
         }
+        String reportTypeStr = context.getRequest().getParameter("reportType");
+        int reportType = ReportQueue.REPORT_TYPE_PDF;
+        if (reportTypeStr!=null){
+        	reportType=Integer.parseInt(reportTypeStr);
+        }
+        boolean sendEmail = false;
+        if ("true".equals(context.getRequest().getParameter("email"))) {
+        	sendEmail = true;
+        }
         //Insert the report into the queue
         if (isValid || !thisCriteria.getSave() || !thisCriteria.getOverwrite()) {
-          int position = ReportQueue.insert(db, thisCriteria);
+          int position = ReportQueue.insert(db, thisCriteria, reportType, sendEmail);
           context.getRequest().setAttribute(
               "queuePosition", String.valueOf(position));
           executeJob(context, "reportRunner");
@@ -494,7 +518,18 @@ public final class Reports extends CFSModule {
         download.setFullPath(
             this.getPath(context, "reports-queue") + getDatePath(
                 queue.getEntered()) + queue.getFilename());
-        download.setDisplayName(queue.getReport().getFilename() + ".pdf");
+        
+        switch (queue.getOutputTypeConstant()) {
+          case ReportQueue.REPORT_TYPE_PDF: 
+            download.setDisplayName(queue.getReport().getFilename() + ".pdf");       
+            break;
+          case ReportQueue.REPORT_TYPE_HTML: 
+            download.setDisplayName(queue.getReport().getFilename() + ".html");
+            break;
+          case ReportQueue.REPORT_TYPE_CSV: 
+            download.setDisplayName(queue.getReport().getFilename() + ".csv");
+            break;
+        }
         download.streamContent(context);
       } catch (Exception e) {
         e.printStackTrace(System.out);
@@ -531,12 +566,26 @@ public final class Reports extends CFSModule {
     if (queue != null) {
       try {
         FileDownload download = new FileDownload();
-        download.setFullPath(
-            this.getPath(context, "reports-queue") + getDatePath(
-                queue.getEntered()) + queue.getFilename());
-        download.setDisplayName(
-            queue.getReport().getFilename().substring(
-                0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
+				download.setFullPath(
+						this.getPath(context, "reports-queue") + getDatePath(
+								queue.getEntered()) + queue.getFilename());
+        switch (queue.getOutputTypeConstant()) {
+          case ReportQueue.REPORT_TYPE_PDF:
+              download.setDisplayName(
+                    queue.getReport().getFilename().substring(
+                        0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
+          break;
+          case ReportQueue.REPORT_TYPE_HTML:
+              download.setDisplayName(
+                    queue.getReport().getFilename().substring(
+                        0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".html");
+           break;
+          case ReportQueue.REPORT_TYPE_CSV:
+              download.setDisplayName(
+                    queue.getReport().getFilename().substring(
+                        0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".csv");
+           break;
+        }
         download.sendFile(context);
       } catch (Exception e) {
         e.printStackTrace(System.out);

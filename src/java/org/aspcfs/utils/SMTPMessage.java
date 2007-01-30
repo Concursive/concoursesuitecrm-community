@@ -267,7 +267,20 @@ public class SMTPMessage {
     }
     attachments.add(tmp);
   }
-
+  
+  /**
+   * Adds a feature to the FileAttachment attribute of the SMTPMessage object
+   *
+   */
+  public void addFileAttachment(String fullFilePath, String clientFileName) {
+    if (attachments == null) {
+      attachments = new FileItemList();
+    }
+    FileItem fileItem = new FileItem();
+    fileItem.setFilename(fullFilePath);
+    fileItem.setClientFilename(clientFileName);
+    attachments.add(fileItem);
+  }
 
   /**
    * Adds a feature to the ByteArrayAttachment attribute of the SMTPMessage

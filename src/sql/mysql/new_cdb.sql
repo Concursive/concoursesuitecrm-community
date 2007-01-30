@@ -808,6 +808,17 @@ CREATE TABLE report_criteria_parameter (
   value TEXT
 );
 
+CREATE TABLE lookup_report_type (
+  code INT AUTO_INCREMENT PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  constant INTEGER DEFAULT 1 NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
+);
+
 CREATE TABLE report_queue (
   queue_id INT AUTO_INCREMENT PRIMARY KEY,
   report_id INTEGER NOT NULL REFERENCES report(report_id),
@@ -817,7 +828,9 @@ CREATE TABLE report_queue (
   status INT NOT NULL DEFAULT 0,
   filename VARCHAR(256),
   filesize INT DEFAULT -1,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  output_type INTEGER REFERENCES lookup_report_type(code),
+  email BOOLEAN DEFAULT false
 );
 
 CREATE TABLE report_queue_criteria (

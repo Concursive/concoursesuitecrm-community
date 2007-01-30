@@ -898,7 +898,7 @@ CREATE TABLE report (
 
 CREATE SEQUENCE report_criter__criteria_id_seq;
 CREATE TABLE report_criteria (
-  criteria_id INTEGER  NOT NULL,
+  criteria_id INTEGER NOT NULL,
   report_id INTEGER NOT NULL REFERENCES report(report_id),
   owner INTEGER NOT NULL REFERENCES "access"(user_id),
   subject NVARCHAR2(512) NOT NULL,
@@ -913,11 +913,23 @@ CREATE TABLE report_criteria (
 -- Old Name: report_criteria_parameter_parameter_id_seq;
 CREATE SEQUENCE report_criter_parameter_id_seq;
 CREATE TABLE report_criteria_parameter (
-  parameter_id INTEGER  NOT NULL,
+  parameter_id INTEGER NOT NULL,
   criteria_id INTEGER NOT NULL REFERENCES report_criteria(criteria_id),
   "parameter" NVARCHAR2(255) NOT NULL,
   "value" CLOB,
   PRIMARY KEY (PARAMETER_ID)
+);
+
+CREATE SEQUENCE lookup_report_type_code_seq;
+CREATE TABLE lookup_report_type (
+  code INT NOT NULL PRIMARY KEY,
+  description NVARCHAR2(300) NOT NULL,
+  default_item CHAR(1) DEFAULT 0,
+  "level" INT DEFAULT 0,
+  enabled CHAR(1) DEFAULT 1,
+  constant INT DEFAULT 1 NOT NULL,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE SEQUENCE report_queue_queue_id_seq;
@@ -931,6 +943,8 @@ CREATE TABLE report_queue (
   filename NVARCHAR2(256),
   filesize INTEGER DEFAULT -1,
   enabled CHAR(1) DEFAULT 1,
+  output_type INT REFERENCES lookup_report_type(code),
+  email CHAR(1) DEFAULT 0,
   PRIMARY KEY (QUEUE_ID)
 );
 

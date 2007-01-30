@@ -1,0 +1,77 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.sql.*;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.modules.reports.base.ReportType;
+import org.aspcfs.modules.reports.base.ReportTypeList;
+import org.aspcfs.modules.reports.base.ReportQueue;
+
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator");
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+
+  print("Inserting new lookup table entry into lookup_report_type table...");
+  ReportTypeList lookupList=new ReportTypeList();
+  lookupList.buildList(db);
+  String descriptionName = dictionary.getTerm("system.fields.label", "reports.type.PDF", "value");
+  if (descriptionName == null) {
+    descriptionName = "PDF";
+  }
+  //String descriptionName = "PDF";
+  int constant=ReportQueue.REPORT_TYPE_PDF;
+  if (lookupList.getIdFromConstant(constant)<0){
+  ReportType listItem = new ReportType();
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(10);
+  listItem.setEnabled(true);
+  listItem.setDefaultItem(true);
+  listItem.setConstant(constant);
+  listItem.insert(db);
+  print("Lookup element '"+descriptionName+"' inserted");
+  }else {print("Lookup element '"+descriptionName+"' already exists"); }
+  
+  descriptionName = dictionary.getTerm("system.fields.label", "reports.type.CSV", "value");
+  if (descriptionName == null) {
+    descriptionName = "CSV";
+  }
+  //descriptionName = "CSV";
+  constant=ReportQueue.REPORT_TYPE_CSV;
+  if (lookupList.getIdFromConstant(constant)<0){
+  ReportType listItem = new ReportType();
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(10);
+  listItem.setEnabled(true);
+  listItem.setDefaultItem(false);
+  listItem.setConstant(constant);
+  listItem.insert(db);
+  print("Lookup element '"+descriptionName+"' inserted");
+  }else {print("Lookup element '"+descriptionName+"' already exists"); }
+
+  descriptionName = dictionary.getTerm("system.fields.label", "reports.type.HTML", "value");
+  if (descriptionName == null) {
+    descriptionName = "HTML";
+  }
+  //descriptionName = "HTML";
+  constant=ReportQueue.REPORT_TYPE_HTML;
+  if (lookupList.getIdFromConstant(constant)<0){
+  ReportType listItem = new ReportType();
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(10);
+  listItem.setEnabled(true);
+  listItem.setDefaultItem(false);
+  listItem.setConstant(constant);
+  listItem.insert(db);
+  print("Lookup element '"+descriptionName+"' inserted");
+  }else {print("Lookup element '"+descriptionName+"' already exists"); }
+
+
+
+

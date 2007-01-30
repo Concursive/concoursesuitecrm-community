@@ -178,6 +178,8 @@ public class FileDownload {
       contentType = "application/x-zip-compressed";
     } else if (filename.endsWith(".vcf")) {
       contentType = "text/x-vcard";
+    } else if (filename.endsWith(".csv")) {
+      contentType = "text/csv";
     } else if (filename.endsWith("readme")) {
       contentType = "text/plain";
     }

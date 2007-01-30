@@ -842,6 +842,18 @@ CREATE TABLE report_criteria_parameter (
   value CLOB
 );
 
+CREATE SEQUENCE lookup_report_type_code_seq;
+CREATE TABLE lookup_report_type (
+  code INT PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  "level" INT DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  constant INT DEFAULT 1 NOT NULL,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE SEQUENCE report_queue_queue_id_seq;
 CREATE TABLE report_queue (
   queue_id INT PRIMARY KEY,
@@ -849,10 +861,12 @@ CREATE TABLE report_queue (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   enteredby INT REFERENCES access(user_id) NOT NULL,
   processed TIMESTAMP ,
-  status INT  DEFAULT 0 NOT NULL,
+  status INT DEFAULT 0 NOT NULL,
   filename VARCHAR(256),
   filesize INT DEFAULT -1,
-  enabled boolean DEFAULT true
+  enabled boolean DEFAULT true,
+  output_type INT REFERENCES lookup_report_type(code),
+  email BOOLEAN DEFAULT false
 );
 
 CREATE SEQUENCE report_queue_criteria_criteria_id_seq;

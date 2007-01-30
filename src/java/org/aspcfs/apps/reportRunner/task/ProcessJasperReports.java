@@ -14,14 +14,19 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.apps.reportRunner.task;
+
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRHtmlExporter;
+import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.reports.base.QueueCriteriaList;
 import org.aspcfs.modules.reports.base.Report;
 import org.aspcfs.modules.reports.base.ReportQueue;
 import org.aspcfs.modules.reports.base.ReportQueueList;
 import org.aspcfs.modules.system.base.Site;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.JasperReportUtils;
+import org.aspcfs.utils.*;
+import org.w3c.dom.Element;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,9 +37,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
 
 /**
  *  Class to compile and generate to PDF a JasperReport
@@ -109,6 +111,62 @@ public class ProcessJasperReports {
           thisQueue.setFilename(filename);
           thisQueue.setSize(size);
           thisQueue.setStatus(ReportQueue.STATUS_PROCESSED);
+          // To Email
+          if (thisQueue.getEmail()) {
+              User user = new User();
+              user.setBuildContact(true);
+              user.setBuildContactDetails(true);
+              user.buildRecord(db, thisQueue.getEnteredBy());
+        	  SMTPMessage message = new SMTPMessage();
+        	  message.setHost((String) config.get("MAILSERVER"));
+        	  message.setFrom((String) config.get("EMAILADDRESS"));
+        	  message.addReplyTo((String) config.get("EMAILADDRESS"));
+        	  message.addTo(user.getContact().getPrimaryEmailAddress());
+        	  thisQueue.buildReport(db);
+        	  message.setType("text/html");
+        	  String dbName = thisSite.getDatabaseName();
+						String templateFilePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "templates_" + thisSite.getLanguage() + ".xml";
+						if (!FileUtils.fileExists(templateFilePath)) {
+							templateFilePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "templates_en_US.xml";
+						}
+						File configFile = new File(templateFilePath);
+						XMLUtils xml = new XMLUtils(configFile);
+						Element mappings = xml.getFirstChild("mappings");
+						// Construct the subject
+						Template messageSubject = new Template();
+						messageSubject.setText(
+								XMLUtils.getNodeText(
+								XMLUtils.getElement(
+								mappings, "map", "id", "report.email.subject")));
+						String subject = messageSubject.getParsedText();
+						message.setSubject(subject);
+            // Construct the body
+            Template messageBody = new Template();
+						messageBody.setText(
+								XMLUtils.getNodeText(
+								XMLUtils.getElement(
+								mappings, "map", "id", "report.alert.email.body")));
+						String body = messageBody.getParsedText();
+
+        	  switch (thisQueue.getOutputTypeConstant()) {
+							case ReportQueue.REPORT_TYPE_HTML:
+							// Just place the HTML in the email body, not as an
+							// attachment...
+							message.setBody(body + StringUtils.loadText(destDir + filename));
+								break;
+							case ReportQueue.REPORT_TYPE_CSV:
+							// Attach the CSV
+							message.setBody(body);
+							message.addFileAttachment(destDir + filename, filename + ".csv");
+								break;
+							case ReportQueue.REPORT_TYPE_PDF:
+								//Attach the PDF
+								message.setBody(body);     			  
+								message.addFileAttachment(destDir + filename, filename + ".pdf");
+								break;
+        	  }
+        	  message.send();
+        	}
         } catch (Exception e) {
           thisQueue.setStatus(ReportQueue.STATUS_ERROR);
           e.printStackTrace(System.out);
@@ -161,12 +219,34 @@ public class ProcessJasperReports {
      *  destFilename,
      *  parameters, db);
      */
-    byte[] bytes = JasperRunManager.runReportToPdf(
-        jasperReport, parameters, db);
+    JasperPrint print = JasperFillManager.fillReport(jasperReport, parameters, db);
     File reportFile = new File(destFilename);
-    FileOutputStream destination = new FileOutputStream(reportFile);
-    destination.write(bytes, 0, bytes.length);
-    //clean up
+	  switch (thisQueue.getOutputTypeConstant()) {
+      case ReportQueue.REPORT_TYPE_HTML:       
+        JRHtmlExporter exporterHTML = new JRHtmlExporter();
+        exporterHTML.setParameter(JRExporterParameter.JASPER_PRINT, print);
+        exporterHTML.setParameter(JRExporterParameter.OUTPUT_FILE,  reportFile);
+        exporterHTML.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.FALSE);
+        exporterHTML.setParameter(JRHtmlExporterParameter.BETWEEN_PAGES_HTML, "");
+        exporterHTML.setParameter(JRHtmlExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,   Boolean.TRUE);
+        exporterHTML.exportReport();         
+        break;
+      case ReportQueue.REPORT_TYPE_CSV:
+        JRCsvExporter exporterCSV = new JRCsvExporter();
+        exporterCSV.setParameter(JRExporterParameter.JASPER_PRINT, print);
+        exporterCSV.setParameter(JRExporterParameter.OUTPUT_FILE,  reportFile);
+        exporterCSV.exportReport();
+    	break;
+      default:
+        byte[] bytes = JasperRunManager.runReportToPdf(jasperReport, parameters, db);   
+        if (reportFile.exists()) {
+          return reportFile.length();
+        }
+        FileOutputStream destination = new FileOutputStream(reportFile);
+        destination.write(bytes, 0, bytes.length);   	  
+        break;
+	  }
+      //clean up
     if (parameters.containsKey("configure_hierarchy_list")) {
       removeHierarchyList(db, parameters);
     }

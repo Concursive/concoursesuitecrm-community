@@ -808,6 +808,17 @@ CREATE TABLE report_criteria_parameter (
   value TEXT
 );
 
+CREATE TABLE lookup_report_type (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  constant INTEGER NOT NULL DEFAULT 1,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE report_queue (
   queue_id INT IDENTITY PRIMARY KEY,
   report_id INTEGER NOT NULL REFERENCES report(report_id),
@@ -817,7 +828,9 @@ CREATE TABLE report_queue (
   status INT NOT NULL DEFAULT 0,
   filename VARCHAR(256),
   filesize INT DEFAULT -1,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  output_type INTEGER REFERENCES lookup_report_type(code),
+  email BIT DEFAULT 0 
 );
 
 CREATE TABLE report_queue_criteria (

@@ -823,6 +823,17 @@ CREATE TABLE report_criteria_parameter (
   value TEXT
 );
 
+CREATE TABLE lookup_report_type (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INT DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  constant INT DEFAULT 1 NOT NULL,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 CREATE TABLE report_queue (
   queue_id SERIAL PRIMARY KEY,
   report_id INTEGER NOT NULL REFERENCES report(report_id),
@@ -832,7 +843,9 @@ CREATE TABLE report_queue (
   status INT NOT NULL DEFAULT 0,
   filename VARCHAR(256),
   filesize INT DEFAULT -1,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  output_type INT REFERENCES lookup_report_type(code),
+  email BOOLEAN DEFAULT false
 );
 
 CREATE TABLE report_queue_criteria (

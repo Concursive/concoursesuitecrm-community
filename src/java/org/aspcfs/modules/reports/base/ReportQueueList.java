@@ -360,8 +360,9 @@ public class ReportQueueList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "q.* " +
+    	"q.*, rt.description as type_description, rt.constant as type_constant " +
         "FROM report_queue q " +
+        "LEFT JOIN lookup_report_type rt ON (q.output_type = rt.code) " +
         "WHERE queue_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -39,6 +39,9 @@ public class ReportQueue extends GenericBean {
   public final static int STATUS_PROCESSED = 2;
   public final static int STATUS_ERROR = 3;
 
+  public final static int REPORT_TYPE_PDF = 1;
+  public final static int REPORT_TYPE_CSV = 2;
+  public final static int REPORT_TYPE_HTML = 3;
   private int id = -1;
   private int reportId = -1;
   private Timestamp entered = null;
@@ -48,6 +51,11 @@ public class ReportQueue extends GenericBean {
   private String filename = null;
   private long size = -1;
   private boolean enabled = true;
+  private int outputType = -1;
+  private int outputTypeConstant =-1;
+  private String outputTypeDescription = null;
+  private boolean email = false;
+	
   //Resources
   private int position = -1;
   private Report report = null;
@@ -66,7 +74,6 @@ public class ReportQueue extends GenericBean {
    *
    * @param rs Description of the Parameter
    * @throws SQLException Description of the Exception
-   * @throws SQLException Description of the Exception
    */
   public ReportQueue(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -78,7 +85,6 @@ public class ReportQueue extends GenericBean {
    *
    * @param db      Description of the Parameter
    * @param queueId Description of the Parameter
-   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ReportQueue(Connection db, int queueId) throws SQLException {
@@ -92,7 +98,6 @@ public class ReportQueue extends GenericBean {
    * @param db             Description of the Parameter
    * @param queueId        Description of the Parameter
    * @param throwException Description of the Parameter
-   * @throws SQLException Description of the Exception
    * @throws SQLException Description of the Exception
    */
   public ReportQueue(Connection db, int queueId, boolean throwException) throws SQLException {
@@ -110,8 +115,9 @@ public class ReportQueue extends GenericBean {
    */
   public void queryRecord(Connection db, int queueId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT q.* " +
+        "SELECT q.*, rt.description as type_description, rt.constant as type_constant " +
             "FROM report_queue q " +
+            "LEFT JOIN lookup_report_type rt ON (q.output_type = rt.code) " +
             "WHERE queue_id = ? ");
     pst.setInt(1, queueId);
     ResultSet rs = pst.executeQuery();
@@ -275,6 +281,38 @@ public class ReportQueue extends GenericBean {
     this.enabled = tmp;
   }
 
+  /**
+   * Sets the outputType attribute of the ReportQueue object
+   *
+   * @param tmp The new outputType value
+   */  
+	public void setOutputType(int tmp) {
+		this.outputType = tmp;
+	}
+  /**
+   * Sets the outputType attribute of the ReportQueue object
+   *
+   * @param tmp The new outputType value
+   */
+	public void setOutputType(String tmp) {
+		this.outputType = Integer.parseInt(tmp);
+	}
+  /**
+   * Sets the email attribute of the ReportQueue object
+   *
+   * @param tmp The new email value
+   */	
+	public void setEmail(boolean tmp) {
+		this.email = tmp;
+	}
+  /**
+   * Sets the email attribute of the ReportQueue object
+   *
+   * @param tmp The new email value
+   */
+	public void setEmail(String tmp) {
+		this.email = DatabaseUtils.parseBoolean(tmp);
+	}
 
   /**
    * Sets the enabled attribute of the ReportQueue object
@@ -424,7 +462,42 @@ public class ReportQueue extends GenericBean {
   public boolean getEnabled() {
     return enabled;
   }
-
+  
+  /**
+   * Gets the outputType attribute of the ReportQueue object
+   *
+   * @return The outputType value
+   */
+	public int getOutputType() {
+		return outputType;
+	}
+	
+  /**
+   * Gets the outputTypeConstant attribute of the ReportQueue object
+   *
+   * @return The outputTypeConstant value
+   */
+	public int getOutputTypeConstant() {
+		return outputTypeConstant;
+	}
+	
+  /**
+   * Gets the utputTypeDescription attribute of the ReportQueue object
+   *
+   * @return The utputTypeDescription value
+   */
+	public String getOutputTypeDescription() {
+		return outputTypeDescription;
+	}
+	
+  /**
+   * Gets the email attribute of the ReportQueue object
+   *
+   * @return The email value
+   */
+	public boolean getEmail() {
+		return email;
+	}
 
   /**
    * Gets the position attribute of the ReportQueue object
@@ -472,6 +545,10 @@ public class ReportQueue extends GenericBean {
     filename = rs.getString("filename");
     size = DatabaseUtils.getLong(rs, "filesize");
     enabled = rs.getBoolean("enabled");
+    outputType = rs.getInt("output_type");
+    email = rs.getBoolean("email");
+    outputTypeDescription = rs.getString("type_description");
+    outputTypeConstant = rs.getInt("type_constant");
   }
 
 
@@ -485,8 +562,9 @@ public class ReportQueue extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "report_queue_queue_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO report_queue " +
-            "(" + (id > -1 ? "queue_id, " : "") + "report_id, entered, enteredby, processed, status, filename, filesize, enabled) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?) ");
+            "(" + (id > -1 ? "queue_id, " : "") + "report_id, entered, enteredby, processed, " +
+           	"status, filename, filesize, enabled, output_type, email) " +
+            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -499,6 +577,8 @@ public class ReportQueue extends GenericBean {
     pst.setString(++i, filename);
     DatabaseUtils.setLong(pst, ++i, size);
     pst.setBoolean(++i, enabled);
+    DatabaseUtils.setInt(pst, ++i, outputType);
+    pst.setBoolean(++i, email);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "report_queue_queue_id_seq", id);
@@ -514,21 +594,23 @@ public class ReportQueue extends GenericBean {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static int insert(Connection db, Criteria criteria) throws SQLException {
+  public static int insert(Connection db, Criteria criteria, int reportType, boolean sendEmail) throws SQLException {
     try {
       db.setAutoCommit(false);
       //Insert the new report into the queue
       int id = DatabaseUtils.getNextSeq(db, "report_queue_queue_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO report_queue " +
-              "(" + (id > -1 ? "queue_id, " : "") + "report_id, enteredby) " +
-              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
+              "(" + (id > -1 ? "queue_id, " : "") + "report_id, enteredby, output_type, email) " +
+              "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
       int i = 0;
       if (id > -1) {
         pst.setInt(++i, id);
       }
       pst.setInt(++i, criteria.getReportId());
       pst.setInt(++i, criteria.getOwner());
+      pst.setInt(++i, reportType);
+      pst.setBoolean(++i, sendEmail);
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "report_queue_queue_id_seq", id);
@@ -602,7 +684,9 @@ public class ReportQueue extends GenericBean {
             "SET status = ?, " +
             (filename != null ? "filename = ?, " : "") +
             "filesize = ?, " +
-            "processed = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "processed = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+            "output_type = ?, " +
+            "email = ? " +
             "WHERE queue_id = ? ");
     int i = 0;
     pst.setInt(++i, status);
@@ -610,6 +694,8 @@ public class ReportQueue extends GenericBean {
       pst.setString(++i, filename);
     }
     DatabaseUtils.setLong(pst, ++i, size);
+    DatabaseUtils.setInt(pst, ++i, outputType);
+    pst.setBoolean(++i, email);
     pst.setInt(++i, id);
     int count = pst.executeUpdate();
     pst.close();

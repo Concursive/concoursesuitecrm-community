@@ -1,0 +1,32 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import java.util.*;
+import java.sql.*;
+import org.aspcfs.utils.Dictionary;
+import org.aspcfs.modules.reports.base.ReportTypeList;
+import org.aspcfs.modules.reports.base.ReportQueueList;
+import org.aspcfs.modules.reports.base.ReportQueue;
+
+  print("Upgrading report_queue table...");
+  
+  ReportQueueList queueList=new ReportQueueList();
+  queueList.buildList(db);
+  
+  ReportTypeList lookupList=new ReportTypeList();
+  lookupList.buildList(db);
+  int constant=ReportQueue.REPORT_TYPE_PDF;
+  int ci = lookupList.getIdFromConstant(constant);
+
+	Iterator it = queueList.iterator();
+	while (it.hasNext()) {
+		ReportQueue rq = (ReportQueue) it.next();
+		if ( rq.getOutputType() == -1) {
+	   rq.setOutputType(ci);
+	   rq.updateStatus(db);
+		}
+	}
+	
+
+

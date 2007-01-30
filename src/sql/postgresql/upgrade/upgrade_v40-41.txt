@@ -100,3 +100,10 @@
 
 # sync fix
 2007-01-24-script01-ananth.bsh
+
+# Create reports in multiple formats (PDF, html, csv)
+2007-01-24-script01-vadim.sql
+2007-01-24-script01-vadim.bsh
+
+# Updating report_queue table
+2007-01-29-script01-zhenya.bsh
