@@ -127,8 +127,12 @@ public class FieldHandler extends TagSupport implements TryCatchFinally {
           result = true;
         } else {
           // Each value must match
-          if (allRequired && matches == checks) {
-            result = true;
+          if (allRequired) {
+            if (matches == checks) {
+              result = false;
+            } else {
+              result = true;
+            }
           } else {
             result = false;
           }
@@ -137,10 +141,14 @@ public class FieldHandler extends TagSupport implements TryCatchFinally {
         // Show the field only if it is listed in system.xml
         if (matches > 0) {
           // Each value must match
-          if (allRequired && matches == checks) {
-            result = true;
+          if (allRequired) {
+            if (matches == checks) {
+              result = true;
+            } else {
+              result = false;
+            }
           } else {
-            result = false;
+            result = true;
           }
         } else {
           result = false;
@@ -153,6 +161,4 @@ public class FieldHandler extends TagSupport implements TryCatchFinally {
       return SKIP_BODY;
     }
   }
-
 }
-
