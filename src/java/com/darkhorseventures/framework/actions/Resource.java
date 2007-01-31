@@ -31,33 +31,17 @@ public class Resource
     implements Serializable {
   private String resourceName = "";
   private String resourceXSL = "";
+  private String resourceContext = "";
+  private boolean resourceRedirect = false;
   private String layoutType = null;
   final static long serialVersionUID = 7269086432553620255L;
 
 
-  /**
-   * Constructor for the Resource object
-   *
-   * @param name Description of Parameter
-   * @param xsl  Description of Parameter
-   */
-  public Resource(String name, String xsl) {
+  public Resource(String name, String xsl, String context, boolean redirect, String layout) {
     resourceName = name;
     resourceXSL = xsl;
-  }
-
-
-  /**
-   * Constructor for the Resource object
-   *
-   * @param name   Description of Parameter
-   * @param xsl    Description of Parameter
-   * @param layout Description of Parameter
-   * @since 1.1
-   */
-  public Resource(String name, String xsl, String layout) {
-    resourceName = name;
-    resourceXSL = xsl;
+    resourceContext = context;
+    resourceRedirect = redirect;
     layoutType = layout;
   }
 
@@ -81,6 +65,20 @@ public class Resource
     return resourceXSL;
   }
 
+  public String getContext() {
+    return resourceContext;
+  }
+
+
+  /**
+   * Returns whether or not the ControllerServlet should forward to this resource or send a
+   * redirect response to the server indicating to redirect the user to this resource.
+   *
+   * @return boolean  true if this resource requires a redirection to get to, or false if forwarding is to be used
+   */
+  public boolean getRedirect() {
+    return resourceRedirect;
+  }
 
   /**
    * Returns the name of the layout to use

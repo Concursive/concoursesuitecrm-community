@@ -25,6 +25,7 @@ import org.aspcfs.controller.ApplicationPrefs;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,14 +56,14 @@ import java.util.*;
  * <p/>
  * Ideas: TransactionLogHook
  *
- * @author kevin duffey
+ *@author     kevin duffey
  * @author matt rajkowski
  * @version $Id: ControllerServlet.java,v 1.8 2001/08/02 15:45:49 mrajkowski
  *          Exp $
  * @created July 1, 2001
  */
-public class ControllerServlet extends HttpServlet
-    implements ControllerInitHook, ControllerHook, ControllerMainMenuHook,
+public class ControllerServlet
+     extends HttpServlet implements ControllerInitHook, ControllerHook, ControllerMainMenuHook,
     ControllerGlobalItemsHook, ControllerDestroyHook {
   private Map actions = new HashMap();
   private Map classes = new HashMap();
@@ -80,15 +81,16 @@ public class ControllerServlet extends HttpServlet
   private String indexAttribute = "-";
   // used to determine if an index value is used during auto-population
   private TransformerFactory tFactory = TransformerFactory.newInstance();
+  private XMLConfigLoader xmlConfig = new XMLConfigLoader(actions);
   private boolean cacheModules = true;
   final static long serialVersionUID = 772485669527451267L;
 
 
   /**
-   * Returns the response output mode by using the Templates XSL attribute
-   * <xsl:output method=""/>tag otherwise it uses HTML output
+   *  Returns the response output mode by using the Templates XSL attribute
+   *  <xsl:output method=""/> tag otherwise it uses HTML output
    *
-   * @param templates Description of Parameter
+   *@param  templates  Description of Parameter
    * @return The ResponseOutput value
    * @since 1.0
    */
@@ -111,7 +113,8 @@ public class ControllerServlet extends HttpServlet
       if (method != null) {
         if (method.equals("html")) {
           return "text/html";
-        } else if (method.equals("text")) {
+        } else
+            if (method.equals("text")) {
           return "text/plain";
         } else {
           return "text/xml";
@@ -126,7 +129,7 @@ public class ControllerServlet extends HttpServlet
   /**
    * Gets the XSLDocument attribute of the ControllerServlet object
    *
-   * @param xsl Description of Parameter
+   *@param  xsl  Description of Parameter
    * @return The XSLDocument value
    * @since 1.0
    */
@@ -137,38 +140,38 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   * Called when this servlet is first called upon.
-   *
-   * @param config Description of Parameter
-   * @throws ServletException Description of Exception
-   * @since 1.0
-   */
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    // lets get the possible configuration parameters if they exist.
-    // See if there is an init parameter designating a class to use as a ControllerInitHook.
-    // If so, execute the hook.  This could be used for storing a Connection Pool in
-    // the application scope, for example.
-    if (config.getInitParameter("InitHook") != null) {
-      // the parameter exists, so try to instantiate the class by the name of the
-      // parameter value.
-      try {
-        initHook = (ControllerInitHook) Class.forName(
-            config.getInitParameter("InitHook")).newInstance();
-        initHook.executeControllerInit(config);
-      } catch (Exception e) {
-        System.out.println(e.toString());
-        initHook = null;
+     * Called when this servlet is first called upon.
+     *
+     * @param config Description of Parameter
+     * @throws ServletException Description of Exception
+     * @since 1.0
+     */
+    public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+      // lets get the possible configuration parameters if they exist.
+      // See if there is an init parameter designating a class to use as a ControllerInitHook.
+      // If so, execute the hook.  This could be used for storing a Connection Pool in
+      // the application scope, for example.
+      if (config.getInitParameter("InitHook") != null) {
+        // the parameter exists, so try to instantiate the class by the name of the
+        // parameter value.
+        try {
+          initHook = (ControllerInitHook) Class.forName(
+              config.getInitParameter("InitHook")).newInstance();
+          initHook.executeControllerInit(config);
+        } catch (Exception e) {
+          System.out.println(e.toString());
+          initHook = null;
+        }
       }
-    }
-    // if a ControllerInitHook class could not be loaded or the init parameter
-    // was not specified, use this class which implements ControllerInitHook
-    // for the hook interface implementation
-    if (initHook == null) {
-      initHook = this;
-    }
+      // if a ControllerInitHook class could not be loaded or the init parameter
+      // was not specified, use this class which implements ControllerInitHook
+      // for the hook interface implementation
+      if (initHook == null) {
+        initHook = this;
+      }
 
-    // See if there is an init parameter designating a class to use as a ControllerHook.
+      // See if there is an init parameter designating a class to use as a ControllerHook.
     // If so, right before the action class method is called a securityCheck() method
     // is called, giving the ability for any application to make sure something is in place
     // before calling the method. This could be used for example to make sure a user is logged
@@ -240,29 +243,17 @@ public class ControllerServlet extends HttpServlet
     if (destroyHook == null) {
       destroyHook = this;
     }
-
-    // load the resource xml configuration file
-    XMLConfigLoader xmlConfig = new XMLConfigLoader();
-    xmlConfig.setActions(actions);
-
     if (config.getInitParameter("ActionConfig") != null) {
-      StringTokenizer strtkn = new StringTokenizer(
-          config.getInitParameter("ActionConfig"), ",");
-
+      StringTokenizer strtkn = new StringTokenizer(config.getInitParameter("ActionConfig"), ",");
       while (strtkn.hasMoreTokens()) {
-        xmlConfig.setFile(
-            config.getServletContext().getRealPath(
-                "/WEB-INF/" + strtkn.nextToken().trim()));
-        xmlConfig.load();
-        // load the configuration file
+        xmlConfig.addFile(strtkn.nextToken().trim());
       }
     } else {
-      // no config file info in web.xml, so use default.
-      xmlConfig.setFile(
-          config.getServletContext().getRealPath("/WEB-INF/theseus.xml"));
-      xmlConfig.load();
-      // load the configuration file
+      xmlConfig.addFile("theseus.xml");
     }
+
+    // load the configuration file
+    xmlConfig.load(config.getServletContext());
 
     // if an init parameter exists to specify the character or string to use
     // during autopopulation of a form/bean, grab the string which is used
@@ -345,8 +336,7 @@ public class ControllerServlet extends HttpServlet
 
               // first make sure its not already in the table.
               if (xslCache.get(resource.getXSL()) == null) {
-                File f = new File(
-                    getServletContext().getRealPath(resource.getXSL()));
+                File f = new File(getServletContext().getRealPath(resource.getXSL()));
                 StreamSource xslStream = new StreamSource(f);
 
                 try {
@@ -366,7 +356,7 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   * Called when the servlet container closes down.
+   *  Called when the servlet container closes down.
    *
    * @since 1.0
    */
@@ -376,21 +366,20 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   * This method handles all incoming actions (both post and get). It will
-   * remove the extension being passed in as well as the last / in the request
-   * URI, then deduct from that the proper action to call. The action is looked
-   * up via a hashtable of already loaded classes (single instances of action
-   * classes), and if the action exists, the instance is called, passing to it
-   * the servlet, request, response and one or more beans mapped to the
-   * particular action. Finally, it gets a result string back from the method
-   * in the action it calls, and forwards (or redirects) to a JSP page that is
-   * mapped to the result string returned. This method will trap all
-   * exceptions, and forward them via the MESSAGE request attribute to what
-   * ever JSP page is forwarded to.
+   *  This method handles all incoming actions (both post and get). It will
+   *  remove the extension being passed in as well as the last / in the request
+   *  URI, then deduct from that the proper action to call. The action is looked
+   *  up via a hashtable of already loaded classes (single instances of action
+   *  classes), and if the action exists, the instance is called, passing to it
+   *  the servlet, request, response and one or more beans mapped to the
+   *  particular action. Finally, it gets a result string back from the method
+   *  in the action it calls, and forwards (or redirects) to a JSP page that is
+   *  mapped to the result string returned. This method will trap all
+   *  exceptions, and forward them via the MESSAGE request attribute to what
+   *  ever JSP page is forwarded to.
    *
-   * @param request  Description of Parameter
-   * @param response Description of Parameter
-   * @since 1.0
+   *@param  request   Description of Parameter
+   *@param  response  Description of Parameter
    */
   public void service(HttpServletRequest request, HttpServletResponse response) {
     String actionPath = getActionPath(request);
@@ -436,25 +425,24 @@ public class ControllerServlet extends HttpServlet
       // list of beans.
       Iterator i = action.getBeans().values().iterator();
       ActionContext context = null;
-      Object contextBeanRef = null;
+
       while (i.hasNext()) {
         Beans beans = (Beans) i.next();
         // next, we get the bean reference from the scope the
         // bean is stored in.
         switch (beans.getBeanScope()) {
-          case 1:
-            // request scope
-            beanRef = request.getAttribute(beans.getBeanName());
-            break;
-          case 2:
-            // session scope
-            beanRef = request.getSession(true).getAttribute(
-                beans.getBeanName());
-            break;
-          case 3:
-            // application/global scope (not thread safe)
-            beanRef = getServletContext().getAttribute(beans.getBeanName());
-            break;
+            case 1:
+              // request scope
+              beanRef = request.getAttribute(beans.getBeanName());
+              break;
+            case 2:
+              // session scope
+              beanRef = request.getSession(true).getAttribute(beans.getBeanName());
+              break;
+            case 3:
+              // application/global scope (not thread safe)
+              beanRef = getServletContext().getAttribute(beans.getBeanName());
+              break;
         }
 
         // if its not found, create it.
@@ -462,36 +450,28 @@ public class ControllerServlet extends HttpServlet
           try {
             beanRef = Class.forName(beans.getClassName()).newInstance();
           } catch (ClassNotFoundException cnfe) {
-            System.out.println(
-                "Class not found exception. MESSAGE = " + cnfe.getMessage());
+            System.out.println("Class not found exception. MESSAGE = " + cnfe.getMessage());
           } catch (InstantiationException ie) {
-            System.out.println(
-                "Instantiation Exception. MESSAGE = " + ie.getMessage());
+            System.out.println("Instantiation Exception. MESSAGE = " + ie.getMessage());
           } catch (IllegalAccessException iae) {
-            System.out.println(
-                "Illegal Access Exception. MESSAGE = " + iae.getMessage());
+            System.out.println("Illegal Access Exception. MESSAGE = " + iae.getMessage());
           }
 
           // store it in the scope it is assigned to,
           switch (beans.getBeanScope()) {
-            case 1:
-              // request scope
-              request.setAttribute(beans.getBeanName(), beanRef);
-              break;
-            case 2:
-              // session scope
-              request.getSession(true).setAttribute(
-                  beans.getBeanName(), beanRef);
-              break;
-            case 3:
-              // application/global scope (not thread safe)
-              getServletContext().setAttribute(beans.getBeanName(), beanRef);
-              break;
+              case 1:
+                // request scope
+                request.setAttribute(beans.getBeanName(), beanRef);
+                break;
+              case 2:
+                // session scope
+                request.getSession(true).setAttribute(beans.getBeanName(), beanRef);
+                break;
+              case 3:
+                // application/global scope (not thread safe)
+                getServletContext().setAttribute(beans.getBeanName(), beanRef);
+                break;
           }
-        }
-
-        if (beans.isDefaultBean()) {
-          contextBeanRef = beanRef;
         }
 
         // we now check to see if a request parameter with a name that matches
@@ -505,18 +485,18 @@ public class ControllerServlet extends HttpServlet
               System.out.println(
                   "> Auto populating a bean: " + beans.getClassName());
             }
-            populateClassInstance.populateObject(
-                beanRef, request, nestedAttribute, indexAttribute);
+            populateClassInstance.populateObject(beanRef, request, nestedAttribute, indexAttribute);
           }
         }
       }
-      context = new ActionContext(
-          this, contextBeanRef, action, request, response);
+
+      context = new ActionContext(this, beanRef, action, request, response);
 
       // at this point, we have a newly created ActionContext and an auto-populated
       // javabean (if the request attribute was passed in to indicate so). We are now ready to
       // attempt to get the class instance if it exists (already loaded), or if not, we
       // will dynamically load it (one time only) and store it in our lists of classes.
+
       Object classRef = null;
       if (classes.containsKey(actionPath) && cacheModules) {
         classRef = classes.get(actionPath);
@@ -525,18 +505,16 @@ public class ControllerServlet extends HttpServlet
           classRef = Class.forName(action.getActionClassName()).newInstance();
           classes.put(actionPath, classRef);
         } catch (ClassNotFoundException cnfe) {
-          System.out.println(
-              "Class Not Found Exception. MESSAGE = " + cnfe.getMessage());
+          System.out.println("Class Not Found Exception. MESSAGE = " + cnfe.getMessage());
         } catch (InstantiationException ie) {
-          System.out.println(
-              "Instantiation Exception. MESSAGE = " + ie.getMessage());
+          System.out.println("Instantiation Exception. MESSAGE = " + ie.getMessage());
         } catch (IllegalAccessException iae) {
-          System.out.println(
-              "Illegal Argument Exception. MESSAGE = " + iae.getMessage());
+          System.out.println("Illegal Argument Exception. MESSAGE = " + iae.getMessage());
         }
       }
 
       String result = null;
+
       try {
         // now we are ready for the next to last step..to call upon the method in the
         // action class instance we have.
@@ -570,14 +548,9 @@ public class ControllerServlet extends HttpServlet
           result = (String) method.invoke(classRef, new Object[]{context});
         }
       } catch (NoSuchMethodException nm) {
-        System.out.println(
-            "No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
+        System.out.println("No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
       } catch (IllegalAccessException ia) {
-        System.out.println(
-            "Illegal Access Exception. MESSAGE = " + ia.getMessage());
-      } catch (java.lang.reflect.InvocationTargetException ite) {
-        ite.printStackTrace(System.out);
-        result = "GraphicsError";
+        System.out.println("Illegal Access Exception. MESSAGE = " + ia.getMessage());
       } catch (Exception e) {
         e.printStackTrace(System.out);
         System.out.println("Exception. MESSAGE = " + e.getMessage());
@@ -587,7 +560,7 @@ public class ControllerServlet extends HttpServlet
         forward(result, action, request, response);
       }
     } else {
-      System.out.println("** It appears there is no mapping");
+      System.out.println("** It appears there is no mapping in the config file");
       try {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -599,13 +572,12 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   * Handles the process of forwarding to a resource.
+   *  Handles the process of forwarding to a resource.
    *
-   * @param lookup   Description of Parameter
-   * @param action   Description of Parameter
-   * @param request  Description of Parameter
-   * @param response Description of Parameter
-   * @since 1.0
+   *@param  lookup    Description of Parameter
+   *@param  action    Description of Parameter
+   *@param  request   Description of Parameter
+   *@param  response  Description of Parameter
    */
   public void forward(String lookup, Action action, HttpServletRequest request, HttpServletResponse response) {
     // last but not least..we now try to forward or redirect to the
@@ -644,13 +616,11 @@ public class ControllerServlet extends HttpServlet
       if ((resource.getXSL() != null) && (resource.getXSL().length() > 0)) {
         // the response forward Action has an XSL page associated with it,
         // so apply the transform
-        StreamSource xslStream = null;
         StreamSource xmlStream = null;
         Templates templates = null;
         if (!useXSLCache) {
           try {
-            templates = tFactory.newTemplates(
-                getXSLDocument(resource.getXSL()));
+            templates = tFactory.newTemplates(getXSLDocument(resource.getXSL()));
           } catch (Exception e) {
           }
         } else {
@@ -661,8 +631,7 @@ public class ControllerServlet extends HttpServlet
             // didn't find it in cache, but we want to use cache, so try to read
             // the XSL page off the hd, then store it in cache.
             try {
-              templates = tFactory.newTemplates(
-                  getXSLDocument(resource.getXSL()));
+              templates = tFactory.newTemplates(getXSLDocument(resource.getXSL()));
               // syncronize this section to make sure that multiple threads don't
               // add the same XSL file to the HashMap, which is not
               // thread safe
@@ -679,9 +648,11 @@ public class ControllerServlet extends HttpServlet
         // Transform the xml output using the xsl stylesheet and the XALAN XSLT
         // engine, placing the output stream of the transformation in the
         // HttpServletResponse output stream.
-        //        response.setBufferSize(8192);
+
+//        response.setBufferSize(8192);
         response.setContentType(getResponseOutput(templates));
         // always assume HTML output from this controller
+
         try {
           StringBuffer link = new StringBuffer();
           link.append(request.getScheme());
@@ -696,18 +667,18 @@ public class ControllerServlet extends HttpServlet
 
           xmlStream = new StreamSource(new URL(link.toString()).openStream());
           Transformer transformer = templates.newTransformer();
-          transformer.transform(
-              xmlStream, new StreamResult(response.getOutputStream()));
+          transformer.transform(xmlStream, new StreamResult(response.getOutputStream()));
         } catch (Exception e) {
-          System.out.println(
-              "Exception trying to read in JSP or transform. MESSAGE: " + e.getMessage());
+          System.out.println("Exception trying to read in JSP or transform. MESSAGE: " + e.getMessage());
           e.printStackTrace(System.out);
         }
       } else {
         // no XSL attribute, so just forward to the JSP page
         try {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Resource-> " + lookup);
+          }
           String forwardPath = resource.getName();
-
           //If there is a layout, then forward to the template instead
           //the template will include the resource
           if (resource.getLayout() != null && resource.getLayout().length() > 0) {
@@ -730,17 +701,26 @@ public class ControllerServlet extends HttpServlet
             }
           }
 
+          ServletContext sc = null;
+          if (resource.getContext() != null && resource.getContext().length() > 0) {
+            sc = getServletContext().getContext(resource.getContext());
+          } else {
+            sc = getServletContext();
+          }
+
           if ((forwardPath != null) && (forwardPath.length() > 0)) {
             try {
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println(
-                    "ControllerServlet-> Resource: " + resource.getName());
+              if (!resource.getRedirect()) {
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println(
+                      "ControllerServlet-> Resource: " + resource.getName());
+                }
+                sc.getRequestDispatcher(forwardPath).forward(request, response);
+              } else {
+                response.sendRedirect(forwardPath);
               }
-              getServletContext().getRequestDispatcher(forwardPath).forward(
-                  request, response);
             } catch (Throwable t) {
-              System.out.println(
-                  "Throwable exception trying to forward to " + forwardPath + "MESSAGE: " + t.getMessage());
+              System.out.println("Throwable exception trying to forward to " + forwardPath + " MESSAGE: " + t.getMessage());
               t.printStackTrace(System.out);
               PrintWriter out = response.getWriter();
               out.println(
@@ -748,8 +728,7 @@ public class ControllerServlet extends HttpServlet
             }
           }
         } catch (Exception e) {
-          System.out.println(
-              "Exception while trying to handle JSP forwarding. MESSAGE: " + e.getMessage());
+          System.out.println("Exception while trying to handle JSP forwarding. MESSAGE: " + e.getMessage());
           e.printStackTrace();
         }
       }
@@ -757,12 +736,12 @@ public class ControllerServlet extends HttpServlet
       // no Action, so forward back to the original page
       System.out.println("> No Action found, so doing nothing.");
       try {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println(
-            "<font color=\"red\">The requested page was not found.</font>");
-      } catch (IOException e) {
-      }
+               response.setContentType("text/html");
+               PrintWriter out = response.getWriter();
+               out.println(
+                   "<font color=\"red\">The requested page was not found.</font>");
+             } catch (IOException e) {
+             }
     }
   }
 
@@ -856,20 +835,22 @@ public class ControllerServlet extends HttpServlet
 
 
   /**
-   * Returns the servlet path of the request.
+   *  Returns the servlet path of the request.
    *
-   * @param request Description of Parameter
-   * @return The ActionPath value
-   * @since 1.0
+   *@param  request  Description of Parameter
+   *@return          The actionPath value
    */
   private String getActionPath(HttpServletRequest request) {
     String s = request.getServletPath();
+
     // For extension matching, we want to strip the extension (if any)
     int slash = s.lastIndexOf("/");
     int period = s.lastIndexOf(".");
+
     if ((period >= 0) && (slash >= 0) && (period > slash)) {
       return s.substring(slash + 1, period);
     }
+
     return s;
   }
 }
