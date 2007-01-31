@@ -15,6 +15,8 @@
  */
 package org.aspcfs.modules.accounts.base;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.AddressList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
@@ -36,12 +38,18 @@ import java.sql.SQLException;
  */
 public class OrganizationAddressList extends AddressList {
 
+  private static Logger log = Logger.getLogger(org.aspcfs.modules.accounts.base.OrganizationAddressList.class);
+  static {
+    if (System.getProperty("DEBUG") != null) {
+      log.setLevel(Level.DEBUG);
+    }
+  }
+
   public final static String tableName = "organization_address";
   public final static String uniqueField = "address_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
-
 
   /**
    *  Constructor for the OrganizationAddressList object
@@ -50,7 +58,6 @@ public class OrganizationAddressList extends AddressList {
    */
   public OrganizationAddressList() {
   }
-
 
   /**
    *  Constructor for the OrganizationAddressList object
@@ -249,7 +256,7 @@ public class OrganizationAddressList extends AddressList {
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
+    rs = DatabaseUtils.executeQuery(db, pst, log);
     while (rs.next()) {
       OrganizationAddress thisAddress = new OrganizationAddress(rs);
       this.addElement(thisAddress);

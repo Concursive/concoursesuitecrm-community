@@ -195,7 +195,7 @@ public class ContactList extends Vector implements UserCentric {
 
   // Logger
   private static long milies = -1;
-  private static Logger logger = Logger.getLogger(ProductCatalog.class);
+  private static Logger logger = Logger.getLogger(org.aspcfs.modules.contacts.base.ContactList.class);
 
   static {
     if (System.getProperty("DEBUG") != null) {
@@ -3127,21 +3127,7 @@ public class ContactList extends Vector implements UserCentric {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
-    }
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
-    }
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = DatabaseUtils.executeQuery(db, pst, logger, pagedListInfo);
     boolean foundDefaultContact = false;
     while (rs.next()) {
       Contact thisContact = new Contact(rs);

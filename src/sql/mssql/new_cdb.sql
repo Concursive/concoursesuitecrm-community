@@ -17,7 +17,7 @@ CREATE TABLE lookup_site_id (
 
 CREATE TABLE access (
   user_id INT IDENTITY(0,1) PRIMARY KEY,
-  username VARCHAR(80) NOT NULL, 
+  username VARCHAR(80) NOT NULL,
   password VARCHAR(80),
   contact_id INT DEFAULT -1,
   role_id INT DEFAULT -1,
@@ -329,7 +329,15 @@ CREATE TABLE organization (
   stage_id INTEGER REFERENCES lookup_account_stage(code)
 );
 
-CREATE INDEX "orglist_name" ON "organization" (name);
+CREATE INDEX orglist_name ON organization(name);
+CREATE INDEX org_owner_idx ON organization(owner);
+CREATE INDEX org_enteredby_idx ON organization(enteredby);
+CREATE INDEX org_modifiedby_idx ON organization(modifiedby);
+CREATE INDEX org_industry_temp_code_idx ON organization(industry_temp_code);
+CREATE INDEX org_account_size_idx ON organization(account_size);
+CREATE INDEX org_org_id_miner_only_idx ON organization(org_id, miner_only);
+CREATE INDEX org_site_id_idx ON organization(site_id);
+CREATE INDEX org_status_id_idx ON organization(status_id);
 
 CREATE TABLE contact (
   contact_id INT IDENTITY PRIMARY KEY,
@@ -554,6 +562,8 @@ CREATE TABLE organization_address (
 )
 ;
 CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
+CREATE INDEX org_addr_pri_address_idx ON organization_address(primary_address);
+CREATE INDEX org_addr_org_id_idx ON organization_address(org_id);
 
 CREATE TABLE organization_emailaddress (
   emailaddress_id INT IDENTITY PRIMARY KEY,

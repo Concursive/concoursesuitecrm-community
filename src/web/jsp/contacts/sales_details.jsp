@@ -86,17 +86,12 @@
     popURL(url,'WorkLead','650','500','yes','yes');
   }
 
-/*  function workAccount() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=account&popup=true&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
-    popURL(url,'WorkLead','650','500','yes','yes');
-  }
-*/
   function workAsAccount() {
-    popURL('Sales.do?command=AssignLead&contactId=<%= ContactDetails.getId() %>&type=workAsAccount&from=dashboard&from=<%= from %>&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popupType|actionId") %>&popup=true','ConvertToAccount','650','200','yes','yes');
+    popURL('Sales.do?command=AssignLead&contactId=<%= ContactDetails.getId() %>&type=workAsAccount&from=<%= from %>&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popupType|actionId") %>&popup=true','ConvertToAccount','650','200','yes','yes');
   }
 
   function reassignLead() {
-    popURL('Sales.do?command=AssignLead&contactId=<%= ContactDetails.getId() %>&type=assignLead&from=dashboard&from=<%= from %>&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popupType|actionId") %>&popup=true','ReassignLead','650','200','yes','yes');
+    popURL('Sales.do?command=AssignLead&contactId=<%= ContactDetails.getId() %>&type=assignLead&from=<%= from %>&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popupType|actionId") %>&popup=true','ReassignLead','650','200','yes','yes');
   }
 
   function continueWorkLead() {
@@ -117,9 +112,6 @@
 
   function modifyLead() {
     var owner = document.forms['details'].owner.value;
-//    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
-//    var manager = document.forms['details'].planManager.value;
-
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
@@ -152,87 +144,7 @@
     var url = "Sales.do?command=Modify&contactId="+contactId+"&nextValue=true&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
     window.location.href= url;
   }
-/*
-  function assignLead() {
-    var owner = document.forms['details'].owner.value;
-    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
-    var manager = document.forms['details'].planManager.value;
 
-    if (owner == '-1') {
-     owner = '<%= User.getUserRecord().getId() %>';
-    }
-    var nextTo = '<%= from %>';
-    try {
-      if (!document.getElementById("toNextLead").checked) {
-        nextTo = "dashboard";
-      }
-    } catch (oException) {
-    }
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner + '&actionPlan=' + actionPlan + '&manager=' + manager;
-    window.frames['server_commands'].location.href=url;
-  }
-
-  function assignAccount() {
-    var owner = document.forms['details'].owner.value;
-    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
-    var manager = document.forms['details'].planManager.value;
-
-    if (owner == '-1') {
-     owner = '<%= User.getUserRecord().getId() %>';
-    }
-    var nextTo = '<%= from %>';
-    try {
-      if (!document.getElementById("toNextLead").checked) {
-        nextTo = "dashboard";
-      }
-    } catch (oException) {
-    }
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assignaccount&from='+ nextTo +'&listForm=<%= (listForm != null?listForm:"") %>&owner=' + owner + '&actionPlan=' + actionPlan + '&manager=' + manager;
-    window.frames['server_commands'].location.href=url;
-  }
-
-  function continueAssignLead() {
-    var rating = document.forms['details'].rating.value;
-    var comments = document.forms['details'].comments.value;
-    var contactId = '<%= ContactDetails.getId() %>';
-    var owner = document.forms['details'].owner.value;
-    if (owner == '-1') {
-     owner = '<%= User.getUserRecord().getId() %>';
-    }
-    var nextTo = '<%= from %>';
-    try {
-      if (!document.getElementById("toNextLead").checked) {
-        nextTo = "dashboard";
-      }
-    } catch (oException) {
-    }
-    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
-    url += "&comments="+comments+"&rating="+rating;
-    window.location.href= url;
-  }
-
-  function continueAssignAccount() {
-    var rating = document.forms['details'].rating.value;
-    var comments = document.forms['details'].comments.value;
-    var contactId = '<%= ContactDetails.getId() %>';
-    var owner = document.forms['details'].owner.value;
-    var actionPlan = document.forms['details'].actionPlan.options[document.forms['details'].actionPlan.selectedIndex].value;
-    var manager = document.forms['details'].planManager.value;
-    if (owner == '-1') {
-     owner = '<%= User.getUserRecord().getId() %>';
-    }
-    var nextTo = '<%= from %>';
-    try {
-      if (!document.getElementById("toNextLead").checked) {
-        nextTo = "dashboard";
-      }
-    } catch (oException) {
-    }
-    var url = "Sales.do?command=Update&contactId="+contactId+"&id="+contactId+"&next=assignaccount&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from="+nextTo+"&listForm=<%= (listForm != null?listForm:"") %>";
-    url += "&comments="+comments+"&rating="+rating+"&actionPlan=" + actionPlan + "&manager=" + manager;
-    window.location.href= url;
-  }
-*/
   function trashLead() {
     var nextTo = '<%= from %>';
     try {
@@ -628,58 +540,6 @@
   </tr>
 </table>
 <br />
-<%--
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="sales.actionPlan">Action Plan</dhv:label>
-    </td>
-    <td>
-      <%= actionPlanSelect.getHtml("actionPlan") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">
-      <dhv:label name="actionPlan.planManager">Plan Manager</dhv:label>
-    </td>
-    <td>
-      <table class="empty">
-        <tr>
-          <td>
-            <div id="changeplanmanager">
-            <% if (actionPlanWork.getManagerId() > 0) { %>
-              <dhv:username id="<%= actionPlanWork.getManagerId() %>"/>
-            <% }else{ %>
-               <dhv:username id="<%= User.getUserRecord().getId() %>"/>
-            <%}%>
-            </div>
-          </td>
-          <td>
-            <input type="hidden" name="planManager" id="planManagerId" value="<%= ((actionPlanWork.getManagerId() > 0) ? actionPlanWork.getManagerId() : User.getUserRecord().getId()) %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('planManagerId','changeplanmanager', 'listView=employees&usersOnly=true&hierarchy=<%= User.getUserId() %>&siteId=<%=ContactDetails.getSiteId()%>&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
-            &nbsp; [<a href="javascript:changeDivContent('changeplanmanager',label('none.selected','None Selected'));javascript:resetNumericFieldValue('planManagerId');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>]
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="sales.rating">Rating</dhv:label>
-    </td>
-    <td>
-      <%= RatingList.getHtmlSelect("rating",ContactDetails.getRating()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      <dhv:label name="contact.source">Source</dhv:label>
-    </td>
-    <td>
-      <%= toHtml( SourceList.getValueFromId(ContactDetails.getSource())) %>
-    </td>
-  </tr>
-</table>
---%>
 <br />
 
 <span name="worklead" id="worklead" style="">

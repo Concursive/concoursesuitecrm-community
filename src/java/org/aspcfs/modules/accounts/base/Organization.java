@@ -20,6 +20,9 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.iteam.utils.ProjectUtils;
 import com.zeroio.webdav.utils.ICalendar;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
 import org.aspcfs.modules.admin.base.User;
@@ -57,6 +60,13 @@ import java.util.TimeZone;
  */
 public class Organization extends GenericBean {
 
+  private static Logger log = Logger.getLogger(org.aspcfs.modules.accounts.base.Organization.class);
+  static {
+    if (System.getProperty("DEBUG") != null) {
+      log.setLevel(Level.DEBUG);
+    }
+  }
+  
   protected double YTD = 0;
 
   private String errorMessage = "";
@@ -150,7 +160,7 @@ public class Organization extends GenericBean {
   private int sicCode = -1;
   private int yearStarted = -1;
   private String sicDescription = null;
-
+  
   /**
    *  Constructor for the Organization object, creates an empty Organization
    *
@@ -209,7 +219,7 @@ public class Organization extends GenericBean {
     pst.setInt(1, org_id);
     pst.setBoolean(2, true);
     pst.setBoolean(3, true);
-    ResultSet rs = pst.executeQuery();
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, log);
     if (rs.next()) {
       buildRecord(rs);
     }
@@ -1984,7 +1994,7 @@ public class Organization extends GenericBean {
    * @return           The Address value
    */
   public Address getAddress(String thisType) {
-    return addressList.getAddress(thisType);
+    return getAddressList().getAddress(thisType);
   }
 
 
@@ -2014,7 +2024,7 @@ public class Organization extends GenericBean {
    * @return    The primaryAddress value
    */
   public Address getPrimaryAddress() {
-    return addressList.getPrimaryAddress();
+    return getAddressList().getPrimaryAddress();
   }
 
 
@@ -3043,7 +3053,7 @@ public class Organization extends GenericBean {
       }
 
       //Insert the addresses if there are any
-      Iterator iaddress = addressList.iterator();
+      Iterator iaddress = getAddressList().iterator();
       while (iaddress.hasNext()) {
         OrganizationAddress thisAddress = (OrganizationAddress) iaddress.next();
         //thisAddress.insert(db, this.getOrgId(), this.getEnteredBy());
@@ -3101,7 +3111,7 @@ public class Organization extends GenericBean {
       }
 
       //Insert the addresses if there are any
-      Iterator iaddress = addressList.iterator();
+      Iterator iaddress = getAddressList().iterator();
       while (iaddress.hasNext()) {
         OrganizationAddress thisAddress = (OrganizationAddress) iaddress.next();
         thisAddress.process(

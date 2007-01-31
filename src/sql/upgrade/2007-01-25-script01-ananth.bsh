@@ -1,0 +1,43 @@
+/* Install a jasper report script
+ * - The .xml will be copied by ant
+ * - This script inserts the report into the database so users can use it
+ */
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.reports.base.Report;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.admin.base.Permission;
+
+// Using the constant categoryId from permissions.xml, get the database id for
+// this module.  This allows for translated permission categories to be used...
+int categoryId = PermissionCategory.lookupId(db, 1); //Accounts
+if (categoryId != -1) {
+  //Set these and the rest will insert the new report
+  String filename = "usf_leads_performance_indicators.xml";
+  String permissionName = "accounts-action-plans";
+  int typeId = 1;//not implemented as of this date
+  String title = "Leads Performance Indicators";
+  String description = "How many leads have been generated and converted to customers by a user?";
+  
+  //Check to see if report already exists
+  int reportId = Report.lookupId(db, filename);
+  if (reportId == -1) {
+    //Update the category report capability
+    PermissionCategory.updateReportAttribute(db, categoryId, true);
+    //Get the permission id for accessing this report
+    int permissionId = Permission.lookupId(db, permissionName);
+    //Insert the report
+    Report report = new Report();
+    report.setCategoryId(categoryId);
+    report.setPermissionId(permissionId);
+    report.setFilename(filename);
+    report.setType(typeId);
+    report.setTitle(title);
+    report.setDescription(description);
+    report.setEnteredBy(0);
+    report.setModifiedBy(0);
+    report.insert(db);
+    print("Report inserted: " + filename);
+  } else {
+    print("Report already exists: " + filename);
+  }
+}

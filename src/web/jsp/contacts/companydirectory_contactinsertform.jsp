@@ -315,6 +315,7 @@
     </td>
   </tr>
   </dhv:include>
+  <dhv:include name="contact.nickname" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
@@ -323,6 +324,7 @@
       <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
     </td>
   </tr>
+  </dhv:include>
   <dhv:include name="contact.birthday" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">

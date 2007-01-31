@@ -16,6 +16,9 @@
 package org.aspcfs.modules.accounts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Import;
@@ -49,6 +52,13 @@ import java.util.ArrayList;
  */
 public class OrganizationList extends Vector implements SyncableList {
 
+  private static Logger log = Logger.getLogger(org.aspcfs.modules.accounts.base.OrganizationList.class);
+  static {
+    if (System.getProperty("DEBUG") != null) {
+      log.setLevel(Level.DEBUG);
+    }
+  }
+  
   private static final long serialVersionUID = 2268314721560915731L;
   public final static int TRUE = 1;
   public final static int FALSE = 0;
@@ -1677,7 +1687,7 @@ public class OrganizationList extends Vector implements SyncableList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, pst);
     }
-    rs = pst.executeQuery();
+    rs = DatabaseUtils.executeQuery(db, pst, log);
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }

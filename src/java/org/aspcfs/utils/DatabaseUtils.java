@@ -19,6 +19,10 @@ import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
 
 import javax.servlet.ServletContext;
+
+import org.apache.log4j.Logger;
+import org.aspcfs.utils.web.PagedListInfo;
+
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
@@ -1703,5 +1707,52 @@ public class DatabaseUtils {
     return truncSQL;
   }
 
+  //Possible time in millies for SQL query
+  static final long POSSIBLE_QUERY_TIME = 3000;
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param log
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static ResultSet executeQuery(Connection db, PreparedStatement pst, Logger log) throws SQLException{
+    return executeQuery(db, pst, log, null);
+  }
 
+   /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param pagedListInfo
+   * @param log
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static ResultSet executeQuery(Connection db, PreparedStatement pst, Logger log, PagedListInfo pagedListInfo) throws SQLException{
+    ResultSet rs = null;
+    long milies = System.currentTimeMillis();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
+    rs = pst.executeQuery();
+    milies = System.currentTimeMillis() - milies;
+    log.debug(pst);
+    log.debug(milies + " ms.");
+    if(milies > POSSIBLE_QUERY_TIME){
+      log.warn("To improve the speed of your application please send the following query to Centric CRM support:");
+      log.warn("------------------------");
+      log.warn(pst);
+      log.warn("[QUERY TIME: " + milies + " ms.]");
+      log.warn("------------------------");
+    }
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    return rs;
+  }
 }

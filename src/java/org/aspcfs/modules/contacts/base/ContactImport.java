@@ -986,6 +986,7 @@ public class ContactImport extends Import implements Runnable {
                     thisOrg.setPotential(thisContact.getPotential());
                     thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
                     thisOrg.setSiteId(thisContact.getSiteId());
+                    thisOrg.setSource(this.getSourceType());
                     if(withoutContact){
                     copyAddressAndPhones(thisContact,
                         thisOrg);}
@@ -1030,6 +1031,7 @@ public class ContactImport extends Import implements Runnable {
                     thisOrg.setPotential(thisContact.getPotential());
                     thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
                     thisOrg.setSiteId(this.getSiteId());
+                    thisOrg.setSource(this.getSourceType());
                     if(withoutContact){
                       copyAddressAndPhones(thisContact,
                           thisOrg);}

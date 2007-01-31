@@ -13,7 +13,7 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
-  - Version: $Id: sales_assign_lead.jsp 15115 2006-05-31 16:47:51 +0000 (Wed, 31 May 2006) matt $
+  - Version: $Id: sales_assign.jsp 15115 2006-05-31 16:47:51 +0000 (Wed, 31 May 2006) matt $
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -46,7 +46,7 @@
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
-    assignLead();
+     continueAssignLead();
   }
   
   function assignLead() {

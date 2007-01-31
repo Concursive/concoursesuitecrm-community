@@ -41,7 +41,7 @@ public class QualifiedLeadsCounter {
           "  owner  " +
           "  from contact " +
           " where conversion_date > ?" +
-          " group by owner, ##) co" +
+          " group by owner, conversion_date) co" +
           " where owner = user_id";
 
   private HashMap rawData;

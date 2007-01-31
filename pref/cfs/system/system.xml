@@ -53,6 +53,7 @@
     <param name="opportunity.lowEstimateCanNotBeZero"/>
     <param name="contact.role"/>
     <param name="contact.additionalNames"/>
+    <param name="contact.nickname"/>
     <param name="contact.instantMessageAddresses"/>
     <param name="contact.textMessageAddresses"/>
     <param name="contact.birthday"/>
@@ -122,8 +123,9 @@
     <param name="object.validation.opportunityComponent.lowNotGTGuess"><value><![CDATA[Near-term weekly opportunity cannot be higher than the Validated Weekly Potential]]></value></param>
     <param name="accounts.accounts_contacts_oppcomponent_add.BestGuess"><value><![CDATA[Near-term weekly opportunity]]></value></param>
     <param name="accounts.accounts_contacts_opps_details.Component"><value><![CDATA[Description]]></value></param>
+    <param name="accounts.accounts_add.nickname"><value><![CDATA[Datawarehouse ID]]></value></param>
     --> 
-    </config>
+  </config>
 
   <!-- The following are the menu names that are renamed -->
 	<config name="system.modules.label" enabled="false">

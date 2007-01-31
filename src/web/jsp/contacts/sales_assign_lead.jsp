@@ -47,7 +47,7 @@
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
-    assignAccount();
+    continueAssignAccount();
   }
   
   function assignAccount() {

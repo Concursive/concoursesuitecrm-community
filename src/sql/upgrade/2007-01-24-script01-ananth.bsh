@@ -25,6 +25,10 @@ if (!importFile.exists()) {
 int systemId = SyncSystem.getSystemId(db, "CFSHttpXMLWriter");
 print("System: " + systemId);
 File configFile = new File(mapFile);
+if (!configFile.exists()) {
+  throw new SQLException("Config file not found: import-mappings.xml");
+}
+
 XMLUtils xml = new XMLUtils(configFile);
 
 ArrayList mapElements = new ArrayList();

@@ -11515,6 +11515,27 @@ any data still directly associated with this disabled user gets re-assigned as s
     <param name="reports.leads.closedLost">
       <value><![CDATA[Lead Lost Stage]]></value>
     </param>
+    <param name="reports.leads.totalLeadsGenerated">
+      <value><![CDATA[Total\nLeads\nGenerated]]></value>
+    </param>
+    <param name="reports.leads.dbLeadsConverted">
+      <value><![CDATA[D&B Leads\nConverted]]></value>
+    </param>
+    <param name="reports.leads.dbLeadsGenerated">
+      <value><![CDATA[D&B Leads\nGenerated]]></value>
+    </param>
+    <param name="reports.leads.totalLeadsConverted">
+      <value><![CDATA[Total\nLeads\nConverted]]></value>
+    </param>
+    <param name="reports.leads.organicLeadsGenerated">
+      <value><![CDATA[Organic\nLeads\Generated]]></value>
+    </param>
+    <param name="reports.leads.organicLeadsConverted">
+      <value><![CDATA[Organic\nLeads\Converted]]></value>
+    </param>
+    <param name="reports.leads.performance.title">
+      <value><![CDATA[Leads Report]]></value>
+    </param>
     <!-- Pipeline Module -->
     <param name="reports.pipeline.stage">
       <value><![CDATA[Stage]]></value>
