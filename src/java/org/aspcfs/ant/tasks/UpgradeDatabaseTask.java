@@ -358,6 +358,8 @@ public class UpgradeDatabaseTask extends Task {
           "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "zeroio-iteam.jar\")");
       script.eval(
           "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "jcrontab.jar\")");
+      script.eval(
+          "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "log4j-1.2.9.jar\")");
       // TODO: Add all libs to classpath...
       //File libDir = new File()
       //File[] libraries = libDir.listFiles();
