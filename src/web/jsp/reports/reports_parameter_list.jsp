@@ -109,8 +109,22 @@
   <tr>
     <th colspan="2">
       <strong><dhv:label name="reports.nameCriteria.text">Name the criteria for future reference</dhv:label></strong>
-      <dhv:label name="reports.optional.brackets">(optional)</dhv:label>
     </th>
+  </tr>
+  <tr>
+    <td class="formLabel">Settings</td>
+    <td>
+      <%-- No previously saved criteria --%>
+      <dhv:evaluate if='<%= "-1".equals(request.getAttribute("criteriaId")) %>'>
+        <input type="checkbox" name="save" value="true"> <dhv:label name="reports.saveCriteria.text">Save this criteria for generating future reports</dhv:label><br />
+      </dhv:evaluate>
+      <%-- Using previously saved criteria --%>
+      <dhv:evaluate if='<%= !"-1".equals(request.getAttribute("criteriaId")) %>'>
+        <input type="radio" name="saveType" value="none" checked> <dhv:label name="reports.doNotSaveCriteria">Do not save criteria for generating future reports</dhv:label><br />
+        <input type="radio" name="saveType" value="overwrite"> <dhv:label name="reports.overwritePreviousCriteria.text">Overwrite previously saved criteria</dhv:label><br />
+        <input type="radio" name="saveType" value="save"> <dhv:label name="reports.saveNewCopyCriteria.text">Save a new copy of this criteria</dhv:label><br />
+      </dhv:evaluate>
+    </td>
   </tr>
   <tr>
     <td class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></td>
@@ -149,18 +163,6 @@
   </tr>
   </dhv:evaluate>
 </table>
-<dhv:evaluate if="<%= count > 0 %>">
-<%-- No previously saved criteria --%>
-<dhv:evaluate if='<%= "-1".equals(request.getAttribute("criteriaId")) %>'>
-<input type="checkbox" name="save" value="true"> <dhv:label name="reports.saveCriteria.text">Save this criteria for generating future reports</dhv:label><br />
-</dhv:evaluate>
-<%-- Using previously saved criteria --%>
-<dhv:evaluate if='<%= !"-1".equals(request.getAttribute("criteriaId")) %>'>
-<input type="radio" name="saveType" value="none" checked> <dhv:label name="reports.doNotSaveCriteria">Do not save criteria for generating future reports</dhv:label><br />
-<input type="radio" name="saveType" value="overwrite"> <dhv:label name="reports.overwritePreviousCriteria.text">Overwrite previously saved criteria</dhv:label><br />
-<input type="radio" name="saveType" value="save"> <dhv:label name="reports.saveNewCopyCriteria.text">Save a new copy of this criteria</dhv:label><br />
-</dhv:evaluate>
-</dhv:evaluate>
 <br />
 <input type="submit" value="<dhv:label name="reports.generateReport">Generate Report</dhv:label>"/>
 </form>
