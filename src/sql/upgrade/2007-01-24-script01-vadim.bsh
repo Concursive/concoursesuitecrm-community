@@ -47,7 +47,7 @@ import org.aspcfs.modules.reports.base.ReportQueue;
   if (lookupList.getIdFromConstant(constant)<0){
   ReportType listItem = new ReportType();
   listItem.setDescription(descriptionName);
-  listItem.setLevel(10);
+  listItem.setLevel(30);
   listItem.setEnabled(true);
   listItem.setDefaultItem(false);
   listItem.setConstant(constant);
@@ -64,7 +64,7 @@ import org.aspcfs.modules.reports.base.ReportQueue;
   if (lookupList.getIdFromConstant(constant)<0){
   ReportType listItem = new ReportType();
   listItem.setDescription(descriptionName);
-  listItem.setLevel(10);
+  listItem.setLevel(20);
   listItem.setEnabled(true);
   listItem.setDefaultItem(false);
   listItem.setConstant(constant);
@@ -72,6 +72,19 @@ import org.aspcfs.modules.reports.base.ReportQueue;
   print("Lookup element '"+descriptionName+"' inserted");
   }else {print("Lookup element '"+descriptionName+"' already exists"); }
 
-
-
-
+  descriptionName = dictionary.getTerm("system.fields.label", "reports.type.Excel", "value");
+  if (descriptionName == null) {
+    descriptionName = "Excel";
+  }
+  //descriptionName = "Excel";
+  constant=ReportQueue.REPORT_TYPE_EXCEL;
+  if (lookupList.getIdFromConstant(constant)<0){
+  ReportType listItem = new ReportType();
+  listItem.setDescription(descriptionName);
+  listItem.setLevel(40);
+  listItem.setEnabled(true);
+  listItem.setDefaultItem(false);
+  listItem.setConstant(constant);
+  listItem.insert(db);
+  print("Lookup element '"+descriptionName+"' inserted");
+  }else {print("Lookup element '"+descriptionName+"' already exists"); }

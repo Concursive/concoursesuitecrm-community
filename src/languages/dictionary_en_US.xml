@@ -8616,6 +8616,12 @@ were available on a network file share.  Create a shared volume or folder to the
     <param name="reports.downloadAsCSV">
       <value><![CDATA[Download CSV]]></value>
     </param>
+    <param name="reports.viewAsExcel">
+      <value><![CDATA[View as Excel]]></value>
+    </param>
+    <param name="reports.downloadAsExcel">
+      <value><![CDATA[Download Excel]]></value>
+    </param>
     <param name="reports.type.PDF">
       <value><![CDATA[PDF]]></value>
     </param>
@@ -8627,6 +8633,9 @@ were available on a network file share.  Create a shared volume or folder to the
     </param>
     <param name="reports.type.HTML">
       <value><![CDATA[HTML]]></value>
+    </param>
+    <param name="reports.type.Excel">
+      <value><![CDATA[Excel]]></value>
     </param>
     <param name="reports.cancelReport">
       <value><![CDATA[Cancel Report]]></value>

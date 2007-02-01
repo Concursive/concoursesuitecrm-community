@@ -42,6 +42,7 @@ public class ReportQueue extends GenericBean {
   public final static int REPORT_TYPE_PDF = 1;
   public final static int REPORT_TYPE_CSV = 2;
   public final static int REPORT_TYPE_HTML = 3;
+  public final static int REPORT_TYPE_EXCEL = 4;
   private int id = -1;
   private int reportId = -1;
   private Timestamp entered = null;
@@ -52,10 +53,10 @@ public class ReportQueue extends GenericBean {
   private long size = -1;
   private boolean enabled = true;
   private int outputType = -1;
-  private int outputTypeConstant =-1;
+  private int outputTypeConstant = -1;
   private String outputTypeDescription = null;
   private boolean email = false;
-	
+
   //Resources
   private int position = -1;
   private Report report = null;
@@ -285,34 +286,37 @@ public class ReportQueue extends GenericBean {
    * Sets the outputType attribute of the ReportQueue object
    *
    * @param tmp The new outputType value
-   */  
-	public void setOutputType(int tmp) {
-		this.outputType = tmp;
-	}
+   */
+  public void setOutputType(int tmp) {
+    this.outputType = tmp;
+  }
+
   /**
    * Sets the outputType attribute of the ReportQueue object
    *
    * @param tmp The new outputType value
    */
-	public void setOutputType(String tmp) {
-		this.outputType = Integer.parseInt(tmp);
-	}
-  /**
-   * Sets the email attribute of the ReportQueue object
-   *
-   * @param tmp The new email value
-   */	
-	public void setEmail(boolean tmp) {
-		this.email = tmp;
-	}
+  public void setOutputType(String tmp) {
+    this.outputType = Integer.parseInt(tmp);
+  }
+
   /**
    * Sets the email attribute of the ReportQueue object
    *
    * @param tmp The new email value
    */
-	public void setEmail(String tmp) {
-		this.email = DatabaseUtils.parseBoolean(tmp);
-	}
+  public void setEmail(boolean tmp) {
+    this.email = tmp;
+  }
+
+  /**
+   * Sets the email attribute of the ReportQueue object
+   *
+   * @param tmp The new email value
+   */
+  public void setEmail(String tmp) {
+    this.email = DatabaseUtils.parseBoolean(tmp);
+  }
 
   /**
    * Sets the enabled attribute of the ReportQueue object
@@ -462,42 +466,42 @@ public class ReportQueue extends GenericBean {
   public boolean getEnabled() {
     return enabled;
   }
-  
+
   /**
    * Gets the outputType attribute of the ReportQueue object
    *
    * @return The outputType value
    */
-	public int getOutputType() {
-		return outputType;
-	}
-	
+  public int getOutputType() {
+    return outputType;
+  }
+
   /**
    * Gets the outputTypeConstant attribute of the ReportQueue object
    *
    * @return The outputTypeConstant value
    */
-	public int getOutputTypeConstant() {
-		return outputTypeConstant;
-	}
-	
+  public int getOutputTypeConstant() {
+    return outputTypeConstant;
+  }
+
   /**
    * Gets the utputTypeDescription attribute of the ReportQueue object
    *
    * @return The utputTypeDescription value
    */
-	public String getOutputTypeDescription() {
-		return outputTypeDescription;
-	}
-	
+  public String getOutputTypeDescription() {
+    return outputTypeDescription;
+  }
+
   /**
    * Gets the email attribute of the ReportQueue object
    *
    * @return The email value
    */
-	public boolean getEmail() {
-		return email;
-	}
+  public boolean getEmail() {
+    return email;
+  }
 
   /**
    * Gets the position attribute of the ReportQueue object
@@ -563,7 +567,7 @@ public class ReportQueue extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO report_queue " +
             "(" + (id > -1 ? "queue_id, " : "") + "report_id, entered, enteredby, processed, " +
-           	"status, filename, filesize, enabled, output_type, email) " +
+            "status, filename, filesize, enabled, output_type, email) " +
             "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {

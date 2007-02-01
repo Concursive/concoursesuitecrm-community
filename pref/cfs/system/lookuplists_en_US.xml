@@ -1126,8 +1126,9 @@
     </lookup>
     <lookup table="lookup_report_type">
       <attribute name="constant" type="integer"/>
-      <record constant="1" enabled="true" default_item="true" level="10"><![CDATA[PDF]]></record>
-      <record constant="2" enabled="true" default_item="false" level="20"><![CDATA[CSV]]></record>
-      <record constant="3" enabled="true" default_item="false" level="30"><![CDATA[HTML]]></record>
+      <record constant="1" enabled="true" default_item="true"><![CDATA[PDF]]></record>
+      <record constant="3" enabled="true" default_item="false"><![CDATA[HTML]]></record>
+      <record constant="2" enabled="true" default_item="false"><![CDATA[CSV]]></record>
+      <record constant="4" enabled="true" default_item="false"><![CDATA[Excel]]></record>
     </lookup>
 </lookupLists>

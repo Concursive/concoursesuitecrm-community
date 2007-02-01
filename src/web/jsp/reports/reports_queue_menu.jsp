@@ -28,6 +28,7 @@
       new ypSlideOutMenu("menu1aPDF", "down", 0, 0, 170, getHeight("menu1aPDFTable"));
       new ypSlideOutMenu("menu1aHtml", "down", 0, 0, 170, getHeight("menu1aHtmlTable"));
       new ypSlideOutMenu("menu1aCsv", "down", 0, 0, 170, getHeight("menu1aCsvTable"));
+      new ypSlideOutMenu("menu1aExcel", "down", 0, 0, 170, getHeight("menu1aExcelTable"));
       new ypSlideOutMenu("menu1b", "down", 0, 0, 170, getHeight("menu1bTable"));
       new ypSlideOutMenu("menu2", "down", 0, 0, 170, getHeight("menu2Table"));
     }
@@ -124,6 +125,36 @@
         </th>
         <td width="100%">
           <dhv:label name="reports.downloadAsCSV">Download CSV</dhv:label>
+        </td>
+      </tr>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteReport()">
+        <th>
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.delete">Delete</dhv:label>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div id="menu1aExcelContainer" class="menu">
+  <div id="menu1aExcelContent">
+    <table id="menu1aExcelTable" class="pulldown" width="170" cellspacing="0">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="stream()">
+        <th>
+          <img src="images/mime/gnome-text-plain-23.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="reports.viewAsExcel">View as Excel</dhv:label>
+        </td>
+      </tr>
+      <tr id="menuEdit" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="download()">
+        <th>
+          <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="reports.downloadAsExcel">Download Excel</dhv:label>
         </td>
       </tr>
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteReport()">

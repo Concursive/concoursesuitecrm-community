@@ -14,7 +14,8 @@ New features:
 - Added Documents to Contacts module
 - Added Documents to Account Contacts module
 - Added file attachments to Communications messages
-- Added creating reports as HTML or CSV, in addition to PDF, and option to email
+- Added creating reports as HTML, CSV, Excel, in addition to PDF
+- Option to automatically email the report once it has been generated
 - Accounts can now be imported without a contact
 - Additional Account search form fields
 - Added new fields to lead/contact/account: revenue, lat/longitude, business

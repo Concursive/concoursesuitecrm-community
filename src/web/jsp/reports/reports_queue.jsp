@@ -100,6 +100,9 @@
     if (thisQueue.getOutputTypeConstant() == ReportQueue.REPORT_TYPE_CSV) {
       typeFormat = "Csv";
     }
+    if (thisQueue.getOutputTypeConstant() == ReportQueue.REPORT_TYPE_EXCEL) {
+      typeFormat = "Excel";
+    }
 %>
   <tr class="row<%= rowid %>">
     <td><a href="javascript:displayMenu('select<%= thisQueue.getId() %>','menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %><%= typeFormat %>','<%= thisQueue.getId() %>');" onMouseOver="over(0, <%= thisQueue.getId() %>)" onmouseout="out(0, <%= thisQueue.getId() %>); hideMenu('menu1<%= (thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED ? "a" : "b") %><%= typeFormat %>');"><img src="images/select.gif" name="select<%= thisQueue.getId() %>" id="select<%= thisQueue.getId() %>" align="absmiddle" border="0"></a></td>

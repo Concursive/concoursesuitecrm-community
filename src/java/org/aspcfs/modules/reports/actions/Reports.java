@@ -22,8 +22,8 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.PermissionCategoryList;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.reports.base.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.JasperReportUtils;
@@ -191,10 +191,10 @@ public final class Reports extends CFSModule {
       criteriaList.setReportId(report.getId());
       criteriaList.setOwner(getUserId(context));
       criteriaList.buildList(db);
-      
+
       ReportTypeList reportTypeList = new ReportTypeList();
       reportTypeList.buildList(db);
-      
+
       context.getRequest().setAttribute("reportTypeList", reportTypeList);
       context.getRequest().setAttribute("criteriaList", criteriaList);
       if (criteriaList.size() == 0) {
@@ -283,13 +283,13 @@ public final class Reports extends CFSModule {
         criteriaList.setOwner(getUserId(context));
         criteriaList.setCriteriaId(criteriaId);
         criteriaList.buildList(db);
-        if (criteriaList.size() != 0){
+        if (criteriaList.size() != 0) {
           Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
           criteria.buildResources(db);
           params.setParameters(criteria);
           context.getRequest().setAttribute("criteria", criteria);
           context.getRequest().setAttribute("criteriaId", criteriaId);
-        } else{ 
+        } else {
           context.getRequest().setAttribute("criteriaId", "-1");
         }
       }
@@ -306,14 +306,14 @@ public final class Reports extends CFSModule {
       context.getRequest().setAttribute(
           "systemStatus", this.getSystemStatus(context));
       context.getRequest().setAttribute("hasEmail", "false");
-			//Determine if user has email
-			int contactId = this.getUser(context, this.getUserId(context)).getContactId();
-			Contact contact = new Contact();
-			contact.setBuildDetails(true);
-			contact.queryRecord(db, contactId);
-			if (contact.getEmailAddressList().size() > 0){
-				context.getRequest().setAttribute("hasEmail", "true");
-			}
+      //Determine if user has email
+      int contactId = this.getUser(context, this.getUserId(context)).getContactId();
+      Contact contact = new Contact();
+      contact.setBuildDetails(true);
+      contact.queryRecord(db, contactId);
+      if (contact.getEmailAddressList().size() > 0) {
+        context.getRequest().setAttribute("hasEmail", "true");
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -380,37 +380,37 @@ public final class Reports extends CFSModule {
           Parameter thisParam = params.getParameter("year_part");
           params.addParam(
               "year_part", DatabaseUtils.getYearPart(
-                  db, thisParam.getDescription()));
+              db, thisParam.getDescription()));
         }
         if (params.getParameter("month_part") != null) {
           Parameter thisParam = params.getParameter("month_part");
           params.addParam(
               "month_part", DatabaseUtils.getMonthPart(
-                  db, thisParam.getDescription()));
+              db, thisParam.getDescription()));
         }
         if (params.getParameter("day_part") != null) {
           Parameter thisParam = params.getParameter("day_part");
           params.addParam(
               "day_part", DatabaseUtils.getDayPart(
-                  db, thisParam.getDescription()));
+              db, thisParam.getDescription()));
         }
         if (params.getParameter("hour_part") != null) {
           Parameter thisParam = params.getParameter("hour_part");
           params.addParam(
               "hour_part", DatabaseUtils.getHourPart(
-                  db, thisParam.getDescription()));
+              db, thisParam.getDescription()));
         }
         if (params.getParameter("min_part") != null) {
           Parameter thisParam = params.getParameter("min_part");
           params.addParam(
               "min_part", DatabaseUtils.getMinutePart(
-                  db, thisParam.getDescription()));
+              db, thisParam.getDescription()));
         }
         if (params.getParameter("temp_table_name") != null) {
           Parameter thisParam = params.getParameter("temp_table_name");
           params.addParam(
               "temp_table_name", DatabaseUtils.getTempTableName(
-                  db, thisParam.getDescription()));
+              db, thisParam.getDescription()));
         }
         //Populate a criteria record which will be used in the report
         thisCriteria = new Criteria();
@@ -452,12 +452,12 @@ public final class Reports extends CFSModule {
         }
         String reportTypeStr = context.getRequest().getParameter("reportType");
         int reportType = ReportQueue.REPORT_TYPE_PDF;
-        if (reportTypeStr!=null){
-        	reportType=Integer.parseInt(reportTypeStr);
+        if (reportTypeStr != null) {
+          reportType = Integer.parseInt(reportTypeStr);
         }
         boolean sendEmail = false;
         if ("true".equals(context.getRequest().getParameter("email"))) {
-        	sendEmail = true;
+          sendEmail = true;
         }
         //Insert the report into the queue
         if (isValid || !thisCriteria.getSave() || !thisCriteria.getOverwrite()) {
@@ -470,7 +470,7 @@ public final class Reports extends CFSModule {
         HashMap errors = new HashMap(params.getErrors());
         errors.put(
             "actionError", systemStatus.getLabel(
-                "object.validation.pleaseEnterValidInput"));
+            "object.validation.pleaseEnterValidInput"));
         processErrors(context, errors);
         context.getRequest().setAttribute("parameterList", params);
       }
@@ -518,16 +518,19 @@ public final class Reports extends CFSModule {
         download.setFullPath(
             this.getPath(context, "reports-queue") + getDatePath(
                 queue.getEntered()) + queue.getFilename());
-        
+
         switch (queue.getOutputTypeConstant()) {
-          case ReportQueue.REPORT_TYPE_PDF: 
-            download.setDisplayName(queue.getReport().getFilename() + ".pdf");       
+          case ReportQueue.REPORT_TYPE_PDF:
+            download.setDisplayName(queue.getReport().getFilename() + ".pdf");
             break;
-          case ReportQueue.REPORT_TYPE_HTML: 
+          case ReportQueue.REPORT_TYPE_HTML:
             download.setDisplayName(queue.getReport().getFilename() + ".html");
             break;
-          case ReportQueue.REPORT_TYPE_CSV: 
+          case ReportQueue.REPORT_TYPE_CSV:
             download.setDisplayName(queue.getReport().getFilename() + ".csv");
+            break;
+          case ReportQueue.REPORT_TYPE_EXCEL:
+            download.setDisplayName(queue.getReport().getFilename() + ".xls");
             break;
         }
         download.streamContent(context);
@@ -566,25 +569,30 @@ public final class Reports extends CFSModule {
     if (queue != null) {
       try {
         FileDownload download = new FileDownload();
-				download.setFullPath(
-						this.getPath(context, "reports-queue") + getDatePath(
-								queue.getEntered()) + queue.getFilename());
+        download.setFullPath(
+            this.getPath(context, "reports-queue") + getDatePath(
+                queue.getEntered()) + queue.getFilename());
         switch (queue.getOutputTypeConstant()) {
           case ReportQueue.REPORT_TYPE_PDF:
-              download.setDisplayName(
-                    queue.getReport().getFilename().substring(
-                        0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
-          break;
+            download.setDisplayName(
+                queue.getReport().getFilename().substring(
+                    0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
+            break;
           case ReportQueue.REPORT_TYPE_HTML:
-              download.setDisplayName(
-                    queue.getReport().getFilename().substring(
-                        0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".html");
-           break;
+            download.setDisplayName(
+                queue.getReport().getFilename().substring(
+                    0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".html");
+            break;
           case ReportQueue.REPORT_TYPE_CSV:
-              download.setDisplayName(
-                    queue.getReport().getFilename().substring(
-                        0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".csv");
-           break;
+            download.setDisplayName(
+                queue.getReport().getFilename().substring(
+                    0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".csv");
+            break;
+          case ReportQueue.REPORT_TYPE_EXCEL:
+            download.setDisplayName(
+                queue.getReport().getFilename().substring(
+                    0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".xls");
+            break;
         }
         download.sendFile(context);
       } catch (Exception e) {
@@ -618,11 +626,11 @@ public final class Reports extends CFSModule {
         if (queue.getProcessed() != null) {
           queue.delete(
               db, this.getPath(context, "reports-queue") + getDatePath(
-                  queue.getEntered()) + queue.getFilename());
+              queue.getEntered()) + queue.getFilename());
         } else {
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.reportDeletion"));
+              "object.validation.actionError.reportDeletion"));
         }
       }
     } catch (Exception e) {
@@ -658,11 +666,11 @@ public final class Reports extends CFSModule {
         if (queue.getProcessed() == null) {
           queue.delete(
               db, this.getPath(context, "reports-queue") + getDatePath(
-                  queue.getEntered()) + queue.getFilename());
+              queue.getEntered()) + queue.getFilename());
         } else {
           context.getRequest().setAttribute(
               "actionError", systemStatus.getLabel(
-                  "object.validation.actionError.reportCancellation"));
+              "object.validation.actionError.reportCancellation"));
         }
       }
     } catch (Exception e) {
