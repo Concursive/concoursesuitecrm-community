@@ -1,8 +1,8 @@
 ----------------------------------------------------------------------------
-Centric CRM 4.1 RC1
+Centric CRM 4.1 RC2
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log
-January 29, 2007
+February 2, 2007
 ----------------------------------------------------------------------------
 
 The following is a running list until release...
