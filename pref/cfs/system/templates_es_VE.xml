@@ -358,5 +358,15 @@ Centric CRM<br />
 </body>
 ]]>
 </map>
+<map id="report.email.subject" displayName="Report Email"><![CDATA[Centric CRM Report]]></map>
+<map id="report.alert.email.body" displayName="Report Email"><![CDATA[
+<body>
+The attached report was generated and emailed as requested...<br />
+<br />
+_____________________________________________________________________________________________<br />
+Centric CRM<br />
+</body>
+]]>
+</map>
 </mappings>
 </templates>
