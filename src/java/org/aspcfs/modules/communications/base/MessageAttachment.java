@@ -353,9 +353,10 @@ public class MessageAttachment extends GenericBean {
       sql.append(
           "INSERT INTO message_file_attachment " +
               "(link_module_id, link_item_id, file_item_id, filename, " +
+              (id > -1 ? "attachment_id, " : "") +
               DatabaseUtils.addQuotes(db, "size") + ", " +
               DatabaseUtils.addQuotes(db, "version") + ") ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ? )");
+      sql.append("VALUES (?, ?, ?, ?, " + (id > -1 ? "?, " : "") + "?, ? )");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getLinkModuleId());
@@ -366,10 +367,14 @@ public class MessageAttachment extends GenericBean {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setString(++i, this.getFileName());
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
       pst.setInt(++i, this.getSize());
       pst.setDouble(++i, this.getVersion());
       pst.execute();
       pst.close();
+      id = DatabaseUtils.getCurrVal(db, "message_file_attachment_attachment_id_seq", id);
       if (commit) {
         db.commit();
       }
