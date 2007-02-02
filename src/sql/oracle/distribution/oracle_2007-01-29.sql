@@ -9,8 +9,8 @@ CREATE TABLE message_file_attachment (
   "version" FLOAT DEFAULT 0
 );
 
-CREATE INDEX "message_f_link_module_id" ON "message_file_attachment" (link_module_id);
-CREATE INDEX "message_f_link_item_id" ON "message_file_attachment" (link_item_id);
+CREATE INDEX message_f_link_module_id ON message_file_attachment (link_module_id);
+CREATE INDEX message_f_link_item_id ON message_file_attachment (link_item_id);
 
 CREATE SEQUENCE lookup_report_type_code_seq;
 CREATE TABLE lookup_report_type (
