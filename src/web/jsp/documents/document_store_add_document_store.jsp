@@ -132,6 +132,15 @@
       <dhv:label name="documents.details.approved">Approved</dhv:label> <zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>"/><br />
     </td>
   </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      <dhv:label name="documents.details.public">Public</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="publicStore" value="ON"<%= documentStoreApprovedCheck %>>
+      <dhv:label name="documents.details.allowWebsiteUsersToAccess">Allow website users to access all documents in this store</dhv:label> 
+    </td>
+  </tr>
 </table>
 <br />
 <input type="hidden" name="onlyWarnings" value='<%=(documentStore.getOnlyWarnings()?"on":"off")%>' />

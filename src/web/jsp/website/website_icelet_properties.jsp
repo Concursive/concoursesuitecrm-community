@@ -103,6 +103,7 @@
           <% htmlEditorIncluded = true; %>
           <script language="JavaScript">
             var imageLibraryURL = "/../WebsiteMedia.do?command=View&row=<%= rowColumn.getPageRowId() %>&popup=true";
+            var documentLibraryURL = "/../WebsiteDocuments.do?command=View&row=<%= rowColumn.getPageRowId() %>&popup=true";
           </script>
         </dhv:evaluate>
         <%= toHtml(property.getDescription()) %><br />

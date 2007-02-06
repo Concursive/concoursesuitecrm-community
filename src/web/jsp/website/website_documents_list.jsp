@@ -27,7 +27,7 @@
 <%@ include file="website_documents_list_menu.jsp" %>
 <script language="JavaScript" type="text/javascript">
   loadImages('select');
-	
+  
 	function fetchImageURL(imageId){
 		<%if (request.getParameter("row") != null) {%> 
 			var imageURL = "ProcessFileItemImage.do?command=StreamImage&id="+imageId+"&path=website&row="+<%=request.getParameter("row")%>;

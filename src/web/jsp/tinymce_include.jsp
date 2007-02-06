@@ -16,7 +16,7 @@
     clientType.setParameters(request);
   }
 %>
-<script language="javascript" type="text/javascript" src="tiny_mce/image-library.js?2"></script>
+<script language="javascript" type="text/javascript" src="tiny_mce/image-library.js?3"></script>
 <script language="javascript" type="text/javascript" src="tiny_mce/tiny_mce.js?1"></script>
 <script language="javascript" type="text/javascript">
   function initEditor(ta) {

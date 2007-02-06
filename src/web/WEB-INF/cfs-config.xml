@@ -20,7 +20,10 @@
           class="org.aspcfs.modules.communications.actions.ProcessFileItemImage">
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>
-
+  <action name="ProcessFileItem"
+          class="org.aspcfs.modules.communications.actions.ProcessFileItem">
+    <forward name="SystemError" resource="/errors/error_system.jsp"/>
+  </action>
   <!-- Orders -->
   <action name="Orders" class="org.aspcfs.modules.orders.actions.Orders">
     <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean"
@@ -130,8 +133,66 @@
     <forward name="PopupCloseOK"
              resource="/website/website_documents_folders_popclose.jsp"/>
   </action>
-
-
+  
+<action name="WebsiteDocumentsFolders" class="org.aspcfs.modules.website.actions.WebsiteDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder"
+          scope="request"/>
+    <forward name="AddOK"
+             resource="/website/website_document_store_folders_add.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK"
+             resource="/website/website_document_store_folders_add.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="UpdatePopupOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="InsertOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="InsertPopupOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="DeleteOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="DeletePopupOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="DeleteERROR" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="MoveOK"
+             resource="/website/website_documents_folders_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/website/website_documents_folders_popclose.jsp"/>
+  </action>
+  
+  <action name="WebsiteDocuments" class="org.aspcfs.modules.website.actions.WebsiteDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem"
+          scope="request"/>
+    <forward name="ViewOK" resource="/website/website_document_store_list.jsp"
+             layout="nav"/>
+    <forward name="ViewPopupOK"
+             resource="/website/website_document_store_list.jsp"
+             layout="style"/>
+    <forward name="DocumentStoreCenterOK" resource="/website/website_document_store_center.jsp"
+             layout="nav"/>
+    <forward name="DocumentStoreCenterPopupOK"
+             resource="/website/website_document_store_center.jsp"
+             layout="style"/>
+    <forward name="AddOK" resource="/website/website_document_store_documents_upload.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK" resource="/website/website_document_store_documents_upload.jsp"
+             layout="style"/>
+    <forward name="UploadOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="UploadPopupOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="AddVersionOK"
+             resource="/website/website_documents_upload_version.jsp"
+             layout="nav"/>
+    <forward name="DetailsOK"
+             resource="/website/website_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/website/website_documents_modify.jsp"
+             layout="nav"/>
+    <forward name="UpdateOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="UpdatePopupOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="DeleteOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="DeletePopupOK" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="DeleteERROR" resource="/WebsiteDocuments.do?command=DocumentStoreCenter"/>
+    <forward name="MoveOK" resource="/website/website_documents_file_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/website/website_documents_folders_popclose.jsp"/>
+  </action>
   <!-- Portfolio Editor -->
   <action name="PortfolioEditor" class="org.aspcfs.modules.website.actions.PortfolioEditor">
     <bean name="category" class="org.aspcfs.modules.website.base.PortfolioCategory" scope="request"/>

@@ -47,7 +47,8 @@ public class DocumentStore extends GenericBean {
   private int approvalBy = -1;
   private boolean closed = false;
   private Timestamp closeDate = null;
-
+  private boolean publicStore = false;
+  
   private Timestamp entered = null;
   private int enteredBy = -1;
   private Timestamp modified = null;
@@ -113,8 +114,34 @@ public class DocumentStore extends GenericBean {
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
+ 
+  /**
+   * Gets the publicStore attribute of the DocumentStore object
+   *
+   * @return publicStore The publicStore value
+   */
+  public boolean getPublicStore() {
+    return this.publicStore;
+  }
 
 
+  /**
+   * Sets the pablicStore attribute of the DocumentStore object
+   *
+   * @param publicStore The new publicStore value
+   */
+  public void setPublicStore(boolean publicStore) {
+    this.publicStore = publicStore;
+  }
+
+  /**
+   * Sets the closed attribute of the DocumentStore object
+   *
+   * @param tmp The new closed value
+   */
+  public void setPublicStore(String tmp) {
+    this.publicStore = DatabaseUtils.parseBoolean(tmp);
+  }
   /**
    * Sets the templateId attribute of the DocumentStore object
    *
@@ -861,8 +888,8 @@ public class DocumentStore extends GenericBean {
           " approvalBy , " +
           " closeDate , " +
           " enteredBy , " +
-          " modifiedBy) " +
-          "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?)");
+          " modifiedBy, public_store) " +
+          "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?,?)");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -894,6 +921,7 @@ public class DocumentStore extends GenericBean {
       }
       pst.setInt(++i, this.enteredBy);
       pst.setInt(++i, this.modifiedBy);
+      pst.setBoolean(++i, this.publicStore);
       pst.execute();
       pst.close();
 
@@ -1092,6 +1120,7 @@ public class DocumentStore extends GenericBean {
     }
     sql.append(
         " closeDate = ? , " +
+        " public_store = ? , " +
         " modifiedby = ? , " +
         " modified = CURRENT_TIMESTAMP " +
         " WHERE document_store_id = ? " +
@@ -1128,6 +1157,7 @@ public class DocumentStore extends GenericBean {
     } else if (!closed) {
       pst.setNull(++i, java.sql.Types.DATE);
     }
+    pst.setBoolean(++i, this.publicStore);
     pst.setInt(++i, this.modifiedBy);
     pst.setInt(++i, this.id);
     if(this.getModified() != null){
@@ -1164,6 +1194,7 @@ public class DocumentStore extends GenericBean {
     this.modified = rs.getTimestamp("modified");
     this.modifiedBy = rs.getInt("modifiedBy");
     this.trashedDate = rs.getTimestamp("trashed_date");
+    this.publicStore = rs.getBoolean("public_store");
   }
 
 

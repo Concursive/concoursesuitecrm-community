@@ -5,6 +5,7 @@ Change Log
 February 6, 2007
 ----------------------------------------------------------------------------
 
+- Website public file attachments from a document store
 - Quickly complete an action plan
 
 

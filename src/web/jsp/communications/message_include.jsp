@@ -24,6 +24,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript">
 	var imageLibraryURL = "/../WebsiteMedia.do?command=View&forEmail=true&popup=true";
+	var documentLibraryURL = "/../WebsiteDocuments.do?command=View&forEmail=true&popup=true";
   indSelected = 0;
   orgSelected = 1;
   onLoad = 1;
@@ -34,7 +35,7 @@
       return(checkForm(form));
     }
   }
-  
+
   function clearSelections() {
     deleteOptions("selectedList");
     insertOption("None Selected", "", "selectedList");
@@ -111,7 +112,7 @@
 	<PARAM NAME="SOURCEVIEW" VALUE="false">
 	<PARAM NAME="MENUICONS" VALUE="true">
 	<%-- all available toolbar items: NEW,OPEN,SAVE,CUT,COPY,PASTE,UNDO,REDO,FIND,BOLD,ITALIC,UNDERLINE,STRIKE,SUPERSCRIPT,SUBSCRIPT,ULIST,OLIST,CLEARFORMATS,INSERTCHARACTER,ANCHOR,VIEWSOURCE,STYLESELECT,LEFT,CENTER,RIGHT,JUSTIFY,DEINDENT,INDENT,IMAGE,COLOR,TABLE,SAVECONTENT,DETACHFRAME,SEPARATOR --%>
-	<PARAM NAME="BUTTONS" VALUE="CUT,COPY,PASTE,SEPARATOR,BOLD,ITALIC,UNDERLINE,SEPARATOR,LEFT,CENTER,RIGHT,justify,SEPARATOR,DETACHFRAME">	
+	<PARAM NAME="BUTTONS" VALUE="CUT,COPY,PASTE,SEPARATOR,BOLD,ITALIC,UNDERLINE,SEPARATOR,LEFT,CENTER,RIGHT,justify,SEPARATOR,DETACHFRAME">
 	<PARAM NAME="BUTTONS2" VALUE="ULIST,OLIST,SEPARATOR,UNDO,REDO,SEPARATOR,DEINDENT,INDENT,SEPARATOR,ANCHOR,SEPARATOR,IMAGE,SEPARATOR,CLEARFORMATS,SEPARATOR,VIEWSOURCE,SEPARATOR,STRIKE,SUPERSCRIPT,SUBSCRIPT,INSERTCHARACTER,SEPARATOR,FIND,COLOR,TABLE">
 	<%-- all available menuitems: <PARAM NAME="MENUITEMS" VALUE="FILE,EDIT,VIEW,FONT,FORMAT,INSERT,TABLE,FORMS,SEARCH,TOOLS,HELP,DEBUG"> --%>
 	<PARAM NAME="MENUITEMS" VALUE="EDIT,FONT,FORMAT,INSERT,TABLE,SEARCH">
@@ -158,7 +159,7 @@
                 %>
                   <option value="<%=thisAttachment.getFileItemId()%>"><%=thisAttachment.getFileName()+" ("+thisAttachment.getRelativeSize()+User.getSystemStatus(getServletConfig()).getLabel("admin.oneThousand.abbreviation", "k")+")"%></option>
                 <%}%>
-                </dhv:evaluate>      
+                </dhv:evaluate>
               </select>
             </td>
             <dhv:permission name="<%= "accounts-accounts-documents-view"+","+"accounts-accounts-contacts-documents-view"+","+ "contacts-external_contacts-documents-view" +","+ "documents-view"+","+ "projects-view"%>" all="false">
@@ -171,14 +172,14 @@
               boolean hasAccountContactPermission = false;
               %>
                <dhv:permission name="contacts-external_contacts-documents-view">
-             	 <%hasContactPermission=true;%>           
-              </dhv:permission>	
+             	 <%hasContactPermission=true;%>
+              </dhv:permission>
               <dhv:permission name="accounts-accounts-documents-view">
-             	 <%hasOrgPermission=true;%>          
-              </dhv:permission>	
+             	 <%hasOrgPermission=true;%>
+              </dhv:permission>
               <dhv:permission name="accounts-accounts-contacts-documents-view">
-             	 <%hasAccountContactPermission=true;%>          
-              </dhv:permission>	
+             	 <%hasAccountContactPermission=true;%>
+              </dhv:permission>
               <%
               if(request.getAttribute("ContactDetails")!=null){
               Contact contact = (Contact)request.getAttribute("ContactDetails");
@@ -192,11 +193,11 @@
               	}
               %>
               <dhv:permission name="documents-view">
-             	 <%if (moduleId==-1){moduleId=Constants.DOCUMENTS_DOCUMENTS;} %>            
-              </dhv:permission>	
+             	 <%if (moduleId==-1){moduleId=Constants.DOCUMENTS_DOCUMENTS;} %>
+              </dhv:permission>
               <dhv:permission name="projects-view">
-             	 <%if (moduleId==-1){moduleId=Constants.PROJECTS_FILES;} %>            
-              </dhv:permission>	
+             	 <%if (moduleId==-1){moduleId=Constants.PROJECTS_FILES;} %>
+              </dhv:permission>
               &nbsp;[<a href="javascript:popDocumentsListMultiple('selectedList','selectedList','<%=moduleId %>','<%=params %>');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
               &nbsp;[<a href="javascript:clearSelections();"><dhv:label name="">Clear</dhv:label></a>]
             </td>
@@ -205,7 +206,7 @@
         </table>
       </td>
     </tr>
-    
+
 </table>
 <%= addHiddenParams(request, "popup|popupType|actionId|actionListId") %>
 <dhv:evaluate if="<%= Message.getId() > 0 %>">

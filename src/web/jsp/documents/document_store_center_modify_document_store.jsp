@@ -140,6 +140,15 @@
       <input type="text" name="requestedDept" size="24" maxlength="50" value="<%= toHtmlValue(documentStore.getRequestedDept()) %>">
     </td>
   </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="documents.details.public">Public</dhv:label>
+    </td>
+    <td>
+      <input type="checkbox" name="publicStore" <%=documentStore.getPublicStore()?"checked":"" %>>
+      <dhv:label name="documents.details.allowWebsiteUsersToAccess">Allow website users to access all documents in this store</dhv:label> 
+    </td>
+  </tr>
 </table>
 <br />
 <input type="hidden" name="onlyWarnings" value='<%=(documentStore.getOnlyWarnings()?"on":"off")%>' />

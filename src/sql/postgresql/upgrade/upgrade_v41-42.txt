@@ -2,3 +2,6 @@
 
 # adding quick_complete in the action_step table
 2007-01-30-script01-zhenya.sql
+
+# website document links
+2007-01-19-script01-olga.sql

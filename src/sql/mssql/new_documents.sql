@@ -57,7 +57,8 @@ CREATE TABLE document_store(
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
-  trashed_date DATETIME
+  trashed_date DATETIME,
+  public_store BIT DEFAULT 0 NOT NULL
 );
 
 -- Stores the mapping of document_store, lookup_document_store_role and lookup_document_store_permission

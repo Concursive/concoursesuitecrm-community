@@ -2550,6 +2550,15 @@
     <param name="documents.details.status">
       <value><![CDATA[Status]]></value>
     </param>
+    <param name="documents.details.public">
+      <value><![CDATA[Public]]></value>
+    </param>
+    <param name="documents.details.allowWebsiteUsersToAccess">
+      <value><![CDATA[Allow website users to access all documents in this store]]></value>
+    </param>
+     <param name="documents.details.isAllowedWebsiteUsersToAccess">
+      <value><![CDATA[Website users are allowed to access all documents in this store]]></value>
+    </param>
     <param name="documents.details.title">
       <value><![CDATA[Title]]></value>
     </param>

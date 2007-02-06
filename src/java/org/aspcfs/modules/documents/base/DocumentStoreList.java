@@ -57,6 +57,7 @@ public class DocumentStoreList extends ArrayList {
   private boolean invitationPendingOnly = false;
   private boolean invitationAcceptedOnly = false;
   private int daysLastAccessed = -1;
+  private boolean publicOnly = false;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
   // calendar filters
@@ -64,6 +65,33 @@ public class DocumentStoreList extends ArrayList {
   protected java.sql.Timestamp alertRangeEnd = null;
   int siteId = -1;
 
+
+  /**
+   * Gets the publicOnly attribute of the DocumentStoreList object
+   *
+   * @return publicOnly The publicOnly value
+   */
+  public boolean getPublicOnly() {
+    return this.publicOnly;
+  }
+
+  /**
+   * Sets the publicOnly attribute of the DocumentStoreList object
+   *
+   * @param publicOnly The new publicOnly value
+   */
+  public void setPublicOnly(boolean publicOnly) {
+    this.publicOnly = publicOnly;
+  }
+
+  /**
+   * Sets the publicOnly attribute of the DocumentStoreList object
+   *
+   * @param publicOnly The new publicOnly value
+   */
+  public void setPublicOnly(String tmp) {
+    this.publicOnly = DatabaseUtils.parseBoolean(tmp);
+  }
 
   /**
    * Constructor for the DocumentStoreList object
@@ -856,6 +884,9 @@ public class DocumentStoreList extends ArrayList {
     if (closedDocumentStoresOnly) {
       sqlFilter.append("AND (closedate IS NOT NULL) ");
     }
+    if (publicOnly) {
+      sqlFilter.append("AND (public_store = ?) ");
+    }
     if (documentStoresForUser > -1) {
       sqlFilter.append(
           "AND ((ds.document_store_id IN (SELECT DISTINCT document_store_id FROM document_store_user_member WHERE item_id = ? )) ");
@@ -910,6 +941,9 @@ public class DocumentStoreList extends ArrayList {
     }
     if (documentStoreId > -1) {
       pst.setInt(++i, documentStoreId);
+    }
+    if (publicOnly) {
+      pst.setBoolean(++i, true);
     }
     if (documentStoresForUser > -1) {
       pst.setInt(++i, documentStoresForUser);
