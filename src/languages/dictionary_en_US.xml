@@ -2832,6 +2832,12 @@
     <param name="website.portfolio.currentCategory.parenthesis">
       <value><![CDATA[(current category)]]></value>
     </param>
+    <param name="actionPlan.actionPlan.quickCheckPreference">
+      <value><![CDATA[Quick Check Preference]]></value>
+    </param>
+    <param name="actionPlan.checkAllPrecedingSteps">
+      <value><![CDATA[Checks all preceding steps]]></value>
+    </param>
     <param name="actionPlan.actions.colon">
       <value><![CDATA[Actions:]]></value>
     </param>

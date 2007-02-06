@@ -125,7 +125,8 @@ CREATE TABLE action_step (
   campaign_id INTEGER REFERENCES campaign(campaign_id),
   allow_duplicate_recipient boolean NOT NULL DEFAULT FALSE,
   display_in_plan_list boolean NOT NULL DEFAULT FALSE,
-  plan_list_label varchar(300)
+  plan_list_label varchar(300),
+  quick_complete boolean DEFAULT false NOT NULL
 );
 
 CREATE TABLE step_action_map (

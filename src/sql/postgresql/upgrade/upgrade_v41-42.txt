@@ -1,0 +1,4 @@
+# These scripts upgrade the 4.1 production databases to 4.2, in order
+
+# adding quick_complete in the action_step table
+2007-01-30-script01-zhenya.sql

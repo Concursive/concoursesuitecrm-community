@@ -47,6 +47,7 @@
       </td>
       <td width="80%" valign="top">
         <%= toHtml(step.getDescription()) %> <dhv:evaluate if="<%= step.getActionRequired() %>"><font color="red">*</font></dhv:evaluate>
+				<dhv:evaluate if="<%= step.getQuickComplete() %>"><img src="images/approved.gif"></dhv:evaluate>
       </td>
      <td valign="top" nowrap>
         <dhv:label name="<%= ActionStep.getActionString(step.getActionId()) %>"><%= toHtml(ActionStep.getActionString(step.getActionId())) %></dhv:label>

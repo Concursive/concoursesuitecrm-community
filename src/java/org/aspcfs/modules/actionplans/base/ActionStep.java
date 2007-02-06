@@ -99,6 +99,7 @@ public class ActionStep extends GenericBean {
   protected String userGroupName = null;
   protected boolean displayInPlanList = false;
   protected String  planListLabel = null;
+  protected boolean quickComplete = false;
 
   /**
    *  Constructor for the ActionStep object
@@ -244,6 +245,7 @@ public class ActionStep extends GenericBean {
     userGroupName = rs.getString("groupname");
     displayInPlanList = rs.getBoolean("display_in_plan_list");
     planListLabel = rs.getString("plan_list_label");
+    quickComplete = rs.getBoolean("quick_complete");
   }
 
 
@@ -301,7 +303,7 @@ public class ActionStep extends GenericBean {
       }
       sql.append("enabled, permission_type, role_id, department_id, " +
           " allow_skip_to_here, action_required, label, group_id, target_relationship, allow_update, campaign_id, " +
-          " allow_duplicate_recipient, display_in_plan_list, plan_list_label)");
+          " allow_duplicate_recipient, display_in_plan_list, plan_list_label, quick_complete)");
       sql.append(" VALUES (?, ?, ?, ?, ");
       if (parentId > -1) {
         sql.append("?, ");
@@ -321,7 +323,7 @@ public class ActionStep extends GenericBean {
       if (entered != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       DatabaseUtils.setInt(pst, ++i, this.getPhaseId());
@@ -360,6 +362,7 @@ public class ActionStep extends GenericBean {
       pst.setBoolean(++i, this.getAllowDuplicateRecipient());
       pst.setBoolean(++i, displayInPlanList);
       pst.setString(++i, planListLabel);
+      pst.setBoolean(++i, quickComplete);
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "action_step_step_id_seq", id);
@@ -435,7 +438,8 @@ public class ActionStep extends GenericBean {
           " campaign_id = ?, " +
           " allow_duplicate_recipient = ?, " +
           " display_in_plan_list = ?, " +
-          " plan_list_label = ? " +
+          " plan_list_label = ?, " +
+          " quick_complete = ? " +
           " WHERE step_id = ? ");
 
       int i = 0;
@@ -462,6 +466,7 @@ public class ActionStep extends GenericBean {
       pst.setBoolean(++i, this.getAllowDuplicateRecipient());
       pst.setBoolean(++i, displayInPlanList);
       pst.setString(++i, planListLabel);
+      pst.setBoolean(++i, quickComplete);
       DatabaseUtils.setInt(pst, ++i, this.getId());
       resultCount = pst.executeUpdate();
       pst.close();
@@ -1122,6 +1127,34 @@ public class ActionStep extends GenericBean {
     this.actionRequired = DatabaseUtils.parseBoolean(tmp);
   }
 
+  
+  /**
+   *  Gets the quickComplete attribute of the ActionStep object
+   *
+   * @return    The quickComplete value
+   */
+  public boolean getQuickComplete() {
+    return quickComplete;
+  }
+
+
+  /**
+   *  Sets the quickComplete attribute of the ActionStep object
+   *
+   * @param  tmp  The new quickComplete value
+   */
+  public void setQuickComplete(boolean tmp) {
+    this.quickComplete = tmp;
+  }
+  
+  /**
+   *  Sets the quickComplete attribute of the ActionStep object
+   *
+   * @param  tmp  The new quickComplete value
+   */
+  public void setQuickComplete(String tmp) {
+    this.quickComplete = DatabaseUtils.parseBoolean(tmp);
+  }
   
   /**
    *  Gets the displayInPlanList attribute of the ActionStep object

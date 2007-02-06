@@ -1,4 +1,14 @@
 ----------------------------------------------------------------------------
+Centric CRM 4.2 Alpha
+Copyright (C) 2007 Dark Horse Ventures, LLC
+Change Log
+February 6, 2007
+----------------------------------------------------------------------------
+
+- Quickly complete an action plan
+
+
+----------------------------------------------------------------------------
 Centric CRM 4.1 RC2
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log

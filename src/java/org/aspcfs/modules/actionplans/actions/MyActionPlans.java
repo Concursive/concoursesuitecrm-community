@@ -553,15 +553,19 @@ public final class MyActionPlans extends CFSModule {
         planWork = new ActionPlanWork(db, phaseWork.getPlanWorkId());
         planWork.setBuildLinkedObject(true);
         planWork.buildLinkedObject(db);
+        planWork.buildPhaseWork(db);
         itemWork.setPlanWork(planWork);
         oldItem = new ActionItemWork();
         oldItem.setPlanWork(planWork);
         oldItem.queryRecord(db, itemWork.getId());
+				if (Integer.parseInt(statusId) == ActionPlanWork.COMPLETED){
+					itemWork.checkPreviousSteps(db, planWork);
+				}
         if (statusId != null && Integer.parseInt(statusId) > 0) {
           itemWork.setStatusId(statusId);
           itemWork.setModifiedBy(this.getUserId(context));
         }
-
+        
         if (nextStepId != null && Integer.parseInt(nextStepId) > 0) {
           nextItem = new ActionItemWork();
           nextItem.setBuildStep(true);

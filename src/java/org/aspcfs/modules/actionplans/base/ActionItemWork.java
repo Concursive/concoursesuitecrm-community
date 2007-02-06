@@ -1888,6 +1888,9 @@ public class ActionItemWork extends GenericBean {
       if (allowSkipToHere) {
         this.setStartDate(new java.sql.Timestamp(new java.util.Date().getTime()));
       }
+      if (this.getStartDate() == null) {
+        this.setStartDate(new java.sql.Timestamp(new java.util.Date().getTime()));
+      }
       this.setEndDate(new java.sql.Timestamp(new java.util.Date().getTime()));
       this.updateStatus(db);
       //update the status of the next step if it exists
@@ -2828,6 +2831,43 @@ public class ActionItemWork extends GenericBean {
    */
   public boolean allowsUpdate() {
     return allowUpdate;
+  }
+  
+  /**
+   *  Description of the Method
+   *
+   */
+  public void checkPreviousSteps(Connection db, ActionPlanWork tmpPlanWork) throws SQLException {
+		boolean quickComplete = this.getStep().getQuickComplete();
+		boolean checkComplete = true;
+		if (quickComplete) {
+			Iterator nextPhaseIter = tmpPlanWork.getPhaseWorkList().iterator();
+			while (nextPhaseIter.hasNext()) {
+				ActionPhaseWork thisPhaseWork = (ActionPhaseWork) nextPhaseIter.next();
+				thisPhaseWork.buildStepWork(db);
+				ActionItemWorkList actionItemWorkList = thisPhaseWork.getItemWorkList();
+				int noOfItems = actionItemWorkList.size();
+				int itemCounter = 0;
+				while ((itemCounter < noOfItems) && checkComplete){
+					ActionItemWork thisItemWork = (ActionItemWork) actionItemWorkList.get(itemCounter);
+					thisItemWork.setStatusId(ActionPlanWork.COMPLETED);
+					if ((itemCounter + 1) == noOfItems) {
+						if (thisItemWork.getId() != id) {
+							thisItemWork.updateStatus(db, null);
+						}
+					} else {
+						if (thisItemWork.getId() != id) {
+							ActionItemWork nextItemWork = (ActionItemWork) actionItemWorkList.get(itemCounter+1);
+							thisItemWork.updateStatus(db, nextItemWork);
+						}
+					}
+					if (thisItemWork.getId() == id) {
+						checkComplete = false;
+					}
+					itemCounter++;
+				}
+			} 
+		}
   }
 }
 

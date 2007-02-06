@@ -312,6 +312,14 @@
       <input type="text" size="52" name="planListLabel" value="<%= toHtmlValue(actionStep.getPlanListLabel()) %>" />&nbsp;<%= showAttribute(request, "displayInPlanListError") %>
     </td>
   </tr>
+  
+  <tr>
+    <td class="formLabel" valign="top"><dhv:label name="actionPlan.quickCheckPreference">Quick Check Preference</dhv:label></td>
+    <td>
+      <input type="checkbox" name="quickComplete" value="true" <%= (actionStep.getQuickComplete() ? "checked" : "") %> />
+      <dhv:label name="actionPlan.checkAllPrecedingSteps">Checks all preceding steps</dhv:label>
+    </td>
+  </tr>
 
 </table>
 <br />
