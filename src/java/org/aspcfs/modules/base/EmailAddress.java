@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.darkhorseventures.framework.beans.GenericBean;
+
 /**
  * Represents an email address.
  *
@@ -28,7 +30,7 @@ import java.sql.SQLException;
  * @version $Id$
  * @created September 6, 2001
  */
-public class EmailAddress {
+public class EmailAddress extends GenericBean {
 
   public final static int BUSINESS = 1;
   protected boolean isContact = false;

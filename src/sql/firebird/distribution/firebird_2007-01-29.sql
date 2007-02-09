@@ -25,3 +25,5 @@ CREATE TABLE lookup_report_type (
 );
 ALTER TABLE report_queue ADD output_type INT REFERENCES lookup_report_type(code);
 ALTER TABLE report_queue ADD email CHAR(1) DEFAULT 'N';
+
+UPDATE permission SET "active" = 'Y', enabled = 'Y' WHERE permission = 'product-catalog';

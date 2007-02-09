@@ -23,3 +23,5 @@ CREATE TABLE lookup_report_type (
 );
 ALTER TABLE report_queue ADD COLUMN output_type INT REFERENCES lookup_report_type(code);
 ALTER TABLE report_queue ADD COLUMN email BOOLEAN DEFAULT false;
+
+UPDATE permission SET active = true, enabled = true WHERE permission = 'product-catalog';

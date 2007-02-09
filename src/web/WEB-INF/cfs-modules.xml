@@ -421,40 +421,6 @@
   </menu>
   
   <menu>
-    <action name="Products"/>
-    <page title="Catalog"/>
-    <permission value="orders-view"/>
-    <long_html value="Catalog"/>
-    <short_html value="Catalog"/>
-    <link value="Products.do?command=SearchForm"/>
-    <graphic width="83" height="36" on="menu-quotes-on.gif" off="menu-quotes-off.gif" rollover=""/>
-    <submenu name="View">
-      <permission value=""/>
-      <long_html value="View"/>
-      <short_html value="View"/>
-      <link value="Products.do?command=View"/>
-    </submenu>
-    <submenu name="Search">
-      <permission value=""/>
-      <long_html value="Search"/>
-      <short_html value="Search"/>
-      <link value="Products.do?command=SearchForm"/>
-    </submenu>
-    <submenu name="Promotions">
-      <permission value=""/>
-      <long_html value="Promotions"/>
-      <short_html value="Promotions"/>
-      <link value="Products.do?command=Promotions"/>
-    </submenu>
-    <submenu name="Admin">
-      <permission value=""/>
-      <long_html value="Admin"/>
-      <short_html value="Admin"/>
-      <link value="Products.do?command=Admin"/>
-    </submenu>
-  </menu>
-
-  <menu>
     <action name="Orders"/>
     <action name="OrdersProducts"/>
     <action name="OrdersPayments"/>

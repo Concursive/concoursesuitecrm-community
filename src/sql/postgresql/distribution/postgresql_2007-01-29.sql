@@ -34,3 +34,5 @@ CREATE INDEX org_site_id_idx ON organization(site_id);
 CREATE INDEX org_status_id_idx ON organization(status_id);
 CREATE INDEX org_addr_pri_address_idx ON organization_address(primary_address);
 CREATE INDEX org_addr_org_id_idx ON organization_address(org_id);
+
+UPDATE permission SET active = true, enabled = true WHERE permission = 'product-catalog';

@@ -184,7 +184,7 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
   </dhv:evaluate>
 </dhv:include>
 <dhv:include name="organization.yearStarted" none="true">
-  <dhv:evaluate if="<%= (OrgDetails.getYearStarted() > -1) %>">
+  <dhv:evaluate if="<%= (OrgDetails.getYearStarted() > 0) %>">
     <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>

@@ -631,7 +631,7 @@
         <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
       </td>
       <td>
-        <input type="text" size="10" name="yearStarted" value="<%= OrgDetails.getYearStarted() > -1 ? String.valueOf(OrgDetails.getYearStarted()) : "" %>">
+        <input type="text" size="10" name="yearStarted" value='<%= OrgDetails.getYearStarted() > 0 ? String.valueOf(OrgDetails.getYearStarted()) : "" %>'>
         <%= showAttribute(request, "yearStartedWarning") %>
       </td>
     </tr>
@@ -642,7 +642,7 @@
       <dhv:label name="organization.employees">No. of Employees</dhv:label>
     </td>
     <td>
-      <input type="text" size="10" name="employees" value="<%= OrgDetails.getEmployees() %>">
+      <input type="text" size="10" name="employees" value='<%= OrgDetails.getEmployees() > -1 ? String.valueOf(OrgDetails.getEmployees()) : "" %>'>
     </td>
   </tr>
   </dhv:include>

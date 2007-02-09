@@ -76,7 +76,7 @@
       <dhv:label name="accounts.accounts_contacts_portal_include.Enabled">Enabled</dhv:label>
     </td>
     <td>
-    <input type="checkbox" name="chk1" value="on" onclick="javascript:setField('enabled', document.inputForm.chk1.checked, 'inputForm');" <%= role.getEnabled() ? "checked":""%>/>
+    <input type="checkbox" name="chk1" value="on" onclick="javascript:setField('enabled', document.inputForm.chk1.checked, 'inputForm');" <%= role.getEnabled() ? "checked":""%>>
     <input type="hidden" name="enabled" value="<%= role.getEnabled() ? "1":"0"%>"></input>
    </td>
   </tr>

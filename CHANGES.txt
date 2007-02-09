@@ -10,13 +10,11 @@ February 6, 2007
 
 
 ----------------------------------------------------------------------------
-Centric CRM 4.1 RC2
+Centric CRM 4.1
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log
-February 2, 2007
+February 7, 2007
 ----------------------------------------------------------------------------
-
-The following is a running list until release...
 
 Latest information can be found in the Centric CRM 4.1 Community:
 http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109

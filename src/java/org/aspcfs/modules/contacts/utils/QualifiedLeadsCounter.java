@@ -40,7 +40,7 @@ public class QualifiedLeadsCounter {
           "  ## as conversion_date," +
           "  owner  " +
           "  from contact " +
-          " where conversion_date > ?" +
+          " where @@ > ?" +
           " group by owner, conversion_date) co" +
           " where owner = user_id";
 
@@ -54,8 +54,8 @@ public class QualifiedLeadsCounter {
 
     Calendar startDate = Calendar.getInstance();
     startDate.add(Calendar.WEEK_OF_MONTH, -8);
-    String truncSQL = DatabaseUtils.getTruncDateDialect("conversion_date", DatabaseUtils.DAY, DatabaseUtils.getType(db));
-    QUERY = QUERY.replaceAll("##", truncSQL);
+    QUERY = QUERY.replaceAll("##", DatabaseUtils.getTruncDateDialect("conversion_date", DatabaseUtils.DAY, DatabaseUtils.getType(db)));
+    QUERY = QUERY.replaceAll("@@", DatabaseUtils.castDateTimeToDate(db, "conversion_date"));
     QUERY = QUERY.replaceAll(" access ", " " + DatabaseUtils.addQuotes(db, "access") + " ");
     PreparedStatement ps = db.prepareStatement(QUERY);
     ps.setDate(1, new Date(startDate.getTimeInMillis()));

@@ -514,7 +514,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
         thisSelect.addGroup(thisElement.getDescription());
       } else {
         // Add the item to the list
-        if (thisElement.getEnabled() == true || !showDisabledFlag) {
+        if (thisElement.getEnabled() || !showDisabledFlag) {
           thisSelect.addItem(
               thisElement.getCode(), thisElement.getDescription());
           if (thisElement.getDefaultItem()) {
@@ -524,7 +524,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
           thisSelect.addItem(
               thisElement.getCode(), thisElement.getDescription());
         }
-        if (thisElement.getCode() == defaultKey) {
+        //Handle --None- case
+        if (thisElement.getCode() == defaultKey && defaultKey > -1) {
           keyFound = true;
         }
       }

@@ -38,7 +38,7 @@
   var vectorUserId = "<%= vectorUserId %>".split("|");<%-- User ID --%>
   var vectorState = "<%= vectorState %>".split("|");<%-- State --%>
 </script>
-<script language="JavaScript" type="text/javascript" src="javascript/document_store_center_user_membership_modify.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/document_store_center_user_membership_modify.js?1"></script>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
