@@ -1,24 +1,25 @@
 package org.aspcfs.taglib;
 
-import org.aspcfs.modules.website.base.Site;
 import org.aspcfs.modules.website.base.PageGroup;
-import org.aspcfs.utils.StringUtils;
+import org.aspcfs.modules.website.base.Site;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
 
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
-import javax.servlet.jsp.JspException;
 
 /**
- *  This Class outs a calendar field based on the user's locale information for
- *  the current UserBean session.
+ * This Class outs a calendar field based on the user's locale information for
+ * the current UserBean session.
  *
- * @author     Matt Rajkowski
- * @created    May 19, 2006
- * @version    $Id: Exp $
+ * @author Matt Rajkowski
+ * @version $Id: Exp $
+ * @created May 19, 2006
  */
 public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFinally {
   private boolean showLink = false;
+  private String pageGroup = null;
 
   public void doCatch(Throwable throwable) throws Throwable {
     // Required but not needed
@@ -27,12 +28,13 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
   public void doFinally() {
     // Reset each property or else the value gets reused
     showLink = false;
+    pageGroup = null;
   }
 
   /**
-   *  Gets the showLink attribute of the PortalPageGroupURLHandler object
+   * Gets the showLink attribute of the PortalPageGroupURLHandler object
    *
-   * @return    The showLink value
+   * @return The showLink value
    */
   public boolean getShowLink() {
     return showLink;
@@ -40,9 +42,9 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
 
 
   /**
-   *  Sets the showLink attribute of the PortalPageGroupURLHandler object
+   * Sets the showLink attribute of the PortalPageGroupURLHandler object
    *
-   * @param  tmp  The new showLink value
+   * @param tmp The new showLink value
    */
   public void setShowLink(boolean tmp) {
     this.showLink = tmp;
@@ -50,28 +52,39 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
 
 
   /**
-   *  Sets the showLink attribute of the PortalPageGroupURLHandler object
+   * Sets the showLink attribute of the PortalPageGroupURLHandler object
    *
-   * @param  tmp  The new showLink value
+   * @param tmp The new showLink value
    */
   public void setShowLink(String tmp) {
     this.showLink = DatabaseUtils.parseBoolean(tmp);
   }
 
+  public String getPageGroup() {
+    return pageGroup;
+  }
+
+  public void setPageGroup(String pageGroup) {
+    this.pageGroup = pageGroup;
+  }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return                                  Description of the Return Value
-   * @exception  JspException                 Description of the Exception
-   * @throws  javax.servlet.jsp.JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException                   Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
 
       Site site = (Site) pageContext.getRequest().getAttribute("site");
 
-      PageGroup pageGroup = (PageGroup) pageContext.getAttribute("pageGroup");
+      PageGroup pageGroup = null;
+      if (this.getPageGroup() != null) {
+        pageGroup = (PageGroup) pageContext.getAttribute(this.getPageGroup());
+      } else {
+        pageGroup = (PageGroup) pageContext.getAttribute("pageGroup");
+      }
 
       String portal = (String) pageContext.getRequest().getAttribute("portal");
 
@@ -85,7 +98,7 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
         } else {
           buffer.append("Sites.do?command=Details");
         }
-        buffer.append("&siteId=" + site.getId() + "&tabId=" + site.getTabToDisplay().getId() + "&pageId=" + pageGroup.getPageList().getDefaultPageId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">"+pageGroup.getName()+"</a>");
+        buffer.append("&siteId=" + site.getId() + "&tabId=" + site.getTabToDisplay().getId() + "&pageId=" + pageGroup.getPageList().getDefaultPageId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">" + pageGroup.getName() + "</a>");
       } else {
         buffer.append(StringUtils.toHtml(pageGroup.getName()));
       }
@@ -106,9 +119,9 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;
