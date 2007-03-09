@@ -1,13 +1,14 @@
 -- Optimized to reduce database overhead
 CREATE SEQUENCE web_site_access_log_code_seq;
 CREATE TABLE web_site_access_log (
-  site_log_id INT PRIMARY KEY,
+  site_log_id INT NOT NULL,
   site_id INT REFERENCES web_site(site_id),
-  user_id INT REFERENCES access(user_id),
+  user_id INT REFERENCES "access"(user_id),
   ip VARCHAR(300),
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   browser VARCHAR(255),
-  referrer VARCHAR(1024)
+  referrer VARCHAR(1024),
+  PRIMARY KEY(SITE_LOG_ID)
 );
 
 CREATE TABLE web_page_access_log (

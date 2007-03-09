@@ -1,0 +1,105 @@
+//Script (C) 2007 Dark Horse Ventures LLC, all rights reserved
+//Upgrade Sync API for Web Services
+
+import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.service.base.*;
+
+int systemId = -1;
+String system = "CFSHttpXMLWriter";
+pst = db.prepareStatement(
+  "SELECT system_id " +
+  "FROM sync_system " +
+  "WHERE application_name = ? ");
+pst.setString(1, system);
+rs = pst.executeQuery();
+if (rs.next()) {
+  systemId = rs.getInt("system_id");
+}
+rs.close();
+pst.close();
+
+if (systemId > -1) {
+  print("System ID for " + system + " determined: " + systemId);
+  // Account History
+  if (1==1) {
+    String className = "org.aspcfs.modules.accounts.base.OrganizationHistory";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("accountHistory");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping already exists for class: " + className);
+    }
+  }
+  if (1==1) {
+    String className = "org.aspcfs.modules.accounts.base.OrganizationHistoryList";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("accountHistoryList");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping already exists for class: " + className);
+    }
+  }
+  
+  
+ //Action Plan Notes
+  if (1==1) {
+    String className = "org.aspcfs.modules.actionplans.base.ActionPlanWorkNote";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("actionPlanWorkNote");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping already exists for class: " + className);
+    }
+  }
+  if (1==1) {
+    String className = "org.aspcfs.modules.actionplans.base.ActionPlanWorkNoteList";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("actionPlanWorkNoteList");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping already exists for class: " + className);
+    }
+  }
+  
+  
+  // Action Item Notes
+    if (1==1) {
+    String className = "org.aspcfs.modules.actionplans.base.ActionItemWorkNote";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("actionItemWorkNote");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping already exists for class: " + className);
+    }
+  }
+  if (1==1) {
+    String className = "org.aspcfs.modules.actionplans.base.ActionItemWorkNoteList";
+    if (SyncTable.lookupTableId(db, systemId, className) == -1) {
+      SyncTable thisTable = new SyncTable();
+      thisTable.setSystemId(systemId);
+      thisTable.setName("actionItemWorkNoteList");
+      thisTable.setMappedClassName(className);
+      thisTable.insert(db);
+    } else {
+      print("Mapping already exists for class: " + className);
+    }
+  }
+}
+
+

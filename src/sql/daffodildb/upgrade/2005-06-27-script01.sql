@@ -45,6 +45,7 @@ ALTER TABLE product_catalog ALTER COLUMN active SET NOT NULL;
 ALTER TABLE product_catalog ALTER COLUMN active SET DEFAULT true;
 ALTER TABLE task ADD COLUMN trashed_date TIMESTAMP;
 ALTER TABLE relationship ADD COLUMN trashed_date TIMESTAMP;
+ALTER TABLE product_catalog ALTER COLUMN resolvable SET NOT NULL;
 
 --Code to add cc and bcc fields into the campaign table for instant campaigns
 ALTER TABLE campaign ADD COLUMN cc VARCHAR(1024);

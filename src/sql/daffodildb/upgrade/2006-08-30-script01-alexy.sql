@@ -54,8 +54,6 @@ create index contact_industry_temp_code on contact  (industry_temp_code);
 
 create index contact_modifiedby on contact  (modifiedby);
 
-create index contact_org_id on contact  (org_id);
-
 create index contact_owner on contact  ("owner");
 
 create index contact_rating on contact  (rating);
@@ -65,8 +63,6 @@ create index contact_site_id on contact  (site_id);
 create index contact_source on contact  (source);
 
 create index contact_super on contact  (super);
-
-create index contact_user_id on contact  (user_id);
 
 create index contact_employee_id on contact (employee_id);
 

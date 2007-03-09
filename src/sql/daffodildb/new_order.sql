@@ -175,6 +175,7 @@ CREATE TABLE order_address (
   modifiedby INT REFERENCES access(user_id) NOT NULL,
   addrline4 VARCHAR(300)
 );
+CREATE INDEX order_city_idx ON order_address(city);
 
 -- The method in which a payment is made
 -- Example: Credit Card, EFT, Cash, Check, Money Order

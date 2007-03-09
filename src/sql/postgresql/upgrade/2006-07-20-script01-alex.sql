@@ -13,6 +13,11 @@ update permission
      active = true
  where permission = 'product-catalog-product';
 
+ update permission
+ set enabled = true,
+     active = true
+ where permission = 'product-catalog';
+ 
 update permission
  set enabled = false,
      active = false

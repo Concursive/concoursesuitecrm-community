@@ -190,7 +190,7 @@ CREATE TABLE portfolio_category (
   parent_category_id INTEGER REFERENCES portfolio_category(category_id),
   enabled BOOLEAN DEFAULT true NOT NULL,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  enteredby NUMBER(10,0) REFERENCES "access"(user_id) NOT NULL,
+  enteredby INTEGER REFERENCES "access"(user_id) NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modifiedby INTEGER REFERENCES "access"(user_id) NOT NULL,
   PRIMARY KEY (CATEGORY_ID)

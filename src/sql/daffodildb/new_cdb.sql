@@ -241,6 +241,7 @@ CREATE TABLE lookup_access_types (
   enabled boolean DEFAULT true,
   rule_id INT NOT NULL
 );
+CREATE INDEX laccess_types_rule_id ON lookup_access_types (rule_id);
 
 CREATE SEQUENCE lookup_account_size_code_seq;
 CREATE TABLE lookup_account_size (
@@ -421,13 +422,25 @@ CREATE TABLE contact (
   sic_description VARCHAR(300)
 );
 
+CREATE INDEX contact_access_type ON users.contact (access_type);
+CREATE INDEX contact_assistant ON users.contact (assistant);
+CREATE INDEX contact_department ON users.contact (department);
+CREATE INDEX contact_employee_id ON users.contact (employee_id);
+CREATE INDEX contact_entered ON users.contact (entered);
+CREATE INDEX contact_enteredby ON users.contact (enteredby);
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
+CREATE INDEX contact_industry_temp_code ON users.contact (industry_temp_code);
 CREATE INDEX "contactlist_namecompany" ON "contact" (namelast, namefirst, company);
 CREATE INDEX "contactlist_company" ON "contact" (company, namelast, namefirst);
 CREATE INDEX "contact_import_id_idx" ON "contact" ("import_id");
 CREATE INDEX contact_org_id_idx ON contact(org_id);
 CREATE INDEX contact_islead_idx ON contact(lead);
-
+CREATE INDEX contact_modifiedby ON users.contact (modifiedby);
+CREATE INDEX contact_owner ON users.contact (owner);
+CREATE INDEX contact_rating ON users.contact (rating);
+CREATE INDEX contact_site_id ON users.contact (site_id);
+CREATE INDEX contact_source ON users.contact (source);
+CREATE INDEX contact_super ON users.contact (super);
 
 CREATE SEQUENCE contact_lead_skipped_map_map_id_seq;
 CREATE TABLE contact_lead_skipped_map (
@@ -743,6 +756,7 @@ CREATE TABLE contact_type_levels (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
+CREATE INDEX tcontactlevels_level ON contact_type_levels ("level");
 
 CREATE SEQUENCE lookup_lists_lookup_id_seq;
 CREATE TABLE lookup_lists_lookup(
