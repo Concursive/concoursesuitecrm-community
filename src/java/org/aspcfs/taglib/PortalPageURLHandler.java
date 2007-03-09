@@ -76,8 +76,8 @@ public class PortalPageURLHandler extends TagSupport implements TryCatchFinally 
       }
 
       String portal = (String) pageContext.getRequest().getAttribute("portal");
-
       String popup = pageContext.getRequest().getParameter("popup");
+      String viewType = pageContext.getRequest().getParameter("viewType");
 
       StringBuffer buffer = new StringBuffer();
       buffer.append("<a href=\"");
@@ -86,13 +86,17 @@ public class PortalPageURLHandler extends TagSupport implements TryCatchFinally 
       } else {
         buffer.append("Sites.do?command=Details");
       }
-      buffer.append("&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + page.getId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">" + StringUtils.toHtml(page.getName()) + "</a>");
+      buffer.append("&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + page.getId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + ((Site.PREVIEW.equals(viewType)) ? "&viewType=" + Site.PREVIEW : "") + "\">" + StringUtils.toHtml(page.getName()) + "</a>");
       if (portal != null && "true".equals(portal)) {
         //do nothing
       } else {
-        buffer.append("&nbsp;<a href=\"javascript:displayMenuPage('selectpage" + page.getId() + "','menuPage','" + page.getId() + "','" + pageGroup.getId() + "','" + site.getId() + "','" + tabId + "','" + site.getTabToDisplay().getThisPageToBuild().getId() + "');\"");
-        buffer.append("onMouseOver=\"over(0, 'page" + page.getId() + "')\" onmouseout=\"out(0, 'page" + page.getId() + "'); hideMenu('menuPage');\">");
-        buffer.append("<img src=\"images/select.gif\" name=\"selectpage" + page.getId() + "\" id=\"selectpage" + page.getId() + "\" align=\"absmiddle\" border=\"0\"></a>");
+				if ((Site.PREVIEW.equals(viewType))) {
+					//do nothing
+				} else {
+					buffer.append("&nbsp;<a href=\"javascript:displayMenuPage('selectpage" + page.getId() + "','menuPage','" + page.getId() + "','" + pageGroup.getId() + "','" + site.getId() + "','" + tabId + "','" + site.getTabToDisplay().getThisPageToBuild().getId() + "');\"");
+					buffer.append("onMouseOver=\"over(0, 'page" + page.getId() + "')\" onmouseout=\"out(0, 'page" + page.getId() + "'); hideMenu('menuPage');\">");
+					buffer.append("<img src=\"images/select.gif\" name=\"selectpage" + page.getId() + "\" id=\"selectpage" + page.getId() + "\" align=\"absmiddle\" border=\"0\"></a>");
+				}
       }
       this.pageContext.getOut().write(buffer.toString());
     } catch (Exception e) {

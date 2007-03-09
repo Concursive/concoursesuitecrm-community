@@ -2761,6 +2761,12 @@
     <param name="sales.Error">
       <value><![CDATA[Error]]></value>
     </param>
+    <param name="website.edit">
+      <value><![CDATA[Edit]]></value>
+    </param>
+    <param name="website.preview">
+      <value><![CDATA[Preview]]></value>
+    </param>
     <param name="website.dashboard.note.text">
       <value><![CDATA[Manage your web presence by configuring the following items. Once the items are configured, they can be used in your public website.]]></value>
     </param>

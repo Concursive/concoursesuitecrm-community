@@ -38,6 +38,9 @@ public class Site extends GenericBean {
 
   public static int EDIT_MODE = 602171327;
   public static int PORTAL_MODE = 602171328;
+  
+  public static String PREVIEW = "preview"; 
+  public static String CONFIGURE = "configure";
 
   private int id = -1;
   private String name = null;

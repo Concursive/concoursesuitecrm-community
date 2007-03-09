@@ -371,6 +371,12 @@ public final class Sites extends CFSModule {
     int pageId = -1;
     String pageValue = context.getRequest().getParameter("pageId");
     String siteId = context.getRequest().getParameter("siteId");
+    String viewType = context.getRequest().getParameter("viewType");
+    if (Site.PREVIEW.equals(viewType)) {
+      context.getRequest().setAttribute("viewType", Site.PREVIEW);
+    } else {
+      context.getRequest().setAttribute("viewType", Site.CONFIGURE);
+    }
     if (siteId == null || "".equals(siteId.trim())) {
       siteId = (String) context.getRequest().getAttribute("siteId");
     }
@@ -395,12 +401,20 @@ public final class Sites extends CFSModule {
       if (StringUtils.hasText(tabValue) && !"-1".equals(tabValue)) {
         tabId = Integer.parseInt(tabValue);
       } else {
-        tabId = TabList.queryDefault(db, site.getId(), Site.EDIT_MODE);
+        if (!Site.PREVIEW.equals(viewType)) {
+          tabId = TabList.queryDefault(db, site.getId(), Site.EDIT_MODE);
+        } else {
+          tabId = TabList.queryDefault(db, site.getId(), Site.PORTAL_MODE);
+        }
       }
       if (StringUtils.hasText(pageValue) && !"-1".equals(pageValue)) {
         pageId = Integer.parseInt(pageValue);
       } else {
-        pageId = PageList.queryDefault(db, tabId, Site.EDIT_MODE);
+        if (!Site.PREVIEW.equals(viewType)) {
+          pageId = PageList.queryDefault(db, tabId, Site.EDIT_MODE);
+        } else {
+          pageId = PageList.queryDefault(db, tabId, Site.PORTAL_MODE);
+        }
       }
       context.getRequest().setAttribute("tabId", String.valueOf(tabId));
       context.getRequest().setAttribute("pageId", String.valueOf(pageId));

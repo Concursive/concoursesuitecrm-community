@@ -5,8 +5,14 @@ Change Log
 February 6, 2007
 ----------------------------------------------------------------------------
 
+New:
 - Website public file attachments from a document store
 - Quickly complete an action plan
+- Website preview feature
+
+Fixes:
+- Removed a "." from the LDAP utils to work with active directory, may cause
+  an issue with LDAP and needs to be verified
 
 
 ----------------------------------------------------------------------------
@@ -20,9 +26,8 @@ Latest information can be found in the Centric CRM 4.1 Community:
 http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
 
 Fixes:
-- Removed a "." from the LDAP utils to work with active directory, may cause
-  an issue with LDAP and needs to be verified
 - Javascript sending unescaped text in some popup widgets
+- Container menus configured for concurrent multiple languages
 
 
 ----------------------------------------------------------------------------

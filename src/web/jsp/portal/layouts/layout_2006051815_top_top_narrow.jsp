@@ -13,7 +13,7 @@
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <center>
 <%-- Login Link --%>
-<dhv:evaluate if="<%= "true".equals(portal) %>">
+<dhv:evaluate if="<%= "true".equals(portal)  %>">
 <table width="768" border="0" cellpadding="0" cellspacing="0" class="portalLogin">
 	<tr>
     <td>
@@ -29,7 +29,7 @@
     <td width="8" nowrap>&nbsp;</td>
     <td>
       <dhv:fileItemImage id="<%= site.getLogoImageId() %>" path="website" name="Logo"/>
-			<dhv:evaluate if="<%= isPopup(request) %>">
+			<dhv:evaluate if="<%= !"true".equals(portal) %>">
 		  	[<a href="Sites.do?command=UpdateLogo&logoImageId=-1&popup=true&siteId=<%=site.getId()%>">Remove</a>]
 			</dhv:evaluate>
 		</td>

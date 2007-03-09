@@ -30,6 +30,7 @@
 <jsp:useBean id="tabId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="pageId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
+<jsp:useBean id="viewType" class="java.lang.String" scope="request"/>
 <jsp:useBean id="layout" class="org.aspcfs.modules.website.base.Layout" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -76,9 +77,15 @@
     </td>
     <td align="right" nowrap>
       Options:
-      <a href="javascript:popURL('WebsiteMedia.do?command=View&siteId=<%=site.getId()%>&popup=true','Add_Logo',600,400,'yes','yes');">Choose Site Logo</a>
-      <a href="javascript:popURL('Sites.do?command=ViewLayouts&siteId=<%=site.getId()%>&popup=true','Choose_Layout',600,400,'yes','yes');">Choose Layout</a>
-      <a href="javascript:popURL('Sites.do?command=ViewStyles&siteId=<%=site.getId()%>&popup=true','Choose_Style',600,400,'yes','yes');">Choose Style</a>
+      <dhv:evaluate if="<%=Site.CONFIGURE.equals(viewType)%>">
+        <a href="Sites.do?command=Details&siteId=<%=site.getId()%>&popup=true&viewType=<%=Site.PREVIEW%> "><dhv:label name="website.preview">Preview</dhv:label></a>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%=Site.PREVIEW.equals(viewType)%>">
+        <a href="Sites.do?command=Details&siteId=<%=site.getId()%>&popup=true&viewType=<%=Site.CONFIGURE%>"><dhv:label name="website.edit">Edit</dhv:label></a>
+      </dhv:evaluate>
+        <a href="javascript:popURL('WebsiteMedia.do?command=View&siteId=<%=site.getId()%>&popup=true','Add_Logo',600,400,'yes','yes');">Choose Site Logo</a>
+        <a href="javascript:popURL('Sites.do?command=ViewLayouts&siteId=<%=site.getId()%>&popup=true','Choose_Layout',600,400,'yes','yes');">Choose Layout</a>
+        <a href="javascript:popURL('Sites.do?command=ViewStyles&siteId=<%=site.getId()%>&popup=true','Choose_Style',600,400,'yes','yes');">Choose Style</a>
     </td>
   </tr>
 </table>

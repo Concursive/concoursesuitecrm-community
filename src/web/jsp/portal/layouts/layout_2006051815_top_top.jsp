@@ -28,7 +28,7 @@
     <td width="8" nowrap>&nbsp;</td>
     <td>
       <dhv:fileItemImage id="<%= site.getLogoImageId() %>" path="website" name="Logo"/>
-			<dhv:evaluate if="<%= isPopup(request) %>">
+			<dhv:evaluate if="<%= !"true".equals(portal) %>">
 		  	[<a href="Sites.do?command=UpdateLogo&logoImageId=-1&popup=true&siteId=<%=site.getId()%>">Remove</a>]
 			</dhv:evaluate>
 		</td>

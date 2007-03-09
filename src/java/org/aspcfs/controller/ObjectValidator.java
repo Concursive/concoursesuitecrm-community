@@ -1945,11 +1945,6 @@ public class ObjectValidator {
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "displayText", 300);
     }
     
-    if (object.getClass().getName().equals("org.aspcfs.modules.website.base.PageGroup")) {
-      checkError(systemStatus, object, "name", REQUIRED_FIELD);
-      checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "name", 300);
-    }
-    
     if (object.getClass().getName().equals("org.aspcfs.modules.website.base.Page")) {
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
       checkLength(systemStatus, object, "object.validation.exceedsLengthLimit", "name", 300);

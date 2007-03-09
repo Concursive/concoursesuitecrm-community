@@ -33,6 +33,7 @@ public class SubmenuItem {
   String link = "";
   String htmlClass = "submenuItemUnselected";
   String permission = "";
+	String label = "";
 
   String graphicWidth = "";
   String graphicHeight = "";
@@ -271,6 +272,7 @@ public class SubmenuItem {
     this.permission = tmp;
   }
 
+public void setLabel(String tmp) { this.label = tmp; }
 
   /**
    * Gets the Html attribute of the SubmenuItem object
@@ -435,6 +437,7 @@ public class SubmenuItem {
   public boolean hasPermission(String thisPermission) {
     return (permission.equals(thisPermission));
   }
+public String getLabel() { return label; }
 
 }
 

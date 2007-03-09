@@ -61,7 +61,7 @@
     </td>
 		<td>
       <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
-        <input type="text" size="35" maxlength="300" name="name" value="<%= toHtmlValue(thisPageGroup.getName()) %>"><font color="red">*</font>
+        <input type="text" size="35" maxlength="300" name="name" value="<%= toHtmlValue(thisPageGroup.getName()) %>">
       </td><td valign="top" nowrap>&nbsp;
         <%= showAttribute(request, "nameError") %>
       </td></tr></table>

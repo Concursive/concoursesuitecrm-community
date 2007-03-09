@@ -315,7 +315,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                         "<td class=\"conSubOn\" nowrap>");
                     this.pageContext.getOut().write(
                         "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                    this.pageContext.getOut().write(thisItem.getLongHtml());
+                    this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                     this.pageContext.getOut().write("</a>");
                     this.pageContext.getOut().write("</td>");
                   } else {
@@ -324,7 +324,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                         "<td class=\"conSubOff\" nowrap>");
                     this.pageContext.getOut().write(
                         "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                    this.pageContext.getOut().write(thisItem.getLongHtml());
+                    this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                     this.pageContext.getOut().write("</a>");
                     this.pageContext.getOut().write("</td>");
                   }
@@ -401,7 +401,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 this.pageContext.getOut().write("<th nowrap>");
                 this.pageContext.getOut().write(
                     "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                 this.pageContext.getOut().write("</a>");
                 this.pageContext.getOut().write("</th>");
               } else {
@@ -409,7 +409,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 this.pageContext.getOut().write("<td nowrap>");
                 this.pageContext.getOut().write(
                     "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                this.pageContext.getOut().write(thisItem.getLongHtml());
+                this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                 this.pageContext.getOut().write("</a>");
                 this.pageContext.getOut().write("</td>");
               }
@@ -503,7 +503,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                     this.pageContext.getOut().write(
                         "<tr><td class=\"sidetab-left-sel\">&nbsp;</td><td class=\"sidetab-mid-sel\">&nbsp;</td><td class=\"sidetab-right-sel\">" +
                             "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
-                            thisItem.getLongHtml() +
+                            getDisplayLabel(thisItem, systemStatus) +
                             "</a>" +
                             "</td></tr>");
                   }
@@ -511,7 +511,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 case LINKS:
                   this.pageContext.getOut().write(
                       "<a class=\"containerOn\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                  this.pageContext.getOut().write(thisItem.getLongHtml());
+                  this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                   this.pageContext.getOut().write("</a>");
                   break;
                 default:
@@ -529,7 +529,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                             "<td class=\"sidetab-mid\">&nbsp;</td>" +
                             "<td class=\"sidetab-right\">" +
                             "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
-                            thisItem.getLongHtml() +
+                            getDisplayLabel(thisItem, systemStatus) +
                             "</a>" +
                             "</td></tr>");
                   }
@@ -537,7 +537,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 case LINKS:
                   this.pageContext.getOut().write(
                       "<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
-                  this.pageContext.getOut().write(thisItem.getLongHtml());
+                  this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                   this.pageContext.getOut().write("</a>");
                   break;
                 default:
@@ -661,10 +661,10 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
 
       //check if custom value is defined in preferences
       String containerName = container.getAttribute("name");
-      String labelValue = systemStatus.getContainerMenuProperty(
-          "system.container.menu.label", containerName + "." + submenu.getAttribute(
-          "name") + ".long_html");
+      String label =  containerName + "." + submenu.getAttribute("name") + ".long_html";
 
+      thisSubmenu.setLabel(label);
+      String labelValue = systemStatus.getContainerMenuProperty("system.container.menu.label", label);
       thisSubmenu.setLongHtml(
           !"".equals(StringUtils.toString(labelValue)) ? labelValue : (XMLUtils.getFirstChild(
               submenu, "long_html").getAttribute("value")));
@@ -709,4 +709,14 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
     }
     return propertyList;
   }
+	
+	private String getDisplayLabel(SubmenuItem thisItem, SystemStatus systemStatus) {
+			String label = thisItem.getLabel();
+			String labelValue = systemStatus.getContainerMenuProperty("system.container.menu.label", label);
+			if ("".equals(StringUtils.toString(labelValue))){
+				labelValue = thisItem.getLongHtml();
+			}
+			
+			return labelValue;
+	}
 }

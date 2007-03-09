@@ -87,8 +87,8 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
       }
 
       String portal = (String) pageContext.getRequest().getAttribute("portal");
-
       String popup = (String) pageContext.getRequest().getParameter("popup");
+      String viewType = (String) pageContext.getRequest().getParameter("viewType");
 
       StringBuffer buffer = new StringBuffer();
       if (this.getShowLink()) {
@@ -98,7 +98,7 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
         } else {
           buffer.append("Sites.do?command=Details");
         }
-        buffer.append("&siteId=" + site.getId() + "&tabId=" + site.getTabToDisplay().getId() + "&pageId=" + pageGroup.getPageList().getDefaultPageId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">" + pageGroup.getName() + "</a>");
+        buffer.append("&siteId=" + site.getId() + "&tabId=" + site.getTabToDisplay().getId() + "&pageId=" + pageGroup.getPageList().getDefaultPageId() + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + ((Site.PREVIEW.equals(viewType)) ? "&viewType=" + Site.PREVIEW : "") + "\">"+pageGroup.getName()+"</a>");
       } else {
         buffer.append(StringUtils.toHtml(pageGroup.getName()));
       }
@@ -106,9 +106,13 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
       if (portal != null && "true".equals(portal)) {
         //do nothing
       } else {
-        buffer.append("&nbsp;<a href=\"javascript:displayMenuPageGroup('selectpagegroup" + pageGroup.getId() + "','menuPageGroup','" + pageGroup.getId() + "','" + site.getId() + "','" + site.getTabToDisplay().getId() + "');\"");
-        buffer.append("onMouseOver=\"over(0, 'pagegroup" + pageGroup.getId() + "')\" onmouseout=\"out(0, 'pagegroup" + pageGroup.getId() + "'); hideMenu('menuPageGroup');\">");
-        buffer.append("<img src=\"images/select.gif\" name=\"selectpagegroup" + pageGroup.getId() + "\" id=\"selectpagegroup" + pageGroup.getId() + "\" align=\"absmiddle\" border=\"0\"></a>");
+				if ((Site.PREVIEW.equals(viewType))) {
+					//do nothing
+				} else {
+					buffer.append("&nbsp;<a href=\"javascript:displayMenuPageGroup('selectpagegroup" + pageGroup.getId() + "','menuPageGroup','" + pageGroup.getId() + "','" + site.getId() + "','" + site.getTabToDisplay().getId() + "');\"");
+					buffer.append("onMouseOver=\"over(0, 'pagegroup" + pageGroup.getId() + "')\" onmouseout=\"out(0, 'pagegroup" + pageGroup.getId() + "'); hideMenu('menuPageGroup');\">");
+					buffer.append("<img src=\"images/select.gif\" name=\"selectpagegroup" + pageGroup.getId() + "\" id=\"selectpagegroup" + pageGroup.getId() + "\" align=\"absmiddle\" border=\"0\"></a>");
+				}
       }
       this.pageContext.getOut().write(buffer.toString());
     } catch (Exception e) {

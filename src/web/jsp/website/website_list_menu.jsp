@@ -45,6 +45,10 @@
     window.location.href='Sites.do?command=Details&siteId=' + thisWebsiteId + '&popup=true';
   }
 
+  function preview() {
+    window.location.href='Sites.do?command=Details&siteId=' + thisWebsiteId + '&popup=true' + '&viewType=preview';
+  }
+
   function modify() {
     window.location.href='Sites.do?command=Modify&siteId='+ thisWebsiteId + '&popup=true';
   }
@@ -79,6 +83,16 @@
         </th>
         <td width="100%">
           <dhv:label name="">Edit Details</dhv:label>
+        </td>
+      </tr>
+    </dhv:permission>
+    <dhv:permission name="site-editor-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="preview();">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="website.preview">Preview</dhv:label>
         </td>
       </tr>
     </dhv:permission>

@@ -49,8 +49,8 @@ public class PortalTabURLHandler extends TagSupport {
       String displayText = tab.getDisplayText();
 
       String portal = (String) pageContext.getRequest().getAttribute("portal");
-
       String popup = (String) pageContext.getRequest().getParameter("popup");
+      String viewType = (String) pageContext.getRequest().getParameter("viewType");
 
       StringBuffer buffer = new StringBuffer();
       buffer.append("<a href=\"");
@@ -59,13 +59,17 @@ public class PortalTabURLHandler extends TagSupport {
       } else {
         buffer.append("Sites.do?command=Details");
       }
-      buffer.append("&siteId=" + siteId + "&tabId=" + tabId + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + "\">" + StringUtils.toHtml(displayText) + "</a>");
+      buffer.append("&siteId=" + siteId + "&tabId=" + tabId + ((popup != null && "true".equals(popup)) ? "&popup=true" : "") + ((Site.PREVIEW.equals(viewType)) ? "&viewType=" + Site.PREVIEW : "") + "\">" + StringUtils.toHtml(displayText) + "</a>");
       if (portal != null && "true".equals(portal)) {
         //do nothing
       } else {
-        buffer.append("&nbsp;<a href=\"javascript:displayMenuTab('selecttab" + tabId + "','menuTab','" + tabId + "','" + siteId + "');\"");
-        buffer.append("onMouseOver=\"over(0, 'tab" + tabId + "')\" onmouseout=\"out(0, 'tab" + tabId + "'); hideMenu('menuTab');\">");
-        buffer.append("<img src=\"images/select.gif\" name=\"selecttab" + tabId + "\" id=\"selecttab" + tabId + "\" align=\"absmiddle\" border=\"0\"></a>");
+				if ((Site.PREVIEW.equals(viewType))) {
+					//do nothing
+				} else {
+					buffer.append("&nbsp;<a href=\"javascript:displayMenuTab('selecttab" + tabId + "','menuTab','" + tabId + "','" + siteId + "');\"");
+					buffer.append("onMouseOver=\"over(0, 'tab" + tabId + "')\" onmouseout=\"out(0, 'tab" + tabId + "'); hideMenu('menuTab');\">");
+					buffer.append("<img src=\"images/select.gif\" name=\"selecttab" + tabId + "\" id=\"selecttab" + tabId + "\" align=\"absmiddle\" border=\"0\"></a>");
+				}
       }
       this.pageContext.getOut().write(buffer.toString());
     } catch (Exception e) {
