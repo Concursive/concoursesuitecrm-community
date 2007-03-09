@@ -1436,6 +1436,7 @@ public class ActionPlanWork extends GenericBean {
     if (rs.next()) {
       actionPlanWork = new ActionPlanWork(db, rs.getInt("plan_work_id"));
     }
+    rs.close();
     pst.close();
     return actionPlanWork;
   }
@@ -1579,6 +1580,7 @@ public class ActionPlanWork extends GenericBean {
       userId = rs.getInt("assignedTo");
     }
     
+    rs.close();
     pst.close();
     //Handle the last user record
     if (userId != -1) {

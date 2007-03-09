@@ -145,6 +145,7 @@ public class RegistrationList extends ArrayList {
       previous = new Registration(rs);
     }
     rs.close();
+    pst.close();
     return previous;
   }
 

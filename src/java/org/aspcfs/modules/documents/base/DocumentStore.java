@@ -999,6 +999,7 @@ public class DocumentStore extends GenericBean {
     } catch (Exception e) {
       db.rollback();
       e.printStackTrace(System.out);
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

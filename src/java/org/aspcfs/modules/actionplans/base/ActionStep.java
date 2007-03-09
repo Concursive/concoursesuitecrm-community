@@ -204,6 +204,7 @@ public class ActionStep extends GenericBean {
       String type = String.valueOf(rs.getInt("type_id"));
       accountTypes.add(type);
     }
+    rs.close();
     pst.close();
   }
 

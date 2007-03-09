@@ -96,8 +96,8 @@ public class SearchCriteriaGroup extends ArrayList {
         groupField.buildRecord(rs);
       }
       rs.close();
-      st.close();
     }
+    st.close();
   }
 }
 

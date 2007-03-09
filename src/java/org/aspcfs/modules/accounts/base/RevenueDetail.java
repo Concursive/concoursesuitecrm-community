@@ -462,19 +462,9 @@ public class RevenueDetail
    */
   public boolean delete(Connection db) throws SQLException {
     Statement st = db.createStatement();
-
-    try {
-      db.setAutoCommit(false);
-      st.executeUpdate(
-          "DELETE FROM revenue_detail WHERE id = " + this.getId());
-      st.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      System.out.println(e.toString());
-    } finally {
-      db.setAutoCommit(true);
-    }
+    st.executeUpdate(
+        "DELETE FROM revenue_detail WHERE id = " + this.getId());
+    st.close();
     return true;
   }
 

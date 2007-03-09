@@ -685,6 +685,7 @@ public class ActionPhaseWorkList extends ArrayList {
       pst.setInt(4, phaseWork.getId());
       pst.executeUpdate();
     }
+    pst.close();
   }
 
 

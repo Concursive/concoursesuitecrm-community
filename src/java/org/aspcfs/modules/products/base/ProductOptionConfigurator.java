@@ -463,6 +463,7 @@ public class ProductOptionConfigurator extends GenericBean {
       rs.close();
       pst.close();
     } catch (SQLException e) {
+    	throw new SQLException(e.getMessage());
     }
     return dependencyList;
   }

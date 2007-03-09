@@ -1134,6 +1134,7 @@ public class Message extends GenericBean {
         }
       }
 
+      rs.close();
       pst.close();
       db.commit();
     } catch (SQLException e) {

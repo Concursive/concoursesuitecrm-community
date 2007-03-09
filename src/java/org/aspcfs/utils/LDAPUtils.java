@@ -108,7 +108,7 @@ public class LDAPUtils {
       String searchContainer = prefs.get("LDAP.SEARCH.CONTAINER");
       boolean doSearchSubtree = "true".equals(prefs.get("LDAP.SEARCH.SUBTREE"));
       String filter = "(& (objectclass=" + prefs.get("LDAP.SEARCH.ORGPERSON")
-          + ") (" + searchName + "=" + searchValue + " ). )";
+          + ") (" + searchName + "=" + searchValue + ") )";
       SearchControls cons = new SearchControls();
       cons.setSearchScope(doSearchSubtree ? SearchControls.SUBTREE_SCOPE
           : SearchControls.ONELEVEL_SCOPE);

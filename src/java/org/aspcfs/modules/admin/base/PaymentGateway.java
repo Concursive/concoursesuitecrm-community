@@ -224,14 +224,18 @@ public class PaymentGateway {
       "SELECT code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, constant_id " +
       "FROM lookup_payment_gateway  " +
       "WHERE code = ? ";
-  PreparedStatement pst = db.prepareStatement(sql);
-  pst.setInt(1, code);
-  ResultSet rs = pst.executeQuery();
-  if (rs.next()) {
-    buildRecord(rs);
-  } else {
-    throw new java.sql.SQLException("ID not found");
-  }
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, code);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      pst.close();
+      throw new java.sql.SQLException("ID not found");
+    }
+    rs.close();
+    pst.close();
   }
 
   /**

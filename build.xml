@@ -1703,7 +1703,77 @@
 		</javadoc>
 	</target>
 
-	<!-- General Contact Importer based on CSV spec -->
+  <target name="language">
+    <property name="zip.dir" value="centric_crm_language_pack" />
+    <delete dir="${dist.dir}" />
+    <mkdir dir="${dist.dir}" />
+    <!-- Update the build number -->
+    <copy file="${base.dir}/src/languages/readme.txt" todir="${dist.dir}" verbose="true" />
+    <buildnumber file="language.number" />
+    <replace file="${dist.dir}/readme.txt" token="@BUILD.NUMBER@" value="${build.number}" />
+    <replace file="${dist.dir}/readme.txt" token="@BUILD.DATE@" value="${date.long}" />
+    <!-- Copy all translatable files -->
+    <mkdir dir="${dist.dir}/dictionary" />
+    <copy todir="${dist.dir}/dictionary" verbose="true">
+      <fileset dir="${base.dir}/src/languages">
+        <include name="*.xml" />
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/javascript" />
+    <copy todir="${dist.dir}/javascript" verbose="true">
+      <fileset dir="${base.dir}/src/languages">
+        <include name="*.js" />
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/permissions" />
+    <copy todir="${dist.dir}/permissions" verbose="true">
+      <fileset dir="${base.dir}/src/sql/init">
+        <include name="permissions_*.xml" />
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/data" />
+    <copy todir="${dist.dir}/data" verbose="true">
+      <fileset dir="${base.dir}/pref/cfs/system">
+        <include name="lookuplists_*.xml" />
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/templates" />
+    <copy todir="${dist.dir}/templates" verbose="true">
+      <fileset dir="${base.dir}/pref/cfs/system">
+        <include name="templates_*.xml" />
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/workflow" />
+    <copy todir="${dist.dir}/workflow" verbose="true">
+      <fileset dir="${base.dir}/pref/cfs/system">
+        <include name="workflow_*.xml" />
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/icelets" />
+    <copy todir="${dist.dir}/icelets" verbose="true">
+      <fileset dir="${base.dir}/src/icelets">
+        <include name="icelet_*.xml" />
+      </fileset>
+    </copy>
+    <!-- Create the distributable .zip file -->
+    <zip destfile="${dist.dir}/${zip.dir}.zip">
+      <!-- main directory -->
+      <zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}" />
+      <zipfileset dir="${dist.dir}/dictionary" prefix="${zip.dir}/dictionary" />
+      <zipfileset dir="${dist.dir}/javascript" prefix="${zip.dir}/javascript" />
+      <zipfileset dir="${dist.dir}/permissions" prefix="${zip.dir}/permissions" />
+      <zipfileset dir="${dist.dir}/data" prefix="${zip.dir}/data" />
+      <zipfileset dir="${dist.dir}/templates" prefix="${zip.dir}/templates" />
+      <zipfileset dir="${dist.dir}/workflow" prefix="${zip.dir}/workflow" />
+      <zipfileset dir="${dist.dir}/icelets" prefix="${zip.dir}/icelets" />
+    </zip>
+    <!-- delete temporary files -->
+    <delete>
+      <fileset dir="${dist.dir}" includes="*.txt" />
+    </delete>
+  </target>
+
+  <!-- General Contact Importer based on CSV spec -->
 	<target name="import.generalcontacts" depends="init">
 		<fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
 		<fail unless="arg2">Missing arg2: Virtual Host to import to not specified

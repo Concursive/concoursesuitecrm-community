@@ -709,6 +709,7 @@ public class BaseWebdavContext implements ModuleContext {
    * @return Description of the Return Value
    */
   public int getUserSiteId(Connection db, int userId) throws SQLException {
+	  int id = -1;
     PreparedStatement pst = db.prepareStatement(
       "SELECT site_id " +
       "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
@@ -716,9 +717,11 @@ public class BaseWebdavContext implements ModuleContext {
     pst.setInt(1, userId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      return DatabaseUtils.getInt(rs, "site_id");
+      id = DatabaseUtils.getInt(rs, "site_id");
     }
-    return -1;
+    rs.close();
+    pst.close();
+    return id;
   }
   
   

@@ -604,6 +604,7 @@ public class IceletProperty extends GenericBean {
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, this.getId());
       pst.execute();
+      pst.close();
 
       if (commit) {
         db.commit();

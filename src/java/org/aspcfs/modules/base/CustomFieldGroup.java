@@ -776,6 +776,7 @@ public class CustomFieldGroup extends ArrayList {
       result = false;
       System.out.println(e.toString());
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

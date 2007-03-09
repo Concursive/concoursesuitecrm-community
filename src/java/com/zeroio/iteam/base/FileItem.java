@@ -178,13 +178,13 @@ public class FileItem extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs, false);
+      rs.close();
+      pst.close();
     } else {
       rs.close();
       pst.close();
       throw new SQLException("File record not found.");
     }
-    rs.close();
-    pst.close();
   }
 
 

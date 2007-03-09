@@ -611,6 +611,8 @@ public class CustomFieldRecord {
       fieldData.setRecordId(this.id);
       fieldData.buildResources(db);
     }
+    rs.close();
+    pst.close();
   }
 
   public boolean deleteData(Connection db) throws SQLException {
@@ -621,7 +623,6 @@ public class CustomFieldRecord {
     pst.setInt(1, this.getId());
     pst.executeUpdate();
     pst.close();
-
     return true;
   }
 }

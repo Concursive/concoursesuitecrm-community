@@ -74,7 +74,7 @@
 .trails {
   width: 100%;
   margin: 0;
-  padding-left: 0px;
+  padding-left: 0;
   border-bottom: 6px solid #FFF;
 }
 .trails td {
@@ -210,7 +210,7 @@
   color: #fff;
   margin: 0;
 	padding-top: .67em;
-	padding-left: 0px;
+	padding-left: 0;
 }
 .tabs td, .tabs th {
   text-align: center;
@@ -546,7 +546,7 @@
 }
 .formLabel { 
   text-align: right !important;
-  width: 100 !important;
+  width: 100px !important;
   background-color: #EDEDED !important;
   border-right: 1px solid #9C9A9C;
 }
@@ -763,15 +763,15 @@
   z-index: 1000;
 }
 .pulldown tr {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   color: #000000;
   background-color: #fff;
   height: 20px;
 }
 .pulldown tr.hover {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   background-color: #316ac5 !important;
   color: #fff;
   height: 20px;
@@ -780,21 +780,21 @@
   width: 20px;
   height: 20px;
   background-color: #619af5;
-  padding: 0px 3px;
+  padding: 0 3px;
 }
 .pulldown th {
   width: 20px;
   height: 20px;
   background-color: #cdf;
-  padding: 0px 3px;
+  padding: 0 3px;
 }
 .pulldown td {
   height: 20px;
-  padding: 0px 3px;
+  padding: 0 3px;
 }
 .pulldown td.hover {
   height: 20px;
-  padding: 0px 3px;
+  padding: 0 3px;
   background-color: #316ac5 !important;
   color: #fff;
 }
@@ -858,11 +858,11 @@ a:visited:hover{color:#FF3300;}
   border: 1px solid #EDEDED;
 }
 
-.menu { visibility:hidden; left:0px; top:0px; position:absolute }
+.menu { visibility:hidden; left:0; top:0; position:absolute }
 .note {
   width: 100%;
   margin: 0;
-  padding-left: 0px;
+  padding-left: 0;
   border-bottom: 6px solid #FFF;
 }
 .note th {
@@ -1051,7 +1051,7 @@ a:visited:hover{color:#FF3300;}
   vertical-align: middle;
 }
 .stageCurrentArrow {
-  background: #99CC66;
+  background-color: #99CC66;
   background-image: url(../images/progress/currentStage.gif);
   background-repeat: no-repeat;
   background-position: right center;
@@ -1090,7 +1090,7 @@ a:visited:hover{color:#FF3300;}
   padding-right: 2px;
 }
 .phaseComplete {
-  background: #FFFFFF;
+  background-color: #FFFFFF;
   border-left: 1px solid #000000;
   border-top: 1px solid #000000;
   text-align: center;
@@ -1098,7 +1098,7 @@ a:visited:hover{color:#FF3300;}
   background-image: none !important;
 }
 .phaseCurrent {
-  background: #99CC66;
+  background-color: #99CC66;
   border-left: 1px solid #000000;
   border-top: 1px solid #000000;
   text-align: center;
@@ -1107,7 +1107,7 @@ a:visited:hover{color:#FF3300;}
   background-image: none !important;
 }
 .phaseIncomplete {
-  background: #FFFFFF;
+  background-color: #FFFFFF;
   border-left: 1px solid #000000;
   border-top: 1px solid #000000;
   text-align: center;
@@ -1121,14 +1121,14 @@ a:visited:hover{color:#FF3300;}
   background-image: none !important;
 }
 .phaseStepCurrentImage {
-  background: #fff7bd;
+  background-color: #fff7bd;
   background-image: url(../images/progress/currentStep.gif) !important;
   background-repeat: no-repeat !important;
   background-position: left center !important;
   border-right: none !important;
 }
 .phaseStepRandomImage {
-  background: #fff7bd;
+  background-color: #fff7bd;
   border-left: 1px solid #000000;
   border-right: none !important;
   background-image: none !important;

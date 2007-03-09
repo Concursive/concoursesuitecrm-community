@@ -122,15 +122,15 @@ public class Revenue extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT r.*, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename, o.name as orgname " +
-        "FROM revenue r " +
-        "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
-        "LEFT JOIN organization o ON (r.org_id = o.org_id) " +
-        "LEFT JOIN lookup_revenue_types rt ON (r." + DatabaseUtils.addQuotes(db, "type") + " = rt.code) " +
-        "WHERE r.id = ? ");
+            "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+            "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, ct_own.namelast as own_namelast, ct_own.namefirst as own_namefirst, rt.description as typename, o.name as orgname " +
+            "FROM revenue r " +
+            "LEFT JOIN contact ct_eb ON (r.enteredby = ct_eb.user_id) " +
+            "LEFT JOIN contact ct_mb ON (r.modifiedby = ct_mb.user_id) " +
+            "LEFT JOIN contact ct_own ON (r.owner = ct_own.user_id) " +
+            "LEFT JOIN organization o ON (r.org_id = o.org_id) " +
+            "LEFT JOIN lookup_revenue_types rt ON (r." + DatabaseUtils.addQuotes(db, "type") + " = rt.code) " +
+            "WHERE r.id = ? ");
     pst.setInt(1, revenueId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -857,8 +857,8 @@ public class Revenue extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE user_id = ? AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -884,8 +884,8 @@ public class Revenue extends GenericBean {
     int oldId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT owner " +
-        "FROM revenue " +
-        "WHERE id = ? ");
+            "FROM revenue " +
+            "WHERE id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -955,7 +955,7 @@ public class Revenue extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "revenue_id_seq");
     sql.append(
         "INSERT INTO revenue " +
-        "(org_id, transaction_id, " + DatabaseUtils.addQuotes(db, "month") + ", " + DatabaseUtils.addQuotes(db, "year") + ", amount, " + DatabaseUtils.addQuotes(db, "type") + ", owner, description, ");
+            "(org_id, transaction_id, " + DatabaseUtils.addQuotes(db, "month") + ", " + DatabaseUtils.addQuotes(db, "year") + ", amount, " + DatabaseUtils.addQuotes(db, "type") + ", owner, description, ");
     if (id > -1) {
       sql.append("id, ");
     }
@@ -1032,19 +1032,10 @@ public class Revenue extends GenericBean {
    */
   public boolean delete(Connection db) throws SQLException {
     PreparedStatement pst = null;
-    try {
-      db.setAutoCommit(false);
-      pst = db.prepareStatement("DELETE FROM revenue WHERE id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      e.printStackTrace(System.out);
-    } finally {
-      db.setAutoCommit(true);
-      pst.close();
-    }
+    pst = db.prepareStatement("DELETE FROM revenue WHERE id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -1068,10 +1059,10 @@ public class Revenue extends GenericBean {
 
     sql.append(
         "UPDATE revenue " +
-        "SET " + DatabaseUtils.addQuotes(db, "month") + " = ?, " + DatabaseUtils.addQuotes(db, "year") + " = ?, amount = ?, owner = ?, description = ?, " +
-        "" + DatabaseUtils.addQuotes(db, "type") + " = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE id = ? ");
+            "SET " + DatabaseUtils.addQuotes(db, "month") + " = ?, " + DatabaseUtils.addQuotes(db, "year") + " = ?, amount = ?, owner = ?, description = ?, " +
+            "" + DatabaseUtils.addQuotes(db, "type") + " = ?, " +
+            "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+            "WHERE id = ? ");
     //if (!override) {
     //  sql.append("AND modified = ? ");
     //}

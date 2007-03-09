@@ -423,6 +423,7 @@ public class OrderPaymentStatus extends GenericBean {
       pst.close();
     } catch (Exception e) {
       e.printStackTrace(System.out);
+      throw new SQLException(e.getMessage());
     }
     return true;
   }

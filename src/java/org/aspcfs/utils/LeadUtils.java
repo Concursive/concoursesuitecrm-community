@@ -811,6 +811,8 @@ public class LeadUtils {
     if (rs1.next()) {
       count = rs1.getInt("resultcount");
     }
+    rs1.close();
+    pst1.close();
 
     //Determine a count of accounts created before the end date and with action plans that
     //were created after the end date
@@ -832,7 +834,7 @@ public class LeadUtils {
     if (rs2.next()) {
       count += rs2.getInt("resultcount");
     }
-    pst1.close();
+    rs2.close();
     pst2.close();
     return count;
   }

@@ -194,6 +194,8 @@ public class PermissionList extends Vector {
     if (rs.next()) {
       maxLevel = rs.getInt("max_level");
     }
+    rs.close();
+    pst.close();
     return maxLevel;
   }
 }

@@ -172,6 +172,8 @@ public class ActivityItemsExistScriptlet extends JRDefaultScriptlet {
         exists = true;
       }
     }
+    rs.close();
+    pst.close();
     return exists;
   }
 }

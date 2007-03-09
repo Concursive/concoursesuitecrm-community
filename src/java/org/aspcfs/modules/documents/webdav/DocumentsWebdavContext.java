@@ -226,6 +226,8 @@ public class DocumentsWebdavContext
       buildProperties(
           item.getContextName(), entered, modified, new Integer(0));
     }
+    rs.close();
+    pst.close();
   }
 
 

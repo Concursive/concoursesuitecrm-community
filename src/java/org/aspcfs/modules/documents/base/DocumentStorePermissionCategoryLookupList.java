@@ -136,6 +136,8 @@ public class DocumentStorePermissionCategoryLookupList extends ArrayList {
     if (rs.next()) {
       maxLevel = rs.getInt("max_level");
     }
+    rs.close();
+    pst.close();
     return maxLevel;
   }
 }

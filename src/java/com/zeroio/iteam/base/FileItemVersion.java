@@ -77,13 +77,13 @@ public class FileItemVersion extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
+      rs.close();
+      pst.close();
     } else {
       rs.close();
       pst.close();
       throw new SQLException("File version record not found.");
     }
-    rs.close();
-    pst.close();
   }
 
 

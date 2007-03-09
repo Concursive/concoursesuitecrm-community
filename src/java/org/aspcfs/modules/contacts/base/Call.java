@@ -1483,6 +1483,7 @@ public class Call extends GenericBean {
     if (rs.next()) {
       scds = rs.getInt("base_value");
     }
+    rs.close();
     pst.close();
     return scds;
   }
@@ -1850,7 +1851,7 @@ public class Call extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, tmpUserId);
       pst.setInt(++i, this.id);
       resultCount = pst.executeUpdate();
-
+      pst.close();
       // Disable the contact history for the call
       if (this.getStatusString().equals("Complete")) {
         ContactHistory.trash(

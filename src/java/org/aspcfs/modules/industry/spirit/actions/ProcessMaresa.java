@@ -295,8 +295,8 @@ public final class ProcessMaresa extends CFSModule {
               System.out.println("Maresa-> Opportunity Not Found.. Creating new one");
             }
           }
-          pst.close();
           rs.close();
+          pst.close();
         } else {
           errors.put("InvalidActionERROR", "Invalid Action : " + resAction);
           throw new Exception("InvalidActionERROR");
@@ -571,6 +571,7 @@ public final class ProcessMaresa extends CFSModule {
       if (db != null) {
         db.rollback();
       }
+      throw new SQLException(e.getMessage());
     } finally {
       if (db != null) {
         db.setAutoCommit(true);

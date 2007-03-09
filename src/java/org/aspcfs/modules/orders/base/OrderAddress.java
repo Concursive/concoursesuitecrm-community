@@ -251,6 +251,7 @@ public class OrderAddress extends Address {
       if (commit) {
         db.rollback();
       }
+      throw new SQLException(e.getMessage());
     } finally {
       if (commit) {
         db.setAutoCommit(true);

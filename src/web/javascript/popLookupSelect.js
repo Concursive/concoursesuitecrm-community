@@ -20,7 +20,7 @@ function popLookupSelectMultiple(displayFieldId,hiddenFieldId,table) {
                   }
                           
                   selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
-                  selectedDisplays = selectedDisplays + document.getElementById(displayFieldId).options[count].text;
+                  selectedDisplays = selectedDisplays + escape(document.getElementById(displayFieldId).options[count].text);
           }
           
   }

@@ -1192,6 +1192,7 @@ public class ActionItemWork extends GenericBean {
     if (rs.next()) {
       this.id = rs.getInt("item_work_id");
     }
+    rs.close();
     pst.close();
     queryRecord(db, this.id);
   }

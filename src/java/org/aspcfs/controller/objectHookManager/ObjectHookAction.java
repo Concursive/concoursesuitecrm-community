@@ -643,6 +643,7 @@ public class ObjectHookAction {
         pst.execute();
         id = DatabaseUtils.getCurrVal(
             db, "business_process_ho_hook_id_seq", id);
+        pst.close();
       }
       if (autoCommit) {
         db.commit();

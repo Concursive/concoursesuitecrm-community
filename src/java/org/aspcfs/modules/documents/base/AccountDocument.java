@@ -328,17 +328,14 @@ public class AccountDocument extends GenericBean {
         " org_id = ? , " +
         " entered = ? " +
         " WHERE id = ? ");
-
-
     pst = db.prepareStatement(sql.toString());
     int i = 0;
-
     pst.setInt(++i, this.documentStoreId);
     pst.setInt(++i, this.orgId);
     pst.setTimestamp(++i, this.entered);
     pst.setInt(++i, this.id);
     resultCount = pst.executeUpdate();
-
+    pst.close();
     return resultCount;
   }
 

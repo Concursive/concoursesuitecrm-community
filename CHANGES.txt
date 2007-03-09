@@ -10,6 +10,22 @@ February 6, 2007
 
 
 ----------------------------------------------------------------------------
+Centric CRM 4.1.1 alpha
+Copyright (C) 2007 Dark Horse Ventures, LLC
+Change Log
+March 9, 2007
+----------------------------------------------------------------------------
+
+Latest information can be found in the Centric CRM 4.1 Community:
+http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
+
+Fixes:
+- Removed a "." from the LDAP utils to work with active directory, may cause
+  an issue with LDAP and needs to be verified
+- Javascript sending unescaped text in some popup widgets
+
+
+----------------------------------------------------------------------------
 Centric CRM 4.1
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log

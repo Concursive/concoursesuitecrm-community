@@ -1094,6 +1094,7 @@ public class CFSNote extends GenericBean {
       db.rollback();
       if (System.getProperty("DEBUG") != null) {
         System.out.println("CFSNote-> " + e.toString());
+      throw new SQLException(e.getMessage());
       }
     } finally {
       db.setAutoCommit(true);

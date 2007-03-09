@@ -415,6 +415,8 @@ public class HelpTableOfContentItemLink extends GenericBean {
         this.linkType = "CONTEXT";
       }
     }
+    rs.close();
+    pst.close();
   }
 
 

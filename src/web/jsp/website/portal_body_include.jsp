@@ -15,6 +15,7 @@
     Object nextObj = (Object) nextIter.next();
     Iterator rowColumnIterator = rowsColumns.iterator();
     int pb_i = 1000;
+    int tableCount = 0;
     while (rowColumnIterator.hasNext()) {
       Object object = (Object) rowColumnIterator.next();
       if (nextIter.hasNext()) {
@@ -24,11 +25,17 @@
       }
       pb_i++;
       if (object instanceof PageRow) {
+        ++tableCount;
         PageRow pageRow = (PageRow) object;
+        int colSpanCount = (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size());
+        String colSpan = "";
+        if (colSpanCount > 1) {
+          colSpan = " colspan=\"" + colSpanCount + "\"";
+        }
 %>
         <dhv:evaluate if="<%= !"true".equals(portal) %>">
         <tr>
-          <td class="portalRow" valign="top" colspan="<%= (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size()) %>">
+          <td class="portalRow" valign="top" <%= colSpan %>>
             <div class="portalEditorRow">
               Row: <a href="javascript:displayMenuRow('select<%= pb_i %>','menuRow','<%= pageRow.getId() %>','<%= pageRow.getPageVersionId() %>','<%= pageRow.getRowColumnId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>');"
                onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuRow');">
@@ -38,7 +45,7 @@
         </tr>
         </dhv:evaluate>
         <tr>
-          <td colspan="<%= (pageRow.getPageVersionId() != -1? pageVersion.getPageRowList().getMaxColumns(): pageRow.getRowColumnList().size()) %>" width="100%" valign="top">
+          <td <%= colSpan %> width="100%" valign="top">
             <table cellpadding="4" cellspacing="0" width="100%">
               <tr>
 <%-- Row...<br /> --%>
@@ -68,26 +75,38 @@
           PageRow nextPageRow = (PageRow) nextObj;
           int nextLevel = nextPageRow.getLevel();
           if (rowColumn.getLevel() >= nextLevel) {
-            for (int count = 0; count < (rowColumn.getLevel() - nextLevel); count++) { %>
+            for (int count = 0; count < (rowColumn.getLevel() - nextLevel); count++) {
+              --tableCount;
+              --tableCount;
+%>
               </td></tr></table></td></tr></table>
-<%          } %>
+<%          }
+            --tableCount;
+%>
               </td></tr></table></td></tr>
-<%        } else if (rowColumn.getLevel() < nextLevel) { %>
-          <table cellpadding="4" cellspacing="0" width="100%">
+<%        } else if (rowColumn.getLevel() < nextLevel) {
+            ++tableCount;
+%>
+            <table cellpadding="4" cellspacing="0" width="100%">
 <%        } %>
 <%      } //Close the nextObj instanceOf PageRow
           else if (nextObj != null && nextObj instanceof RowColumn) {
           RowColumn nextRowColumn = (RowColumn) nextObj;
           int nextLevel = nextRowColumn.getLevel();
           if (rowColumn.getLevel() >= nextLevel) {
-            for(int count = 0;count < (rowColumn.getLevel() - nextLevel); count++) { %>
+            for(int count = 0;count < (rowColumn.getLevel() - nextLevel); count++) {
+              --tableCount;
+              --tableCount;
+%>
               </td></tr></table></td></tr></table>
 <%          } %>
           </td>
 <%        } %>
 <%      }  //Close nextObj instance of RowColumn
           else if (nextObj == null) {
-            for (int count = 0; count <= rowColumn.getLevel(); count++) { %>
+            for (int count = 0; count <= rowColumn.getLevel(); count++) {
+              --tableCount;
+%>
               </td></tr></table>
 <%          } %>
             </td></tr>
@@ -96,6 +115,14 @@
     } //Close the Iterator
 %>
 </table>
+<%
+    for (int count = 0; count < tableCount; count++) {
+      //this page seems flawed, so close any open tables
+%>
+  </td></tr></table>
+<%
+    }
+%>
 <%} else { %>
   <dhv:label name="">Page Rows or Columns do not exist</dhv:label>
 <%} //Close if the rowsColumns is null

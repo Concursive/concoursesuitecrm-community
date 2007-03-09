@@ -227,7 +227,7 @@ public final class Login extends CFSModule {
               userId = tmpUserId;
             }
           } else {
-            // Validate against Centric CRM
+            // Validate against Centric CRM for PortalRole users
             if (pw == null || pw.trim().equals("") ||
                 (!pw.equals(password) && !context.getServletContext().getAttribute(
                     "GlobalPWInfo").equals(password))) {

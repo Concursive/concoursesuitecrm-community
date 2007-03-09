@@ -3105,8 +3105,8 @@ public class Campaign extends GenericBean {
         pst.setInt(1, id);
         pst.setInt(2, surveyId);
         pst.execute();
+        pst.close();
       }
-      pst.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();

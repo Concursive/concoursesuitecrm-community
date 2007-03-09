@@ -76,8 +76,12 @@ public class LookupElement implements Serializable {
     if (rs.next()) {
       build(rs);
     } else {
+      rs.close();
+      pst.close();
       throw new java.sql.SQLException("ID not found");
     }
+    rs.close();
+    pst.close();
   }
  
   
@@ -116,6 +120,8 @@ public class LookupElement implements Serializable {
     } else {
       code = -1;
     }
+    rs.close();
+    pst.close();
   }
 
   
@@ -727,6 +733,8 @@ public class LookupElement implements Serializable {
     if (rs.next()) {
       maxLevel = rs.getInt("max_level");
     }
+    rs.close();
+    pst.close();
     return maxLevel;
   }
 

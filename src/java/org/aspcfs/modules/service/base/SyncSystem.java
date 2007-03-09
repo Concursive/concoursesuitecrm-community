@@ -148,6 +148,7 @@ public class SyncSystem extends GenericBean {
     pst.setString(++i, applicationName);
     pst.setBoolean(++i, enabled);
     pst.execute();
+    pst.close();
     id = DatabaseUtils.getCurrVal(db, "sync_system_system_id_seq", id);
   }
 

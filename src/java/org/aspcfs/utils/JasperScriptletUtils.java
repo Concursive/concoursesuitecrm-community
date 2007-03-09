@@ -545,6 +545,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
         sb.append("\n" + country);
       }
     }
+    pst.close();
 
     pst = db.prepareStatement(
         "SELECT " + DatabaseUtils.addQuotes(db, "number")+ " AS phonenum " +
@@ -562,6 +563,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
         }
       }
     }
+    pst.close();
 
     pst = db.prepareStatement(
         "SELECT " + DatabaseUtils.addQuotes(db, "number")+ " AS faxnum " +
@@ -579,6 +581,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
         }
       }
     }
+    pst.close();
 
     pst = db.prepareStatement(
         "SELECT url " +

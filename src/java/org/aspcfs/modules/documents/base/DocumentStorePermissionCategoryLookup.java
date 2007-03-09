@@ -194,6 +194,7 @@ public class DocumentStorePermissionCategoryLookup extends GenericBean {
     pst.setInt(++i, level);
     pst.setBoolean(++i, enabled);
     pst.execute();
+    pst.close();
     id = DatabaseUtils.getCurrVal(db, "lookup_document_store_permission_category_code_seq", id);
     return true;
   }

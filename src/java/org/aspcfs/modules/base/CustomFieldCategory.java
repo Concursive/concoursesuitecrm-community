@@ -1055,6 +1055,7 @@ public class CustomFieldCategory extends ArrayList {
       }
     } catch (Exception e) {
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

@@ -290,11 +290,12 @@ public class DocumentStorePermissionList extends HashMap {
             ++i, Integer.parseInt(
             request.getParameter("perm" + count + "level")));
         pst.execute();
+        pst.close();
       }
-      pst.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }
@@ -343,7 +344,6 @@ public class DocumentStorePermissionList extends HashMap {
       list.setIncludeEnabled(Constants.TRUE);
       list.buildList(db);
       Iterator iterator = list.iterator();
-      // TODO: optimize because preparedStatement can be used outside iterator
       while (iterator.hasNext()) {
         DocumentStorePermissionLookup thisPermission = (DocumentStorePermissionLookup) iterator.next();
         int id = DatabaseUtils.getNextSeq(
@@ -362,8 +362,8 @@ public class DocumentStorePermissionList extends HashMap {
         pst.execute();
         id = DatabaseUtils.getCurrVal(
             db, "document_store_permissions_id_seq", id);
+        pst.close();
       }
-      pst.close();
     }
   }
 }

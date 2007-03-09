@@ -1747,6 +1747,7 @@ public class CustomField extends GenericBean implements Cloneable {
       if (commit) {
         db.rollback();
       }
+      throw new SQLException(e.getMessage());
     } finally {
       if (commit) {
         db.setAutoCommit(true);
@@ -1881,6 +1882,7 @@ public class CustomField extends GenericBean implements Cloneable {
     } catch (SQLException e) {
       result = false;
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

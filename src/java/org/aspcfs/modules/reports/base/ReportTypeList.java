@@ -161,6 +161,7 @@ public class ReportTypeList extends HtmlSelect {
         "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
+    //TODO: see if this gets closed
     return rs;
   }
 

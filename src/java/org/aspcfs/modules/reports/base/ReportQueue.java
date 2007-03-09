@@ -599,8 +599,13 @@ public class ReportQueue extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public static int insert(Connection db, Criteria criteria, int reportType, boolean sendEmail) throws SQLException {
+    int position = -1;
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //Insert the new report into the queue
       int id = DatabaseUtils.getNextSeq(db, "report_queue_queue_id_seq");
       PreparedStatement pst = db.prepareStatement(
@@ -649,17 +654,23 @@ public class ReportQueue extends GenericBean {
               "WHERE processed IS NULL ");
       ResultSet rs = pst.executeQuery();
       rs.next();
-      int position = rs.getInt("position");
+      position = rs.getInt("position");
       rs.close();
       pst.close();
-      db.commit();
-      return position;
+      if (commit) {
+        db.commit();
+      }
     } catch (Exception e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
+    return position;
   }
 
 

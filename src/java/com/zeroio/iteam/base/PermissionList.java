@@ -274,11 +274,12 @@ public class PermissionList extends HashMap {
             ++i, Integer.parseInt(
             request.getParameter("perm" + count + "level")));
         pst.execute();
+        pst.close();
       }
-      pst.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

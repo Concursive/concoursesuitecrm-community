@@ -2559,6 +2559,7 @@ public class Project extends GenericBean {
     } catch (Exception e) {
       db.rollback();
       e.printStackTrace(System.out);
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }
@@ -2740,6 +2741,7 @@ public class Project extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

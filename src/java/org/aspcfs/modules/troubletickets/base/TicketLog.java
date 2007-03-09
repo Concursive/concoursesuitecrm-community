@@ -1020,6 +1020,7 @@ public class TicketLog extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }

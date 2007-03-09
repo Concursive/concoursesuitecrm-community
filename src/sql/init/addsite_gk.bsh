@@ -35,7 +35,7 @@ if ((String) paramMap.get("LANGUAGE") != null) {
 // Insert the site
 if (1==1) {
   // Create a default user to relate new data to, bypass user class constraints
-  print("Inserting new site... " + (String) paramMap.get("VIRTUAL_HOST"));
+  print("Inserting new site... " + (String) paramMap.get("VIRTUAL_HOST") + " " + language);
   int id = DatabaseUtils.getNextSeq(db, "sites_site_id_seq");
   PreparedStatement pst = db.prepareStatement(
     "INSERT INTO sites (" + (id>-1?"site_id, ":"") + "sitecode, vhost, dbhost, dbname, dbuser, dbpw, driver, enabled, " + DatabaseUtils.addQuotes(db, "language") + ") " +

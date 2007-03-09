@@ -895,6 +895,8 @@ public abstract class Configurator {
     if (rs.next()) {
       return (rs.getInt("thecount"));
     }
+    rs.close();
+    pst.close();
     return 0;
   }
 

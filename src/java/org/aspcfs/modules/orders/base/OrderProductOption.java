@@ -823,6 +823,7 @@ public class OrderProductOption extends GenericBean {
       if (commit) {
         db.rollback();
       }
+      throw new SQLException(e.getMessage());
     } finally {
       if (commit) {
         db.setAutoCommit(true);

@@ -95,8 +95,12 @@ public class LookupList extends HtmlSelect implements SyncableList {
     if (rs.next()) {
       this.setTableName(rs.getString("tableName"));
     } else {
+      rs.close();
+      pst.close();
       throw new SQLException("No lookup table found");
     }
+    rs.close();
+    pst.close();
   }
 
 
@@ -1280,6 +1284,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
     if (rs.next()) {
       maxLevel = rs.getInt("max_level");
     }
+    rs.close();
+    pst.close();
     return maxLevel;
   } 
 }

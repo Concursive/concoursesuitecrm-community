@@ -58,7 +58,7 @@ public class WorkflowManager {
       System.out.println("WorkflowManager-> Executing Business Process");
     }
     //Populate the global process parameters, individual components can override later
-    this.populateProcessParameters(context);
+    populateProcessParameters(context);
     int startId = context.getProcess().getStartId();
     if (System.getProperty("DEBUG") != null) {
       System.out.println(
@@ -187,7 +187,7 @@ public class WorkflowManager {
    *
    * @param context Description of the Parameter
    */
-  private void populateProcessParameters(ComponentContext context) {
+  private static void populateProcessParameters(ComponentContext context) {
     BusinessProcess thisProcess = context.getProcess();
     if (thisProcess.hasParameters()) {
       Iterator i = thisProcess.getParameters().iterator();
@@ -209,7 +209,7 @@ public class WorkflowManager {
    * @param context   Description of the Parameter
    * @param component Description of the Parameter
    */
-  private void populateComponentParameters(ComponentContext context, BusinessProcessComponent component) {
+  private static void populateComponentParameters(ComponentContext context, BusinessProcessComponent component) {
     if (component.hasParameters()) {
       Iterator i = component.getParameters().iterator();
       while (i.hasNext()) {
@@ -228,7 +228,7 @@ public class WorkflowManager {
    *
    * @param context Description of the Parameter
    */
-  private void loadAnchors(ComponentContext context) {
+  private static void loadAnchors(ComponentContext context) {
     System.out.println("WorkflowManager-> loadAnchors");
     Connection db = null;
     try {
@@ -261,7 +261,7 @@ public class WorkflowManager {
    *
    * @param context Description of the Parameter
    */
-  private void saveAnchors(ComponentContext context) {
+  private static void saveAnchors(ComponentContext context) {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("WorkflowManager-> saveAnchors: " + context.getProcess().getName());
     }

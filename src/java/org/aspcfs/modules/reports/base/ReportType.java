@@ -249,14 +249,18 @@ public class ReportType {
               ", enabled, "+DatabaseUtils.addQuotes(db,"constant")+", entered, modified "+
       "FROM lookup_report_type " +
       "WHERE code = ? ";
-  PreparedStatement pst = db.prepareStatement(sql);
-  pst.setInt(1, code);
-  ResultSet rs = pst.executeQuery();
-  if (rs.next()) {
-    buildRecord(rs);
-  } else {
-    throw new java.sql.SQLException("ID not found");
-  }
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, code);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      pst.close();
+      throw new java.sql.SQLException("ID not found");
+    }
+    rs.close();
+    pst.close();
   }
 
   /**

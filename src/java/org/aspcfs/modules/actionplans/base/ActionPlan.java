@@ -568,6 +568,7 @@ public class ActionPlan extends GenericBean {
     if (rs.next()) {
       mapId = rs.getInt("map_id");
     }
+    rs.close();
     pst.close();
     
     return mapId;

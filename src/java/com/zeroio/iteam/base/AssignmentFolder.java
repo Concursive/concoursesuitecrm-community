@@ -852,6 +852,7 @@ public class AssignmentFolder extends GenericBean {
         db.rollback();
       }
       System.out.println(e.getMessage());
+      throw new SQLException(e.getMessage());
     } finally {
       if (commit) {
         db.setAutoCommit(true);

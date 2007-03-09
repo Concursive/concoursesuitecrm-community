@@ -932,6 +932,7 @@ public class Site extends GenericBean {
     DatabaseUtils.setInt(pst, 1, newLogoImageId);
     pst.setInt(2, id);
     pst.executeUpdate();
+    pst.close();
     logoImageId = newLogoImageId;
   }
 
@@ -944,6 +945,7 @@ public class Site extends GenericBean {
     DatabaseUtils.setInt(pst, 1, newLayoutId);
     pst.setInt(2, id);
     pst.executeUpdate();
+    pst.close();
     layoutId = newLayoutId;
   }
 
@@ -956,6 +958,7 @@ public class Site extends GenericBean {
     DatabaseUtils.setInt(pst, 1, newStyleId);
     pst.setInt(2, id);
     pst.executeUpdate();
+    pst.close();
     styleId = newStyleId;
   }
 }

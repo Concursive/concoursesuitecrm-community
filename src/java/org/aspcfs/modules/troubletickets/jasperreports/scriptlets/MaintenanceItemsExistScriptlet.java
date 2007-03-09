@@ -172,6 +172,8 @@ public class MaintenanceItemsExistScriptlet extends JRDefaultScriptlet {
         exists = true;
       }
     }
+    rs.close();
+    pst.close();
     return exists;
   }
 }

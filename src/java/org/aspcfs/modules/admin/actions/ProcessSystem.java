@@ -278,6 +278,7 @@ public final class ProcessSystem extends CFSModule {
         if (db != null) {
           db.rollback();
         }
+        throw new SQLException(e.getMessage());
       } finally {
         if (db != null) {
           db.setAutoCommit(true);

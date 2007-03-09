@@ -486,11 +486,12 @@ public class HelpFeature extends GenericBean {
     int i = 0;
     int max = 0;
     pst.setInt(++i, this.getLinkHelpId());
-    pst.execute();
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       max = DatabaseUtils.getInt(rs, "maxrecord");
     }
+    rs.close();
+    pst.close();
     return max;
   }
 

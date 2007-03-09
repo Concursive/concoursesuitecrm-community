@@ -148,6 +148,7 @@ public class PaymentGatewayList extends HtmlSelect implements SyncableList {
         "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
+    //TODO: check if this gets closed
     return rs;
   }
 
