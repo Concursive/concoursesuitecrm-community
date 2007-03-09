@@ -16,7 +16,7 @@
   <display-name>Darkhorse Ventures Tag Library</display-name>
 
 	<tag>
-    <name>browser</name> 
+    <name>browser</name>
     <tag-class>org.aspcfs.taglib.BrowserHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -43,9 +43,9 @@
       <required>no</required>
     </attribute>
   </tag>
-	
+
   <tag>
-    <name>permission</name> 
+    <name>permission</name>
     <tag-class>org.aspcfs.taglib.PermissionHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -65,9 +65,9 @@
       <required>no</required>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>sharing</name> 
+    <name>sharing</name>
     <tag-class>org.aspcfs.taglib.SharingHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -94,10 +94,10 @@
       <required>no</required>
     </attribute>
   </tag>
-  
-  
+
+
   <tag>
-    <name>username</name> 
+    <name>username</name>
     <tag-class>org.aspcfs.taglib.UsernameHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -126,9 +126,9 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>contactname</name> 
+    <name>contactname</name>
     <tag-class>org.aspcfs.taglib.ContactNameHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -146,7 +146,7 @@
   </tag>
 
   <tag>
-    <name>include</name> 
+    <name>include</name>
     <tag-class>org.aspcfs.taglib.FieldHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -165,9 +165,9 @@
       <required>no</required>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>label</name> 
+    <name>label</name>
     <tag-class>org.aspcfs.taglib.LabelHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -194,9 +194,9 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>evaluate</name> 
+    <name>evaluate</name>
     <tag-class>org.aspcfs.taglib.EvaluateHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -213,9 +213,9 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>container</name> 
+    <name>container</name>
     <tag-class>org.aspcfs.taglib.ContainerMenuHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -262,7 +262,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>pagedListAlphabeticalLinks</name>
     <tag-class>org.aspcfs.taglib.PagedListAlphabeticalLinksHandler</tag-class>
@@ -279,9 +279,9 @@
       <required>yes</required>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>pagedListControl</name> 
+    <name>pagedListControl</name>
     <tag-class>org.aspcfs.taglib.PagedListControlHandler</tag-class>
     <display-name>
       Displays a control panel(form) for the PagedListInfo specified.
@@ -327,7 +327,7 @@
       <required>no</required>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>pagedListStatus</name>
     <tag-class>org.aspcfs.taglib.PagedListStatusHandler</tag-class>
@@ -380,7 +380,7 @@
       <name>title</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
-    </attribute>    
+    </attribute>
     <attribute>
       <name>showExpandLink</name>
       <required>no</required>
@@ -422,7 +422,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>group</name>
     <tag-class>org.aspcfs.taglib.Group</tag-class>
@@ -444,7 +444,7 @@
       <required>no</required>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>lookupHtml</name>
     <tag-class>org.aspcfs.taglib.LookupHtmlHandler</tag-class>
@@ -465,7 +465,7 @@
       <required>no</required>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>checkbox</name>
     <tag-class>org.aspcfs.taglib.CheckboxHtmlHandler</tag-class>
@@ -489,7 +489,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>hasAuthority</name>
     <tag-class>org.aspcfs.taglib.AuthorityHandler</tag-class>
@@ -503,9 +503,9 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>tz</name> 
+    <name>tz</name>
     <tag-class>org.aspcfs.taglib.DateTimeHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -543,9 +543,9 @@
       <required>no</required>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>filesize</name> 
+    <name>filesize</name>
     <tag-class>org.aspcfs.taglib.FileSizeHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -557,9 +557,9 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
-    <name>fileItemImage</name> 
+    <name>fileItemImage</name>
     <tag-class>org.aspcfs.taglib.FileItemHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -591,7 +591,7 @@
     </attribute>
   </tag>
   <tag>
-    <name>svgText</name> 
+    <name>svgText</name>
     <tag-class>org.aspcfs.taglib.SVGTextHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -622,7 +622,7 @@
   </tag>
 
   <tag>
-    <name>documentPermission</name> 
+    <name>documentPermission</name>
     <tag-class>org.aspcfs.taglib.DocumentsPermissionHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
@@ -654,7 +654,7 @@
     </attribute>
   </tag>
   <tag>
-    <name>documentRoleSelect</name> 
+    <name>documentRoleSelect</name>
     <tag-class>org.aspcfs.taglib.DocumentsRoleSelectHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -682,7 +682,7 @@
     </attribute>
   </tag>
   <tag>
-    <name>productCategoryHierarchy</name> 
+    <name>productCategoryHierarchy</name>
     <tag-class>org.aspcfs.taglib.ProductCategoryHierarchyHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>

@@ -1517,6 +1517,9 @@ public class DatabaseUtils {
    */
   public static Connection getConnection(String dbUrl, String dbUser, String dbPwd) throws SQLException {
     Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
+    /*
+    System.out.println("DatabaseUtils-> Holdability: " + connection.getHoldability());
+    */
     if (DatabaseUtils.getType(connection) == DatabaseUtils.MYSQL) {
       PreparedStatement pst = connection.prepareStatement("SELECT @@session.sql_mode;");
       String currentMode = "";
@@ -1531,6 +1534,10 @@ public class DatabaseUtils {
           "SET sql_mode = '" + currentMode + ((currentMode.length() > 0) ? "," : "") + "ANSI_QUOTES,NO_AUTO_VALUE_ON_ZERO';");
       pst.execute();
       pst.close();
+    } else if (DatabaseUtils.getType(connection) == DatabaseUtils.DB2) {
+      /*
+      connection.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+      */
     }
     return connection;
   }

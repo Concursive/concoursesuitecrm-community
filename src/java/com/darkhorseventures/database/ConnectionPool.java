@@ -378,8 +378,14 @@ public class ConnectionPool implements Runnable {
             } else if (testConnections) {
               //See if connection is good, else recycle it
               try {
+                String testString = "SELECT 1";
+                if (DatabaseUtils.getType(existingConnection) == DatabaseUtils.DB2) {
+                  testString = "SELECT 1 FROM SYSIBM.SYSDUMMY1";
+                } else if (DatabaseUtils.getType(existingConnection) == DatabaseUtils.ORACLE) {
+                  testString = "SELECT 1 FROM DUAL";
+                }
                 PreparedStatement pst = existingConnection.prepareStatement(
-                    "SELECT CURRENT_TIMESTAMP");
+                    testString);
                 ResultSet rs = pst.executeQuery();
                 rs.next();
                 rs.close();

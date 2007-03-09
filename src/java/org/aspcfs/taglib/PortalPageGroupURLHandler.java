@@ -72,7 +72,7 @@ public class PortalPageGroupURLHandler extends TagSupport implements TryCatchFin
    * Description of the Method
    *
    * @return Description of the Return Value
-   * @throws JspException                   Description of the Exception
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
