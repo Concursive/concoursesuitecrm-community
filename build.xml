@@ -132,7 +132,17 @@
 		<property name="namingJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}naming-resources.jar" />
 		<echo message="Web Server: Tomcat 5.x" />
 	</target>
-	<!-- Weblogic -->
+  <!-- Tomcat 6.x -->
+  <target name="init.servlet6.exists" depends="init.environment" if="TYPE.CATALINA">
+    <available file="${CATALINA_HOME}/lib/servlet-api.jar" property="build.servlet6.present" />
+  </target>
+  <target name="init.servlet6.set" depends="init.servlet6.exists" if="build.servlet6.present">
+    <property name="servletJar" value="${CATALINA_HOME}${fs}lib${fs}servlet-api.jar" />
+    <property name="jspJar" value="${CATALINA_HOME}${fs}lib${fs}jsp-api.jar" />
+    <property name="namingJar" value="${CATALINA_HOME}${fs}lib${fs}catalina.jar" />
+    <echo message="Web Server: Tomcat 6.x" />
+  </target>
+  <!-- Weblogic -->
 	<target name="init.weblogic.exists" depends="init.environment" if="TYPE.WEBLOGIC">
 		<available file="${WEBLOGIC_HOME}${fs}server${fs}lib${fs}weblogic.jar" property="build.weblogic.present" />
 	</target>
@@ -550,7 +560,7 @@
 
 	<!-- Configure classpath as both object and a property -->
 	<target name="init.classpath"
-          depends="init.classpath.uptodate,init.servlet.type,init.servlet4.set,init.servlet5.set,init.weblogic.set,init.geronimo10.set,init.geronimo11.set,init.jboss24.set,init.websphere.set">
+          depends="init.classpath.uptodate,init.servlet.type,init.servlet6.set,init.servlet4.set,init.servlet5.set,init.weblogic.set,init.geronimo10.set,init.geronimo11.set,init.jboss24.set,init.websphere.set">
 		<path id="cfs2.classpath">
 			<pathelement location="${servletJar}" />
 			<pathelement location="${jspJar}" />
