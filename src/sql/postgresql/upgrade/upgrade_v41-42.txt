@@ -5,3 +5,6 @@
 
 # website document links
 2007-01-19-script01-olga.sql
+
+# website page alias
+2007-03-09-script01-mr.sql

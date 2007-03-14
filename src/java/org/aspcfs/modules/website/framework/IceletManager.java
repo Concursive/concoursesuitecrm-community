@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Server side preparation for portlets
@@ -135,7 +136,21 @@ public class IceletManager {
     String actionWindowId = portalURL.getActionWindow();
 
     Tab tab = site.getTabToDisplay();
-    Page page = site.getTabToDisplay().getThisPageToBuild();
+    Page page = null;
+    // Determine if this page is aliased to another
+    if (site.getTabToDisplay().getThisPageToBuild().getAlias() > -1) {
+      // use the aliased page for display
+      page = new Page(db, site.getTabToDisplay().getThisPageToBuild().getAlias());
+      page.setMode(tab.getMode());
+      page.buildPageVersionToView(db);
+      context.getRequest().setAttribute("pageAlias", page);
+      // use the alias rowcolumns (from Sites.java and Portal.java)
+      ArrayList rowColumnList = new ArrayList();
+      page.getPageVersionToView().getPageRowList().buildRowsColumns(rowColumnList, 0);
+      context.getRequest().setAttribute("rowsColumns", rowColumnList);
+    } else {
+      page = site.getTabToDisplay().getThisPageToBuild();
+    }
     // This is the current page
     boolean result = false;
     PageVersion pageVersion = page.getPageVersionToView();

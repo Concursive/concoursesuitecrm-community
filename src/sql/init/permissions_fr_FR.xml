@@ -32,7 +32,7 @@
     <category id="420041014" name="Produits et services" folders="false" lookups="false" reports="false" enabled="false">
       <permission name="products" attributes="v---" description="AccГ©dez au module de produits et de services"/>
     </category>
-    <category id="223061200" name="Website" folders="false" lookups="true" reports="false" categories="false" products="false" enabled="false">
+    <category id="223061200" name="Website" folders="false" lookups="true" reports="false" categories="false" products="false" enabled="true">
       <permission name="website" attributes="v---" description="Access to Website module" enabled="true"/>
       <permission name="website-portfolio" attributes="vaed" description="Portfolio Editor" enabled="true"/>
       <permission name="site-editor" attributes="vaed" description="Site Editor" enabled="true"/>

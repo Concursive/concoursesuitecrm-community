@@ -61,6 +61,7 @@ public class Site extends GenericBean {
   private TabList tabList = null;
   private boolean override = true;
   private Tab tabToDisplay = null;
+  private boolean buildAll = false;
 
 
   /**
@@ -562,6 +563,14 @@ public class Site extends GenericBean {
   }
 
 
+  public boolean getBuildAll() {
+    return buildAll;
+  }
+
+  public void setBuildAll(boolean buildAll) {
+    this.buildAll = buildAll;
+  }
+
   /**
    * Description of the Method
    *
@@ -903,7 +912,7 @@ public class Site extends GenericBean {
     Iterator tabIterator = tabList.iterator();
     while (tabIterator.hasNext()) {
       Tab thisTab = (Tab) tabIterator.next();
-      if (thisTab.getId() == tabId) {
+      if (thisTab.getId() == tabId || buildAll) {
         thisTab.setMode(mode);
 
         // All the contents of this page will be built

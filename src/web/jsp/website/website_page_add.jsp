@@ -18,25 +18,28 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.website.base.*,org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="pageGroup" class="org.aspcfs.modules.website.base.PageGroup" scope="request"/>
 <jsp:useBean id="thisPage" class="org.aspcfs.modules.website.base.Page" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript">
+<script type="text/javascript" src="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
 	function checkForm(form) {
 		var flag = true;
 		message = "";
-		if (flag == false) {
+		if (!flag) {
         alert(label("check.form","Form could not be saved, please check the following:\r\n\r\n") + message);
 	      return false;
 		} else {
 			return true;
 		}
 	}
+  function setAlias(pageId) {
+    document.getElementById("alias").value = pageId;
+  }
 </script>
-<body onLoad="javascript:document.website.name.focus();">
+<body onLoad="document.website.name.focus();">
 <form name="website" action="Pages.do?command=Save&auto-populate=true&popup=true" onSubmit="return checkForm(this);" method="post">
 <input type="hidden" name="id" value="<%= thisPage.getId() %>"/>
 <input type="hidden" name="pageGroupId" value="<%= thisPage.getPageGroupId() %>"/>
@@ -86,6 +89,16 @@
 			<TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(thisPage.getNotes()) %></TEXTAREA>
 		</td>
 	</tr>
+	<tr class="containerBody">
+		<td nowrap class="formLabel">
+			<dhv:label name="">Page Alias</dhv:label>
+		</td>
+		<td>
+			Reference the content from page:
+      <input type="text" size="12" maxlength="20" id="alias" name="alias" value='<%= thisPage.getAlias() > -1 ? String.valueOf(thisPage.getAlias()) : "" %>'>
+      [<a href="javascript:popURL('Pages.do?command=SelectAlias&pageGroupId=<%= thisPage.getPageGroupId() %>&popup=true','PageAlias',600,600,'yes','yes');">select</a>]
+    </td>
+	</tr>
 </table>
 <br />
 <dhv:evaluate if="<%= thisPage.getId() > -1 %>">
@@ -96,3 +109,4 @@
 <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();">
 </form>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+</body>

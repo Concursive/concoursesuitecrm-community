@@ -7,10 +7,18 @@
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <jsp:useBean id="site" class="org.aspcfs.modules.website.base.Site" scope="request"/>
 <jsp:useBean id="rowsColumns" class="java.util.ArrayList" scope="request"/>
+<dhv:evaluate if="<%= !"true".equals(portal) && site.getTabToDisplay().getThisPageToBuild().getAlias() > -1 %>">
+  <dhv:label name="">NOTE: THE CONTENT ON THIS PAGE IS AN ALIAS TO CONTENT ON ANOTHER PAGE ]]</dhv:label><br />
+  <br />
+</dhv:evaluate>
 <%if (rowsColumns.size() > 0) { %>
 <table cellpadding="0" cellspacing="0" width="100%" class="portalPortlets">
 <%
-    PageVersion pageVersion = site.getTabToDisplay().getThisPageToBuild().getPageVersionToView();
+    Page thisPage = site.getTabToDisplay().getThisPageToBuild();
+    if (thisPage.getAlias() > -1) {
+      thisPage = (Page) request.getAttribute("pageAlias");
+    }
+    PageVersion pageVersion = thisPage.getPageVersionToView();
     Iterator nextIter = rowsColumns.iterator();
     Object nextObj = (Object) nextIter.next();
     Iterator rowColumnIterator = rowsColumns.iterator();
@@ -37,7 +45,7 @@
         <tr>
           <td class="portalRow" valign="top" <%= colSpan %>>
             <div class="portalEditorRow">
-              Row: <a href="javascript:displayMenuRow('select<%= pb_i %>','menuRow','<%= pageRow.getId() %>','<%= pageRow.getPageVersionId() %>','<%= pageRow.getRowColumnId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>');"
+              Row: <a href="javascript:displayMenuRow('select<%= pb_i %>','menuRow','<%= pageRow.getId() %>','<%= pageRow.getPageVersionId() %>','<%= pageRow.getRowColumnId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= thisPage.getId() %>');"
                onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuRow');">
                <img src="images/select.gif" name="select<%= pb_i %>" id="select<%= pb_i %>" align="absmiddle" border="0"></a>
             </div>
@@ -58,7 +66,7 @@
                 <td class="portalColumn" width="<%= (rowColumn.getParentRow().getTotalColumnWidth() != 0? String.valueOf((double)(rowColumn.getWidth() * 100)/(double)rowColumn.getParentRow().getTotalColumnWidth())+"%": String.valueOf(rowColumn.getWidth())) %>" valign="top">
                   <dhv:evaluate if="<%= !"true".equals(portal) %>">
                     <div class="portalEditorColumn">
-                    Column: <a href="javascript:displayMenuColumn('select<%= pb_i %>','menuColumn','<%= rowColumn.getId() %>','<%= rowColumn.getParentRow().getId() %>','<%= rowColumn.getParentRow().getPageVersionId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= site.getTabToDisplay().getThisPageToBuild().getId() %>','<%= rowColumn.getIceletId() %>','<%= (rowColumn.getSubRows() != null && rowColumn.getSubRows().size() > 0) %>');"
+                    Column: <a href="javascript:displayMenuColumn('select<%= pb_i %>','menuColumn','<%= rowColumn.getId() %>','<%= rowColumn.getParentRow().getId() %>','<%= rowColumn.getParentRow().getPageVersionId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= thisPage.getId() %>','<%= rowColumn.getIceletId() %>','<%= (rowColumn.getSubRows() != null && rowColumn.getSubRows().size() > 0) %>');"
                     onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuColumn');">
                       <img src="images/select.gif" name="select<%= pb_i %>" id="select<%= pb_i %>" align="absmiddle" border="0"></a>
                     </div>

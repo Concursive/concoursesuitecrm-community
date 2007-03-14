@@ -16,8 +16,8 @@
 package org.aspcfs.modules.website.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,11 +25,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     kailash
- * @created    February 10, 2006 $Id: Exp $
- * @version    $Id: Exp $
+ * @author kailash
+ * @version $Id: Exp $
+ * @created February 10, 2006
  */
 public class Page extends GenericBean {
 
@@ -62,21 +62,22 @@ public class Page extends GenericBean {
 
   private int previousPageId = -1;
   private int nextPageId = -1;
+  private int alias = -1;
 
 
   /**
-   *  Constructor for the Page object
+   * Constructor for the Page object
    */
-  public Page() { }
+  public Page() {
+  }
 
 
   /**
-   *  Constructor for the Page object
+   * Constructor for the Page object
    *
-   * @param  db                Description of the Parameter
-   * @param  tmpPageId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tmpPageId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Page(Connection db, int tmpPageId) throws SQLException {
     queryRecord(db, tmpPageId);
@@ -84,10 +85,10 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Constructor for the Page object
+   * Constructor for the Page object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public Page(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -95,9 +96,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Page object
+   * Sets the id attribute of the Page object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -105,9 +106,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the id attribute of the Page object
+   * Sets the id attribute of the Page object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -115,9 +116,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the name attribute of the Page object
+   * Sets the name attribute of the Page object
    *
-   * @param  tmp  The new name value
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -125,9 +126,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the position attribute of the Page object
+   * Sets the position attribute of the Page object
    *
-   * @param  tmp  The new position value
+   * @param tmp The new position value
    */
   public void setPosition(int tmp) {
     this.position = tmp;
@@ -135,9 +136,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the position attribute of the Page object
+   * Sets the position attribute of the Page object
    *
-   * @param  tmp  The new position value
+   * @param tmp The new position value
    */
   public void setPosition(String tmp) {
     this.position = Integer.parseInt(tmp);
@@ -145,9 +146,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the activePageVersionId attribute of the Page object
+   * Sets the activePageVersionId attribute of the Page object
    *
-   * @param  tmp  The new activePageVersionId value
+   * @param tmp The new activePageVersionId value
    */
   public void setActivePageVersionId(int tmp) {
     this.activePageVersionId = tmp;
@@ -155,9 +156,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the activePageVersionId attribute of the Page object
+   * Sets the activePageVersionId attribute of the Page object
    *
-   * @param  tmp  The new activePageVersionId value
+   * @param tmp The new activePageVersionId value
    */
   public void setActivePageVersionId(String tmp) {
     this.activePageVersionId = Integer.parseInt(tmp);
@@ -165,9 +166,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the constructionPageVersionId attribute of the Page object
+   * Sets the constructionPageVersionId attribute of the Page object
    *
-   * @param  tmp  The new constructionPageVersionId value
+   * @param tmp The new constructionPageVersionId value
    */
   public void setConstructionPageVersionId(int tmp) {
     this.constructionPageVersionId = tmp;
@@ -175,9 +176,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the constructionPageVersionId attribute of the Page object
+   * Sets the constructionPageVersionId attribute of the Page object
    *
-   * @param  tmp  The new constructionPageVersionId value
+   * @param tmp The new constructionPageVersionId value
    */
   public void setConstructionPageVersionId(String tmp) {
     this.constructionPageVersionId = Integer.parseInt(tmp);
@@ -185,9 +186,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the pageGroupId attribute of the Page object
+   * Sets the pageGroupId attribute of the Page object
    *
-   * @param  tmp  The new pageGroupId value
+   * @param tmp The new pageGroupId value
    */
   public void setPageGroupId(int tmp) {
     this.pageGroupId = tmp;
@@ -195,9 +196,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the pageGroupId attribute of the Page object
+   * Sets the pageGroupId attribute of the Page object
    *
-   * @param  tmp  The new pageGroupId value
+   * @param tmp The new pageGroupId value
    */
   public void setPageGroupId(String tmp) {
     this.pageGroupId = Integer.parseInt(tmp);
@@ -205,9 +206,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the tabBannerId attribute of the Page object
+   * Sets the tabBannerId attribute of the Page object
    *
-   * @param  tmp  The new tabBannerId value
+   * @param tmp The new tabBannerId value
    */
   public void setTabBannerId(int tmp) {
     this.tabBannerId = tmp;
@@ -215,9 +216,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the tabBannerId attribute of the Page object
+   * Sets the tabBannerId attribute of the Page object
    *
-   * @param  tmp  The new tabBannerId value
+   * @param tmp The new tabBannerId value
    */
   public void setTabBannerId(String tmp) {
     this.tabBannerId = Integer.parseInt(tmp);
@@ -225,9 +226,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the notes attribute of the Page object
+   * Sets the notes attribute of the Page object
    *
-   * @param  tmp  The new notes value
+   * @param tmp The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = tmp;
@@ -235,9 +236,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Page object
+   * Sets the enabled attribute of the Page object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -245,9 +246,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the enabled attribute of the Page object
+   * Sets the enabled attribute of the Page object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -255,9 +256,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Page object
+   * Sets the enteredBy attribute of the Page object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -265,9 +266,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the enteredBy attribute of the Page object
+   * Sets the enteredBy attribute of the Page object
    *
-   * @param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -275,9 +276,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Page object
+   * Sets the entered attribute of the Page object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -285,9 +286,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Page object
+   * Sets the entered attribute of the Page object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -295,9 +296,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Page object
+   * Sets the modifiedBy attribute of the Page object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -305,9 +306,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the modifiedBy attribute of the Page object
+   * Sets the modifiedBy attribute of the Page object
    *
-   * @param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -315,9 +316,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Page object
+   * Sets the modified attribute of the Page object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -325,9 +326,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Page object
+   * Sets the modified attribute of the Page object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -335,9 +336,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the buildPageVersionList attribute of the Page object
+   * Sets the buildPageVersionList attribute of the Page object
    *
-   * @param  tmp  The new buildPageVersionList value
+   * @param tmp The new buildPageVersionList value
    */
   public void setBuildPageVersionList(boolean tmp) {
     this.buildPageVersionList = tmp;
@@ -345,9 +346,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the buildPageVersionList attribute of the Page object
+   * Sets the buildPageVersionList attribute of the Page object
    *
-   * @param  tmp  The new buildPageVersionList value
+   * @param tmp The new buildPageVersionList value
    */
   public void setBuildPageVersionList(String tmp) {
     this.buildPageVersionList = DatabaseUtils.parseBoolean(tmp);
@@ -355,9 +356,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the pageVersionList attribute of the Page object
+   * Sets the pageVersionList attribute of the Page object
    *
-   * @param  tmp  The new pageVersionList value
+   * @param tmp The new pageVersionList value
    */
   public void setPageVersionList(PageVersionList tmp) {
     this.pageVersionList = tmp;
@@ -365,9 +366,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the Page object
+   * Sets the override attribute of the Page object
    *
-   * @param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(boolean tmp) {
     this.override = tmp;
@@ -375,9 +376,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the override attribute of the Page object
+   * Sets the override attribute of the Page object
    *
-   * @param  tmp  The new override value
+   * @param tmp The new override value
    */
   public void setOverride(String tmp) {
     this.override = DatabaseUtils.parseBoolean(tmp);
@@ -385,9 +386,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the buildTabBanner attribute of the Page object
+   * Sets the buildTabBanner attribute of the Page object
    *
-   * @param  tmp  The new buildTabBanner value
+   * @param tmp The new buildTabBanner value
    */
   public void setBuildTabBanner(boolean tmp) {
     this.buildTabBanner = tmp;
@@ -395,9 +396,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the buildTabBanner attribute of the Page object
+   * Sets the buildTabBanner attribute of the Page object
    *
-   * @param  tmp  The new buildTabBanner value
+   * @param tmp The new buildTabBanner value
    */
   public void setBuildTabBanner(String tmp) {
     this.buildTabBanner = DatabaseUtils.parseBoolean(tmp);
@@ -405,9 +406,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the tabBanner attribute of the Page object
+   * Sets the tabBanner attribute of the Page object
    *
-   * @param  tmp  The new tabBanner value
+   * @param tmp The new tabBanner value
    */
   public void setTabBanner(TabBanner tmp) {
     this.tabBanner = tmp;
@@ -415,9 +416,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the mode attribute of the Page object
+   * Sets the mode attribute of the Page object
    *
-   * @param  tmp  The new mode value
+   * @param tmp The new mode value
    */
   public void setMode(int tmp) {
     this.mode = tmp;
@@ -425,9 +426,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the mode attribute of the Page object
+   * Sets the mode attribute of the Page object
    *
-   * @param  tmp  The new mode value
+   * @param tmp The new mode value
    */
   public void setMode(String tmp) {
     this.mode = Integer.parseInt(tmp);
@@ -435,9 +436,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the buildPageVersionToView attribute of the Page object
+   * Sets the buildPageVersionToView attribute of the Page object
    *
-   * @param  tmp  The new buildPageVersionToView value
+   * @param tmp The new buildPageVersionToView value
    */
   public void setBuildPageVersionToView(boolean tmp) {
     this.buildPageVersionToView = tmp;
@@ -445,9 +446,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the buildPageVersionToView attribute of the Page object
+   * Sets the buildPageVersionToView attribute of the Page object
    *
-   * @param  tmp  The new buildPageVersionToView value
+   * @param tmp The new buildPageVersionToView value
    */
   public void setBuildPageVersionToView(String tmp) {
     this.buildPageVersionToView = DatabaseUtils.parseBoolean(tmp);
@@ -455,9 +456,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the pageVersionToView attribute of the Page object
+   * Sets the pageVersionToView attribute of the Page object
    *
-   * @param  tmp  The new pageVersionToView value
+   * @param tmp The new pageVersionToView value
    */
   public void setPageVersionToView(PageVersion tmp) {
     this.pageVersionToView = tmp;
@@ -465,9 +466,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the id attribute of the Page object
+   * Gets the id attribute of the Page object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -475,9 +476,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the name attribute of the Page object
+   * Gets the name attribute of the Page object
    *
-   * @return    The name value
+   * @return The name value
    */
   public String getName() {
     return name;
@@ -485,9 +486,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the position attribute of the Page object
+   * Gets the position attribute of the Page object
    *
-   * @return    The position value
+   * @return The position value
    */
   public int getPosition() {
     return position;
@@ -495,9 +496,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the activePageVersionId attribute of the Page object
+   * Gets the activePageVersionId attribute of the Page object
    *
-   * @return    The activePageVersionId value
+   * @return The activePageVersionId value
    */
   public int getActivePageVersionId() {
     return activePageVersionId;
@@ -505,9 +506,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the constructionPageVersionId attribute of the Page object
+   * Gets the constructionPageVersionId attribute of the Page object
    *
-   * @return    The constructionPageVersionId value
+   * @return The constructionPageVersionId value
    */
   public int getConstructionPageVersionId() {
     return constructionPageVersionId;
@@ -515,9 +516,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the pageGroupId attribute of the Page object
+   * Gets the pageGroupId attribute of the Page object
    *
-   * @return    The pageGroupId value
+   * @return The pageGroupId value
    */
   public int getPageGroupId() {
     return pageGroupId;
@@ -525,9 +526,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the tabBannerId attribute of the Page object
+   * Gets the tabBannerId attribute of the Page object
    *
-   * @return    The tabBannerId value
+   * @return The tabBannerId value
    */
   public int getTabBannerId() {
     return tabBannerId;
@@ -535,9 +536,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the notes attribute of the Page object
+   * Gets the notes attribute of the Page object
    *
-   * @return    The notes value
+   * @return The notes value
    */
   public String getNotes() {
     return notes;
@@ -545,9 +546,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the enabled attribute of the Page object
+   * Gets the enabled attribute of the Page object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -555,9 +556,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the enteredBy attribute of the Page object
+   * Gets the enteredBy attribute of the Page object
    *
-   * @return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -565,9 +566,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Page object
+   * Gets the entered attribute of the Page object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -575,9 +576,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the modifiedBy attribute of the Page object
+   * Gets the modifiedBy attribute of the Page object
    *
-   * @return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -585,9 +586,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Page object
+   * Gets the modified attribute of the Page object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -595,9 +596,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the buildPageVersionList attribute of the Page object
+   * Gets the buildPageVersionList attribute of the Page object
    *
-   * @return    The buildPageVersionList value
+   * @return The buildPageVersionList value
    */
   public boolean getBuildPageVersionList() {
     return buildPageVersionList;
@@ -605,9 +606,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the pageVersionList attribute of the Page object
+   * Gets the pageVersionList attribute of the Page object
    *
-   * @return    The pageVersionList value
+   * @return The pageVersionList value
    */
   public PageVersionList getPageVersionList() {
     return pageVersionList;
@@ -615,9 +616,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the override attribute of the Page object
+   * Gets the override attribute of the Page object
    *
-   * @return    The override value
+   * @return The override value
    */
   public boolean getOverride() {
     return override;
@@ -625,9 +626,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the buildTabBanner attribute of the Page object
+   * Gets the buildTabBanner attribute of the Page object
    *
-   * @return    The buildTabBanner value
+   * @return The buildTabBanner value
    */
   public boolean getBuildTabBanner() {
     return buildTabBanner;
@@ -635,9 +636,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the tabBanner attribute of the Page object
+   * Gets the tabBanner attribute of the Page object
    *
-   * @return    The tabBanner value
+   * @return The tabBanner value
    */
   public TabBanner getTabBanner() {
     return tabBanner;
@@ -645,9 +646,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the mode attribute of the Page object
+   * Gets the mode attribute of the Page object
    *
-   * @return    The mode value
+   * @return The mode value
    */
   public int getMode() {
     return mode;
@@ -655,9 +656,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the buildPageVersionToView attribute of the Page object
+   * Gets the buildPageVersionToView attribute of the Page object
    *
-   * @return    The buildPageVersionToView value
+   * @return The buildPageVersionToView value
    */
   public boolean getBuildPageVersionToView() {
     return buildPageVersionToView;
@@ -665,9 +666,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the pageVersionToView attribute of the Page object
+   * Gets the pageVersionToView attribute of the Page object
    *
-   * @return    The pageVersionToView value
+   * @return The pageVersionToView value
    */
   public PageVersion getPageVersionToView() {
     return pageVersionToView;
@@ -675,9 +676,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the previousPageId attribute of the Page object
+   * Gets the previousPageId attribute of the Page object
    *
-   * @return    The previousPageId value
+   * @return The previousPageId value
    */
   public int getPreviousPageId() {
     return previousPageId;
@@ -685,9 +686,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the previousPageId attribute of the Page object
+   * Sets the previousPageId attribute of the Page object
    *
-   * @param  tmp  The new previousPageId value
+   * @param tmp The new previousPageId value
    */
   public void setPreviousPageId(int tmp) {
     this.previousPageId = tmp;
@@ -695,9 +696,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the previousPageId attribute of the Page object
+   * Sets the previousPageId attribute of the Page object
    *
-   * @param  tmp  The new previousPageId value
+   * @param tmp The new previousPageId value
    */
   public void setPreviousPageId(String tmp) {
     this.previousPageId = Integer.parseInt(tmp);
@@ -705,9 +706,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Gets the nextPageId attribute of the Page object
+   * Gets the nextPageId attribute of the Page object
    *
-   * @return    The nextPageId value
+   * @return The nextPageId value
    */
   public int getNextPageId() {
     return nextPageId;
@@ -715,9 +716,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the nextPageId attribute of the Page object
+   * Sets the nextPageId attribute of the Page object
    *
-   * @param  tmp  The new nextPageId value
+   * @param tmp The new nextPageId value
    */
   public void setNextPageId(int tmp) {
     this.nextPageId = tmp;
@@ -725,19 +726,36 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the nextPageId attribute of the Page object
+   * Sets the nextPageId attribute of the Page object
    *
-   * @param  tmp  The new nextPageId value
+   * @param tmp The new nextPageId value
    */
   public void setNextPageId(String tmp) {
     this.nextPageId = Integer.parseInt(tmp);
   }
 
 
+  public int getAlias() {
+    return alias;
+  }
+
+  public void setAlias(int alias) {
+    this.alias = alias;
+  }
+
+  public void setAlias(String alias) {
+    try {
+      this.alias = Integer.parseInt(alias);
+    } catch (Exception e) {
+      this.alias = -1;
+    }
+  }
+
+
   /**
-   *  Gets the pageGroup attribute of the Page object
+   * Gets the pageGroup attribute of the Page object
    *
-   * @return    The pageGroup value
+   * @return The pageGroup value
    */
   public PageGroup getPageGroup() {
     return pageGroup;
@@ -745,9 +763,9 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Sets the pageGroup attribute of the Page object
+   * Sets the pageGroup attribute of the Page object
    *
-   * @param  tmp  The new pageGroup value
+   * @param tmp The new pageGroup value
    */
   public void setPageGroup(PageGroup tmp) {
     this.pageGroup = tmp;
@@ -755,12 +773,12 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  tmpPageId      Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tmpPageId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean queryRecord(Connection db, int tmpPageId) throws SQLException {
 
@@ -768,8 +786,8 @@ public class Page extends GenericBean {
     ResultSet rs = null;
     pst = db.prepareStatement(
         " SELECT wp.* " +
-        " FROM web_page wp " +
-        " WHERE page_id = ? ");
+            " FROM web_page wp " +
+            " WHERE page_id = ? ");
     pst.setInt(1, tmpPageId);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -795,11 +813,11 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
 
@@ -807,18 +825,18 @@ public class Page extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO web_page " +
-        "(" + (id > -1 ? "page_id, " : "") +
-        "page_name , " +
-        "page_position , " +
-        "active_page_version_id , " +
-        "construction_page_version_id , " +
-        "page_group_id , " +
-        "tab_banner_id , " +
-        "notes , " +
-        "enabled , " +
-        "enteredby , " +
-        "modifiedby ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?)");
+            "(" + (id > -1 ? "page_id, " : "") +
+            "page_name , " +
+            "page_position , " +
+            "active_page_version_id , " +
+            "construction_page_version_id , " +
+            "page_group_id , " +
+            "tab_banner_id , " +
+            "notes , " +
+            "enabled , " +
+            "enteredby , " +
+            "modifiedby, page_alias ) " +
+            "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -833,6 +851,7 @@ public class Page extends GenericBean {
     pst.setBoolean(++i, enabled);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
+    DatabaseUtils.setInt(pst, ++i, alias);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_page_page_id_seq", id);
     pst.close();
@@ -844,11 +863,11 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -856,15 +875,15 @@ public class Page extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE web_page " +
-        "SET " +
-        "page_name = ? , " +
-        "page_position = ? , " +
-        "active_page_version_id = ? , " +
-        "construction_page_version_id = ? , " +
-        "page_group_id = ? , " +
-        "tab_banner_id = ? , " +
-        "notes = ? , " +
-        "enabled = ?  ");
+            "SET " +
+            "page_name = ? , " +
+            "page_position = ? , " +
+            "active_page_version_id = ? , " +
+            "construction_page_version_id = ? , " +
+            "page_group_id = ? , " +
+            "tab_banner_id = ? , " +
+            "notes = ? , " +
+            "enabled = ?, page_alias = ?  ");
 
     if (!override) {
       sql.append(
@@ -872,7 +891,7 @@ public class Page extends GenericBean {
     }
     sql.append("WHERE page_id = ? ");
     if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+      sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     }
 
     int i = 0;
@@ -885,6 +904,7 @@ public class Page extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, tabBannerId);
     pst.setString(++i, notes);
     pst.setBoolean(++i, enabled);
+    DatabaseUtils.setInt(pst, ++i, alias);
     if (!override) {
       pst.setInt(++i, modifiedBy);
     }
@@ -900,11 +920,11 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
 
@@ -915,10 +935,9 @@ public class Page extends GenericBean {
       }
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_page SET " +
-          "active_page_version_id = ?,  " +
-          "construction_page_version_id = ? " +
-          "WHERE page_id =  ? ");
-
+              "active_page_version_id = ?,  " +
+              "construction_page_version_id = ? " +
+              "WHERE page_id =  ? ");
       DatabaseUtils.setInt(pst, 1, -1);
       DatabaseUtils.setInt(pst, 2, -1);
       DatabaseUtils.setInt(pst, 3, this.getId());
@@ -933,20 +952,32 @@ public class Page extends GenericBean {
 
       updateRelatedPages(db, false);
 
-			//Reset logs
+      //Reset logs
       pst = db.prepareStatement(
-        "UPDATE web_page_access_log " +
-          " SET page_id = ? " +
-					" WHERE page_id = ? ");
-			int i = 0;
-			DatabaseUtils.setInt(pst, ++i, -1);
+          "UPDATE web_page_access_log " +
+              " SET page_id = ? " +
+              " WHERE page_id = ? ");
+      int i = 0;
+      DatabaseUtils.setInt(pst, ++i, -1);
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
 
+      // Remove the alias to this page
+      pst = db.prepareStatement(
+          "UPDATE web_page " +
+              "SET page_alias = ? " +
+              "WHERE page_alias = ?"
+      );
+      DatabaseUtils.setInt(pst, ++i, -1);
+      pst.setInt(++i, id);
+      pst.execute();
+      pst.close();
+
+      // Delete this page
       pst = db.prepareStatement(
           "DELETE FROM web_page " +
-          "WHERE page_id =  ? ");
+              "WHERE page_id =  ? ");
 
       pst.setInt(1, this.getId());
       pst.execute();
@@ -970,10 +1001,10 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("page_id");
@@ -985,19 +1016,19 @@ public class Page extends GenericBean {
     tabBannerId = DatabaseUtils.getInt(rs, "tab_banner_id");
     notes = rs.getString("notes");
     enabled = rs.getBoolean("enabled");
-
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    alias = DatabaseUtils.getInt(rs, "page_alias");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTabBanner(Connection db) throws SQLException {
     tabBanner = new TabBanner(db, this.getTabBannerId());
@@ -1005,10 +1036,10 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPageVersionList(Connection db) throws SQLException {
     pageVersionList = new PageVersionList();
@@ -1018,10 +1049,10 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildPageVersionToView(Connection db) throws SQLException {
     pageVersionToView = new PageVersion();
@@ -1041,13 +1072,12 @@ public class Page extends GenericBean {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     if (this.getId() == -1) {
@@ -1088,11 +1118,11 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int computePagePosition(Connection db) throws SQLException {
     int result = Page.INITIAL_POSITION;
@@ -1109,11 +1139,11 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  add               Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param add Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateRelatedPages(Connection db, boolean add) throws SQLException {
     if (previousPageId > -1) {
@@ -1127,11 +1157,11 @@ public class Page extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  moveUp            Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db     Description of the Parameter
+   * @param moveUp Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void move(Connection db, boolean moveUp) throws SQLException {
     Page switchPage = null;

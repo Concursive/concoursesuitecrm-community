@@ -16,7 +16,6 @@
 package org.aspcfs.modules.website.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -27,11 +26,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     kailash
- * @created    February 10, 2006
- * @version    $Id: Exp $
+ * @author kailash
+ * @version $Id: Exp $
+ * @created February 10, 2006
  */
 public class SiteList extends ArrayList {
 
@@ -42,15 +41,16 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Constructor for the SiteList object
+   * Constructor for the SiteList object
    */
-  public SiteList() { }
+  public SiteList() {
+  }
 
 
   /**
-   *  Sets the pagedListInfo attribute of the SiteList object
+   * Sets the pagedListInfo attribute of the SiteList object
    *
-   * @param  tmp  The new pagedListInfo value
+   * @param tmp The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -58,9 +58,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the SiteList object
+   * Sets the id attribute of the SiteList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -68,9 +68,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the id attribute of the SiteList object
+   * Sets the id attribute of the SiteList object
    *
-   * @param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -78,9 +78,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the SiteList object
+   * Sets the enabled attribute of the SiteList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(int tmp) {
     this.enabled = tmp;
@@ -88,9 +88,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Sets the enabled attribute of the SiteList object
+   * Sets the enabled attribute of the SiteList object
    *
-   * @param  tmp  The new enabled value
+   * @param tmp The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = Integer.parseInt(tmp);
@@ -98,9 +98,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the SiteList object
+   * Gets the pagedListInfo attribute of the SiteList object
    *
-   * @return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -108,9 +108,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the id attribute of the SiteList object
+   * Gets the id attribute of the SiteList object
    *
-   * @return    The id value
+   * @return The id value
    */
   public int getId() {
     return id;
@@ -118,9 +118,9 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the enabled attribute of the SiteList object
+   * Gets the enabled attribute of the SiteList object
    *
-   * @return    The enabled value
+   * @return The enabled value
    */
   public int getEnabled() {
     return enabled;
@@ -128,10 +128,10 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -148,12 +148,12 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  pst            Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db  Description of the Parameter
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
 
@@ -168,8 +168,8 @@ public class SiteList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM web_site " +
-        "WHERE site_id > -1 ");
+            "FROM web_site " +
+            "WHERE site_id > -1 ");
 
     createFilter(sqlFilter, db);
 
@@ -200,8 +200,8 @@ public class SiteList extends ArrayList {
     }
     sqlSelect.append(
         "w.* " +
-        "FROM web_site w " +
-        "WHERE site_id > -1 ");
+            "FROM web_site w " +
+            "WHERE site_id > -1 ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -218,11 +218,11 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter      Description of the Parameter
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param sqlFilter Description of the Parameter
+   * @param db        Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
     if (id != -1) {
@@ -235,11 +235,11 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst            Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -254,11 +254,11 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Gets the object attribute of the SiteList object
+   * Gets the object attribute of the SiteList object
    *
-   * @param  rs             Description of the Parameter
-   * @return                The object value
-   * @throws  SQLException  Description of the Exception
+   * @param rs Description of the Parameter
+   * @return The object value
+   * @throws SQLException Description of the Exception
    */
   public Site getObject(ResultSet rs) throws SQLException {
     Site thisSite = new Site(rs);
@@ -267,10 +267,10 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator siteIterator = this.iterator();
@@ -282,16 +282,31 @@ public class SiteList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public static void disableOtherSites(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement("UPDATE web_site SET enabled = ? ");
     pst.setBoolean(1, false);
     pst.executeUpdate();
     pst.close();
+  }
+
+  public static int querySiteIdFromPageGroupId(Connection db, int pageGroupId) throws SQLException {
+    int siteId = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT site_id FROM web_site " +
+            "WHERE site_id IN (SELECT site_id FROM web_tab WHERE tab_id IN (SELECT tab_id FROM web_page_group WHERE page_group_id = ?)) ");
+    pst.setInt(1, pageGroupId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      siteId = rs.getInt("site_id");
+    }
+    rs.close();
+    pst.close();
+    return siteId;
   }
 
 }

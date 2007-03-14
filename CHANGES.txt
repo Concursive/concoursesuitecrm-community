@@ -9,6 +9,10 @@ New:
 - Website public file attachments from a document store
 - Quickly complete an action plan
 - Website preview feature
+- Website page alias feature
+
+Changed:
+- Website module is now enabled during install and upgrade
 
 Fixes:
 - Removed a "." from the LDAP utils to work with active directory, may cause
@@ -19,15 +23,24 @@ Fixes:
 Centric CRM 4.1.1 alpha
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log
-March 9, 2007
+March 12, 2007
 ----------------------------------------------------------------------------
 
 Latest information can be found in the Centric CRM 4.1 Community:
 http://www.centriccrm.com/ProjectManagement.do?command=ProjectCenter&pid=109
 
 Fixes:
+- Printable ticket updated to work with MySQL
+- Ticket action plans were failing
+- Account action plans had an incorrect visible permission, so this tab would
+  be displayed if user had ticket permissions, but the action would report
+  a permission error
+- Duplicate check of imported contacts failed if contact had spacing before/
+  end of name
 - Javascript sending unescaped text in some popup widgets
 - Container menus configured for concurrent multiple languages
+- Locales other than en_US reported error because icelet_*.xml was not found
+- Locales without AMPM worked incorrectly in communications scheduling
 
 
 ----------------------------------------------------------------------------

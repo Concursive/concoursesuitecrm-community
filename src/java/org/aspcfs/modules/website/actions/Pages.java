@@ -16,15 +16,11 @@
 package org.aspcfs.modules.website.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.website.base.*;
-import org.aspcfs.modules.website.framework.IceletManager;
 import org.aspcfs.modules.website.icelet.HtmlContentPortlet;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 
@@ -32,30 +28,30 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *  Actions for the Pages module
+ * Actions for the Pages module
  *
- * @author     kailash
- * @created    February 10, 2006 $Id: Exp $
+ * @author kailash
+ * @version $Id: Exp $
+ * @created February 10, 2006
  */
 public final class Pages extends CFSModule {
 
   /**
-   *  Default: not used
+   * Default: not used
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
-
-    return this.getReturn(context, "Default");
+    return getReturn(context, "Default");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -105,10 +101,10 @@ public final class Pages extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -149,10 +145,10 @@ public final class Pages extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -217,10 +213,10 @@ public final class Pages extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -249,10 +245,10 @@ public final class Pages extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "site-editor-delete"))) {
@@ -299,15 +295,15 @@ public final class Pages extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "ConfirmDelete");
+    return getReturn(context, "ConfirmDelete");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "site-editor-delete"))) {
@@ -340,17 +336,42 @@ public final class Pages extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=-1&popup=true");
-    return this.getReturn(context, "Delete");
+    return getReturn(context, "Delete");
+  }
+
+  public String executeCommandSelectAlias(ActionContext context) {
+    if (!hasPermission(context, "site-editor-edit")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    try {
+      int pageGroupId = Integer.parseInt(context.getRequest().getParameter("pageGroupId"));
+      db = getConnection(context);
+      // Generate a site map...
+      // All the tab names, all the page group names, all the page names
+      Site site = new Site(db, SiteList.querySiteIdFromPageGroupId(db, pageGroupId));
+      site.setBuildAll(true);
+      site.buildResources(db, -1, -1, Site.EDIT_MODE);
+      context.getRequest().setAttribute("siteMap", site);
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("SelectAliasOK");
   }
 
 
+
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context           Description of the Parameter
-   * @param  db                Description of the Parameter
-   * @param  page              Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @param page    Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertDefaultData(ActionContext context, Connection db, Page page) throws SQLException {
     SystemStatus systemStatus = this.getSystemStatus(context);

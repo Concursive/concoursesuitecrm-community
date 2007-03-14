@@ -108,7 +108,8 @@ CREATE TABLE web_page (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  page_alias INT REFERENCES web_page(page_id)
 );
 
 ALTER TABLE web_page_version ADD COLUMN page_id INT REFERENCES web_page(page_id);

@@ -274,6 +274,7 @@
     <forward name="MovePopupOK" resource="/website/reopen_website_details.jsp"/>
     <forward name="ConfirmDeletePopupOK" resource="/dialog.jsp"/>
     <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="SelectAliasOK" resource="/website/sitemap_select.jsp" layout="style"/>
   </action>
 
   <action name="PageRows" class="org.aspcfs.modules.website.actions.PageRows">
