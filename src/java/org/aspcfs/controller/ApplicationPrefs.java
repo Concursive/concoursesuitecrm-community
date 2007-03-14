@@ -697,28 +697,42 @@ public class ApplicationPrefs {
 		HashMap iceletMap = null;
 		if (!icelets.containsKey(language)) {
       String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "icelets" + fs;
-				if (System.getProperty("DEBUG") != null) {
-					System.out.println("ApplicationPrefs-> Loading icelets: " + language);
-				}
       try {
-				// Create a dictionary with the default language
-        iceletMap = IceletList.load(languagePath + "icelet_en_US.xml");
-				if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
-					// Override the text with a selected language
-          iceletMap = IceletList.load(languagePath + "icelet_" + language + ".xml");
-				}
-				icelets.put(language, iceletMap);
-			} catch (Exception e) {
-				e.printStackTrace(System.out);
-				System.out.println("ApplicationPrefs-> Language Error: " + e.getMessage());
-			}
-		}
+        if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
+          // Override the text with a selected language
+          File configFile = new File(languagePath + "icelet_" + language + ".xml");
+          if (configFile.exists()) {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println(
+                  "ApplicationPrefs-> Loading icelets: " + language);
+            }
+            iceletMap = IceletList.load(languagePath + "icelet_" + language + ".xml");
+            icelets.put(language, iceletMap);
+          }
+        }
+        if (iceletMap == null) {
+          if (!icelets.containsKey("en_US")) {
+            //Icelets for the language specified could not be loaded. Load default language icelets instead
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println(
+                  "ApplicationPrefs-> Loading icelets (default): en_US");
+            }
+            iceletMap = IceletList.load(languagePath + "icelet_en_US.xml");
+            icelets.put("en_US", iceletMap); //TODO:en_US should be a constant
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace(System.out);
+        System.out.println(
+            "ApplicationPrefs-> Language Error: " + e.getMessage());
+      }
+    }
   }
 
 
   /**
 	 * Gets the label attribute of the ApplicationPrefs object
-	 * 
+	 *
    * @param section   Description of the Parameter
    * @param parameter Description of the Parameter
 	 * @return The label value

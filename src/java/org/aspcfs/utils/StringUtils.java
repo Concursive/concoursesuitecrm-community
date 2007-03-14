@@ -988,18 +988,18 @@ public class StringUtils {
     boolean lastFirstFormat = (name.indexOf(",") != -1);
     if (lastFirstFormat) {
       StringTokenizer str = new StringTokenizer(name, ",");
-      nameLast = str.nextToken();
+      nameLast = str.nextToken().trim();
       if (str.hasMoreTokens()) {
-        nameFirst = str.nextToken();
+        nameFirst = str.nextToken().trim();
         if ("".equals(nameFirst.trim())) {
           nameFirst = null;
         }
       }
     } else {
       StringTokenizer str = new StringTokenizer(name);
-      nameFirst = str.nextToken();
+      nameFirst = str.nextToken().trim();
       if (str.hasMoreTokens()) {
-        nameLast = str.nextToken();
+        nameLast = str.nextToken().trim();
       } else {
         nameLast = nameFirst;
         nameFirst = null;

@@ -489,7 +489,7 @@
     </submenu>
     <submenu name="actionplans">
       <long_html value="Action Plans"/>
-      <permission value="accounts-accounts-tickets-view"/>
+      <permission value="accounts-action-plans-view"/>
       <link value="AccountTicketActionPlans.do?command=List&amp;ticketId=${id}"/>
     </submenu>
   </container>

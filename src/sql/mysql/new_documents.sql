@@ -30,7 +30,7 @@ CREATE TABLE lookup_document_store_role (
 CREATE TABLE lookup_document_store_permission (
   code INT AUTO_INCREMENT PRIMARY KEY,
   category_id INTEGER REFERENCES lookup_document_store_permission_category(code),
-  permission VARCHAR(300) UNIQUE NOT NULL,
+  permission VARCHAR(255) UNIQUE NOT NULL,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,

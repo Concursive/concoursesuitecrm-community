@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actionplans.base.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.troubletickets.base.Ticket;
@@ -294,6 +295,8 @@ public final class TroubleTicketActionPlans extends CFSModule {
       if (actionPlanId == null || "".equals(actionPlanId)) {
         actionPlanId = (String) context.getRequest().getAttribute("actionPlanId");
       }
+      Organization orgDetails = new Organization(db, thisTicket.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", orgDetails);
       //Build plan with regular phases
       ActionPlanWork planWork = new ActionPlanWork();
       planWork.setBuildPhaseWork(true);
@@ -301,6 +304,7 @@ public final class TroubleTicketActionPlans extends CFSModule {
       planWork.setBuildStepWork(true);
       planWork.setTicket(thisTicket);
       planWork.setBuildLinkedObject(true);
+      planWork.setOrganization(orgDetails);
       planWork.queryRecord(db, Integer.parseInt(actionPlanId));
       planWork.buildStepLinks();
       context.getRequest().setAttribute("actionPlanWork", planWork);

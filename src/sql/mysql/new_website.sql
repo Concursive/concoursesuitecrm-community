@@ -131,7 +131,7 @@ CREATE TABLE web_icelet (
   icelet_id INT AUTO_INCREMENT PRIMARY KEY,
   icelet_name VARCHAR(300) NOT NULL,
   icelet_description TEXT,
-  icelet_configurator_class VARCHAR(300) NOT NULL UNIQUE,
+  icelet_configurator_class VARCHAR(255) NOT NULL UNIQUE,
   icelet_version INT,
   enabled BOOLEAN NOT NULL DEFAULT true
 );

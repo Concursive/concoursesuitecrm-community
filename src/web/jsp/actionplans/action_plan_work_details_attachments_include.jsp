@@ -82,13 +82,13 @@
              <dhv:evaluate if="<%= thisItemWork.getActionId() == ActionStep.ATTACH_NOTE_SINGLE %>">
                 <table class="empty" border="0">
                   <tr>
-                    <td><img border="0" src="images/icons/stock_form-date-field-16.gif" align="absmiddle" /></td>
+                   <td><img border="0" src="images/icons/stock_form-date-field-16.gif" align="absmiddle" /></td>
                     <dhv:evaluate if="<%= thisItemWork.getNote() != null %>">
                       <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><zeroio:tz timestamp="<%=  thisItemWork.getNote().getSubmitted() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>" dateOnly="true"/></div></a></td>
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= thisItemWork.getNote() == null %>">
                       <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachDate.text\">Attach Date</dhv:label>" %></div></a></td>
-                    </dhv:evaluate>
+                    </dhv:evaluate> 
                   </tr>
                 </table>
              </dhv:evaluate>

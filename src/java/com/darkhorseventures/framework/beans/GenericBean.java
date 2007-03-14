@@ -426,14 +426,17 @@ public class GenericBean implements Serializable {
         cal.setTimeInMillis(timestamp.getTime());
         int hour = Integer.parseInt((String) request.getParameter(field + "Hour"));
         int minute = Integer.parseInt((String) request.getParameter(field + "Minute"));
-        int ampm = Integer.parseInt((String) request.getParameter(field + "AMPM"));
-        if (ampm == Calendar.AM) {
-          if (hour == 12) {
-            hour = 0;
-          }
-        } else {
-          if (hour < 12) {
-            hour += 12;
+        if (request.getParameter(field + "AMPM") != null) {
+          int ampm = Integer.parseInt((String) request.getParameter(field
+              + "AMPM"));
+          if (ampm == Calendar.AM) {
+            if (hour == 12) {
+              hour = 0;
+            }
+          } else {
+            if (hour < 12) {
+              hour += 12;
+            }
           }
         }
 

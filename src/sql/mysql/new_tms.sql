@@ -11,7 +11,7 @@
  
 CREATE TABLE ticket_level (
   code INT AUTO_INCREMENT PRIMARY KEY,
-  description VARCHAR(300) NOT NULL UNIQUE,
+  description VARCHAR(255) NOT NULL UNIQUE,
   default_item BOOLEAN DEFAULT false,
   level INT DEFAULT 0,
   enabled BOOLEAN DEFAULT true
@@ -20,7 +20,7 @@ CREATE TABLE ticket_level (
 
 CREATE TABLE ticket_severity (
   code INT AUTO_INCREMENT PRIMARY KEY
-  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,description VARCHAR(255) NOT NULL UNIQUE
   ,style text
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
@@ -30,7 +30,7 @@ CREATE TABLE ticket_severity (
 
 CREATE TABLE lookup_ticketsource (
   code INT AUTO_INCREMENT PRIMARY KEY
-  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,description VARCHAR(255) NOT NULL UNIQUE
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
@@ -39,7 +39,7 @@ CREATE TABLE lookup_ticketsource (
 
 CREATE TABLE lookup_ticket_status (
   code INT AUTO_INCREMENT PRIMARY KEY
-  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,description VARCHAR(255) NOT NULL UNIQUE
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
@@ -48,7 +48,7 @@ CREATE TABLE lookup_ticket_status (
 
 CREATE TABLE ticket_priority (
   code INT AUTO_INCREMENT PRIMARY KEY
-  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,description VARCHAR(255) NOT NULL UNIQUE
   ,style text
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
@@ -58,7 +58,7 @@ CREATE TABLE ticket_priority (
 
 CREATE TABLE lookup_ticket_escalation(
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY
-  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,description VARCHAR(255) NOT NULL UNIQUE
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true

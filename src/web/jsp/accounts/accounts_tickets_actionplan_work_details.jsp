@@ -182,6 +182,6 @@
   </dhv:evaluate>
   <% Organization orgDetails = new Organization(); orgDetails.setOrgId(-2); %>
   <%@ include file="../troubletickets/troubletickets_actionplan_work_details_include.jsp" %> 
-</dhv:container>
+  </dhv:container>
 </dhv:container>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

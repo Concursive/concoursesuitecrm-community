@@ -321,6 +321,7 @@ public final class AccountTicketActionPlans extends CFSModule {
       planWork.setBuildStepWork(true);
       planWork.setTicket(thisTicket);
       planWork.setBuildLinkedObject(true);
+      planWork.setOrganization(orgDetails);
       planWork.queryRecord(db, Integer.parseInt(actionPlanId));
       planWork.buildStepLinks();
       context.getRequest().setAttribute("actionPlanWork", planWork);

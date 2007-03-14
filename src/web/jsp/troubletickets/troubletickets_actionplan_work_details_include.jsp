@@ -371,7 +371,7 @@
                               <% if (thisItemWork.getStep().getQuickComplete()) {
                                 if (!thisItemWork.isComplete()) {
                                   if (thisItemWork.getHasNext()) {%>
-                                    <a class="rollover" href="javascript:markComplete('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getNextStep().getId() %>');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a> 
+                                    <a class="rollover" href="javascript:markComplete('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getNextStep().getId() %>');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
                                     <a class="rollover" href="javascript:markComplete('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '<%= thisItemWork.getNextStep().getId() %>');"><%= toHtml(thisItemWork.getStepDescription()) %></a>
                                   <%} else {%>
                                     <a class="rollover" href="javascript:markComplete('<%= thisItemWork.getActionRequired() %>', '<%= thisItemWork.getActionId() %>','<%= actionPlanWork.getId() %>', '<%= thisItemWork.getId() %>', '-1');"><%= thisItemWork.getStatusGraphicTag(systemStatus) %></a>
@@ -426,14 +426,14 @@
             <%-- Attachments --%>
             <td valign="top" align="center" nowrap
                 <dhv:evaluate if="<%= !thisPhaseWork.getPhase().getRandom() && thisItemWork.isCurrent() %>">
-                class="phaseStepHighlight"
+                  class="phaseStepHighlight"
                 </dhv:evaluate>
                 <dhv:evaluate if="<%= thisPhaseWork.getPhase().getRandom() && thisPhaseWork.getPhase().getId() == actionPlanWork.getCurrentPhaseId() %>">
-                class="phaseStepHighlight"
+                  class="phaseStepHighlight"
                 </dhv:evaluate>
                 width="30%">
                 <%@ include file="../actionplans/action_plan_work_details_attachments_include.jsp" %>
-            </td>
+              </td>
             <%-- Owner/Responsible This can also be the group user or role or department user responsible --%>
             <td valign="top" nowrap
                 <dhv:evaluate if="<%= !thisPhaseWork.getPhase().getRandom() && thisItemWork.isCurrent() %>">
