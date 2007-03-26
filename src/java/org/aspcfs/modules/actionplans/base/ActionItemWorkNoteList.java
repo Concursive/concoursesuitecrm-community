@@ -16,6 +16,7 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -32,7 +33,7 @@ import java.util.Iterator;
  * @author Ananth
  * @created August 30, 2005
  */
-public class ActionItemWorkNoteList extends ArrayList {
+public class ActionItemWorkNoteList extends ArrayList  implements SyncableList {
   private PagedListInfo pagedListInfo = null;
   private int itemWorkId = -1;
   private int orgId = -1;
@@ -123,6 +124,13 @@ public class ActionItemWorkNoteList extends ArrayList {
   }
 
 
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
   /**
    * Gets the tableName attribute of the ActionItemWorkNoteList object
    *
@@ -204,7 +212,6 @@ public class ActionItemWorkNoteList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -215,7 +222,7 @@ public class ActionItemWorkNoteList extends ArrayList {
             "FROM action_item_work_notes aiwn " +
             "WHERE aiwn.note_id > 0 ");
 
-    createFilter(sqlFilter, db);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -252,42 +259,26 @@ public class ActionItemWorkNoteList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY submitted, description ");
     }
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append(" SELECT ");
-    }
-    sqlSelect.append(
-        "aiwn.* " +
-            "FROM action_item_work_notes aiwn " +
-            "WHERE aiwn.note_id > 0 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+
     while (rs.next()) {
       ActionItemWorkNote thisNote = new ActionItemWorkNote(rs);
       this.add(thisNote);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
   /**
    * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter, Connection db) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -296,14 +287,14 @@ public class ActionItemWorkNoteList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND aiwn.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND aiwn.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND aiwn.modified > ? ");
+      sqlFilter.append("AND aiwn.entered < ? ");
+      sqlFilter.append("AND aiwn.modified < ? ");
     }
     //filters notes for a specific account
     if (orgId > -1) {
@@ -324,7 +315,7 @@ public class ActionItemWorkNoteList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (itemWorkId != -1) {
       pst.setInt(++i, itemWorkId);
@@ -372,5 +363,51 @@ public class ActionItemWorkNoteList extends ArrayList {
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
+  
+  /**
+   *  Gets the object attribute of the ActionItemWorkNoteList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionItemWorkNote getObject(ResultSet rs) throws SQLException {
+  	ActionItemWorkNote obj = new ActionItemWorkNote(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  	StringBuffer sqlSelect = new StringBuffer();
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append(" SELECT ");
+    }
+    sqlSelect.append(
+        "aiwn.* " +
+            "FROM action_item_work_notes aiwn " +
+            "WHERE aiwn.note_id > 0 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  	return queryList(db, pst, "", "");
+  }
+
+  
 }
 

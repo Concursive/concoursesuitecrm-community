@@ -11,7 +11,9 @@ CREATE TABLE lookup_revenue_types (
   description VARCHAR(50) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
 ;
 
@@ -20,7 +22,9 @@ CREATE TABLE lookup_revenuedetail_types (
   description VARCHAR(50) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
 ;
 

@@ -97,7 +97,9 @@ CREATE TABLE lookup_survey_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE survey (
@@ -187,7 +189,7 @@ CREATE TABLE active_survey_responses (
   active_survey_id INT NOT NULL REFERENCES active_survey(active_survey_id),
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
-  ip_address VARCHAR(15) NOT NULL,
+  ip_address VARCHAR(30) NOT NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   address_updated INT
 );

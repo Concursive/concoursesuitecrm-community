@@ -14,10 +14,9 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.utils;
-
-import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -26,21 +25,27 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 /**
- * Utilities for working with HTTP
+ *  Utilities for working with HTTP
  *
- * @author matt rajkowski
- * @version $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
- *          $
- * @created August 29, 2002
+ * @author     matt rajkowski
+ * @version    $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
+ *      $
+ * @created    August 29, 2002
  */
 public class HTTPUtils {
   /**
-   * Generates acceptable html text when displaying in HTML, especially useful
-   * within a table cell because a cell should not be left empty
+   *  Generates acceptable html text when displaying in HTML, especially useful
+   *  within a table cell because a cell should not be left empty
    *
-   * @param s Description of the Parameter
-   * @return Description of the Return Value
+   * @param  s  Description of the Parameter
+   * @return    Description of the Return Value
    */
   public static String toHtml(String s) {
     if (s != null) {
@@ -56,11 +61,11 @@ public class HTTPUtils {
 
 
   /**
-   * Generates acceptable default html text when using an input field on an
-   * html form
+   *  Generates acceptable default html text when using an input field on an
+   *  html form
    *
-   * @param s Description of the Parameter
-   * @return Description of the Return Value
+   * @param  s  Description of the Parameter
+   * @return    Description of the Return Value
    */
   public static String toHtmlValue(String s) {
     if (s != null) {
@@ -80,12 +85,12 @@ public class HTTPUtils {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param address   Description of the Parameter
-   * @param xmlPacket Description of the Parameter
-   * @return Description of the Return Value
-   * @throws java.io.IOException Description of the Exception
+   * @param  address               Description of the Parameter
+   * @param  xmlPacket             Description of the Parameter
+   * @return                       Description of the Return Value
+   * @throws  java.io.IOException  Description of the Exception
    */
   public static String sendPacket(String address, String xmlPacket) throws java.io.IOException {
     return sendPacket(address, xmlPacket, null);
@@ -93,14 +98,15 @@ public class HTTPUtils {
 
 
   /**
-   * Sends a string to the specified URL, intended for communicating with web
-   * servers. Use the SSLMessage for secure communication with a server
-   * application.
+   *  Sends a string to the specified URL, intended for communicating with web
+   *  servers. Use the SSLMessage for secure communication with a server
+   *  application.
    *
-   * @param address   Description of the Parameter
-   * @param xmlPacket Description of the Parameter
-   * @return Description of the Return Value
-   * @throws java.io.IOException Description of the Exception
+   * @param  address               Description of the Parameter
+   * @param  xmlPacket             Description of the Parameter
+   * @param  headers               Description of the Parameter
+   * @return                       Description of the Return Value
+   * @throws  java.io.IOException  Description of the Exception
    */
   public static String sendPacket(String address, String xmlPacket, HashMap headers) throws java.io.IOException {
     Exception errorMessage = null;
@@ -121,13 +127,15 @@ public class HTTPUtils {
         ((HttpsURLConnection) conn).setHostnameVerifier(
             new HttpsHostnameVerifier());
       }
-      /*//Backwards compatible if something sets the old system property
-      if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
-            factory);
-        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
-            new HttpsHostnameVerifierDeprecated());
-      }*/
+      /*
+       *  /Backwards compatible if something sets the old system property
+       *  if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+       *  ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+       *  factory);
+       *  ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+       *  new HttpsHostnameVerifierDeprecated());
+       *  }
+       */
       ((HttpURLConnection) conn).setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
       if (headers != null && headers.size() > 0) {
@@ -168,11 +176,11 @@ public class HTTPUtils {
 
 
   /**
-   * Returns the text received from a web post
+   *  Returns the text received from a web post
    *
-   * @param http Description of the Parameter
-   * @return Description of the Return Value
-   * @throws java.io.IOException Description of the Exception
+   * @param  http                  Description of the Parameter
+   * @return                       Description of the Return Value
+   * @throws  java.io.IOException  Description of the Exception
    */
   public static String retrieveHtml(URLConnection http) throws java.io.IOException {
     StringBuffer htmlOutput = new StringBuffer();
@@ -188,12 +196,80 @@ public class HTTPUtils {
 
 
   /**
-   * Downloads a URL into a postscript file. Currently uses html2ps, but for
-   * Windows compatibility may need to use htmldoc after testing.
+   *  Description of the Method
    *
-   * @param url          Description of the Parameter
-   * @param baseFilename Description of the Parameter
-   * @return Description of the Return Value
+   * @param  address                  Description of the Parameter
+   * @param  xmlPacket                Description of the Parameter
+   * @return                          Description of the Return Value
+   * @exception  java.io.IOException  Description of the Exception
+   */
+  public static InputStream downloadPackage(String address, String xmlPacket) throws java.io.IOException {
+    Exception errorMessage = null;
+    try {
+      //The default factory requires a trusted certificate
+      //Accept any certificate using the custom TrustManager
+      X509TrustManager xtm = new HttpsTrustManager();
+      TrustManager mytm[] = {xtm};
+      SSLContext ctx = SSLContext.getInstance("SSL");
+      ctx.init(null, mytm, null);
+      SSLSocketFactory factory = ctx.getSocketFactory();
+      //Get a connection
+      URL url = new URL(address);
+      URLConnection conn = url.openConnection();
+      //Override the default certificates
+      if (conn instanceof HttpsURLConnection) {
+        ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
+        ((HttpsURLConnection) conn).setHostnameVerifier(
+            new HttpsHostnameVerifier());
+      }
+      /*
+       *  /Backwards compatible if something sets the old system property
+       *  if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+       *  ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+       *  factory);
+       *  ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+       *  new HttpsHostnameVerifierDeprecated());
+       *  }
+       */
+      ((HttpURLConnection) conn).setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
+      conn.setDoInput(true);
+      conn.setDoOutput(true);
+      OutputStreamWriter out = new OutputStreamWriter(
+          conn.getOutputStream(), "UTF8");
+      out.write(xmlPacket);
+      out.close();
+      InputStream is = conn.getInputStream(); 
+      return is;
+    } catch (java.net.MalformedURLException e) {
+      errorMessage = e;
+    } catch (java.io.IOException e) {
+      errorMessage = e;
+    } catch (java.security.KeyManagementException e) {
+      errorMessage = e;
+    } catch (java.security.NoSuchAlgorithmException e) {
+      errorMessage = e;
+    } catch (NullPointerException e) {
+      e.printStackTrace(System.out);
+      errorMessage = e;
+    }
+    if (errorMessage != null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("HTTPUtils-> downloadPackage error: " + errorMessage.getMessage());
+      }
+      throw new java.io.IOException(errorMessage.toString());
+    }
+    return null;
+  }
+
+
+  /**
+   *  Downloads a URL into a postscript file. Currently uses html2ps, but for
+   *  Windows compatibility may need to use htmldoc after testing.
+   *
+   * @param  url           Description of the Parameter
+   * @param  baseFilename  Description of the Parameter
+   * @return               Description of the Return Value
    */
   public static int convertUrlToPostscriptFile(String url, String baseFilename) {
     Process process;
@@ -232,10 +308,10 @@ public class HTTPUtils {
 
 
   /**
-   * Connects to a web server and gets the Server header field
+   *  Connects to a web server and gets the Server header field
    *
-   * @param address Description of the Parameter
-   * @return The serverName value
+   * @param  address  Description of the Parameter
+   * @return          The serverName value
    */
   public static String getServerName(String address) {
     System.out.println("HTTPUtils-> Checking: " + address);
@@ -257,17 +333,18 @@ public class HTTPUtils {
             new HttpsHostnameVerifier());
       }
       /*
-      try {
-        //Backwards compatible if something sets the old system property
-        if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
-          ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
-              factory);
-          ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
-              new HttpsHostnameVerifierDeprecated());
-        }
-      } catch (Exception e) {
-        // Class not found so ignore
-      }*/
+       *  try {
+       *  /Backwards compatible if something sets the old system property
+       *  if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+       *  ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(
+       *  factory);
+       *  ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(
+       *  new HttpsHostnameVerifierDeprecated());
+       *  }
+       *  } catch (Exception e) {
+       *  / Class not found so ignore
+       *  }
+       */
       if (conn instanceof HttpURLConnection) {
         HttpURLConnection httpConnection = (HttpURLConnection) conn;
         httpConnection.setRequestMethod("HEAD");

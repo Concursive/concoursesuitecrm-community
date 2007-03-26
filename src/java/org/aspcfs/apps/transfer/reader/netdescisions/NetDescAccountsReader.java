@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader.netdescisions;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -42,6 +43,8 @@ import java.util.StringTokenizer;
  * @created January 21, 2003
  */
 public class NetDescAccountsReader implements DataReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.netdescisions.NetDescAccountsReader.class);
 
   private DataWriter writer = null;
   private PropertyMapList mappings = null;

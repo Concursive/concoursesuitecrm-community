@@ -11,7 +11,9 @@ CREATE TABLE lookup_task_priority (
   description VARCHAR(50) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_task_loe (
@@ -19,7 +21,9 @@ CREATE TABLE lookup_task_loe (
   description VARCHAR(50) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_task_category (
@@ -27,7 +31,9 @@ CREATE TABLE lookup_task_category (
   description VARCHAR(255) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_ticket_task_category (
@@ -35,7 +41,9 @@ CREATE TABLE lookup_ticket_task_category (
   description VARCHAR(255) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE task (

@@ -1150,7 +1150,8 @@ public class OpportunityHeader extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE opportunity_component " +
-        "SET enabled = ? " +
+        "SET enabled = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE opp_id = ? ");
     int i = 0;
     pst.setBoolean(++i, false);
@@ -1194,12 +1195,7 @@ public class OpportunityHeader extends GenericBean {
       if (thisContact != null && thisContact.getOrgId() > 0) {
         sql.append("contact_org_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append("enteredBy, modifiedBy, custom1_integer ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -1210,9 +1206,13 @@ public class OpportunityHeader extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?) ");
 
@@ -1950,7 +1950,10 @@ public class OpportunityHeader extends GenericBean {
    */
   public void insertOpportunitySiteId(Connection db, int sId) throws SQLException {
     if (sId != -1) {
-      PreparedStatement pst = db.prepareStatement("UPDATE opportunity_header SET site_id = ? WHERE opp_id = ? ");
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE opportunity_header " +
+              "SET site_id = ?, " + "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+              "WHERE opp_id = ? ");
       pst.setInt(1, sId);
       pst.setInt(2, this.getId());
       pst.executeUpdate();

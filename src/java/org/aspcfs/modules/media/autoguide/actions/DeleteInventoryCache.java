@@ -27,27 +27,27 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * The sync process doesn't handle synchronizing partial tables, so this action
- * is used when a PDA syncs and the owner of an account has changed. In that
- * case, the PDA must request that the server deletes the inventory cache for
- * that account.
+ *  The sync process doesn't handle synchronizing partial tables, so this action
+ *  is used when a PDA syncs and the owner of an account has changed. In that
+ *  case, the PDA must request that the server deletes the inventory cache for
+ *  that account.
  *
- * @author matt rajkowski
- * @version $Id: DeleteInventoryCache.java,v 1.2 2003/05/08 13:50:18
- *          mrajkowski Exp $
- * @created April 29, 2003
+ * @author     matt rajkowski
+ * @version    $Id: DeleteInventoryCache.java,v 1.2 2003/05/08 13:50:18
+ *      mrajkowski Exp $
+ * @created    April 29, 2003
  */
 public class DeleteInventoryCache implements CustomActionHandler {
 
   /**
-   * Deletes the inventory cache for the given account, and related cache data
-   * (not the actual records) when a PDA says to.
+   *  Deletes the inventory cache for the given account, and related cache data
+   *  (not the actual records) when a PDA says to.
    *
-   * @param packetContext Description of the Parameter
-   * @param db            Description of the Parameter
-   * @param values        Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  packetContext  Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @param  values         Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean process(PacketContext packetContext, Connection db, HashMap values) throws SQLException {
     System.out.println("DeleteInventoryCache-> BEGIN");
@@ -135,6 +135,21 @@ public class DeleteInventoryCache implements CustomActionHandler {
     System.out.println("DeleteInventoryCache-> Inventory cache deleted");
     //The in-memory cache is no longer valid so blow it out
     packetContext.getClientManager().removeClient(clientId);
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  packetContext     Description of the Parameter
+   * @param  db                Description of the Parameter
+   * @param  values            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public boolean status(PacketContext packetContext, Connection db, HashMap values) throws SQLException {
+    //TODO: Implement this if required
     return true;
   }
 }

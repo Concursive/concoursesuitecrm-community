@@ -15,9 +15,11 @@
  */
 package org.aspcfs.apps.transfer.writer;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.service.sync.base.SyncPackage;
 import org.aspcfs.utils.DatabaseUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,12 +35,15 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author Ananth
- * @created February 3, 2006
+ * @author     Ananth
+ * @created    February 3, 2006
  */
 public class CFSXMLWriter implements DataWriter {
+
+  private final static Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.writer.CFSXMLWriter.class);
+
   private String lastResponse = null;
   private String filename = null;
   private PrintWriter out = null;
@@ -49,11 +54,44 @@ public class CFSXMLWriter implements DataWriter {
   TransformerFactory transformerFactory = null;
   Transformer transformer = null;
 
+  private int recipient = SyncPackage.SYNC_CLIENT;
+
 
   /**
-   * Gets the lastResponse attribute of the CFSXMLWriter object
+   *  Gets the recipient attribute of the CFSXMLWriter object
    *
-   * @return The lastResponse value
+   * @return    The recipient value
+   */
+  public int getRecipient() {
+    return recipient;
+  }
+
+
+  /**
+   *  Sets the recipient attribute of the CFSXMLWriter object
+   *
+   * @param  tmp  The new recipient value
+   */
+  public void setRecipient(int tmp) {
+    this.recipient = tmp;
+  }
+
+
+  /**
+   *  Sets the recipient attribute of the CFSXMLWriter object
+   *
+   * @param  tmp  The new recipient value
+   */
+  public void setRecipient(String tmp) {
+    this.recipient = Integer.parseInt(tmp);
+  }
+
+
+
+  /**
+   *  Gets the lastResponse attribute of the CFSXMLWriter object
+   *
+   * @return    The lastResponse value
    */
   public String getLastResponse() {
     return lastResponse;
@@ -61,9 +99,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Gets the filename attribute of the CFSXMLWriter object
+   *  Gets the filename attribute of the CFSXMLWriter object
    *
-   * @return The filename value
+   * @return    The filename value
    */
   public String getFilename() {
     return filename;
@@ -71,9 +109,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Sets the filename attribute of the CFSXMLWriter object
+   *  Sets the filename attribute of the CFSXMLWriter object
    *
-   * @param tmp The new filename value
+   * @param  tmp  The new filename value
    */
   public void setFilename(String tmp) {
     this.filename = tmp;
@@ -81,9 +119,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Gets the overwrite attribute of the CFSXMLWriter object
+   *  Gets the overwrite attribute of the CFSXMLWriter object
    *
-   * @return The overwrite value
+   * @return    The overwrite value
    */
   public boolean getOverwrite() {
     return overwrite;
@@ -91,9 +129,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Sets the overwrite attribute of the CFSXMLWriter object
+   *  Sets the overwrite attribute of the CFSXMLWriter object
    *
-   * @param tmp The new overwrite value
+   * @param  tmp  The new overwrite value
    */
   public void setOverwrite(boolean tmp) {
     this.overwrite = tmp;
@@ -101,9 +139,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Sets the overwrite attribute of the CFSXMLWriter object
+   *  Sets the overwrite attribute of the CFSXMLWriter object
    *
-   * @param tmp The new overwrite value
+   * @param  tmp  The new overwrite value
    */
   public void setOverwrite(String tmp) {
     this.overwrite = DatabaseUtils.parseBoolean(tmp);
@@ -111,18 +149,18 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Sets the autoCommit attribute of the CFSXMLWriter object
+   *  Sets the autoCommit attribute of the CFSXMLWriter object
    *
-   * @param flag The new autoCommit value
+   * @param  flag  The new autoCommit value
    */
   public void setAutoCommit(boolean flag) {
   }
 
 
   /**
-   * Gets the name attribute of the CFSXMLWriter object
+   *  Gets the name attribute of the CFSXMLWriter object
    *
-   * @return The name value
+   * @return    The name value
    */
   public String getName() {
     return "CFS XML Writer";
@@ -130,9 +168,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Gets the description attribute of the CFSXMLWriter object
+   *  Gets the description attribute of the CFSXMLWriter object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return "Generates an XML representation of data as specified";
@@ -140,9 +178,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Gets the configured attribute of the CFSXMLWriter object
+   *  Gets the configured attribute of the CFSXMLWriter object
    *
-   * @return The configured value
+   * @return    The configured value
    */
   public boolean isConfigured() {
     if (filename == null) {
@@ -159,7 +197,7 @@ public class CFSXMLWriter implements DataWriter {
 
       out = new PrintWriter(
           new BufferedWriter(
-              new FileWriter(filename, !overwrite)));
+          new FileWriter(filename, !overwrite)));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       return false;
@@ -172,10 +210,10 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param record Description of the Parameter
-   * @return Description of the Return Value
+   * @param  record  Description of the Parameter
+   * @return         Description of the Return Value
    */
   public boolean save(DataRecord record) {
     ++recordCount;
@@ -219,9 +257,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean commit() {
     return true;
@@ -229,9 +267,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean rollback() {
     return false;
@@ -239,9 +277,9 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean close() {
     out.println(" </cfsdata>");
@@ -255,16 +293,16 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    */
   public void initialize() {
   }
 
 
   /**
-   * Gets the version attribute of the CFSXMLWriter object
+   *  Gets the version attribute of the CFSXMLWriter object
    *
-   * @return The version value
+   * @return    The version value
    */
   public double getVersion() {
     return 1.0d;
@@ -272,10 +310,10 @@ public class CFSXMLWriter implements DataWriter {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param record Description of the Parameter
-   * @return Description of the Return Value
+   * @param  record  Description of the Parameter
+   * @return         Description of the Return Value
    */
   public boolean load(DataRecord record) {
     return false;

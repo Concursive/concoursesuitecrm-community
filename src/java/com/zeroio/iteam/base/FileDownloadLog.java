@@ -24,34 +24,128 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author matt rajkowski
- * @version $Id: FileDownloadLog.java,v 1.1.136.1 2004/03/19 21:00:50 rvasista
- *          Exp $
- * @created January 15, 2003
+ * @author     matt rajkowski
+ * @created    January 15, 2003
+ * @version    $Id: FileDownloadLog.java,v 1.1.136.1 2004/03/19 21:00:50
+ *      rvasista Exp $
  */
 public class FileDownloadLog extends GenericBean {
 
+  private int id = -1;
   private int itemId = -1;
   private double version = -1;
   private int userId = -1;
   private java.sql.Timestamp downloadDate = null;
   private int fileSize = 0;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
 
   /**
-   * Constructor for the FileDownloadLog object
+   *  Gets the entered attribute of the FileDownloadLog object
+   *
+   * @return    The entered value
    */
-  public FileDownloadLog() {
+  public java.sql.Timestamp getEntered() {
+    return entered;
   }
 
 
   /**
-   * Constructor for the FileDownloadLog object
+   *  Sets the entered attribute of the FileDownloadLog object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the FileDownloadLog object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the modified attribute of the FileDownloadLog object
+   *
+   * @return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the FileDownloadLog object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the FileDownloadLog object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+
+  /**
+   *  Gets the id attribute of the FileDownloadLog object
+   *
+   * @return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Sets the id attribute of the FileDownloadLog object
+   *
+   * @param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the FileDownloadLog object
+   *
+   * @param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Constructor for the FileDownloadLog object
+   */
+  public FileDownloadLog() { }
+
+
+  /**
+   *  Constructor for the FileDownloadLog object
+   *
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public FileDownloadLog(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -59,21 +153,22 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Constructor for the FileDownloadLog object
+   *  Constructor for the FileDownloadLog object
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  itemId            Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
-  public FileDownloadLog(Connection db, int id) throws SQLException {
-    if (id < 1) {
+  public FileDownloadLog(Connection db, int itemId) throws SQLException {
+    if (itemId < 1) {
       throw new SQLException("ID not specified");
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id, download_date " +
-            "FROM project_files_download d " +
-            "WHERE d.item_id = ? ");
-    pst.setInt(1, id);
+        "FROM project_files_download d " +
+        "WHERE d.item_id = ? ");
+    pst.setInt(1, itemId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -84,9 +179,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the itemId attribute of the FileDownloadLog object
+   *  Sets the itemId attribute of the FileDownloadLog object
    *
-   * @param tmp The new itemId value
+   * @param  tmp  The new itemId value
    */
   public void setItemId(int tmp) {
     this.itemId = tmp;
@@ -94,9 +189,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the itemId attribute of the FileDownloadLog object
+   *  Sets the itemId attribute of the FileDownloadLog object
    *
-   * @param tmp The new itemId value
+   * @param  tmp  The new itemId value
    */
   public void setItemId(String tmp) {
     this.itemId = Integer.parseInt(tmp);
@@ -104,9 +199,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the version attribute of the FileDownloadLog object
+   *  Sets the version attribute of the FileDownloadLog object
    *
-   * @param tmp The new version value
+   * @param  tmp  The new version value
    */
   public void setVersion(double tmp) {
     this.version = tmp;
@@ -114,9 +209,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the version attribute of the FileDownloadLog object
+   *  Sets the version attribute of the FileDownloadLog object
    *
-   * @param tmp The new version value
+   * @param  tmp  The new version value
    */
   public void setVersion(String tmp) {
     this.version = Double.parseDouble(tmp);
@@ -124,9 +219,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the userId attribute of the FileDownloadLog object
+   *  Sets the userId attribute of the FileDownloadLog object
    *
-   * @param tmp The new userId value
+   * @param  tmp  The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -134,9 +229,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the userId attribute of the FileDownloadLog object
+   *  Sets the userId attribute of the FileDownloadLog object
    *
-   * @param tmp The new userId value
+   * @param  tmp  The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -144,9 +239,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the downloadDate attribute of the FileDownloadLog object
+   *  Sets the downloadDate attribute of the FileDownloadLog object
    *
-   * @param tmp The new downloadDate value
+   * @param  tmp  The new downloadDate value
    */
   public void setDownloadDate(java.sql.Timestamp tmp) {
     this.downloadDate = tmp;
@@ -154,9 +249,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the downloadDate attribute of the FileDownloadLog object
+   *  Sets the downloadDate attribute of the FileDownloadLog object
    *
-   * @param tmp The new downloadDate value
+   * @param  tmp  The new downloadDate value
    */
   public void setDownloadDate(String tmp) {
     this.downloadDate = DatabaseUtils.parseTimestamp(tmp);
@@ -164,9 +259,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Sets the fileSize attribute of the FileDownloadLog object
+   *  Sets the fileSize attribute of the FileDownloadLog object
    *
-   * @param tmp The new fileSize value
+   * @param  tmp  The new fileSize value
    */
   public void setFileSize(int tmp) {
     this.fileSize = tmp;
@@ -174,9 +269,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Gets the itemId attribute of the FileDownloadLog object
+   *  Gets the itemId attribute of the FileDownloadLog object
    *
-   * @return The itemId value
+   * @return    The itemId value
    */
   public int getItemId() {
     return itemId;
@@ -184,9 +279,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Gets the version attribute of the FileDownloadLog object
+   *  Gets the version attribute of the FileDownloadLog object
    *
-   * @return The version value
+   * @return    The version value
    */
   public double getVersion() {
     return version;
@@ -194,9 +289,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Gets the userId attribute of the FileDownloadLog object
+   *  Gets the userId attribute of the FileDownloadLog object
    *
-   * @return The userId value
+   * @return    The userId value
    */
   public int getUserId() {
     return userId;
@@ -204,9 +299,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Gets the downloadDate attribute of the FileDownloadLog object
+   *  Gets the downloadDate attribute of the FileDownloadLog object
    *
-   * @return The downloadDate value
+   * @return    The downloadDate value
    */
   public java.sql.Timestamp getDownloadDate() {
     return downloadDate;
@@ -214,9 +309,9 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Gets the fileSize attribute of the FileDownloadLog object
+   *  Gets the fileSize attribute of the FileDownloadLog object
    *
-   * @return The fileSize value
+   * @return    The fileSize value
    */
   public int getFileSize() {
     return fileSize;
@@ -224,48 +319,71 @@ public class FileDownloadLog extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("download_id");
     itemId = rs.getInt("item_id");
     version = rs.getDouble("version");
     userId = rs.getInt("user_download_id");
     downloadDate = rs.getTimestamp("download_date");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO project_files_download " +
-            "(item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id, download_date) " +
-            "VALUES (?, ?, ?, ?)");
+    StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_files_download_download_id_seq");
+    sql.append("INSERT INTO project_files_download ");
+    sql.append("(item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id, entered, modified, download_date) ");
+    sql.append("VALUES (?, ?, ?, ");
+    if (entered != null) {
+      sql.append("?, ");
+    }else{
+      sql.append("CURRENT_TIMESTAMP, ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    }else{
+      sql.append("CURRENT_TIMESTAMP, ");
+    }
+    sql.append("? ) ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, itemId);
     pst.setDouble(++i, version);
     pst.setInt(++i, userId);
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
     pst.setTimestamp(++i, downloadDate);
     pst.execute();
     pst.close();
+    id = DatabaseUtils.getCurrVal(db, "project_files_download_download_id_seq", id);
     return true;
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean updateCounter(Connection db) throws SQLException {
     if (itemId < 0 || version < 0) {
@@ -274,16 +392,18 @@ public class FileDownloadLog extends GenericBean {
     //Record the raw number of downloads
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_files " +
-            "SET downloads = (downloads + 1) " +
-            "WHERE item_id = ? ");
+        "SET downloads = (downloads + 1), " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE item_id = ? ");
     pst.setInt(1, itemId);
     pst.executeUpdate();
     pst.close();
     pst = db.prepareStatement(
         "UPDATE project_files_version " +
-            "SET downloads = (downloads + 1) " +
-            "WHERE item_id = ? " +
-            "AND " + DatabaseUtils.addQuotes(db, "version") + " = ? ");
+        "SET downloads = (downloads + 1), " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE item_id = ? " +
+        "AND " + DatabaseUtils.addQuotes(db, "version") + " = ? ");
     pst.setInt(1, itemId);
     pst.setDouble(2, version);
     pst.executeUpdate();
@@ -292,8 +412,8 @@ public class FileDownloadLog extends GenericBean {
     int usageId = DatabaseUtils.getNextSeq(db, "usage_log_usage_id_seq");
     String sql =
         "INSERT INTO usage_log " +
-            "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
-            "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ";
+        "(" + (usageId > -1 ? "usage_id, " : "") + "enteredby, action, record_id, record_size) " +
+        "VALUES (" + (usageId > -1 ? "?, " : "") + "?, ?, ?, ?) ";
     int i = 0;
     pst = db.prepareStatement(sql);
     if (usageId > -1) {
@@ -311,7 +431,7 @@ public class FileDownloadLog extends GenericBean {
     }
     sql =
         "INSERT INTO project_files_download " +
-            "(item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id) VALUES (?, ?, ?) ";
+        "(item_id, " + DatabaseUtils.addQuotes(db, "version") + ", user_download_id) VALUES (?, ?, ?) ";
     i = 0;
     pst = db.prepareStatement(sql);
     pst.setInt(++i, itemId);

@@ -16,6 +16,7 @@
 package org.aspcfs.modules.admin.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -34,7 +36,15 @@ import java.util.Iterator;
  * @version $Id$
  * @created January 13, 2003
  */
-public class RolePermissionList extends Hashtable {
+public class RolePermissionList extends Hashtable implements SyncableList {
+
+  private static final long serialVersionUID = -970518793145247635L;
+
+  public final static String tableName = "role_permission";
+  public final static String uniqueField = "id";
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
 
   private int roleId = -1;
   private int enabledState = Constants.TRUE;
@@ -46,6 +56,17 @@ public class RolePermissionList extends Hashtable {
   public RolePermissionList() {
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static RolePermission getObject(ResultSet rs) throws SQLException {
+    RolePermission rp = new RolePermission(rs);
+    return rp;
+  }
 
   /**
    * Constructor for the RolePermissionList object
@@ -74,7 +95,62 @@ public class RolePermissionList extends Hashtable {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Sets the enabledState attribute of the RolePermissionList object
    *
@@ -104,7 +180,6 @@ public class RolePermissionList extends Hashtable {
   public void buildCombinedList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-    int items = -1;
 
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
@@ -112,15 +187,16 @@ public class RolePermissionList extends Hashtable {
 
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete " +
-            "FROM permission p, permission_category c, role_permission r " +
-            "WHERE p.category_id = c.category_id " +
-            "AND p.permission_id = r.permission_id ");
+        "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete" +
+        ", role_offline_add, role_offline_view, role_offline_edit, role_offline_delete" +
+        " FROM permission p, permission_category c, role_permission r" +
+        " WHERE p.category_id = c.category_id" +
+        " AND p.permission_id = r.permission_id ");
     sqlOrder.append("ORDER BY r.role_id, c." + DatabaseUtils.addQuotes(db, "level") + ", p." + DatabaseUtils.addQuotes(db, "level") + " ");
     createFilter(sqlFilter);
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
+    prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
       Permission thisPermission = new Permission(rs);
@@ -128,13 +204,46 @@ public class RolePermissionList extends Hashtable {
       thisPermission.setAdd(rs.getBoolean("role_add"));
       thisPermission.setEdit(rs.getBoolean("role_edit"));
       thisPermission.setDelete(rs.getBoolean("role_delete"));
+      thisPermission.setOfflineView(rs.getBoolean("role_offline_view"));
+      thisPermission.setOfflineAdd(rs.getBoolean("role_offline_add"));
+      thisPermission.setOfflineEdit(rs.getBoolean("role_offline_edit"));
+      thisPermission.setOfflineDelete(rs.getBoolean("role_offline_delete"));
       this.put(thisPermission.getName(), thisPermission);
     }
     rs.close();
     pst.close();
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    ResultSet rs = null;
 
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    sqlSelect.append(
+        "SELECT r.* " +
+            "FROM role_permission r, permission p, permission_category c " +
+            "WHERE r.permission_id = p.permission_id AND  p.category_id = c.category_id ");
+    createFilter(sqlFilter);
+    sqlOrder.append("ORDER BY c." + DatabaseUtils.addQuotes(db, "level") + ", c.category, p." + DatabaseUtils.addQuotes(db, "level") + " ");
+
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+
+    return rs;
+  }
   /**
    * Description of the Method
    *
@@ -145,13 +254,25 @@ public class RolePermissionList extends Hashtable {
       sqlFilter = new StringBuffer();
     }
 
-    if (enabledState != -1) {
+    if (enabledState != Constants.UNDEFINED) {
       sqlFilter.append("AND p.enabled = ? ");
       sqlFilter.append("AND c.enabled = ? ");
     }
 
     if (roleId > -1) {
       sqlFilter.append("AND r.role_id = ? ");
+    }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND r.entered > ? ");
+      }
+      sqlFilter.append("AND r.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND r.modified > ? ");
+      sqlFilter.append("AND r.entered < ? ");
+      sqlFilter.append("AND r.modified < ? ");
     }
   }
 
@@ -166,7 +287,7 @@ public class RolePermissionList extends Hashtable {
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
-    if (enabledState != -1) {
+    if (enabledState != Constants.UNDEFINED) {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
       pst.setBoolean(++i, enabledState == Constants.TRUE);
     }
@@ -174,6 +295,19 @@ public class RolePermissionList extends Hashtable {
     if (roleId > -1) {
       pst.setInt(++i, roleId);
     }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+
     return i;
   }
 
@@ -198,8 +332,19 @@ public class RolePermissionList extends Hashtable {
       if ("edit".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getEdit()) {
         return true;
       }
-      if ("delete".equals(thisType) && thisName.equals(
-          thisPermission.getName()) && thisPermission.getDelete()) {
+      if ("delete".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getDelete()) {
+        return true;
+      }
+      if ("offline_add".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getOfflineAdd()) {
+        return true;
+      }
+      if ("offline_view".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getOfflineView()) {
+        return true;
+      }
+      if ("offline_edit".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getOfflineEdit()) {
+        return true;
+      }
+      if ("offline_delete".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getOfflineDelete()) {
         return true;
       }
     }

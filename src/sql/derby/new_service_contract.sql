@@ -11,7 +11,9 @@ CREATE TABLE lookup_asset_status(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_sc_category(
@@ -19,7 +21,9 @@ CREATE TABLE lookup_sc_category(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_sc_type(
@@ -27,7 +31,9 @@ CREATE TABLE lookup_sc_type(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_response_model(
@@ -35,7 +41,9 @@ CREATE TABLE lookup_response_model(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_phone_model(
@@ -43,7 +51,9 @@ CREATE TABLE lookup_phone_model(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_onsite_model(
@@ -51,7 +61,9 @@ CREATE TABLE lookup_onsite_model(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_email_model(
@@ -59,7 +71,9 @@ CREATE TABLE lookup_email_model(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_hours_reason(
@@ -67,7 +81,9 @@ CREATE TABLE lookup_hours_reason(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_asset_manufacturer(
@@ -75,7 +91,9 @@ CREATE TABLE lookup_asset_manufacturer(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_asset_vendor(
@@ -83,7 +101,9 @@ CREATE TABLE lookup_asset_vendor(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE service_contract (
@@ -205,7 +225,9 @@ CREATE TABLE lookup_asset_materials(
  description VARCHAR(300),
  default_item CHAR(1) DEFAULT '0',
  "level" INTEGER,
- enabled CHAR(1) DEFAULT '1'
+ enabled CHAR(1) DEFAULT '1',
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE asset_materials_map (

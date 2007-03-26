@@ -13,7 +13,9 @@ CREATE TABLE lookup_order_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each order has a type which defines the flow of product to/from customer
@@ -23,7 +25,9 @@ CREATE TABLE lookup_order_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each order has terms in which the order was placed
@@ -32,7 +36,9 @@ CREATE TABLE lookup_order_terms (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
 	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each order has a type of origination
@@ -42,7 +48,9 @@ CREATE TABLE lookup_order_source (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
 	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- The details of an order are listed
@@ -152,7 +160,9 @@ CREATE TABLE lookup_orderaddress_types (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_address (
@@ -181,7 +191,9 @@ CREATE TABLE lookup_payment_methods (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Example: Visa, Master Card, Discover, American Express
@@ -192,7 +204,9 @@ CREATE TABLE lookup_creditcard_types (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE payment_creditcard (
@@ -265,7 +279,9 @@ CREATE TABLE lookup_payment_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_payment (
@@ -321,7 +337,9 @@ CREATE TABLE lookup_payment_gateway (
   default_item BOOLEAN DEFAULT false,
   "level" int DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  constant_id int
+  constant_id int,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE merchant_payment_gateway (

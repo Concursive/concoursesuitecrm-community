@@ -14,7 +14,9 @@ CREATE TABLE lookup_document_store_permission_category (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Store the document store roles (e.g., owner, contributor, guest, etc.)
@@ -24,7 +26,9 @@ CREATE TABLE lookup_document_store_role (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Store the permissions in a document store (e.g., upload file, create version, create folder, download file, etc.)
@@ -37,7 +41,9 @@ CREATE TABLE lookup_document_store_permission (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
-  default_role INTEGER REFERENCES lookup_document_store_role(code)
+  default_role INTEGER REFERENCES lookup_document_store_role(code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Store the document store details

@@ -17,6 +17,8 @@ package org.aspcfs.modules.contacts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -25,6 +27,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +41,7 @@ import java.util.TimeZone;
  * @version $Id$
  * @created January 8, 2002
  */
-public class CallList extends ArrayList {
+public class CallList extends ArrayList implements SyncableList {
 
   public final static String tableName = "call_log";
   public final static String uniqueField = "call_id";
@@ -69,7 +72,80 @@ public class CallList extends ArrayList {
   protected int oppCallsOnly = Constants.UNDEFINED;
   protected int avoidDisabledContacts = Constants.UNDEFINED;
 
+  /**
+   * Constructor for the CallList object
+   */
+  public CallList() {
+  }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static Call getObject(ResultSet rs) throws SQLException {
+    Call call = new Call(rs);
+    return call;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Gets the onlyCompletedOrCancelled attribute of the CallList object
    *
@@ -88,14 +164,6 @@ public class CallList extends ArrayList {
   public void setOnlyCompletedOrCanceled(boolean tmp) {
     this.onlyCompletedOrCanceled = tmp;
   }
-
-
-  /**
-   * Constructor for the CallList object
-   */
-  public CallList() {
-  }
-
 
   /**
    * Sets the PagedListInfo attribute of the CallList object
@@ -443,27 +511,6 @@ public class CallList extends ArrayList {
     return hasAlertDate;
   }
 
-
-  /**
-   * Gets the tableName attribute of the CallList object
-   *
-   * @return The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the CallList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
   /**
    * Sets the includeOnlyTrashed attribute of the CallList object
    *
@@ -552,37 +599,6 @@ public class CallList extends ArrayList {
   public int getSyncType() {
     return syncType;
   }
-
-
-  /**
-   * Sets the lastAnchor attribute of the CallList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the CallList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the syncType attribute of the CallList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
 
   /**
    * Gets the PagedListInfo attribute of the CallList object
@@ -831,7 +847,64 @@ public class CallList extends ArrayList {
     }
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
 
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length")+ ", " +
+        "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
+        "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
+        "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
+        "c.alert_call_type_id, c.followup_contact_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description as alertType, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.org_name as ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name as orgname, p.description as priority " +
+        "FROM " + tableName + " c " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
+        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+        "LEFT JOIN contact ct2 ON (c.followup_contact_id = ct2.contact_id) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+        "WHERE call_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+  
   /**
    * Description of the Method
    *
@@ -842,7 +915,6 @@ public class CallList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -875,44 +947,15 @@ public class CallList extends ArrayList {
       sqlOrder.append("ORDER BY c.entered DESC ");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length")+ ", " +
-        "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
-        "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
-        "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.followup_contact_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description as alertType, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.org_name as ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name as orgname, p.description as priority " +
-        "FROM call_log c " +
-        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
-        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
-        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
-        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
-        "LEFT JOIN contact ct2 ON (c.followup_contact_id = ct2.contact_id) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "WHERE call_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       Call thisCall = new Call(rs);
       this.add(thisCall);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
@@ -1048,6 +1091,17 @@ public class CallList extends ArrayList {
             "OR ct.trashed_date IS NOT NULL) ");
       }
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND c.entered > ? ");
+      }
+      sqlFilter.append("AND c.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND c.modified > ? ");
+      sqlFilter.append("AND c.entered < ? ");
+      sqlFilter.append("AND c.modified < ? ");
+    }
   }
 
 
@@ -1130,6 +1184,17 @@ public class CallList extends ArrayList {
       } else if (this.getAvoidDisabledContacts() == Constants.FALSE) {
         pst.setBoolean(++i, false);
       }
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

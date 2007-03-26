@@ -18,7 +18,6 @@ package org.aspcfs.modules.actionplans.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.actionplans.base.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.PermissionCategory;

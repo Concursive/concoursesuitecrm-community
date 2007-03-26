@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -35,7 +36,13 @@ import java.util.Iterator;
  *          Exp $
  * @created December 28, 2001
  */
-public class CustomFieldCategoryList extends ArrayList {
+public class CustomFieldCategoryList extends ArrayList implements SyncableList {
+
+  public final static String tableName = "custom_field_category";
+  public final static String uniqueField = "category_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
 
@@ -52,6 +59,80 @@ public class CustomFieldCategoryList extends ArrayList {
   private boolean buildTotalNumOfRecords = false;
 
 
+  /**
+   * Constructor for the CustomFieldCategoryList object
+   */
+  public CustomFieldCategoryList() {
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static CustomFieldCategory getObject(ResultSet rs) throws SQLException {
+    CustomFieldCategory customFieldCategory = new CustomFieldCategory(rs);
+    return customFieldCategory;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Sets the linkItemId attribute of the CustomFieldCategoryList object
    *
@@ -113,14 +194,6 @@ public class CustomFieldCategoryList extends ArrayList {
   public boolean getBuildTotalNumOfRecords() {
     return buildTotalNumOfRecords;
   }
-
-
-  /**
-   * Constructor for the CustomFieldCategoryList object
-   */
-  public CustomFieldCategoryList() {
-  }
-
 
   /**
    * Sets the PagedListInfo attribute of the CustomFieldCategoryList object
@@ -370,6 +443,54 @@ public class CustomFieldCategoryList extends ArrayList {
     return thisSelect.getHtml(selectName, defaultKey);
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc." + DatabaseUtils.addQuotes(db, "level") + " as " + DatabaseUtils.addQuotes(db, "level") + ",  " +
+            " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
+            " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
+            " cfc.multiple_records as multiple_records, cfc.read_only as read_only, cfc.modified " +
+            " FROM " + tableName + " cfc, module_field_categorylink mfc " +
+            " WHERE cfc.module_id = mfc.category_id ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
 
   /**
    * Description of the Method
@@ -383,7 +504,6 @@ public class CustomFieldCategoryList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -392,7 +512,7 @@ public class CustomFieldCategoryList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
             "FROM custom_field_category cfc, module_field_categorylink mfc " +
-            "WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
+            "WHERE cfc.module_id = mfc.category_id ");
 
     createFilter(sqlFilter);
 
@@ -417,36 +537,16 @@ public class CustomFieldCategoryList extends ArrayList {
           "ORDER BY cfc." + DatabaseUtils.addQuotes(db, "level") + ", cfc.category_name, cfc.category_id ");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc." + DatabaseUtils.addQuotes(db, "level") + " as " + DatabaseUtils.addQuotes(db, "level") + ",  " +
-            " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
-            " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
-            " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
-            " FROM custom_field_category cfc, module_field_categorylink mfc " +
-            " WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
-
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       CustomFieldCategory thisCategory = new CustomFieldCategory(rs);
       this.add(thisCategory);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
+    
     if (buildResources) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
@@ -479,6 +579,10 @@ public class CustomFieldCategoryList extends ArrayList {
       sqlFilter = new StringBuffer();
     }
 
+    if (linkModuleId > -1) {
+     sqlFilter.append("AND cfc.module_id = ? ");
+    }
+    
     if (includeScheduled == Constants.TRUE) {
       sqlFilter.append(
           "AND CURRENT_TIMESTAMP > cfc.start_date AND (CURRENT_TIMESTAMP < cfc.end_date OR cfc.end_date IS NULL) ");
@@ -486,9 +590,19 @@ public class CustomFieldCategoryList extends ArrayList {
       sqlFilter.append(
           "AND (CURRENT_TIMESTAMP < cfc.start_date OR (CURRENT_TIMESTAMP > cfc.end_date AND cfc.end_date IS NOT NULL)) ");
     }
-
     if (includeEnabled == Constants.TRUE || includeEnabled == Constants.FALSE) {
       sqlFilter.append("AND cfc.enabled = ? ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND cfc.entered > ? ");
+      }
+      sqlFilter.append("AND cfc.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND cfc.modified > ? ");
+      sqlFilter.append("AND cfc.entered < ? ");
+      sqlFilter.append("AND cfc.modified < ? ");
     }
   }
 
@@ -500,15 +614,28 @@ public class CustomFieldCategoryList extends ArrayList {
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
-    pst.setInt(++i, linkModuleId);
+    if (linkModuleId > -1) {
+      pst.setInt(++i, linkModuleId);
+    }
 
     if (includeEnabled == Constants.TRUE) {
       pst.setBoolean(++i, true);
     } else if (includeEnabled == Constants.FALSE) {
       pst.setBoolean(++i, false);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
 
     return i;

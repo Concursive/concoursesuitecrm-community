@@ -43,9 +43,11 @@ public class TicketCategoryDraft extends GenericBean {
   private boolean enabled = true;
   private int level = 0;
   private int siteId = -1;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
   private TicketCategoryDraftList shortChildList = new TicketCategoryDraftList();
 
-  private String baseTableName = "ticket_category_draft";
+  private String baseTableName = "ticket_category";
 
 
   /**
@@ -93,7 +95,7 @@ public class TicketCategoryDraft extends GenericBean {
    * @exception  SQLException  Description of the Exception
    */
   public TicketCategoryDraft(Connection db, int id) throws SQLException {
-    queryRecord(db, id, "ticket_category");
+    queryRecord(db, id, baseTableName);
   }
 
 
@@ -422,6 +424,47 @@ public class TicketCategoryDraft extends GenericBean {
     this.siteId = Integer.parseInt(tmp);
   }
 
+  /**
+   * @return the entered
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(java.sql.Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    *  Description of the Method
@@ -451,14 +494,17 @@ public class TicketCategoryDraft extends GenericBean {
         db.setAutoCommit(false);
       }
       if (baseTableName == null) {
-        baseTableName = "ticket_category_draft";
+        baseTableName = "ticket_category";
       }
       int i = 0;
       id = DatabaseUtils.getNextSeq(db, baseTableName + "_draft_id_seq");
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO " + DatabaseUtils.getTableName(db, baseTableName + "_draft") + " " +
-          "(" + (id > -1 ? "id, " : "") + "cat_level, link_id, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, site_id) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "cat_level, link_id, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, site_id, entered, modified) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?" +
+          (this.getEntered() != null?", ?":(", " + DatabaseUtils.getCurrentTimestamp(db))) +
+          (this.getModified() != null?", ?":(", " + DatabaseUtils.getCurrentTimestamp(db))) +
+          ") ");
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -473,6 +519,12 @@ public class TicketCategoryDraft extends GenericBean {
       pst.setInt(++i, this.getLevel());
       pst.setBoolean(++i, this.getEnabled());
       DatabaseUtils.setInt(pst, ++i, this.getSiteId());
+      if(this.getEntered() != null){
+        DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
+      }
+      if(this.getModified() != null){
+        DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
+      }
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, baseTableName + "_draft_id_seq", id);
@@ -511,7 +563,8 @@ public class TicketCategoryDraft extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE " + tableName + "_draft " +
-          "SET description = ?, cat_level = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, " + (actualCatId != -1 ? "link_id = ?," : "") + " enabled = ? " +
+          "SET description = ?, cat_level = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, " + (actualCatId != -1 ? "link_id = ?," : "") + " enabled = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());
@@ -614,6 +667,8 @@ public class TicketCategoryDraft extends GenericBean {
     level = rs.getInt("level");
     enabled = rs.getBoolean("enabled");
     siteId = DatabaseUtils.getInt(rs, "site_id");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 

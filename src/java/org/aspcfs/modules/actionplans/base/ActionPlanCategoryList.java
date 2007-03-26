@@ -16,6 +16,7 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -36,7 +37,7 @@ import java.util.Vector;
  *          mrajkowski Exp $
  * @created September 6, 2005
  */
-public class ActionPlanCategoryList extends Vector {
+public class ActionPlanCategoryList extends Vector implements SyncableList {
   HtmlSelect catListSelect = new HtmlSelect();
   private PagedListInfo pagedListInfo = null;
   private int parentCode = -1;
@@ -109,6 +110,12 @@ public class ActionPlanCategoryList extends Vector {
     this.syncType = tmp;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
 
   /**
    * Gets the tableName attribute of the ActionPlanCategoryList object
@@ -184,7 +191,6 @@ public class ActionPlanCategoryList extends Vector {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -195,7 +201,7 @@ public class ActionPlanCategoryList extends Vector {
             "FROM action_plan_category apc " +
             "WHERE apc.id > -1 ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -235,40 +241,24 @@ public class ActionPlanCategoryList extends Vector {
       sqlOrder.append("ORDER BY apc.description");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "apc.* " +
-            "FROM action_plan_category apc " +
-            "WHERE apc.id > -1 ");
-    pst = db.prepareStatement(new String(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString()));
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       ActionPlanCategory thisCat = new ActionPlanCategory(rs);
       this.addElement(thisCat);
     }
     rs.close();
-    pst.close();
+    if(pst != null){
+      pst.close();
+    }
   }
 
 
   /**
    * Description of the Method
-   *
+   * @param db TODO
    * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -292,14 +282,14 @@ public class ActionPlanCategoryList extends Vector {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND apc.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND apc.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND apc.modified > ? ");
+      sqlFilter.append("AND apc.entered < ? ");
+      sqlFilter.append("AND apc.modified < ? ");
     }
   }
 
@@ -311,7 +301,7 @@ public class ActionPlanCategoryList extends Vector {
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (enabledState != -1) {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
@@ -630,6 +620,51 @@ public class ActionPlanCategoryList extends Vector {
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
   }
+  
+  /**
+   *  Gets the object attribute of the ActionPlanCategoryList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionPlanCategory getObject(ResultSet rs) throws SQLException {
+  	ActionPlanCategory obj = new ActionPlanCategory(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  	StringBuffer sqlSelect = new StringBuffer();
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "apc.* " +
+            "FROM action_plan_category apc " +
+            "WHERE apc.id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+     return queryList(db, pst, "", "");
+  }
+
 
 }
 

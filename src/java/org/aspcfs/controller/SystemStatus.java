@@ -23,6 +23,7 @@ import com.zeroio.webdav.WebdavManager;
 import net.sf.asterisk.manager.ManagerConnection;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.service.base.SyncTableList;
 import org.aspcfs.utils.AsteriskListener;
 import org.aspcfs.utils.AsteriskManager;
 import org.aspcfs.utils.XMLUtils;
@@ -42,15 +43,17 @@ import java.util.*;
 /**
  *  System status maintains global values for a shared group of users. This is
  *  based on the database that the user is connecting to.<p>
+ *
  *  <p/>
+ *
  *  When a user logs in, permissions and hierarchies are read in. If someone
  *  changes user or role data then the user's permissions and hierarchies will
  *  be read in during the Security Check.
  *
  * @author     mrajkowski
- * @version $Id: SystemStatus.java,v 1.40.10.1 2004/08/27 18:33:59 mrajkowski
- *          Exp $
- * @created October 10, 2001
+ * @created    October 10, 2001
+ * @version    $Id: SystemStatus.java,v 1.40.10.1 2004/08/27 18:33:59 mrajkowski
+ *      Exp $
  */
 public class SystemStatus {
   //Unique to this system
@@ -111,17 +114,20 @@ public class SystemStatus {
   //System Language
   private String language = null;
 
+  //XML Object Map (readOnly)
+  SyncTableList systemObjectMap = null;
+
+
   /**
-   * Constructor for the SystemStatus object
+   *  Constructor for the SystemStatus object
    *
    * @since    1.1
    */
-  public SystemStatus() {
-  }
+  public SystemStatus() { }
 
 
   /**
-   * Constructor for the SystemStatus object
+   *  Constructor for the SystemStatus object
    *
    * @param  db                Description of Parameter
    * @exception  SQLException  Description of the Exception
@@ -134,7 +140,7 @@ public class SystemStatus {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
    * @param  db             Description of the Parameter
    * @throws  SQLException  Description of the Exception
@@ -148,7 +154,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the PermissionCheck attribute of the SystemStatus object
+   *  Sets the PermissionCheck attribute of the SystemStatus object
    *
    * @param  tmp  The new PermissionCheck value
    * @since       1.1
@@ -159,7 +165,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the HierarchyCheck attribute of the SystemStatus object
+   *  Sets the HierarchyCheck attribute of the SystemStatus object
    *
    * @param  tmp  The new HierarchyCheck value
    * @since       1.1
@@ -170,7 +176,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the connectionElement attribute of the SystemStatus object
+   *  Sets the connectionElement attribute of the SystemStatus object
    *
    * @param  tmp  The new connectionElement value
    */
@@ -180,7 +186,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the fileLibraryPath attribute of the SystemStatus object
+   *  Sets the fileLibraryPath attribute of the SystemStatus object
    *
    * @param  tmp  The new fileLibraryPath value
    */
@@ -189,16 +195,28 @@ public class SystemStatus {
   }
 
 
+  /**
+   *  Gets the url attribute of the SystemStatus object
+   *
+   * @return    The url value
+   */
   public String getUrl() {
     return url;
   }
 
+
+  /**
+   *  Sets the url attribute of the SystemStatus object
+   *
+   * @param  url  The new url value
+   */
   public void setUrl(String url) {
     this.url = url;
   }
 
+
   /**
-   * SessionManager manages the sessions active in the system
+   *  SessionManager manages the sessions active in the system
    *
    * @param  sessionManager  The new sessionManager value
    */
@@ -208,7 +226,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the webdavManager attribute of the SystemStatus object
+   *  Sets the webdavManager attribute of the SystemStatus object
    *
    * @param  webdavManager  The new webdavManager value
    */
@@ -218,7 +236,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the sessionTimeout attribute of the SystemStatus object
+   *  Sets the sessionTimeout attribute of the SystemStatus object
    *
    * @param  sessionTimeout  The new sessionTimeout value
    */
@@ -228,7 +246,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the categoryEditorList attribute of the SystemStatus object
+   *  Gets the categoryEditorList attribute of the SystemStatus object
    *
    * @return    The categoryEditorList value
    */
@@ -259,10 +277,11 @@ public class SystemStatus {
         "ImportManager");
   }
 
+
   /**
-   * Sets the preferences attribute of the SystemStatus object
+   *  Sets the preferences attribute of the SystemStatus object
    *
-   * @param preferences The new preferences value
+   * @param  preferences  The new preferences value
    */
   public void setPreferences(Map preferences) {
     this.preferences = preferences;
@@ -270,7 +289,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the preferences attribute of the SystemStatus object
+   *  Gets the preferences attribute of the SystemStatus object
    *
    * @return    The preferences value
    */
@@ -280,7 +299,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the categoryEditor attribute of the SystemStatus object
+   *  Gets the categoryEditor attribute of the SystemStatus object
    *
    * @param  db             Description of the Parameter
    * @param  constantId     Description of the Parameter
@@ -306,6 +325,7 @@ public class SystemStatus {
    *
    * @param  db                Description of the Parameter
    * @param  constantId        Description of the Parameter
+   * @param  context           Description of the Parameter
    * @return                   The customListViewEditor value
    * @exception  SQLException  Description of the Exception
    */
@@ -335,7 +355,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the sessionManager attribute of the SystemStatus object
+   *  Gets the sessionManager attribute of the SystemStatus object
    *
    * @return    The sessionManager value
    */
@@ -345,7 +365,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the webdavManager attribute of the SystemStatus object
+   *  Gets the webdavManager attribute of the SystemStatus object
    *
    * @return    The webdavManager value
    */
@@ -355,7 +375,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the PermissionCheck attribute of the SystemStatus object
+   *  Gets the PermissionCheck attribute of the SystemStatus object
    *
    * @return    The PermissionCheck value
    * @since     1.1
@@ -368,7 +388,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the HierarchyCheck attribute of the SystemStatus object
+   *  Gets the HierarchyCheck attribute of the SystemStatus object
    *
    * @return    The HierarchyCheck value
    * @since     1.1
@@ -381,7 +401,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the hierarchyList attribute of the SystemStatus object
+   *  Gets the hierarchyList attribute of the SystemStatus object
    *
    * @return    The hierarchyList value
    */
@@ -393,7 +413,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the userList attribute of the SystemStatus object
+   *  Gets the userList attribute of the SystemStatus object
    *
    * @return    The userList value
    */
@@ -405,7 +425,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the siteUserList attribute of the SystemStatus object
+   *  Gets the siteUserList attribute of the SystemStatus object
    *
    * @return    The siteUserList value
    */
@@ -450,7 +470,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the lettersArray attribute of the SystemStatus object
+   *  Gets the lettersArray attribute of the SystemStatus object
    *
    * @param  thisLabel  Description of the Parameter
    * @return            The lettersArray value
@@ -462,7 +482,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the title attribute of the SystemStatus object
+   *  Gets the title attribute of the SystemStatus object
    *
    * @param  item          Description of the Parameter
    * @param  thisProperty  Description of the Parameter
@@ -479,7 +499,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the subMenuProperty attribute of the SystemStatus object
+   *  Gets the subMenuProperty attribute of the SystemStatus object
    *
    * @param  thisLabel  Description of the Parameter
    * @return            The subMenuProperty value
@@ -494,7 +514,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the containerMenuProperty attribute of the SystemStatus object
+   *  Gets the containerMenuProperty attribute of the SystemStatus object
    *
    * @param  collection    Description of the Parameter
    * @param  thisProperty  Description of the Parameter
@@ -510,7 +530,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the connectionElement attribute of the SystemStatus object
+   *  Gets the connectionElement attribute of the SystemStatus object
    *
    * @return    The connectionElement value
    */
@@ -520,7 +540,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the fileLibraryPath attribute of the SystemStatus object
+   *  Gets the fileLibraryPath attribute of the SystemStatus object
    *
    * @return    The fileLibraryPath value
    */
@@ -530,7 +550,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the hookManager attribute of the SystemStatus object
+   *  Gets the hookManager attribute of the SystemStatus object
    *
    * @return    The hookManager value
    */
@@ -540,7 +560,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the applicationPrefs attribute of the SystemStatus object
+   *  Gets the applicationPrefs attribute of the SystemStatus object
    *
    * @return    The applicationPrefs value
    */
@@ -548,12 +568,19 @@ public class SystemStatus {
     return applicationPrefs;
   }
 
+
+  /**
+   *  Gets the localizationPrefs attribute of the SystemStatus object
+   *
+   * @return    The localizationPrefs value
+   */
   public Map getLocalizationPrefs() {
     return applicationPrefs.getLocalizationPrefs(language);
   }
 
+
   /**
-   * Sets the applicationPrefs attribute of the SystemStatus object
+   *  Sets the applicationPrefs attribute of the SystemStatus object
    *
    * @param  tmp  The new applicationPrefs value
    */
@@ -562,18 +589,29 @@ public class SystemStatus {
   }
 
 
+  /**
+   *  Gets the language attribute of the SystemStatus object
+   *
+   * @return    The language value
+   */
   public String getLanguage() {
     return language;
   }
 
+
+  /**
+   *  Sets the language attribute of the SystemStatus object
+   *
+   * @param  language  The new language value
+   */
   public void setLanguage(String language) {
     this.language = language;
   }
 
 
   /**
-   * Generates a list of all users in the system for the given database
-   * connection
+   *  Generates a list of all users in the system for the given database
+   *  connection
    *
    * @param  db             Description of Parameter
    * @throws  SQLException  Description of Exception
@@ -591,6 +629,7 @@ public class SystemStatus {
     tmpListA.setBuildContactDetails(false);
     tmpListA.setBuildHierarchy(false);
     tmpListA.setTopLevel(true);
+    tmpListA.setIncludeDHVAdmin(true);
     tmpListA.setIncludeUsersWithRolesOnly(false);
     tmpListA.buildList(db);
     if (System.getProperty("DEBUG") != null) {
@@ -599,6 +638,7 @@ public class SystemStatus {
     }
     //Get everyone
     UserList tmpListB = new UserList();
+    tmpListB.setIncludeDHVAdmin(true);
     tmpListB.setBuildContact(false);
     tmpListB.setBuildContactDetails(false);
     tmpListB.setBuildHierarchy(false);
@@ -633,8 +673,8 @@ public class SystemStatus {
 
 
   /**
-   * A method to reload the user hierarchy, typically used when a user is added
-   * or changed in the hierarchy.
+   *  A method to reload the user hierarchy, typically used when a user is added
+   *  or changed in the hierarchy.
    *
    * @param  db             Description of Parameter
    * @throws  SQLException  Description of Exception
@@ -660,8 +700,8 @@ public class SystemStatus {
 
 
   /**
-   * Reloads role permissions that have been cached. Typically used when roles
-   * are modified or created.
+   *  Reloads role permissions that have been cached. Typically used when roles
+   *  are modified or created.
    *
    * @param  db             Description of the Parameter
    * @throws  SQLException  Description of the Exception
@@ -687,8 +727,8 @@ public class SystemStatus {
 
 
   /**
-   * Loads the preferences for this specific system. Preference files are
-   * stored as XML in the system's fileLibrary.
+   *  Loads the preferences for this specific system. Preference files are
+   *  stored as XML in the system's fileLibrary.
    *
    * @param  db  Description of the Parameter
    */
@@ -716,9 +756,8 @@ public class SystemStatus {
                 configNode.getNodeType() == Node.ELEMENT_NODE &&
                 "config".equals(((Element) configNode).getTagName()) &&
                 (((Element) configNode).getAttribute("enabled") == null ||
-                    "".equals(((Element) configNode).getAttribute("enabled")) ||
-                    "true".equals(((Element) configNode).getAttribute("enabled"))))
-            {
+                "".equals(((Element) configNode).getAttribute("enabled")) ||
+                "true".equals(((Element) configNode).getAttribute("enabled")))) {
               //For each config name, create a map for each of the params
               String configName = ((Element) configNode).getAttribute("name");
               Map preferenceGroup = null;
@@ -770,8 +809,7 @@ public class SystemStatus {
       hookManager.setFileLibraryPath(fileLibraryPath);
       hookManager.initializeBusinessProcessList(db, true);
       hookManager.initializeObjectHookList(db, true);
-      if (hookManager.getProcessList().size() == 0 || hookManager.getHookList().size() == 0)
-      {
+      if (hookManager.getProcessList().size() == 0 || hookManager.getHookList().size() == 0) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println(
               "SystemStatus-> Loading workflow processes: " + fileLibraryPath + "workflow.xml");
@@ -861,7 +899,7 @@ public class SystemStatus {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
    * @param  db             Description of the Parameter
    * @throws  SQLException  Description of the Exception
@@ -872,7 +910,7 @@ public class SystemStatus {
 
 
   /**
-   * Initializes the permissions cache.
+   *  Initializes the permissions cache.
    *
    * @param  db             Description of the Parameter
    * @throws  SQLException  Description of the Exception
@@ -902,6 +940,18 @@ public class SystemStatus {
         if (thisPermission.getDelete()) {
           permissions.add(thisPermission.getName() + "-delete");
         }
+        if (thisPermission.getOfflineAdd()) {
+          permissions.add(thisPermission.getName() + "-add" + "-offline");
+        }
+        if (thisPermission.getOfflineView()) {
+          permissions.add(thisPermission.getName() + "-view" + "-offline");
+        }
+        if (thisPermission.getOfflineEdit()) {
+          permissions.add(thisPermission.getName() + "-edit" + "-offline");
+        }
+        if (thisPermission.getOfflineDelete()) {
+          permissions.add(thisPermission.getName() + "-delete" + "-offline");
+        }
       }
       rolePermissions.put(new Integer(thisRole.getId()), permissions);
     }
@@ -909,7 +959,7 @@ public class SystemStatus {
 
 
   /**
-   * Builds the lookupList on demand and caches it in the lookups HashTable.
+   *  Builds the lookupList on demand and caches it in the lookups HashTable.
    *
    * @param  db             Description of the Parameter
    * @param  tableName      Description of the Parameter
@@ -933,7 +983,7 @@ public class SystemStatus {
 
 
   /**
-   * Removes a lookup list from the cache
+   *  Removes a lookup list from the cache
    *
    * @param  tableName  Description of the Parameter
    * @return            Description of the Return Value
@@ -955,7 +1005,33 @@ public class SystemStatus {
 
 
   /**
-   * Retrieves the access type list from the cache
+   *  Gets the xMLObjectMap attribute of the SystemStatus object
+   *
+   * @param  db                Description of the Parameter
+   * @param  systemId          Description of the Parameter
+   * @return                   The xMLObjectMap value
+   * @exception  SQLException  Description of the Exception
+   */
+  public HashMap getXMLObjectMap(Connection db, int systemId) throws SQLException {
+    if (systemObjectMap == null) {
+      synchronized (this) {
+        if (systemObjectMap == null) {
+          systemObjectMap = new SyncTableList();
+          systemObjectMap.setBuildTextFields(false);
+          try {
+            systemObjectMap.buildList(db);
+          } catch (SQLException e) {
+            e.printStackTrace(System.out);
+          }
+        }
+      }
+    }
+    return (systemObjectMap.getObjectMapping(systemId));
+  }
+
+
+  /**
+   *  Retrieves the access type list from the cache
    *
    * @param  db             Description of the Parameter
    * @param  accessId       Description of the Parameter
@@ -978,13 +1054,20 @@ public class SystemStatus {
     return (AccessTypeList) accessTypes.get(new Integer(accessId));
   }
 
+
+  /**
+   *  Gets the tracker attribute of the SystemStatus object
+   *
+   * @return    The tracker value
+   */
   public Tracker getTracker() {
     return tracker;
   }
 
+
   /**
-   * A presentation object (.jsp) can see if a field should be ignored in the
-   * output
+   *  A presentation object (.jsp) can see if a field should be ignored in the
+   *  output
    *
    * @param  thisField  Description of Parameter
    * @return            Description of the Returned Value
@@ -999,10 +1082,10 @@ public class SystemStatus {
 
 
   /**
-   * Adds a feature to the ChildUsers attribute of the SystemStatus object
-   * Gets the customValidators attribute of the SystemStatus object
+   *  Adds a feature to the ChildUsers attribute of the SystemStatus object Gets
+   *  the customValidators attribute of the SystemStatus object
    *
-   * @return The customValidators value
+   * @return    The customValidators value
    */
   public Map getCustomValidators() {
     Map customValidators = (Map) preferences.get("system.fields.customValidator");
@@ -1011,7 +1094,7 @@ public class SystemStatus {
 
 
   /**
-   * Adds a feature to the ChildUsers attribute of the SystemStatus object
+   *  Adds a feature to the ChildUsers attribute of the SystemStatus object
    *
    * @param  thisUser  The feature to be added to the ChildUsers attribute
    * @param  addFrom   The feature to be added to the ChildUsers attribute
@@ -1035,7 +1118,7 @@ public class SystemStatus {
 
 
   /**
-   * Adds a feature to the UserToSite attribute of the SystemStatus object
+   *  Adds a feature to the UserToSite attribute of the SystemStatus object
    *
    * @param  thisUser  The feature to be added to the UserToSite attribute
    */
@@ -1058,8 +1141,8 @@ public class SystemStatus {
 
 
   /**
-   * Activates the object hook manager with the specified objects to see if a
-   * business process can execute
+   *  Activates the object hook manager with the specified objects to see if a
+   *  business process can execute
    *
    * @param  context         Description of the Parameter
    * @param  action          Description of the Parameter
@@ -1075,7 +1158,7 @@ public class SystemStatus {
 
 
   /**
-   * Activates the specified business process through the object hook manager
+   *  Activates the specified business process through the object hook manager
    *
    * @param  context      Description of the Parameter
    * @param  processName  Description of the Parameter
@@ -1092,7 +1175,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the user attribute of the SystemStatus object
+   *  Gets the user attribute of the SystemStatus object
    *
    * @param  id  Description of the Parameter
    * @return     The user value
@@ -1105,8 +1188,8 @@ public class SystemStatus {
 
 
   /**
-   * Method checks the cached role permissions to see if the user has the
-   * specified permission.
+   *  Method checks the cached role permissions to see if the user has the
+   *  specified permission.
    *
    * @param  userId          Description of the Parameter
    * @param  thisPermission  Description of the Parameter
@@ -1126,7 +1209,7 @@ public class SystemStatus {
 
 
   /**
-   * Returns whether this system has any permissions loaded
+   *  Returns whether this system has any permissions loaded
    *
    * @return    Description of the Return Value
    */
@@ -1136,7 +1219,7 @@ public class SystemStatus {
 
 
   /**
-   * Forces the cached contact information to reload from the database
+   *  Forces the cached contact information to reload from the database
    *
    * @param  db             Description of the Parameter
    * @param  id             Description of the Parameter
@@ -1153,8 +1236,8 @@ public class SystemStatus {
 
 
   /**
-   * Gets the preferences value for this SystemStatus object. If the value is
-   * not found, then null is returned.
+   *  Gets the preferences value for this SystemStatus object. If the value is
+   *  not found, then null is returned.
    *
    * @param  section    Description of the Parameter
    * @param  parameter  Description of the Parameter
@@ -1166,7 +1249,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the value attribute of the SystemStatus object
+   *  Gets the value attribute of the SystemStatus object
    *
    * @param  section    Description of the Parameter
    * @param  parameter  Description of the Parameter
@@ -1187,8 +1270,8 @@ public class SystemStatus {
 
 
   /**
-   * Gets the preferences value for this SystemStatus object. If the value is
-   * not found, then -1 is returned.
+   *  Gets the preferences value for this SystemStatus object. If the value is
+   *  not found, then -1 is returned.
    *
    * @param  section    Description of the Parameter
    * @param  parameter  Description of the Parameter
@@ -1205,7 +1288,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the objects attribute of the SystemStatus object
+   *  Gets the objects attribute of the SystemStatus object
    *
    * @return    The objects value
    */
@@ -1215,7 +1298,7 @@ public class SystemStatus {
 
 
   /**
-   * Sets the objects attribute of the SystemStatus object
+   *  Sets the objects attribute of the SystemStatus object
    *
    * @param  tmp  The new objects value
    */
@@ -1225,7 +1308,7 @@ public class SystemStatus {
 
 
   /**
-   * Gets the object attribute of the SystemStatus object
+   *  Gets the object attribute of the SystemStatus object
    *
    * @param  label  Description of the Parameter
    * @return        The object value
@@ -1234,32 +1317,63 @@ public class SystemStatus {
     return objects.get(label);
   }
 
+
+  /**
+   *  Gets the asteriskConnection attribute of the SystemStatus object
+   *
+   * @return    The asteriskConnection value
+   */
   public ManagerConnection getAsteriskConnection() {
     return asteriskConnection;
   }
 
+
+  /**
+   *  Gets the asteriskListener attribute of the SystemStatus object
+   *
+   * @return    The asteriskListener value
+   */
   public AsteriskListener getAsteriskListener() {
     return asteriskListener;
   }
 
+
+  /**
+   *  Sets the asteriskListener attribute of the SystemStatus object
+   *
+   * @param  asteriskListener  The new asteriskListener value
+   */
   public void setAsteriskListener(AsteriskListener asteriskListener) {
     this.asteriskListener = asteriskListener;
   }
 
+
+  /**
+   *  Gets the xmppConnection attribute of the SystemStatus object
+   *
+   * @return    The xmppConnection value
+   */
   public XMPPConnection getXmppConnection() {
     return xmppConnection;
   }
 
+
   /**
-   * Returns a comma-delimited list of all users within the specified siteId
+   *  Returns a comma-delimited list of all users within the specified siteId
    *
-   * @param siteId Description of the Parameter
-   * @return The siteIdRange value
+   * @param  siteId  Description of the Parameter
+   * @return         The siteIdRange value
    */
   public String getSiteIdRange(int siteId) {
     return (String) getSiteUserList().get(new Integer(siteId));
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   */
   public void startServers(ServletContext context) {
     // Monitor Jabber
     if ("true".equals(applicationPrefs.get("XMPP.ENABLED"))) {
@@ -1276,6 +1390,10 @@ public class SystemStatus {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   */
   public void stopServers() {
     //Unload Asterisk if loaded
     AsteriskManager.removeConnection(this);

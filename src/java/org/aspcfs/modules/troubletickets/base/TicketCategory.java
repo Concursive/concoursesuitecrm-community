@@ -40,6 +40,8 @@ public class TicketCategory extends GenericBean {
   private boolean enabled = true;
   private int level = -1;
   private int siteId = -1;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
   private TicketCategoryDraftList shortChildList = new TicketCategoryDraftList();
 
 
@@ -301,7 +303,6 @@ public class TicketCategory extends GenericBean {
     this.siteId = tmp;
   }
 
-
   /**
    *  Sets the siteId attribute of the TicketCategory object
    *
@@ -311,6 +312,47 @@ public class TicketCategory extends GenericBean {
     this.siteId = Integer.parseInt(tmp);
   }
 
+  /**
+   * @return the entered
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(java.sql.Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    *  Description of the Method
@@ -326,8 +368,20 @@ public class TicketCategory extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "ticket_category_id_seq");
       sql.append(
           "INSERT INTO ticket_category " +
-          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, site_id) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, site_id");
+      sql.append(", entered, modified");
+      sql.append(")VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?");
+      if(this.getEntered() != null){
+        sql.append(", ?");
+      } else {
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+      }
+      if(this.getModified() != null){
+        sql.append(", ?");
+      } else {
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+      }
+      sql.append(") ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (id > -1) {
@@ -343,6 +397,12 @@ public class TicketCategory extends GenericBean {
       pst.setInt(++i, this.getLevel());
       pst.setBoolean(++i, this.getEnabled());
       DatabaseUtils.setInt(pst, ++i, this.getSiteId());
+      if(this.getEntered() != null){
+        DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
+      }
+      if(this.getModified() != null){
+        DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
+      }
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "ticket_category_id_seq", id);
@@ -374,7 +434,8 @@ public class TicketCategory extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE ticket_category " +
-          "SET description = ?, cat_level = ?, parent_cat_code = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ? " +
+          "SET description = ?, cat_level = ?, parent_cat_code = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());
@@ -409,6 +470,8 @@ public class TicketCategory extends GenericBean {
     level = rs.getInt("level");
     enabled = rs.getBoolean("enabled");
     siteId = DatabaseUtils.getInt(rs,"site_id");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 

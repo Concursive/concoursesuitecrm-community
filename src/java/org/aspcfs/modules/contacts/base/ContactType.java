@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Represents a ContactType
@@ -41,6 +42,8 @@ public class ContactType {
   private int category = -1;
   private int userId = -1;
   private int level = 0;
+  protected Timestamp entered = null;
+  protected Timestamp modified = null;
 
 
   /**
@@ -65,6 +68,8 @@ public class ContactType {
     enabled = rs.getBoolean("enabled");
     category = rs.getInt("category");
     userId = DatabaseUtils.getInt(rs, "user_id");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
@@ -224,6 +229,47 @@ public class ContactType {
     return enabled;
   }
 
+  /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    * Sets the enabled attribute of the ContactType object
@@ -267,11 +313,25 @@ public class ContactType {
   public boolean insert(Connection db) throws SQLException {
     int i = 0;
     id = DatabaseUtils.getNextSeq(db, "lookup_contact_types_code_seq");
-    PreparedStatement pst = db.prepareStatement(
+    StringBuffer sql = new StringBuffer(); 
+    sql.append(        
         "INSERT INTO lookup_contact_types " +
-            "(" + (id > -1 ? "code, " : "") +
-            "description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?" + (userId > -1 ? ", ?" : "") + ") ");
+        "(" + (id > -1 ? "code, " : "") +
+        "description, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, category" + (userId > -1 ? ", user_id" : "") +
+        ", entered, modified) " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?" + (userId > -1 ? ", ?" : ""));
+    if(entered == null){
+      sql.append(", CURRENT_TIMESTAMP");
+    }else{
+      sql.append(", ?");
+    }
+    if(modified == null){
+      sql.append(", CURRENT_TIMESTAMP");
+    }else{
+      sql.append(", ?");
+    }
+    sql.append(") ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     if (id > -1) {
       pst.setInt(++i, id);
     }
@@ -281,6 +341,12 @@ public class ContactType {
     pst.setInt(++i, category);
     if (userId > -1) {
       pst.setInt(++i, userId);
+    }
+    if(entered != null){
+      pst.setTimestamp(++i, entered);
+    }
+    if(modified != null){
+      pst.setTimestamp(++i, modified);
     }
     pst.execute();
     pst.close();

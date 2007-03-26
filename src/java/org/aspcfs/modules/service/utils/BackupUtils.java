@@ -15,10 +15,13 @@
  */
 package org.aspcfs.modules.service.utils;
 
+import org.aspcfs.apps.transfer.reader.CFSXMLDatabaseReader;
 import org.aspcfs.apps.transfer.reader.CFSXMLReader;
+import org.aspcfs.apps.transfer.writer.CFSXMLWriter;
 import org.aspcfs.apps.transfer.writer.cfsdatabasewriter.CFSXMLDatabaseWriter;
 import org.aspcfs.modules.service.base.SyncClient;
 
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -36,7 +39,8 @@ public class BackupUtils {
    * @param  db                Description of the Parameter
    * @param  backupFile        Description of the Parameter
    * @param  syncClient        Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param  dbLookup          Description of the Parameter
+   * @exception  Exception     Description of the Exception
    */
   public static void restore(Connection db, Connection dbLookup, 
                   String backupFile, SyncClient syncClient) throws Exception {
@@ -52,6 +56,38 @@ public class BackupUtils {
     
     writer.initialize();
     reader.execute(writer);
+    writer.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of the Parameter
+   * @param  dbLookup       Description of the Parameter
+   * @param  backupFile     Description of the Parameter
+   * @param  syncClient     Description of the Parameter
+   * @exception  Exception  Description of the Exception
+   */
+  public static void backup(Connection db, Connection dbLookup,
+      String backupFile, String mappingsFile, SyncClient syncClient, ArrayList dataRecords) throws Exception {
+    //Instantiate a reader to read datarecords
+    CFSXMLDatabaseReader reader = new CFSXMLDatabaseReader();
+    reader.setClientId(syncClient.getId());
+    reader.setConnection(db);
+    reader.setConnectionLookup(dbLookup);
+    reader.setDataRecords(dataRecords);
+    reader.setProcessConfigFile(mappingsFile);
+    reader.setNextAnchor(new java.sql.Timestamp((new java.util.Date()).getTime()));
+    
+    //Instantiate a writer to write datarecords to the database
+    CFSXMLWriter writer = new CFSXMLWriter();
+    writer.setFilename(backupFile);
+    
+    if (writer.isConfigured() && reader.isConfigured()) {
+      reader.initialize();
+      reader.execute(writer);
+    }
     writer.close();
   }
 }

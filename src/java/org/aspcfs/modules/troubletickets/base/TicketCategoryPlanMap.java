@@ -23,7 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
+import java.sql.Timestamp;
 
 /**
  *  Description of the Class
@@ -37,6 +37,8 @@ public class TicketCategoryPlanMap extends GenericBean {
   private int id = -1;
   private int categoryId = -1;
   private int planId = -1;
+  private Timestamp entered = null;
+  private Timestamp modified = null;
 
 
   /**
@@ -107,6 +109,8 @@ public class TicketCategoryPlanMap extends GenericBean {
     id = rs.getInt("map_id");
     planId = rs.getInt("plan_id");
     categoryId = rs.getInt("category_id");
+    setEntered(rs.getTimestamp("entered"));
+    setModified(rs.getTimestamp("modified"));
   }
 
 
@@ -120,17 +124,40 @@ public class TicketCategoryPlanMap extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
-      int i = 0;
       id = DatabaseUtils.getNextSeq(db, "ticket_category_plan_map_map_id_seq");
-      PreparedStatement pst = db.prepareStatement(
+      StringBuffer sql = new StringBuffer();
+      
+      sql.append(
           "INSERT INTO ticket_category_plan_map " +
-          "(" + (id > -1 ? "map_id, " : "") + "category_id, plan_id) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?) ");
+          "(" + (id > -1 ? "map_id, " : "") + "category_id, plan_id");
+      sql.append(", entered, modified");
+      sql.append(") VALUES (" + (id > -1 ? "?, " : "") + "?, ?");
+      if(this.getEntered() != null){
+        sql.append(", ?");
+      } else {
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+      }
+      if(this.getModified() != null){
+        sql.append(", ?");
+      } else {
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+      }
+      sql.append(") ");
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
       if (id > -1) {
         pst.setInt(++i, id);
       }
       pst.setInt(++i, this.getCategoryId());
       pst.setInt(++i, this.getPlanId());
+      if(this.getEntered() != null){
+        DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
+      }
+      if(this.getModified() != null){
+        DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
+      }
+
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "ticket_category_plan_map_map_id_seq", id);
@@ -162,7 +189,8 @@ public class TicketCategoryPlanMap extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE ticket_category_plan_map " +
-          "SET category_id = ?, plan_id = ? " +
+          "SET category_id = ?, plan_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE  map_id = ? ");
       pst.setInt(++i, this.getCategoryId());
       pst.setInt(++i, this.getPlanId());
@@ -334,6 +362,48 @@ public class TicketCategoryPlanMap extends GenericBean {
    */
   public void setPlanId(String tmp) {
     this.planId = Integer.parseInt(tmp);
+  }
+
+  /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
   }
 }
 

@@ -6,6 +6,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Description
@@ -21,6 +22,8 @@ public class ModuleFieldCategoryLink extends GenericBean {
   private int categoryId = -1;;
   private int level = -1;;
   private String description = null;
+  private Timestamp entered = null;
+  private Timestamp modified = null;
 
   public ModuleFieldCategoryLink() {
   }
@@ -82,8 +85,13 @@ public class ModuleFieldCategoryLink extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO module_field_categorylink " +
         "(" + (id > -1 ? "id, " : "") + "module_id, category_id, " + DatabaseUtils.addQuotes(db, "level") +
+        ", entered, modified" +
         ", description) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?) ");
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, " +
+        (entered != null ? "?, " : (DatabaseUtils.getCurrentTimestamp(db) + ", ")) +
+        (modified != null ? "?, " : (DatabaseUtils.getCurrentTimestamp(db) + ", ")) +
+        "?) ");
+    
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -91,9 +99,28 @@ public class ModuleFieldCategoryLink extends GenericBean {
     pst.setInt(++i, moduleId);
     pst.setInt(++i, categoryId);
     pst.setInt(++i, level);
+    if (entered != null) {
+      pst.setTimestamp(i++, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(i++, modified);
+    }
     pst.setString(++i, description);
     pst.executeUpdate();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "module_field_categorylin_id_seq", id);
+  }
+  
+  public Timestamp getEntered() {
+    return entered;
+  }
+  public Timestamp getModified() {
+    return modified;
+  }
+  public void setEntered(Timestamp tmp) {
+    this.entered = tmp;
+  }
+  public void setModified(Timestamp tmp) {
+    this.modified = tmp;
   }
 }

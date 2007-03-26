@@ -17,6 +17,8 @@ package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
+
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.utils.DatabaseUtils;
@@ -34,6 +36,9 @@ import java.sql.SQLException;
  * @created September 17, 2002
  */
 public class TicketCategoryWriter implements DataWriter {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.writer.cfsdatabasewriter.TicketCategoryWriter.class);
+
   private ConnectionPool sqlDriver = null;
   private Connection db = null;
   private int level0Id = -1;

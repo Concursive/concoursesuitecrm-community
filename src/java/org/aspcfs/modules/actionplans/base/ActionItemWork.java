@@ -1260,64 +1260,64 @@ public class ActionItemWork extends GenericBean {
    */
   public void buildUserLists(Connection db) throws SQLException {
     switch (step.getPermissionType()) {
-      case ActionStep.ROLE:
-        roleUsers = new UserList();
-        roleUsers.setRoleId(step.getRoleId());
-        roleUsers.buildList(db);
-        Role role = new Role(db, step.getRoleId());
-        this.setRoleName(role.getRole());
-        break;
-      case ActionStep.DEPARTMENT:
-        departmentUsers = new UserList();
-        departmentUsers.setDepartment(step.getDepartmentId());
-        departmentUsers.buildList(db);
-        LookupList list = new LookupList(db, "lookup_department");
-        this.setDepartmentName(list.getSelectedValue(step.getDepartmentId()));
-        break;
-      case ActionStep.USER_GROUP:
-        groupUsers = new UserList();
-        ActionPhaseWork phaseWork = new ActionPhaseWork(db, this.getPhaseWorkId());
-        if (this.getPlanWork() == null) {
-          planWork = new ActionPlanWork();
-          planWork.setBuildLinkedObject(true);
-          planWork.queryRecord(db, phaseWork.getPlanWorkId());
-        }
-        if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS)) {
-          //do not build any users
-        } else if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
-          //do not build any users
-        } else if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
-          if (planWork.getTicket() == null || planWork.getTicket().getId() <= 0 ) {
-            planWork.buildLinkedObject(db);
+        case ActionStep.ROLE:
+          roleUsers = new UserList();
+          roleUsers.setRoleId(step.getRoleId());
+          roleUsers.buildList(db);
+          Role role = new Role(db, step.getRoleId());
+          this.setRoleName(role.getRole());
+          break;
+        case ActionStep.DEPARTMENT:
+          departmentUsers = new UserList();
+          departmentUsers.setDepartment(step.getDepartmentId());
+          departmentUsers.buildList(db);
+          LookupList list = new LookupList(db, "lookup_department");
+          this.setDepartmentName(list.getSelectedValue(step.getDepartmentId()));
+          break;
+        case ActionStep.USER_GROUP:
+          groupUsers = new UserList();
+          ActionPhaseWork phaseWork = new ActionPhaseWork(db, this.getPhaseWorkId());
+          if (this.getPlanWork() == null) {
+            planWork = new ActionPlanWork();
+            planWork.setBuildLinkedObject(true);
+            planWork.queryRecord(db, phaseWork.getPlanWorkId());
           }
-          if (planWork.getTicket().getUserGroupId() != -1) {
-            groupUsers.setUserGroupId(planWork.getTicket().getUserGroupId());
+          if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS)) {
+            //do not build any users
+          } else if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
+            //do not build any users
+          } else if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
+            if (planWork.getTicket() == null || planWork.getTicket().getId() <= 0) {
+              planWork.buildLinkedObject(db);
+            }
+            if (planWork.getTicket().getUserGroupId() != -1) {
+              groupUsers.setUserGroupId(planWork.getTicket().getUserGroupId());
+              groupUsers.buildList(db);
+              UserGroup group = new UserGroup(db, planWork.getTicket().getUserGroupId());
+              this.setUserGroupName(group.getName());
+            }
+          }
+          break;
+        case ActionStep.SPECIFIC_USER_GROUP:
+          groupUsers = new UserList();
+          if (step.getUserGroupId() != -1) {
+            groupUsers.setUserGroupId(step.getUserGroupId());
             groupUsers.buildList(db);
-            UserGroup group = new UserGroup(db, planWork.getTicket().getUserGroupId());
-            this.setUserGroupName(group.getName());
+            this.setUserGroupName(step.getUserGroupName());
           }
-        }
-        break;
-      case ActionStep.SPECIFIC_USER_GROUP:
-        groupUsers = new UserList();
-        if (step.getUserGroupId() != -1) {
-          groupUsers.setUserGroupId(step.getUserGroupId());
-          groupUsers.buildList(db);
-          this.setUserGroupName(step.getUserGroupName());
-        }
-        break;
-      case ActionStep.WITHIN_USER_HIERARCHY:
-        departmentUsers = new UserList();
-        departmentUsers.setManagerId(this.getOwnerId());
-        departmentUsers.setEnabled(Constants.TRUE);
-        departmentUsers.buildList(db);
-        this.setDepartmentName("");
-        break;
-      case ActionStep.UP_USER_HIERARCHY:
-        this.setDepartmentName("");
-        break;
-      default:
-        break;
+          break;
+        case ActionStep.WITHIN_USER_HIERARCHY:
+          departmentUsers = new UserList();
+          departmentUsers.setManagerId(this.getOwnerId());
+          departmentUsers.setEnabled(Constants.TRUE);
+          departmentUsers.buildList(db);
+          this.setDepartmentName("");
+          break;
+        case ActionStep.UP_USER_HIERARCHY:
+          this.setDepartmentName("");
+          break;
+        default:
+          break;
     }
   }
 
@@ -1325,42 +1325,43 @@ public class ActionItemWork extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  userId  Description of the Parameter
-   * @return         Description of the Return Value
+   * @param  userId   Description of the Parameter
+   * @param  request  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public boolean userHasPermission(int userId, HttpServletRequest request) {
     boolean result = false;
     switch (step.getPermissionType()) {
-      case ActionStep.ROLE:
-        result = (roleUsers != null && roleUsers.getUser(userId) != null);
-        break;
-      case ActionStep.DEPARTMENT:
-        result = (departmentUsers != null && departmentUsers.getUser(userId) != null);
-        break;
-      case ActionStep.USER_GROUP:
-        result = (groupUsers != null && groupUsers.getUser(userId) != null);
-        break;
-      case ActionStep.SPECIFIC_USER_GROUP:
-        result = (groupUsers != null && groupUsers.getUser(userId) != null);
-        break;
-      case ActionStep.MANAGER:
-        result = (userId == planWork.getManagerId());
-        break;
-      case ActionStep.UP_USER_HIERARCHY:
-        result = this.getOwnerId() == userId || (UserUtils.getUserIdRange(request).indexOf(String.valueOf(this.getOwnerId())) != -1);
-        break;
-      case ActionStep.WITHIN_USER_HIERARCHY:
-        result = (departmentUsers != null && departmentUsers.getUser(userId) != null) || this.getOwnerId() == userId;
-        break;
-      case ActionStep.ASSIGNED_USER_AND_MANAGER:
-        result = (userId == this.getOwnerId() || userId == planWork.getManagerId());
-        break;
-      case ActionStep.USER_DELEGATED:
-        result = (this.getOwnerId() == userId);
-        break;
-      default:
-        result = (this.getOwnerId() == userId);
-        break;
+        case ActionStep.ROLE:
+          result = (roleUsers != null && roleUsers.getUser(userId) != null);
+          break;
+        case ActionStep.DEPARTMENT:
+          result = (departmentUsers != null && departmentUsers.getUser(userId) != null);
+          break;
+        case ActionStep.USER_GROUP:
+          result = (groupUsers != null && groupUsers.getUser(userId) != null);
+          break;
+        case ActionStep.SPECIFIC_USER_GROUP:
+          result = (groupUsers != null && groupUsers.getUser(userId) != null);
+          break;
+        case ActionStep.MANAGER:
+          result = (userId == planWork.getManagerId());
+          break;
+        case ActionStep.UP_USER_HIERARCHY:
+          result = this.getOwnerId() == userId || (UserUtils.getUserIdRange(request).indexOf(String.valueOf(this.getOwnerId())) != -1);
+          break;
+        case ActionStep.WITHIN_USER_HIERARCHY:
+          result = (departmentUsers != null && departmentUsers.getUser(userId) != null) || this.getOwnerId() == userId;
+          break;
+        case ActionStep.ASSIGNED_USER_AND_MANAGER:
+          result = (userId == this.getOwnerId() || userId == planWork.getManagerId());
+          break;
+        case ActionStep.USER_DELEGATED:
+          result = (this.getOwnerId() == userId);
+          break;
+        default:
+          result = (this.getOwnerId() == userId);
+          break;
     }
     if (step.getAllowSkipToHere() && userId == planWork.getManagerId()) {
       result = true;
@@ -1382,77 +1383,77 @@ public class ActionItemWork extends GenericBean {
     }
     if (linkItemId > -1) {
       switch (actionId) {
-        case ActionStep.ATTACH_ACCOUNT_CONTACT:
-          contact = new Contact(db, linkItemId);
-          break;
-        case ActionStep.ADD_RECIPIENT:
-          contact = new Contact(db, linkItemId);
-          break;
-        case ActionStep.ATTACH_OPPORTUNITY:
-          component = new OpportunityComponent(db, linkItemId);
-          break;
-        case ActionStep.ATTACH_DOCUMENT:
-          fileItem = new FileItem(db, linkItemId);
-          break;
-        case ActionStep.ATTACH_ACTIVITY:
-          activity = new Call(db, linkItemId);
-          break;
-        case ActionStep.ATTACH_FOLDER:
-          int categoryId = CustomFieldCategory.getIdFromRecord(db, linkItemId);
-          if (categoryId != -1) {
-            customFieldCategory = new CustomFieldCategory(db, categoryId);
-            customFieldCategory.setLinkModuleId(Constants.ACCOUNTS);
-            if (this.getPlanWork() != null && this.getPlanWork().getLinkItemId() != -1) {
-              customFieldCategory.setLinkItemId(this.getPlanWork().getLinkItemId());
-              customFieldCategory.setRecordId(linkItemId);
-              customFieldCategory.setBuildResources(true);
-              customFieldCategory.buildResources(db);
+          case ActionStep.ATTACH_ACCOUNT_CONTACT:
+            contact = new Contact(db, linkItemId);
+            break;
+          case ActionStep.ADD_RECIPIENT:
+            contact = new Contact(db, linkItemId);
+            break;
+          case ActionStep.ATTACH_OPPORTUNITY:
+            component = new OpportunityComponent(db, linkItemId);
+            break;
+          case ActionStep.ATTACH_DOCUMENT:
+            fileItem = new FileItem(db, linkItemId);
+            break;
+          case ActionStep.ATTACH_ACTIVITY:
+            activity = new Call(db, linkItemId);
+            break;
+          case ActionStep.ATTACH_FOLDER:
+            int categoryId = CustomFieldCategory.getIdFromRecord(db, linkItemId);
+            if (categoryId != -1) {
+              customFieldCategory = new CustomFieldCategory(db, categoryId);
+              customFieldCategory.setLinkModuleId(Constants.ACCOUNTS);
+              if (this.getPlanWork() != null && this.getPlanWork().getLinkItemId() != -1) {
+                customFieldCategory.setLinkItemId(this.getPlanWork().getLinkItemId());
+                customFieldCategory.setRecordId(linkItemId);
+                customFieldCategory.setBuildResources(true);
+                customFieldCategory.buildResources(db);
+              }
             }
-          }
-          break;
-        case ActionStep.ATTACH_NOTE_SINGLE:
-          note = new ActionItemWorkNote(db, linkItemId);
-          break;
-        case ActionStep.ATTACH_NOTE_MULTIPLE:
-          note = new ActionItemWorkNote(db, linkItemId);
-          noteList = new ActionItemWorkNoteList();
-          noteList.setItemWorkId(id);
-          noteList.buildList(db);
-          break;
-        case ActionStep.ATTACH_LOOKUPLIST_MULTIPLE:
-          selectionList = new ActionItemWorkSelectionList();
-          selectionList.setItemWorkId(id);
-          selectionList.buildList(db);
-          break;
-        case ActionStep.ATTACH_RELATIONSHIP:
-          relationshipList = new RelationshipList();
-          if (planWork != null) {
-            if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
-              relationshipList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
-            }
-            relationshipList.setObjectIdMapsFrom(planWork.getLinkItemId());
-            relationshipList.setObjectIdMapsTo(-1);
+            break;
+          case ActionStep.ATTACH_NOTE_SINGLE:
+            note = new ActionItemWorkNote(db, linkItemId);
+            break;
+          case ActionStep.ATTACH_NOTE_MULTIPLE:
+            note = new ActionItemWorkNote(db, linkItemId);
+            noteList = new ActionItemWorkNoteList();
+            noteList.setItemWorkId(id);
+            noteList.buildList(db);
+            break;
+          case ActionStep.ATTACH_LOOKUPLIST_MULTIPLE:
+            selectionList = new ActionItemWorkSelectionList();
+            selectionList.setItemWorkId(id);
+            selectionList.buildList(db);
+            break;
+          case ActionStep.ATTACH_RELATIONSHIP:
+            relationshipList = new RelationshipList();
+            if (planWork != null) {
+              if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
+                relationshipList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+              }
+              relationshipList.setObjectIdMapsFrom(planWork.getLinkItemId());
+              relationshipList.setObjectIdMapsTo(-1);
 
-            //set the relationship type
-            if (targetRelationship.endsWith("_reciprocal")) {
-              relationshipList.setObjectIdMapsTo(planWork.getLinkItemId());
-              relationshipList.setObjectIdMapsFrom(-1);
-              relationshipList.setTypeId(
-                  Integer.parseInt(targetRelationship.substring(0,
-                  targetRelationship.indexOf("_"))));
-            } else {
-              relationshipList.setTypeId(
-                  Integer.parseInt(targetRelationship));
-            }
-            relationshipList.buildList(db);
+              //set the relationship type
+              if (targetRelationship.endsWith("_reciprocal")) {
+                relationshipList.setObjectIdMapsTo(planWork.getLinkItemId());
+                relationshipList.setObjectIdMapsFrom(-1);
+                relationshipList.setTypeId(
+                    Integer.parseInt(targetRelationship.substring(0,
+                    targetRelationship.indexOf("_"))));
+              } else {
+                relationshipList.setTypeId(
+                    Integer.parseInt(targetRelationship));
+              }
+              relationshipList.buildList(db);
 
-            //Filter account relationships that don't fall under action step's account types
-            if (step == null) {
-              this.buildStep(db);
+              //Filter account relationships that don't fall under action step's account types
+              if (step == null) {
+                this.buildStep(db);
+              }
+              relationshipList.filterAccounts(step.getAccountTypes());
             }
-            relationshipList.filterAccounts(step.getAccountTypes());
-          }
-          break;
+            break;
       }
     }
   }
@@ -1470,7 +1471,8 @@ public class ActionItemWork extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_item_work " +
-        "SET link_module_id = ?, link_item_id = ? " +
+        "SET link_module_id = ?, link_item_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE item_work_id = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, linkModuleId);
@@ -1509,8 +1511,8 @@ public class ActionItemWork extends GenericBean {
     if (this.getPlanWork() != null && this.getPlanWork().getPhaseWorkList() != null) {
       ActionPhaseWork phaseWork = this.getPlanWork().getPhaseWorkList().getPhaseWorkById(this.getPhaseWorkId());
       if (phaseWork != null) {
-        if (phaseWork.getPhase() != null && phaseWork.getPhase().getRandom() && phaseWork.getItemWorkList() != null 
-            && phaseWork.getItemWorkList().size() > 0 && !phaseWork.allStepsComplete()) {
+        if (phaseWork.getPhase() != null && phaseWork.getPhase().getRandom() && phaseWork.getItemWorkList() != null
+             && phaseWork.getItemWorkList().size() > 0 && !phaseWork.allStepsComplete()) {
           result = false;
         }
       }
@@ -1560,12 +1562,11 @@ public class ActionItemWork extends GenericBean {
       if (nextStep != null && nextStep.isCurrent()) {
         return true;
       }
-      if(nextStep!=null && nextStep.getPlanWork()!=null && this.getPlanWork().getPhaseWorkList() != null)
-      {
+      if (nextStep != null && nextStep.getPlanWork() != null && this.getPlanWork().getPhaseWorkList() != null) {
         ActionPhaseWork nextPhaseWork = nextStep.getPlanWork().getPhaseWorkList().getPhaseWorkById(nextStep.getPhaseWorkId());
         if (nextPhaseWork != null) {
-          if (nextPhaseWork.getPhase() != null && nextPhaseWork.getPhase().getRandom() && nextPhaseWork.getItemWorkList() != null 
-              && nextPhaseWork.getItemWorkList().size() > 0 && nextPhaseWork.noStepComplete()) {
+          if (nextPhaseWork.getPhase() != null && nextPhaseWork.getPhase().getRandom() && nextPhaseWork.getItemWorkList() != null
+               && nextPhaseWork.getItemWorkList().size() > 0 && nextPhaseWork.noStepComplete()) {
             return true;
           }
         }
@@ -1578,6 +1579,8 @@ public class ActionItemWork extends GenericBean {
     }
     return false;
   }
+
+
   /**
    *  Description of the Method
    *
@@ -1597,7 +1600,8 @@ public class ActionItemWork extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_item_work " +
         "SET link_module_id = ?, " +
-        "link_item_id = ? " +
+        "link_item_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE item_work_id = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, linkModuleId);
@@ -1641,7 +1645,8 @@ public class ActionItemWork extends GenericBean {
 
     pst = db.prepareStatement(
         "UPDATE action_item_work " +
-        "SET link_item_id = ? " +
+        "SET link_item_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         (newRecordId == -1 ? ", link_module_id = ? " : "") +
         "WHERE item_work_id = ? ");
     int i = 0;
@@ -1668,7 +1673,8 @@ public class ActionItemWork extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_item_work " +
-        "SET owner = ? " +
+        "SET owner = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE item_work_id = ? ");
     int i = 0;
     pst.setInt(++i, ownerId);
@@ -1719,7 +1725,8 @@ public class ActionItemWork extends GenericBean {
         "SET status_id = ?, " +
         "start_date = ?, " +
         "end_date = ?, " +
-        "owner = ? " +
+        "owner = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE item_work_id = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, statusId);
@@ -1743,7 +1750,8 @@ public class ActionItemWork extends GenericBean {
   public boolean updateAttachment(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_item_work " +
-        "SET link_item_id = ?, link_module_id = ? " +
+        "SET link_item_id = ?, link_module_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE item_work_id = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, linkItemId);
@@ -1961,7 +1969,8 @@ public class ActionItemWork extends GenericBean {
 
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_item_work " +
-          "SET status_id = ?, start_date = ?, end_date = ? " +
+          "SET status_id = ?, start_date = ?, end_date = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE item_work_id = ? ");
       int i = 0;
       DatabaseUtils.setInt(pst, ++i, statusId);
@@ -2222,7 +2231,10 @@ public class ActionItemWork extends GenericBean {
    * @exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    level = this.retrieveNextLevel(db);
+    if (level <= 0) {
+      //NOTE: If the object is being restored or synced then the level should not be retrieved
+      level = this.retrieveNextLevel(db);
+    }
     id = DatabaseUtils.getNextSeq(db, "action_item_work_item_work_id_seq");
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -2236,12 +2248,7 @@ public class ActionItemWork extends GenericBean {
       sql.append("end_date, ");
     }
     sql.append("" + DatabaseUtils.addQuotes(db, "level") + ", link_module_id, link_item_id, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredby, modifiedby ) ");
     sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ");
     if (startDate != null) {
@@ -2253,9 +2260,13 @@ public class ActionItemWork extends GenericBean {
     sql.append("?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ? ) ");
     int i = 0;
@@ -2530,7 +2541,7 @@ public class ActionItemWork extends GenericBean {
                 if (randomWork.getStatusId() == ActionPlanWork.SKIPPED && flag) {
                   skippedSteps.add(randomWork);
                 }
-                //check for the begining of the 
+                //check for the begining of the
                 if (randomWork.getParentId() == 0) {
                   flag = false;
                 }
@@ -2833,7 +2844,8 @@ public class ActionItemWork extends GenericBean {
   public boolean allowsUpdate() {
     return allowUpdate;
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -2867,8 +2879,41 @@ public class ActionItemWork extends GenericBean {
 					}
 					itemCounter++;
 				}
-			} 
+			}
 		}
+  }
+
+  /**
+   *  Gets the referenceTable attribute of the ActionPlanWork object
+   *
+   * @param  field  Description of the Parameter
+   * @return        The referenceTable value
+   */
+  public String getReferenceTable(String field) {
+    if ("actionId".equals(field)) {
+      int action = this.getActionId();
+      switch (action) {
+        case ActionStep.ATTACH_ACCOUNT_CONTACT:
+        case ActionStep.ADD_RECIPIENT:
+          return "contact";
+        case ActionStep.ATTACH_OPPORTUNITY:
+          return "opportunityComponent";
+        case ActionStep.ATTACH_DOCUMENT:
+          return "fileItem";
+        case ActionStep.ATTACH_ACTIVITY:
+          return "call";
+        case ActionStep.ATTACH_FOLDER:
+          return "customFieldRecord";
+        case ActionStep.ATTACH_NOTE_SINGLE:
+        case ActionStep.ATTACH_NOTE_MULTIPLE:
+          return "actionItemWorkNote";
+        case ActionStep.ATTACH_LOOKUPLIST_MULTIPLE:
+          return "actionItemWorkSelection";
+        case ActionStep.ATTACH_RELATIONSHIP:
+          return "relationship";
+      }
+    }
+    return null;
   }
 }
 

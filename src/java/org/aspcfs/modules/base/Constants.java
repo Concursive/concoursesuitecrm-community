@@ -117,6 +117,7 @@ public final class Constants {
 
   public final static int SERVICE_CONTRACTS = 209041109;
   public final static int ASSETS = 209041110;
+  public final static int SYNC_PACKAGES = 1117200609;
   //Synchronization API
   public final static int NO_SYNC = -1;
   public final static int SYNC_INSERTS = 2;

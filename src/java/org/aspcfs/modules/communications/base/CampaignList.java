@@ -16,6 +16,7 @@
 package org.aspcfs.modules.communications.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -35,7 +36,7 @@ import java.util.Vector;
  *          $
  * @created November 16, 2001
  */
-public class CampaignList extends Vector {
+public class CampaignList extends Vector implements SyncableList{
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
@@ -82,6 +83,17 @@ public class CampaignList extends Vector {
   public CampaignList() {
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static Campaign getObject(ResultSet rs) throws SQLException {
+    Campaign campaign = new Campaign(rs);
+    return campaign;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the CampaignList object
@@ -357,6 +369,14 @@ public class CampaignList extends Vector {
     this.lastAnchor = tmp;
   }
 
+  /**
+   * Sets the lastAnchor attribute of the CampaignList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
+  }
 
   /**
    * Sets the nextAnchor attribute of the CampaignList object
@@ -367,6 +387,14 @@ public class CampaignList extends Vector {
     this.nextAnchor = tmp;
   }
 
+  /**
+   * Sets the nextAnchor attribute of the CampaignList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
+  }
 
   /**
    * Sets the syncType attribute of the CampaignList object
@@ -377,7 +405,13 @@ public class CampaignList extends Vector {
     this.syncType = tmp;
   }
 
-
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Sets the type attribute of the CampaignList object
    *
@@ -645,7 +679,55 @@ public class CampaignList extends Vector {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
+            "FROM campaign c " +
+            "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message") + " msg ON (c.message_id = msg.id) " +
+            "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
+            "WHERE c.campaign_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(db, buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+}
+  
   /**
    * Description of the Method
    *
@@ -659,7 +741,6 @@ public class CampaignList extends Vector {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -711,35 +792,15 @@ public class CampaignList extends Vector {
       sqlOrder.append("ORDER BY c.modified desc ");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
-            "FROM campaign c " +
-            "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message") + " msg ON (c.message_id = msg.id) " +
-            "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-            "WHERE c.campaign_id > -1 ");
-
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       Campaign thisCamp = new Campaign(rs);
       this.add(thisCamp);
     }
     rs.close();
-    pst.close();
+    if(pst != null){
+      pst.close();
+    }
     buildResources(db);
   }
 
@@ -831,14 +892,14 @@ public class CampaignList extends Vector {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND c.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND c.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND c.modified > ? ");
+      sqlFilter.append("AND c.entered < ? ");
+      sqlFilter.append("AND c.modified < ? ");
     }
   }
 

@@ -16,126 +16,54 @@
 package org.aspcfs.modules.contacts.base;
 
 import org.aspcfs.modules.base.AddressList;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Builds an address list for a contact using a custom query that extends the
- * fields and methods of a typical AddressList.
+ *  Builds an address list for a contact using a custom query that extends the
+ *  fields and methods of a typical AddressList.
  *
- * @author mrajkowski
- * @version $Id: ContactAddressList.java,v 1.4 2003/01/15 15:51:07 mrajkowski
- *          Exp $
- * @created September 1, 2001
+ * @author     mrajkowski
+ * @version    $Id: ContactAddressList.java,v 1.4 2003/01/15 15:51:07 mrajkowski
+ *      Exp $
+ * @created    September 1, 2001
  */
-public class ContactAddressList extends AddressList {
+public class ContactAddressList extends AddressList implements SyncableList {
 
   public final static String tableName = "contact_address";
   public final static String uniqueField = "address_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
-
 
   /**
-   * Constructor for the ContactAddressList object
+   *  Constructor for the ContactAddressList object
    *
-   * @since 1.1
+   * @since    1.1
    */
-  public ContactAddressList() {
-  }
+  public ContactAddressList() { }
 
-
-  /**
-   * Gets the tableName attribute of the ContactAddressList object
-   *
-   * @return The tableName value
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
    */
   public String getTableName() {
     return tableName;
   }
 
-
-  /**
-   * Gets the uniqueField attribute of the ContactAddressList object
-   *
-   * @return The uniqueField value
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
    */
   public String getUniqueField() {
     return uniqueField;
   }
 
-
   /**
-   * Gets the lastAnchor attribute of the ContactAddressList object
+   *  Constructor for the ContactAddressList object
    *
-   * @return The lastAnchor value
-   */
-  public java.sql.Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   * Gets the nextAnchor attribute of the ContactAddressList object
-   *
-   * @return The nextAnchor value
-   */
-  public java.sql.Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   * Gets the syncType attribute of the ContactAddressList object
-   *
-   * @return The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   * Sets the lastAnchor attribute of the ContactAddressList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ContactAddressList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the syncType attribute of the ContactAddressList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   * Constructor for the ContactAddressList object
-   *
-   * @param request Description of the Parameter
+   * @param  request  Description of the Parameter
    */
   public ContactAddressList(HttpServletRequest request) {
     int i = 0;
@@ -158,16 +86,13 @@ public class ContactAddressList extends AddressList {
 
 
   /**
-   * Builds a list of addresses based on several parameters. The parameters are
-   * set after this object is constructed, then the buildList method is called
-   * to generate the list.
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlSelect = new StringBuffer();
@@ -240,14 +165,53 @@ public class ContactAddressList extends AddressList {
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+
+    return rs;
+  }
+
+
+  /**
+   *  Builds a list of addresses based on several parameters. The parameters are
+   *  set after this object is constructed, then the buildList method is called
+   *  to generate the list.
+   *
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
+   */
+  public void buildList(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      ContactAddress thisAddress = new ContactAddress(rs);
+      ContactAddress thisAddress = this.getObject(rs);
       this.addElement(thisAddress);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
-  
+
+
+  /**
+   *  Gets the object attribute of the ContactAddressList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ContactAddress getObject(ResultSet rs) throws SQLException {
+    ContactAddress thisAddress = new ContactAddress(rs);
+    return thisAddress;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void select(Connection db) throws SQLException {
     buildList(db);
   }

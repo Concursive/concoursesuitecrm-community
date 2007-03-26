@@ -167,7 +167,7 @@ public class CustomFieldCategory extends ArrayList {
             " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc." + DatabaseUtils.addQuotes(db, "level") + " AS " + DatabaseUtils.addQuotes(db, "level") + ",  " +
             " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
             " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
-            " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
+            " cfc.multiple_records as multiple_records, cfc.read_only as read_only, cfc.modified " +
             "FROM custom_field_category cfc " +
             "WHERE cfc.category_id = ? ");
     pst.setInt(1, categoryId);
@@ -956,7 +956,7 @@ public class CustomFieldCategory extends ArrayList {
             "FROM custom_field_group cfg " +
             "WHERE cfg.category_id = " + id + " ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", group_id, group_name ");
 
     pst = db.prepareStatement(
@@ -1030,7 +1030,7 @@ public class CustomFieldCategory extends ArrayList {
       st.executeUpdate(
           "UPDATE custom_field_record " +
               "SET modifiedBy = " + modifiedBy + ", " +
-              "modified = CURRENT_TIMESTAMP " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE link_module_id = " + linkModuleId + " " +
               "AND link_item_id = " + linkItemId + " " +
               "AND record_id = " + recordId + " ");
@@ -1180,9 +1180,7 @@ public class CustomFieldCategory extends ArrayList {
     if (id > -1) {
       sql.append("category_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enabled ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -1190,6 +1188,13 @@ public class CustomFieldCategory extends ArrayList {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?) ");
 
@@ -1206,6 +1211,9 @@ public class CustomFieldCategory extends ArrayList {
     }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
     }
 
     pst.setBoolean(++i, this.getEnabled());
@@ -1233,7 +1241,8 @@ public class CustomFieldCategory extends ArrayList {
 
     String sql =
         "UPDATE custom_field_category " +
-            "SET enabled = ? " +
+            "SET enabled = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE category_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1260,7 +1269,8 @@ public class CustomFieldCategory extends ArrayList {
     String sql =
         "UPDATE custom_field_category " +
             "SET category_name = ?, description = ?, enabled = ?, " +
-            "multiple_records = ?, read_only = ? " +
+            "multiple_records = ?, read_only = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE module_id = ? AND category_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1354,7 +1364,7 @@ public class CustomFieldCategory extends ArrayList {
     endDate = rs.getTimestamp("end_date");
     defaultItem = rs.getBoolean("default_item");
     entered = rs.getTimestamp("entered");
-    modified = entered;
+    modified = rs.getTimestamp("modified");;
     enabled = rs.getBoolean("enabled");
     allowMultipleRecords = rs.getBoolean("multiple_records");
     readOnly = rs.getBoolean("read_only");
@@ -1366,17 +1376,17 @@ public class CustomFieldCategory extends ArrayList {
    *
    * @param sqlFilter Description of Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
 
     if (includeScheduled == TRUE) {
       sqlFilter.append(
-          "AND CURRENT_TIMESTAMP > cfg.start_date AND (CURRENT_TIMESTAMP < cfg.end_date OR cfg.end_date IS NULL) ");
+          "AND " + DatabaseUtils.getCurrentTimestamp(db) + " > cfg.start_date AND (" + DatabaseUtils.getCurrentTimestamp(db) + " < cfg.end_date OR cfg.end_date IS NULL) ");
     } else if (includeScheduled == FALSE) {
       sqlFilter.append(
-          "AND (CURRENT_TIMESTAMP < cfg.start_date OR (CURRENT_TIMESTAMP > cfg.end_date AND cfg.end_date IS NOT NULL)) ");
+          "AND (" + DatabaseUtils.getCurrentTimestamp(db) + " < cfg.start_date OR (" + DatabaseUtils.getCurrentTimestamp(db) + " > cfg.end_date AND cfg.end_date IS NOT NULL)) ");
     }
 
     if (includeEnabled == TRUE || includeEnabled == FALSE) {

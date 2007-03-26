@@ -61,6 +61,7 @@ public class InitHook implements ControllerInitHook {
           context, config.getInitParameter("DynamicFormConfig"));
       context.setAttribute("DynamicFormList", forms);
     }
+    SyncHook.initSync(context);
     return null;
   }
 

@@ -23,12 +23,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author Ananth
- * @created August 31, 2005
+ * @author     Ananth
+ * @created    August 31, 2005
  */
 public class ActionStepLookup extends GenericBean {
   private int id = -1;
@@ -37,12 +38,44 @@ public class ActionStepLookup extends GenericBean {
   private boolean defaultItem = false;
   private int level = 0;
   private boolean enabled = true;
+  protected Timestamp entered = null;
+  protected Timestamp modified = null;
 
 
   /**
-   * Gets the id attribute of the ActionStepLookup object
+   *  Gets the entered attribute of the ActionStepLookup object
    *
-   * @return The id value
+   * @return    The entered value
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActionStepLookup object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActionStepLookup object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the ActionStepLookup object
+   *
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -50,9 +83,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the ActionStepLookup object
+   *  Sets the id attribute of the ActionStepLookup object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -60,9 +93,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the ActionStepLookup object
+   *  Sets the id attribute of the ActionStepLookup object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -70,9 +103,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Gets the stepId attribute of the ActionStepLookup object
+   *  Gets the stepId attribute of the ActionStepLookup object
    *
-   * @return The stepId value
+   * @return    The stepId value
    */
   public int getStepId() {
     return stepId;
@@ -80,9 +113,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the stepId attribute of the ActionStepLookup object
+   *  Sets the stepId attribute of the ActionStepLookup object
    *
-   * @param tmp The new stepId value
+   * @param  tmp  The new stepId value
    */
   public void setStepId(int tmp) {
     this.stepId = tmp;
@@ -90,9 +123,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the stepId attribute of the ActionStepLookup object
+   *  Sets the stepId attribute of the ActionStepLookup object
    *
-   * @param tmp The new stepId value
+   * @param  tmp  The new stepId value
    */
   public void setStepId(String tmp) {
     this.stepId = Integer.parseInt(tmp);
@@ -100,9 +133,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Gets the description attribute of the ActionStepLookup object
+   *  Gets the description attribute of the ActionStepLookup object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
@@ -110,9 +143,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the description attribute of the ActionStepLookup object
+   *  Sets the description attribute of the ActionStepLookup object
    *
-   * @param tmp The new description value
+   * @param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -120,9 +153,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Gets the defaultItem attribute of the ActionStepLookup object
+   *  Gets the defaultItem attribute of the ActionStepLookup object
    *
-   * @return The defaultItem value
+   * @return    The defaultItem value
    */
   public boolean getDefaultItem() {
     return defaultItem;
@@ -130,9 +163,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the defaultItem attribute of the ActionStepLookup object
+   *  Sets the defaultItem attribute of the ActionStepLookup object
    *
-   * @param tmp The new defaultItem value
+   * @param  tmp  The new defaultItem value
    */
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
@@ -140,9 +173,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the defaultItem attribute of the ActionStepLookup object
+   *  Sets the defaultItem attribute of the ActionStepLookup object
    *
-   * @param tmp The new defaultItem value
+   * @param  tmp  The new defaultItem value
    */
   public void setDefaultItem(String tmp) {
     this.defaultItem = DatabaseUtils.parseBoolean(tmp);
@@ -150,9 +183,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Gets the level attribute of the ActionStepLookup object
+   *  Gets the level attribute of the ActionStepLookup object
    *
-   * @return The level value
+   * @return    The level value
    */
   public int getLevel() {
     return level;
@@ -160,9 +193,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the level attribute of the ActionStepLookup object
+   *  Sets the level attribute of the ActionStepLookup object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -170,9 +203,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the level attribute of the ActionStepLookup object
+   *  Sets the level attribute of the ActionStepLookup object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -180,9 +213,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Gets the enabled attribute of the ActionStepLookup object
+   *  Gets the enabled attribute of the ActionStepLookup object
    *
-   * @return The enabled value
+   * @return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -190,9 +223,9 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the enabled attribute of the ActionStepLookup object
+   *  Sets the enabled attribute of the ActionStepLookup object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -200,25 +233,47 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Sets the enabled attribute of the ActionStepLookup object
+   *  Sets the enabled attribute of the ActionStepLookup object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
   /**
-   * Constructor for the ActionStepLookup object
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
+
+  /**
+   *  Constructor for the ActionStepLookup object
    */
   public ActionStepLookup() { }
 
 
   /**
-   * Constructor for the ActionStepLookup object
+   *  Constructor for the ActionStepLookup object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public ActionStepLookup(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -226,11 +281,12 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Constructor for the ActionStepLookup object
+   *  Constructor for the ActionStepLookup object
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public ActionStepLookup(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -238,11 +294,11 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  id             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -250,8 +306,8 @@ public class ActionStepLookup extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT asl.* " +
-            "FROM action_step_lookup asl " +
-            "WHERE asl.code = ? ");
+        "FROM action_step_lookup asl " +
+        "WHERE asl.code = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -267,10 +323,10 @@ public class ActionStepLookup extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("code");
@@ -279,25 +335,38 @@ public class ActionStepLookup extends GenericBean {
     defaultItem = rs.getBoolean("default_item");
     level = rs.getInt("level");
     enabled = rs.getBoolean("enabled");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "action_step_lookup_code_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO action_step_lookup " +
-            "(" + (id > -1 ? "code, " : "") + "step_id, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+        "(" + (id > -1 ? "code, " : "") +
+        "entered, modified, " +
+        "step_id, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled) " +
+        "VALUES (" + (id > -1 ? "?, " : "") +
+        (entered != null ? "?, " : (DatabaseUtils.getCurrentTimestamp(db) + ", ")) +
+        (modified != null ? "?, " : (DatabaseUtils.getCurrentTimestamp(db) + ", ")) +
+        "?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
+    }
+    if (entered != null) {
+      pst.setTimestamp(++i, this.getEntered());
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
     }
     pst.setInt(++i, stepId);
     pst.setString(++i, description);

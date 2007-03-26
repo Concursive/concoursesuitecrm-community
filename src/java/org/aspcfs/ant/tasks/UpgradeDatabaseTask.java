@@ -371,6 +371,12 @@ public class UpgradeDatabaseTask extends Task {
           "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "bcprov-jdk14-121.jar\")");
       script.eval(
           "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "commons-codec-1.3.jar\")");
+      script.eval(
+          "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "commons-logging-api.jar\")");
+      script.eval(
+          "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "commons-logging.jar\")");
+      script.eval(
+          "addClassPath(bsh.cwd + \"" + fsEval + "lib" + fsEval + "log4j-1.2.9.jar\")");
       script.eval("addClassPath(\"" + servletJar + "\")");
       script.set("db", db);
       script.set("fileLibraryPath", fileLibraryPath + fs);

@@ -18,12 +18,14 @@ package org.aspcfs.modules.relationships.base;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.modules.accounts.base.Organization;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -36,7 +38,14 @@ import java.util.LinkedHashMap;
  * @created    August 11, 2004
  * @version $Id$
  */
-public class RelationshipList extends LinkedHashMap {
+public class RelationshipList extends LinkedHashMap implements SyncableList{
+
+  public final static String tableName = "relationship";
+  public final static String uniqueField = "relationship_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   protected int typeId = -1;
   protected int categoryIdMapsFrom = -1;
   protected int objectIdMapsFrom = -1;
@@ -53,6 +62,70 @@ public class RelationshipList extends LinkedHashMap {
    */
   public RelationshipList() { }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static Relationship getObject(ResultSet rs) throws SQLException {
+    Relationship relationship = new Relationship(rs);
+    return relationship;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+  
+  public void setSyncType(String tmp) {
+    this.syncType = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the typeId attribute of the RelationshipList object
@@ -313,6 +386,55 @@ public class RelationshipList extends LinkedHashMap {
     this.objectIdMapsTo = Integer.parseInt(tmp);
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "r.relationship_id, r.type_id, r.object_id_maps_from, " +
+        "r.category_id_maps_from, r.object_id_maps_to, r.category_id_maps_to, " +
+        "r.entered, r.enteredby, r.modified, r.modifiedby, r.trashed_date, " +
+        "rt.reciprocal_name_1, rt.reciprocal_name_2 " +
+        "FROM " + tableName + " r " +
+        "LEFT JOIN lookup_relationship_types rt ON (rt.type_id = r.type_id) " +
+        "WHERE relationship_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
 
   /**
    *  Description of the Method
@@ -324,14 +446,14 @@ public class RelationshipList extends LinkedHashMap {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM relationship t " +
+        "FROM relationship r " +
+        "LEFT JOIN lookup_relationship_types rt ON (rt.type_id = r.type_id) " +
         "WHERE r.relationship_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -365,38 +487,17 @@ public class RelationshipList extends LinkedHashMap {
       pagedListInfo.setDefaultSort("r.type_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY r.type_id ");
+      sqlOrder.append("ORDER BY r.type_id "); 
     }
-    //Build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "r.relationship_id, r.type_id, r.object_id_maps_from, " +
-        "r.category_id_maps_from, r.object_id_maps_to, r.category_id_maps_to, " +
-        "r.entered, r.enteredby, r.modified, r.modifiedby, r.trashed_date, " +
-        "rt.reciprocal_name_1, rt.reciprocal_name_2 " +
-        "FROM relationship r " +
-        "LEFT JOIN lookup_relationship_types rt ON (rt.type_id = r.type_id) " +
-        "WHERE relationship_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       Relationship thisRelationship = new Relationship(rs);
       this.add(thisRelationship);
     }
     rs.close();
-    pst.close();
+    if (pst!= null) {
+      pst.close();
+    }
 
     //build mapped objects
     Iterator rt = this.keySet().iterator();
@@ -463,6 +564,17 @@ public class RelationshipList extends LinkedHashMap {
     } else {
       sqlFilter.append("AND r.trashed_date IS NULL ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND r.entered > ? ");
+      }
+      sqlFilter.append("AND r.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND r.modified > ? ");
+      sqlFilter.append("AND r.entered < ? ");
+      sqlFilter.append("AND r.modified < ? ");
+    }
   }
 
 
@@ -505,6 +617,17 @@ public class RelationshipList extends LinkedHashMap {
       pst.setTimestamp(++i, trashedDate);
     } else {
       // do nothing
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
 
     return i;

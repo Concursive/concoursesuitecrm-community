@@ -16,6 +16,7 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -32,7 +33,7 @@ import java.util.Iterator;
  * @author Ananth
  * @created August 31, 2005
  */
-public class ActionStepLookupList extends ArrayList {
+public class ActionStepLookupList extends ArrayList  implements SyncableList {
   private int stepId = -1;
 
   public final static String tableName = "action_step_lookup";
@@ -91,6 +92,13 @@ public class ActionStepLookupList extends ArrayList {
     this.syncType = tmp;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Sets the PagedListInfo attribute of the ActionStepLookupList object. <p>
    * <p/>
@@ -162,48 +170,36 @@ public class ActionStepLookupList extends ArrayList {
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-    int items = -1;
-
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
+    int items = -1;
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
             "FROM action_step_lookup asl " +
             "WHERE asl.code > 0 ");
-
-    createFilter(sqlFilter, db);
-
+    createFilter(db, sqlFilter);
     sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", asl.description ");
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append(" SELECT ");
-    sqlSelect.append(
-        "asl.* " +
-            "FROM action_step_lookup asl " +
-            "WHERE asl.code > 0 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       ActionStepLookup thisItem = new ActionStepLookup(rs);
       this.add(thisItem);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
   /**
    * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter, Connection db) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -212,14 +208,14 @@ public class ActionStepLookupList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND asl.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND asl.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND asl.modified > ? ");
+      sqlFilter.append("AND asl.entered < ? ");
+      sqlFilter.append("AND asl.modified < ? ");
     }
   }
 
@@ -231,7 +227,7 @@ public class ActionStepLookupList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (stepId != -1) {
       pst.setInt(++i, stepId);
@@ -287,5 +283,48 @@ public class ActionStepLookupList extends ArrayList {
     }
 
   }
+  
+  /**
+   *  Gets the object attribute of the ActionStepLookupList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionStepLookup getObject(ResultSet rs) throws SQLException {
+  	ActionStepLookup obj = new ActionStepLookup(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+    //Need to build a base SQL statement for returning records
+     sqlSelect.append(" SELECT ");
+     sqlSelect.append(
+         "asl.* " +
+             "FROM action_step_lookup asl " +
+             "WHERE asl.code > 0 ");
+     if(sqlFilter == null || sqlFilter.length() == 0){
+     	StringBuffer buff = new StringBuffer();
+     	createFilter(db, buff);
+     	sqlFilter = buff.toString();
+     }
+     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+     prepareFilter(pst);
+
+     return  DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+  
+  
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  	return queryList(db, pst, "", "");
+  }
+
 }
 

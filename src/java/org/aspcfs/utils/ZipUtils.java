@@ -18,24 +18,25 @@ package org.aspcfs.utils;
 import java.io.*;
 import java.util.zip.*;
 
+
 /**
  * Description of the Class
  *
- * @author matt rajkowski
- * @version $Id: ZipUtils.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
- *          2005) mrajkowski $
- * @created January 15, 2003
+ * @author     matt rajkowski
+ * @version    $Id: ZipUtils.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
+ *      2005) mrajkowski $
+ * @created    January 15, 2003
  */
 public class ZipUtils {
 
   /**
    * Adds a feature to the TextEntry attribute of the ZipUtils class
    *
-   * @param zip      The feature to be added to the TextEntry attribute
-   * @param fileName The feature to be added to the TextEntry attribute
-   * @param data     The feature to be added to the TextEntry attribute
-   * @throws ZipException Description of the Exception
-   * @throws IOException  Description of the Exception
+   * @param  zip            The feature to be added to the TextEntry attribute
+   * @param  fileName       The feature to be added to the TextEntry attribute
+   * @param  data           The feature to be added to the TextEntry attribute
+   * @throws  ZipException  Description of the Exception
+   * @throws  IOException   Description of the Exception
    */
   public static void addTextEntry(ZipOutputStream zip, String fileName, String data) throws ZipException, IOException {
     int bytesRead;
@@ -51,9 +52,9 @@ public class ZipUtils {
   /**
    * Description of the Method
    *
-   * @param zipFile     Description of the Parameter
-   * @param destination Description of the Parameter
-   * @throws IOException Description of the Exception
+   * @param  zipFile          Description of the Parameter
+   * @param  destination      Description of the Parameter
+   * @exception  IOException  Description of the Exception
    */
   public static void extract(File zipFile, String destination) throws IOException {
     ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile));
@@ -80,10 +81,10 @@ public class ZipUtils {
   /**
    * Extracts the specified zipped file to a destination in the filesystem
    *
-   * @param zipFile     Description of the Parameter
-   * @param entry       Description of the Parameter
-   * @param destination Description of the Parameter
-   * @throws IOException Description of the Exception
+   * @param  zipFile          Description of the Parameter
+   * @param  entry            Description of the Parameter
+   * @param  destination      Description of the Parameter
+   * @exception  IOException  Description of the Exception
    */
   public static void extract(ZipFile zipFile, String entry, String destination) throws IOException {
     ZipEntry zipEntry = zipFile.getEntry(entry);
@@ -109,6 +110,44 @@ public class ZipUtils {
       }
     }
     inputStream.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  inputFile        Description of the Parameter
+   * @param  zipFile          Description of the Parameter
+   * @exception  IOException  Description of the Exception
+   */
+  public static void compress(String inputFile, File zipFile) throws IOException {
+    ZipUtils.compress(inputFile, zipFile, inputFile);
+  }
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  inputFile        Description of the Parameter
+   * @param  zipFile          Description of the Parameter
+   * @param  entryName        Zip entry name
+   * @exception  IOException  Description of the Exception
+   */
+  public static void compress(String inputFile, File zipFile, String entryName) throws IOException {
+    byte[] buffer = new byte[1024];
+
+    ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(zipFile));
+    FileInputStream fin = new FileInputStream(inputFile);
+
+    zip.putNextEntry(new ZipEntry(entryName));
+
+    int len = -1;
+    while ((len = fin.read(buffer)) > 0) {
+      zip.write(buffer, 0, len);
+    }
+
+    zip.closeEntry();
+    fin.close();
+    zip.close();
   }
 }
 

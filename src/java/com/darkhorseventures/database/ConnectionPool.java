@@ -15,6 +15,7 @@
  */
 package com.darkhorseventures.database;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
@@ -51,6 +52,9 @@ import java.util.TimerTask;
  * @created December 12, 2000
  */
 public class ConnectionPool implements Runnable {
+
+  private final static Logger log = Logger.getLogger(com.darkhorseventures.database.ConnectionPool.class);
+
   //Internal Constants
   public final static int BUSY_CONNECTION = 1;
   public final static int AVAILABLE_CONNECTION = 2;
@@ -530,15 +534,9 @@ public class ConnectionPool implements Runnable {
       synchronized (this) {
         if (connection != null) {
           availableConnections.put(thisElement, connection);
-          if (debug) {
-            System.out.println(
-                "ConnectionPool-> New: " + thisElement.getUrl() + " " + this.toString());
-          }
+          log.debug("New: " + thisElement.getUrl() + " " + this.toString());
         } else {
-          if (debug) {
-            System.out.println(
-                "ConnectionPool-> Database connection could not be created: " + thisElement.getUrl() + " " + this.toString());
-          }
+          log.debug("Database connection could not be created: " + thisElement.getUrl() + " " + this.toString());
           //NOTE: This is currently here because the getConnection() would be broken
           //without it.  When getConnection() grabs this it will just recycle it right
           //away.  Needs to be fixed since a NullPointer exception would be raised.
@@ -548,7 +546,7 @@ public class ConnectionPool implements Runnable {
         notifyAll();
       }
     } catch (Exception e) {
-      System.err.println("Connection Pool Thread Error: " + e.toString());
+      log.error("Thread Error: " + e.toString());
       // SQLException or OutOfMemory
       // Give up on new connection and wait for existing one
       // to free up.
@@ -569,8 +567,7 @@ public class ConnectionPool implements Runnable {
       ConnectionElement thisElement = (ConnectionElement) busyConnections.get(
           connection);
       if (thisElement == null) {
-        System.out.println(
-            "ConnectionPool-> Connection has already been returned to pool");
+        log.info("Connection has already been returned to pool");
       } else {
         busyConnections.remove(connection);
         try {
@@ -578,8 +575,7 @@ public class ConnectionPool implements Runnable {
             if (!connection.isClosed()) {
               connection.close();
               if (!forceClose) {
-                System.out.println(
-                    "ConnectionPool-> Removed a possibly dead busy connection");
+                log.info("Removed a possibly dead busy connection");
               }
             }
           }
@@ -636,17 +632,11 @@ public class ConnectionPool implements Runnable {
    * @since 1.1
    */
   public synchronized void closeAllConnections() {
-    if (debug) {
-      System.out.println("ConnectionPool-> Status: " + this.toString());
-    }
-    if (debug) {
-      System.out.println("ConnectionPool-> Closing available connections");
-    }
+    log.debug("Status: " + this.toString());
+    log.debug("Closing available connections");
     closeConnections(AVAILABLE_CONNECTION, availableConnections);
     availableConnections.clear();
-    if (debug) {
-      System.out.println("ConnectionPool-> Closing busy connections");
-    }
+    log.debug("Closing busy connections");
     closeConnections(BUSY_CONNECTION, busyConnections);
     busyConnections.clear();
   }
@@ -691,16 +681,14 @@ public class ConnectionPool implements Runnable {
       cleanupTimer.cancel();
       cleanupTimer = null;
       if (debug) {
-        System.out.println("Connection Pool-> Timer shut down");
+        log.debug("Timer shut down");
         try {
           Thread.sleep(2000);
         } catch (InterruptedException e) {
         }
       }
     }
-    if (debug) {
-      System.out.println("Connection Pool-> Stopped");
-    }
+    log.debug("Stopped");
   }
 
 
@@ -758,10 +746,7 @@ public class ConnectionPool implements Runnable {
               thisElement);
           if (expiredConnection != null) {
             expiredConnection.close();
-            if (debug) {
-              System.out.println(
-                  "ConnectionPool-> Removed: " + thisElement.getUrl() + " " + this.toString());
-            }
+            log.debug("Removed: " + thisElement.getUrl() + " " + this.toString());
             notify();
           }
           expiredConnection = null;
@@ -770,7 +755,7 @@ public class ConnectionPool implements Runnable {
       } catch (Exception sqle) {
         if (thisElement != null) {
           availableConnections.remove(thisElement);
-          //if (debug) System.out.println("ConnectionPool-> Removed a null available connection");
+          //log.debug("Removed a null available connection");
         }
         notify();
         //Ignore errors; garbage collect anyhow

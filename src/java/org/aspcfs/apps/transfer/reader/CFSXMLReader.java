@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataRecord;
@@ -35,6 +36,7 @@ import java.util.Iterator;
  * @created February 3, 2006
  */
 public class CFSXMLReader implements DataReader {
+  private static final Logger log = Logger.getLogger(org.aspcfs.apps.transfer.reader.CFSXMLReader.class);
   protected String xmlDataFile = null;
 
 
@@ -101,7 +103,7 @@ public class CFSXMLReader implements DataReader {
     boolean configOK = true;
     File importFile = new File(xmlDataFile);
     if (!importFile.exists()) {
-      logger.info("CFSXMLReader-> Config: file not found: " + xmlDataFile);
+      log.error("CFSXMLReader-> Config: file not found: " + xmlDataFile);
       configOK = false;
     }
 
@@ -127,13 +129,16 @@ public class CFSXMLReader implements DataReader {
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
     try {
+      log.info("xmlDataFile: " + xmlDataFile);
+      System.out.println("xmlDataFile: " + xmlDataFile);
       File configFile = new File(xmlDataFile);
       XMLUtils xml = new XMLUtils(configFile);
 
       ArrayList recordList = new ArrayList();
       XMLUtils.getAllChildren(
           xml.getFirstChild("cfsdata"), "dataRecord", recordList);
-      logger.info("Records: " + recordList.size());
+      log.info("Records: " + recordList.size());
+      System.out.println("Records: " + recordList.size());
 
       Iterator records = recordList.iterator();
       while (records.hasNext()) {
@@ -142,6 +147,8 @@ public class CFSXMLReader implements DataReader {
 
         thisRecord.setName((String) record.getAttribute("name"));
         thisRecord.setAction((String) record.getAttribute("action"));
+        log.info(thisRecord.getName() + " -> " + thisRecord.getAction());
+        System.out.println(thisRecord.getName() + " -> " + thisRecord.getAction());
         thisRecord.setShareKey(
             StringUtils.isTrue(
                 (String) record.getAttribute("shareKey")));
@@ -167,7 +174,7 @@ public class CFSXMLReader implements DataReader {
         }
       }
     } catch (Exception e) {
-      logger.info(e.toString());
+      log.error(e.toString());
       e.printStackTrace(System.out);
       return false;
     }

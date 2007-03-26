@@ -18,12 +18,14 @@ package org.aspcfs.modules.setup.actions;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.hooks.CustomHook;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactEmailAddress;
+import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.modules.setup.beans.DatabaseBean;
 import org.aspcfs.modules.setup.beans.ServerBean;
 import org.aspcfs.modules.setup.beans.UserSetupBean;
@@ -48,6 +50,8 @@ import java.util.TimeZone;
  */
 public class Setup extends CFSModule {
 
+  static Logger log = Logger.getLogger(org.aspcfs.modules.setup.actions.Setup.class);
+  
   public final static String os = System.getProperty("os.name");
 
 
@@ -473,7 +477,9 @@ public class Setup extends CFSModule {
         try {
           // The database must already be created, this creates the schema and
           // inserts the default data
+          log.info("Creating Database schema...");
           SetupUtils.createDatabaseSchema(db, setupPath);
+          log.info("Inserting default data...");
           SetupUtils.insertDefaultData(db, dbFileLibraryPath, setupPath, locale, isRestoreFromBackup);
           if (isRestoreFromBackup) {
             // Call the restore program
@@ -481,6 +487,7 @@ public class Setup extends CFSModule {
             SetupUtils.restoreFromBackup(db, dbLookup, backupFile);
           }
         } catch (SQLException cre) {
+          log.error("Inserting default data failed: " + cre.getMessage());
           throw new SQLException(cre.getMessage());
         }
         if (db != null) {

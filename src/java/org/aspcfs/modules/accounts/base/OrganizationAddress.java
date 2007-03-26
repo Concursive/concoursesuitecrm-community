@@ -162,12 +162,7 @@ public class OrganizationAddress extends Address {
     if (id > -1) {
       sql.append("address_id, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
-    if (this.getModified() != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
     if (id > -1) {
@@ -175,9 +170,13 @@ public class OrganizationAddress extends Address {
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", "); 
     }
     if (this.getModified() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
 
@@ -236,7 +235,8 @@ public class OrganizationAddress extends Address {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_address " +
         "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, addrline4 = ?, city = ?, state = ?, postalcode = ?, country = ?, county = ?, latitude = ?, longitude =? , primary_address = ?, " +
-        "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedby = ?, " + 
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE address_id = ? ");
     int i = 0;
     if (this.getType() > -1) {

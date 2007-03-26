@@ -75,6 +75,12 @@ public interface SyncableList {
    */
   public void setSyncType(int tmp);
 
+  /**
+   * Sets the syncType attribute of the SyncableList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(String tmp);
 
   /**
    * The tableName refers to the table in which the collection will query from.

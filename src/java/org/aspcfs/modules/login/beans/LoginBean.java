@@ -73,13 +73,21 @@ public class LoginBean extends GenericBean {
    * @since 1.0
    */
   public void setPassword(String tmp) {
-    PasswordHash pwh = new PasswordHash();
     this.password = PasswordHash.encrypt(tmp);
     //Enrypt the webdav password. 'username' should be already set for a valid webdav password
     this.webdavPassword = PasswordHash.encrypt(
         username + ":" +
             WebdavServlet.CFS_USER_REALM + ":" + tmp);
     this.ldapPassword = tmp;
+  }
+
+  /**
+   * Sets the Password Hash
+   *
+   * @param passwordHash The new Password Hash value
+   */
+  public void setPasswordHash(String passwordHash) {
+    this.password = passwordHash;
   }
 
   /**

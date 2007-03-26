@@ -34,7 +34,7 @@ String fs = System.getProperty("file.separator") ;
 String mapFile = prefsPath + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
 File importFile = new File(mapFile);
 if (!importFile.exists()) {
-  mapFile = prefsPath + fs + "import-mappings.xml";
+  mapFile = prefsPath + "import-mappings.xml";
 }
 
 void insertLookupMapping(Connection db, String id) {
@@ -43,14 +43,14 @@ void insertLookupMapping(Connection db, String id) {
   baseMap.setName(id);
   baseMap.setMappedClassName("org.aspcfs.utils.web.LookupElement");
   baseMap.insert(db);
-  print("Added Mapping-> ID: " + id + ", CLASS: org.aspcfs.utils.web.CustomLookupElement");
+  print("Added Mapping-> ID: " + id + ", CLASS: org.aspcfs.utils.web.LookupElement");
   
   SyncTable listMap = new SyncTable();
   listMap.setSystemId(systemId);
   listMap.setName(id + "List");
   listMap.setMappedClassName("org.aspcfs.utils.web.LookupList");
   listMap.insert(db);
-  print("Added Mapping-> ID: " + id + "List, CLASS: org.aspcfs.utils.web.CustomLookupList");
+  print("Added Mapping-> ID: " + id + "List, CLASS: org.aspcfs.utils.web.LookupList");
 }
 
 void insertCustomLookupMapping(Connection db, String id) {
@@ -112,6 +112,9 @@ while (mapItems.hasNext()) {
         listMap.setMappedClassName("org.aspcfs.modules.communications.base.ActiveSurveyAnswerItemList");
       } else if (id.equals("projectFilesThumbnail")) {
         //Missing list class
+        continue;
+      } else if (id.equals("compileSyncData") || id.equals("processSyncPackageDownload")) {
+        //CustomActionHandlers
         continue;
       }
       listMap.insert(db);

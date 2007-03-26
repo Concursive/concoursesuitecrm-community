@@ -1,5 +1,6 @@
 package org.aspcfs.utils;
 
+import org.apache.commons.codec.binary.Base64;
 import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,7 +38,7 @@ public class CRMConnection extends CFSHttpXMLWriter {
     try {
       XMLUtils xml = new XMLUtils(getLastResponse());
       Element response = xml.getFirstChild("response");
-      Element recordSet = xml.getFirstChild(response, "recordSet");
+      Element recordSet = XMLUtils.getFirstChild(response, "recordSet");
       if (recordSet != null && recordSet.hasAttributes()) {
         return (Integer.parseInt(recordSet.getAttribute("count")));
       }
@@ -56,11 +57,13 @@ public class CRMConnection extends CFSHttpXMLWriter {
     try {
       XMLUtils xml = new XMLUtils(getLastResponse());
       Element response = xml.getFirstChild("response");
-      Element status = xml.getFirstChild(response, "status");
+      Element status = XMLUtils.getFirstChild(response, "status");
       if (status != null) {
-        return (Integer.parseInt(xml.getNodeText(status)));
+        return (Integer.parseInt(XMLUtils.getNodeText(status)));
       }
     } catch (Exception e) {
+      //No connection
+      return -1;
     }
     return 1;
   }
@@ -76,8 +79,8 @@ public class CRMConnection extends CFSHttpXMLWriter {
     try {
       XMLUtils xml = new XMLUtils(getLastResponse());
       Element response = xml.getFirstChild("response");
-      Element recordSet = xml.getFirstChild(response, "recordSet");
-      Element record = xml.getFirstChild(recordSet, "record");
+      Element recordSet = XMLUtils.getFirstChild(response, "recordSet");
+      Element record = XMLUtils.getFirstChild(recordSet, "record");
 
       NodeList objectElements = record.getChildNodes();
       for (int j = 0; j < objectElements.getLength(); j++) {
@@ -85,7 +88,7 @@ public class CRMConnection extends CFSHttpXMLWriter {
         if (theObject.getNodeType() == Node.ELEMENT_NODE) {
           //For each parameter/value pair, try to set the value on the object
           String param = theObject.getNodeName();
-          String value = xml.getNodeText(theObject);
+          String value = XMLUtils.getNodeText(theObject);
 
           if (param.equals(fieldName)) {
             return value;
@@ -97,6 +100,15 @@ public class CRMConnection extends CFSHttpXMLWriter {
     return null;
   }
 
+  /**
+   * Gets the encoded responseValue attribute of the CRMConnection object and decode it
+   *
+   * @param fieldName Description of the Parameter
+   * @return The encoded responseValue value
+   */
+  public String getEncodedResponseValue(String fieldName) throws Exception{
+    return new String(new Base64().decode(getResponseValue(fieldName).getBytes("UTF-8")));
+  }
 
   /**
    * Gets the records attribute of the CRMConnection object
@@ -105,15 +117,14 @@ public class CRMConnection extends CFSHttpXMLWriter {
    * @return The records value
    */
   public ArrayList getRecords(String className) {
-    int count = getRecordCount();
     ArrayList records = new ArrayList();
     try {
       ArrayList elements = new ArrayList();
 
       XMLUtils xml = new XMLUtils(getLastResponse());
       Element response = xml.getFirstChild("response");
-      Element recordSet = xml.getFirstChild(response, "recordSet");
-      xml.getAllChildren(recordSet, elements);
+      Element recordSet = XMLUtils.getFirstChild(response, "recordSet");
+      XMLUtils.getAllChildren(recordSet, elements);
 
       Iterator i = elements.iterator();
       while (i.hasNext()) {

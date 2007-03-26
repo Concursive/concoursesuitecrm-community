@@ -275,6 +275,9 @@ public class LookupList extends HtmlSelect implements SyncableList {
     this.tableName = tmp;
   }
 
+  public void setUniqueField(String tmp) {
+    this.uniqueField = tmp;
+  }
 
   /**
    *  Sets the lastAnchor attribute of the LookupList object
@@ -786,8 +789,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
    * @return                The object value
    * @throws  SQLException  Description of Exception
    */
-  public LookupElement getObject(ResultSet rs) throws SQLException {
+  public Object getObject(ResultSet rs) throws SQLException {
     LookupElement thisElement = new LookupElement(rs);
+    thisElement.setTableName(tableName);
+    
     return thisElement;
   }
 
@@ -816,7 +821,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
       pagedListInfo.doManualOffset(db, rs);
     }
     while (rs.next()) {
-      LookupElement thisElement = this.getObject(rs);
+      LookupElement thisElement = (LookupElement) this.getObject(rs);
       if (thisElement.getEnabled() == true || !showDisabledFlag || hasItem(
           thisElement.getCode())) {
         this.add(thisElement);

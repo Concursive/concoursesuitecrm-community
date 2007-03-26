@@ -17,10 +17,13 @@ package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 
+import com.darkhorseventures.framework.beans.GenericBean;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 /**
  * Description of the Class
@@ -30,55 +33,219 @@ import java.sql.ResultSet;
  *          Exp $
  * @created January 25, 2006
  */
-public class ActionStepMap {
+public class ActionStepMap extends GenericBean {
   private int mapId = -1;
   private int constantId = -1;
   private int actionConstantId = -1;
+  private Timestamp entered = null;
+  private Timestamp modified = null;
 
+  /**
+   * Constructor for the ActionStepMap object
+   */
   public ActionStepMap() {}
 
-  public int getMapId() {
+  /**
+   * Constructor for the ActionStepMap object
+   * @param rs
+   * @throws SQLException
+   */
+  public ActionStepMap(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Returned Value
+   */
+  public int getId() {
     return mapId;
   }
 
-  public void setMapId(int mapId) {
+  /**
+   * Description of the Method
+   *
+   * @param mapId Description of the Returned Value
+   */
+  public void setId(int mapId) {
     this.mapId = mapId;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param mapId Description of the Returned Value
+   */
+  public void setId(String mapId) {
+    this.mapId = Integer.parseInt(mapId);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Returned Value
+   */
   public int getConstantId() {
     return constantId;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param constantId Description of the Returned Value
+   */
   public void setConstantId(int constantId) {
     this.constantId = constantId;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param constantId Description of the Returned Value
+   */
+  public void setConstantId(String constantId) {
+    this.constantId = Integer.parseInt(constantId);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Returned Value
+   */
   public int getActionConstantId() {
     return actionConstantId;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param actionConstantId Description of the Returned Value
+   */
   public void setActionConstantId(int actionConstantId) {
     this.actionConstantId = actionConstantId;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param actionConstantId Description of the Returned Value
+   */
+  public void setActionConstantId(String actionConstantId) {
+    this.actionConstantId = Integer.parseInt(actionConstantId);
+  }
+
+  /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param rs Description of the Returned Value
+   * @throws SQLException 
+   */
+  private void buildRecord(ResultSet rs) throws SQLException {
+    setId(rs.getInt("map_id"));
+    setConstantId(rs.getInt("constant_id"));
+    setActionConstantId(rs.getInt("action_constant_id"));
+    setEntered(rs.getTimestamp("entered"));
+    setModified(rs.getTimestamp("modified"));
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @throws SQLException Description of the Returned Value
+   */
   public void insert(Connection db) throws SQLException {
     mapId = DatabaseUtils.getNextSeq(db, "step_action_map_map_id_seq");
-    PreparedStatement pst = db.prepareStatement(
+    StringBuffer sql = new StringBuffer();
+    sql.append(
         "INSERT INTO step_action_map (" +
-            (mapId > -1 ? "map_id, " : "") + "constant_id, action_constant_id) " +
-            "VALUES (" +
-            (mapId > -1 ? "?, " : "") + "?, ?) ");
+        (mapId > -1 ? "map_id, " : "") + "constant_id, action_constant_id");
+    if(this.getEntered() != null){
+      sql.append(", entered");
+    }
+    if(this.getModified() != null){
+      sql.append(", modified");
+    }
+    sql.append(
+        ") VALUES (" +
+        (mapId > -1 ? "?, " : "") + "?, ?");
+    if(this.getEntered() != null){
+      sql.append(", ?");
+    }
+    if(this.getModified() != null){
+      sql.append(", ?");
+    }
+    sql.append(") ");
+
     int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+
     if (mapId > -1) {
       pst.setInt(++i, mapId);
     }
     pst.setInt(++i, constantId);
     pst.setInt(++i, actionConstantId);
+    if(this.getEntered() != null){
+      DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
+    }
+    if(this.getModified() != null){
+      DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
+    }
+
     pst.execute();
     pst.close();
     mapId = DatabaseUtils.getCurrVal(db, "step_action_map_map_id_seq", mapId);
   }
   
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @throws SQLException Description of the Returned Value
+   */
   public void delete(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
       "DELETE FROM step_action_map WHERE constant_id = ? AND action_constant_id = ? ");
@@ -88,6 +255,14 @@ public class ActionStepMap {
     pst.close();
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param constantId
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
   public static int retrieveActionPlanMapIdFromConstantId(Connection db, int constantId) throws SQLException {
     int mapId = -1;
     PreparedStatement pst = db.prepareStatement(

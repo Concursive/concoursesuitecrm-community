@@ -16,12 +16,10 @@
 package org.aspcfs.modules.admin.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Description of the Class
@@ -32,6 +30,7 @@ import java.sql.SQLException;
  */
 public class RolePermission extends GenericBean {
 
+  private static final long serialVersionUID = 1419251940758986734L;
   protected int id = -1;
   protected int roleId = -1;
   protected int permissionId = -1;
@@ -39,7 +38,12 @@ public class RolePermission extends GenericBean {
   protected boolean view = false;
   protected boolean edit = false;
   protected boolean delete = false;
-
+  protected boolean offlineAdd = false;
+  protected boolean offlineView = false;
+  protected boolean offlineEdit = false;
+  protected boolean offlineDelete = false;
+  protected Timestamp entered = null;
+  protected Timestamp modified = null;
 
   /**
    * Constructor for the RolePermission object
@@ -293,6 +297,131 @@ public class RolePermission extends GenericBean {
     return delete;
   }
 
+  /**
+   * @return the offlineAdd
+   */
+  public boolean getOfflineAdd() {
+    return offlineAdd;
+  }
+
+  /**
+   * @param offlineAdd the offlineAdd to set
+   */
+  public void setOfflineAdd(boolean offlineAdd) {
+    this.offlineAdd = offlineAdd;
+  }
+
+  /**
+   * @param offlineAdd the offlineAdd to set
+   */
+  public void setOfflineAdd(String offlineAdd) {
+    this.offlineAdd = DatabaseUtils.parseBoolean(offlineAdd);
+  }
+
+  /**
+   * @return the offlineDelete
+   */
+  public boolean getOfflineDelete() {
+    return offlineDelete;
+  }
+
+  /**
+   * @param offlineDelete the offlineDelete to set
+   */
+  public void setOfflineDelete(boolean offlineDelete) {
+    this.offlineDelete = offlineDelete;
+  }
+
+  /**
+   * @param offlineDelete the offlineDelete to set
+   */
+  public void setOfflineDelete(String offlineDelete) {
+    this.offlineDelete = DatabaseUtils.parseBoolean(offlineDelete);
+  }
+
+  /**
+   * @return the offlineEdit
+   */
+  public boolean getOfflineEdit() {
+    return offlineEdit;
+  }
+
+  /**
+   * @param offlineEdit the offlineEdit to set
+   */
+  public void setOfflineEdit(boolean offlineEdit) {
+    this.offlineEdit = offlineEdit;
+  }
+
+  /**
+   * @param offlineEdit the offlineEdit to set
+   */
+  public void setOfflineEdit(String offlineEdit) {
+    this.offlineEdit = DatabaseUtils.parseBoolean(offlineEdit);
+  }
+
+  /**
+   * @return the offlineView
+   */
+  public boolean getOfflineView() {
+    return offlineView;
+  }
+
+  /**
+   * @param offlineView the offlineView to set
+   */
+  public void setOfflineView(boolean offlineView) {
+    this.offlineView = offlineView;
+  }
+
+  /**
+   * @param offlineView the offlineView to set
+   */
+  public void setOfflineView(String offlineView) {
+    this.offlineView = DatabaseUtils.parseBoolean(offlineView);
+  }
+
+  /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    * Description of the Method
@@ -309,6 +438,12 @@ public class RolePermission extends GenericBean {
     add = rs.getBoolean("role_add");
     edit = rs.getBoolean("role_edit");
     delete = rs.getBoolean("role_delete");
+    offlineView = rs.getBoolean("role_offline_view");
+    offlineAdd = rs.getBoolean("role_offline_add");
+    offlineEdit = rs.getBoolean("role_offline_edit");
+    offlineDelete = rs.getBoolean("role_offline_delete");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
@@ -321,10 +456,27 @@ public class RolePermission extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "role_permission_id_seq");
-    PreparedStatement pst = db.prepareStatement(
+    StringBuffer sql = new StringBuffer(); 
+    sql.append(        
         "INSERT INTO role_permission (" + (id > -1 ? "id, " : "") + "role_id, permission_id, role_view, " +
-        "role_add, role_edit, role_delete) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?,?, ?) ");
+        "role_add, role_edit, role_delete" +
+        ", role_offline_view, role_offline_add, role_offline_edit, role_offline_delete" +
+        ", entered, modified" +
+        ") " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?,?, ?" +
+        ", ?, ?, ?, ?");
+    if(entered == null){
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+    }else{
+      sql.append(", ?");
+    }
+    if(modified == null){
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+    }else{
+      sql.append(", ?");
+    }
+    sql.append(") ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -335,10 +487,44 @@ public class RolePermission extends GenericBean {
     pst.setBoolean(++i, add);
     pst.setBoolean(++i, edit);
     pst.setBoolean(++i, delete);
+    pst.setBoolean(++i, offlineView);
+    pst.setBoolean(++i, offlineAdd);
+    pst.setBoolean(++i, offlineEdit);
+    pst.setBoolean(++i, offlineDelete);
+    if(entered != null){
+      pst.setTimestamp(++i, entered);
+    }
+    if(modified != null){
+      pst.setTimestamp(++i, modified);
+    }
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "role_permission_id_seq", id);
     return true;
   }
-}
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @throws SQLException Description of the Returned Value
+   */
+  public static void setReadOnlyOfflinePermissionsForAll(Connection db, SystemStatus systemStatus) throws SQLException{
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE role_permission" +
+        " SET role_offline_add = ?," +
+        " role_offline_edit = ?," +
+        " role_offline_delete = ?"
+        );
+    pst.setBoolean(++i, false);
+    pst.setBoolean(++i, false);
+    pst.setBoolean(++i, false);
+    pst.executeUpdate();
+    if(pst != null){
+      pst.close();
+    }
+    
+    systemStatus.updateRolePermissions(db);
+  }
+}

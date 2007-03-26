@@ -16,6 +16,8 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
+
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -373,11 +375,12 @@ public class SharingHandler extends TagSupport implements TryCatchFinally {
       SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
           "SystemStatus")).get(ce.getUrl());
       StringTokenizer st = new StringTokenizer(permissionName, ",");
+      boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(pageContext.getServletContext(), "OFFLINE_MODE"));
       while (st.hasMoreTokens()) {
         String thisPermission = st.nextToken();
         ++checks;
         if (systemStatus.hasPermission(
-            thisUser.getUserId(), thisPermission.trim())) {
+            thisUser.getUserId(), thisPermission.trim() + (isOfflineMode?"-offline":""))) {
           ++matches;
         }
       }

@@ -479,5 +479,10 @@ public class PaymentGatewayList extends HtmlSelect implements SyncableList {
     // TODO Auto-generated method stub
 
   }
-
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+	  // TODO Auto-generated method stub
+  }
 }

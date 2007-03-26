@@ -19,6 +19,8 @@ import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.webdav.WebdavServlet;
+
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
@@ -72,8 +74,13 @@ import java.util.*;
  * @version $Id$
  * @created September 17, 2001
  */
+
 public class User extends GenericBean {
-  // User Properties
+
+  private static final long serialVersionUID = -8407265772708150808L;
+
+  private static final Logger log = Logger.getLogger(org.aspcfs.modules.admin.base.User.class);
+
   protected String errmsg = "";
 
   protected int id = -1;
@@ -676,11 +683,10 @@ public class User extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public String generateRandomPassword(Connection db) throws SQLException {
-    int resultCount = -1;
     String newPassword = String.valueOf(StringUtils.rand(100000, 999999));
     this.setPassword1(newPassword);
     this.setPassword2(newPassword);
-    resultCount = this.newPassword(db);
+    this.newPassword(db);
     return newPassword;
   }
 
@@ -1857,6 +1863,56 @@ public class User extends GenericBean {
   }
 
   /**
+   * @return the startOfDay
+   */
+  public int getStartOfDay() {
+    return startOfDay;
+  }
+
+  /**
+   * @param startOfDay the startOfDay to set
+   */
+  public void setStartOfDay(int startOfDay) {
+    this.startOfDay = startOfDay;
+  }
+
+  /**
+   * @param startOfDay the startOfDay to set
+   */
+  public void setStartOfDay(String startOfDay) {
+    try{
+      this.startOfDay = Integer.parseInt(startOfDay);
+    }catch (Exception e) {
+      this.startOfDay = -1;
+    }
+  }
+
+  /**
+   * @return the endOfDay
+   */
+  public int getEndOfDay() {
+    return endOfDay;
+  }
+
+  /**
+   * @param endOfDay the endOfDay to set
+   */
+  public void setEndOfDay(int endOfDay) {
+    this.endOfDay = endOfDay;
+  }
+
+  /**
+   * @param endOfDay the endOfDay to set
+   */
+  public void setEndOfDay(String endOfDay) {
+    try{
+      this.endOfDay = Integer.parseInt(endOfDay);
+    }catch (Exception e) {
+      this.endOfDay = -1;
+    }
+  }
+
+  /**
    * Returns whether this user is above the specified userId. If the specified
    * userId is a child of this user, returns true.
    *
@@ -1945,13 +2001,15 @@ public class User extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-              "SET " + DatabaseUtils.addQuotes(db, "password") + " = ?, webdav_password = ?, hidden = ? " +
+              "SET " + DatabaseUtils.addQuotes(db, "password") + " = ?, webdav_password = ?, hidden = ?, " +
+                     "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, encryptPassword(password1));
       pst.setString(++i, this.encryptWebdavPassword(username, password1));
       pst.setBoolean(++i, this.getHidden());
+      pst.setInt(++i, modifiedBy);
       pst.setInt(++i, getId());
       resultCount = pst.executeUpdate();
       pst.close();
@@ -1984,12 +2042,14 @@ public class User extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-              "SET webdav_password = ?, hidden = ? " +
+              "SET webdav_password = ?, hidden = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, tmpPwd);
       pst.setBoolean(++i, this.getHidden());
+      pst.setInt(++i, modifiedBy);
       pst.setInt(++i, getId());
       pst.executeUpdate();
 
@@ -2033,9 +2093,7 @@ public class User extends GenericBean {
       if ((doCommit = db.getAutoCommit()) == true) {
         db.setAutoCommit(false);
       }
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("User-> Beginning insert");
-      }
+      log.debug("User-> Beginning insert");
       //new contact at the same time
       if (contactId < 1 && addContact) {
         Contact newContact = this.getContact();
@@ -2043,13 +2101,9 @@ public class User extends GenericBean {
         newContact.setModifiedBy(modifiedBy);
         newContact.setOwner(enteredBy);
         newContact.insert(db);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("User-> Inserting new Contact");
-        }
+        log.debug("User-> Inserting new Contact");
         contactId = newContact.getId();
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("User-> New Contact ID: " + newContact.getId());
-        }
+        log.debug("User-> New Contact ID: " + newContact.getId());
       }
       checkHidden();
       // Insert the user
@@ -2062,12 +2116,7 @@ public class User extends GenericBean {
       if (id > -1) {
         sql.append("user_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       if (lastLogin != null) {
         sql.append("last_login, ");
       }
@@ -2081,17 +2130,20 @@ public class User extends GenericBean {
       if (language != null) {
         sql.append("" + DatabaseUtils.addQuotes(db, "language") + ", ");
       }
-      sql
-          .append("enteredBy, modifiedBy, webdav_password, hidden, allow_webdav_access, allow_httpapi_access ) ");
+      sql.append("enteredBy, modifiedBy, webdav_password, hidden, allow_webdav_access, allow_httpapi_access ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?, ");
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (lastLogin != null) {
         sql.append("?, ");
@@ -2154,28 +2206,28 @@ public class User extends GenericBean {
       pst.setBoolean(++i, this.getHasHttpApiAccess());
       pst.execute();
       pst.close();
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("User-> Getting interval value");
-      }
+      log.debug("User-> Getting interval value");
+      
       id = DatabaseUtils.getCurrVal(db, "access_user_id_seq", id);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("User-> Updating contact");
-      }
+
       //Update the backwards pointer
+      log.debug("User-> Updating contact");
       pst = db.prepareStatement(
           "UPDATE contact " +
-              "SET user_id = ? " +
+              "SET user_id = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE contact_id = ? ");
       pst.setInt(1, id);
-      pst.setInt(2, contact.getId());
+      pst.setInt(2, modifiedBy);
+      pst.setInt(3, contact.getId());
       pst.executeUpdate();
       pst.close();
+
       if (doCommit) {
         db.commit();
       }
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("User-> User inserted & contact record updated");
-      }
+      
+      log.debug("User-> User inserted & contact record updated");
     } catch (SQLException e) {
       if (doCommit) {
         db.rollback();
@@ -2277,11 +2329,13 @@ public class User extends GenericBean {
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-            "SET enabled = ?, hidden = ? " +
+            "SET enabled = ?, hidden = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
             "WHERE user_id = ? ");
     pst.setBoolean(1, false);
     pst.setBoolean(2, this.getHidden());
-    pst.setInt(3, this.getId());
+    pst.setInt(3, this.getModifiedBy());
+    pst.setInt(4, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -2309,11 +2363,13 @@ public class User extends GenericBean {
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-            "SET enabled = ? , hidden = ? " +
+            "SET enabled = ? , hidden = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
             "WHERE user_id = ? ");
     pst.setBoolean(1, true);
     pst.setBoolean(2, this.getHidden());
-    pst.setInt(3, this.getId());
+    pst.setInt(3, this.getModifiedBy());
+    pst.setInt(4, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -2359,12 +2415,14 @@ public class User extends GenericBean {
       String sql =
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET last_login = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-              "last_ip = ?, hidden = ? " +
+              "last_ip = ?, hidden = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.ip);
       pst.setBoolean(2, this.getHidden());
-      pst.setInt(3, this.id);
+      pst.setInt(3, this.getModifiedBy());
+      pst.setInt(4, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -2385,12 +2443,14 @@ public class User extends GenericBean {
       String sql =
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET allow_httpapi_access = ?, " +
-              "hidden = ? " +
+              "hidden = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setBoolean(1, access);
       pst.setBoolean(2, this.getHidden());
-      pst.setInt(3, this.id);
+      pst.setInt(3, this.getModifiedBy());
+      pst.setInt(4, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -2410,12 +2470,14 @@ public class User extends GenericBean {
       String sql =
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
               "SET allow_webdav_access = ?, " +
-              "hidden = ? " +
+              "hidden = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setBoolean(1, access);
       pst.setBoolean(2, this.getHidden());
-      pst.setInt(3, this.id);
+      pst.setInt(3, this.getModifiedBy());
+      pst.setInt(4, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -2446,14 +2508,16 @@ public class User extends GenericBean {
       checkHidden();
       String sql =
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-              "SET timezone = ?, currency = ?, " + DatabaseUtils.addQuotes(db, "language") + " = ?, hidden = ? " +
+              "SET timezone = ?, currency = ?, " + DatabaseUtils.addQuotes(db, "language") + " = ?, hidden = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
               "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.timeZone);
       pst.setString(2, this.currency);
       pst.setString(3, this.language);
       pst.setBoolean(4, this.getHidden());
-      pst.setInt(5, this.id);
+      pst.setInt(5, this.getModifiedBy());
+      pst.setInt(6, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -2981,7 +3045,7 @@ public class User extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-            "SET username = ?, manager_id = ?, role_id = ?, expires = ?, site_id = ?, ");
+            "SET username = ?, manager_id = ?, role_id = ?, expires = ?, site_id = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     if (password1 != null) {
       sql.append("" + DatabaseUtils.addQuotes(db, "password") + " = ?, ");
       sql.append("webdav_password = ?, ");

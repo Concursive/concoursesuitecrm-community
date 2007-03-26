@@ -17,6 +17,8 @@ package org.aspcfs.modules.setup.utils;
 
 import bsh.EvalError;
 import bsh.Interpreter;
+
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.help.ImportHelp;
 import org.aspcfs.apps.icelets.ImportIcelets;
 import org.aspcfs.apps.lookuplists.ImportLookupLists;
@@ -43,6 +45,7 @@ import java.util.HashMap;
  */
 public class SetupUtils {
 
+  static Logger log = Logger.getLogger(org.aspcfs.modules.setup.utils.SetupUtils.class);
   public final static String fs = System.getProperty("file.separator");
 
   public static void createDatabaseSchema(Connection db, String setupPath) throws Exception {
@@ -115,7 +118,7 @@ public class SetupUtils {
     script.set("db", db);
     script.set("dbFileLibraryPath", dbFileLibraryPath);
     script.set("locale", locale);
-    script.set("prefsPath", setupPath + "init" + fs);
+    script.set("prefsPath", setupPath.substring(0, setupPath.indexOf(fs + "WEB-INF" + fs)) + fs + "WEB-INF" + fs);
     // Default database inserts
     script.source(setupPath + "init" + fs + "sync.bsh");
     script.source(setupPath + "init" + fs + "sync-mappings.bsh");

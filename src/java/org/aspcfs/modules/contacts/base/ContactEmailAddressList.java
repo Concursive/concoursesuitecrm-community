@@ -16,34 +16,31 @@
 package org.aspcfs.modules.contacts.base;
 
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.EmailAddressList;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
-
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Contains a list of email addresses... currently used to build the list from
- * the database with any of the parameters to limit the results.
+ *  Contains a list of email addresses... currently used to build the list from
+ *  the database with any of the parameters to limit the results.
  *
- * @author mrajkowski
- * @version $Id: ContactEmailAddressList.java,v 1.7.34.2 2004/04/08 18:36:20
- *          kbhoopal Exp $
- * @created January 29, 2003
+ * @author     mrajkowski
+ * @version    $Id: ContactEmailAddressList.java,v 1.7.34.2 2004/04/08 18:36:20
+ *      kbhoopal Exp $
+ * @created    January 29, 2003
  */
-public class ContactEmailAddressList extends EmailAddressList {
+public class ContactEmailAddressList extends EmailAddressList implements SyncableList{
 
   public final static String tableName = "contact_emailaddress";
   public final static String uniqueField = "emailaddress_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
 
   //Html drop-down helper properties
   private String emptyHtmlSelectRecord = null;
@@ -51,16 +48,29 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   * Constructor for the ContactEmailAddressList object
+   *  Constructor for the ContactEmailAddressList object
    */
-  public ContactEmailAddressList() {
+  public ContactEmailAddressList() { }
+
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
-   * Constructor for the ContactEmailAddressList object
+   *  Constructor for the ContactEmailAddressList object
    *
-   * @param request Description of the Parameter
+   * @param  request  Description of the Parameter
    */
   public ContactEmailAddressList(HttpServletRequest request) {
     int i = 0;
@@ -81,62 +91,11 @@ public class ContactEmailAddressList extends EmailAddressList {
     }
   }
 
-
   /**
-   * Gets the tableName attribute of the ContactEmailAddressList object
+   *  Gets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
+   *  object
    *
-   * @return The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the ContactEmailAddressList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   * Gets the lastAnchor attribute of the ContactEmailAddressList object
-   *
-   * @return The lastAnchor value
-   */
-  public java.sql.Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   * Gets the nextAnchor attribute of the ContactEmailAddressList object
-   *
-   * @return The nextAnchor value
-   */
-  public java.sql.Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   * Gets the syncType attribute of the ContactEmailAddressList object
-   *
-   * @return The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   * Gets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
-   * object
-   *
-   * @return The emptyHtmlSelectRecord value
+   * @return    The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -144,50 +103,20 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   * Gets the jsEvent attribute of the ContactEmailAddressList object
+   *  Gets the jsEvent attribute of the ContactEmailAddressList object
    *
-   * @return The jsEvent value
+   * @return    The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
   }
 
 
-  /**
-   * Sets the lastAnchor attribute of the ContactEmailAddressList object
+    /**
+   *  Sets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
+   *  object
    *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ContactEmailAddressList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the syncType attribute of the ContactEmailAddressList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   * Sets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
-   * object
-   *
-   * @param tmp The new emptyHtmlSelectRecord value
+   * @param  tmp  The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -195,9 +124,9 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   * Sets the jsEvent attribute of the ContactEmailAddressList object
+   *  Sets the jsEvent attribute of the ContactEmailAddressList object
    *
-   * @param tmp The new jsEvent value
+   * @param  tmp  The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -205,14 +134,14 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -291,20 +220,49 @@ public class ContactEmailAddressList extends EmailAddressList {
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    while (rs.next()) {
-      ContactEmailAddress thisEmailAddress = new ContactEmailAddress(rs);
-      this.addElement(thisEmailAddress);
-    }
-    rs.close();
-    pst.close();
+
+    return rs;
   }
 
 
   /**
-   * Gets the htmlSelect attribute of the ContactEmailAddressList object
+   *  Description of the Method
    *
-   * @param selectName Description of the Parameter
-   * @return The htmlSelect value
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   */
+  public void buildList(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      ContactEmailAddress thisEmailAddress = this.getObject(rs);
+      this.addElement(thisEmailAddress);
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+  }
+
+
+  /**
+   *  Gets the object attribute of the ContactEmailAddressList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ContactEmailAddress getObject(ResultSet rs) throws SQLException {
+    ContactEmailAddress thisEmailAddress = new ContactEmailAddress(rs);
+    return thisEmailAddress;
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ContactEmailAddressList object
+   *
+   * @param  selectName  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -312,10 +270,11 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   * Gets the emptyHtmlSelect attribute of the ContactEmailAddressList object
+   *  Gets the emptyHtmlSelect attribute of the ContactEmailAddressList object
    *
-   * @param selectName Description of the Parameter
-   * @return The emptyHtmlSelect value
+   * @param  selectName  Description of the Parameter
+   * @param  thisSystem  Description of the Parameter
+   * @return             The emptyHtmlSelect value
    */
   public String getEmptyHtmlSelect(SystemStatus thisSystem, String selectName) {
     HtmlSelect emailListSelect = new HtmlSelect();
@@ -326,11 +285,11 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
-   * Gets the htmlSelect attribute of the ContactEmailAddressList object
+   *  Gets the htmlSelect attribute of the ContactEmailAddressList object
    *
-   * @param selectName Description of the Parameter
-   * @param defaultKey Description of the Parameter
-   * @return The htmlSelect value
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect emailListSelect = new HtmlSelect();
@@ -351,6 +310,13 @@ public class ContactEmailAddressList extends EmailAddressList {
     return emailListSelect.getHtml(selectName, defaultKey);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void select(Connection db) throws SQLException {
     buildList(db);
   }

@@ -21,7 +21,9 @@ CREATE TABLE lookup_currency (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each category can be associated with a type
@@ -32,7 +34,9 @@ CREATE TABLE lookup_product_category_type (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- A category groups one or more products
@@ -74,7 +78,9 @@ CREATE TABLE lookup_product_type (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each product can have a manufacturer
@@ -84,7 +90,9 @@ CREATE TABLE lookup_product_manufacturer (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each product can have a format
@@ -94,7 +102,9 @@ CREATE TABLE lookup_product_format (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each product can have a shipping code for shipping company
@@ -103,7 +113,9 @@ CREATE TABLE lookup_product_shipping (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each product can have an estimated shipping time
@@ -113,7 +125,9 @@ CREATE TABLE lookup_product_ship_time (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each product can have a tax code
@@ -122,7 +136,9 @@ CREATE TABLE lookup_product_tax (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each price is either fixed or recurring, if recurring then when?
@@ -132,7 +148,9 @@ CREATE TABLE lookup_recurring_type (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- The details of a product are listed
@@ -247,7 +265,9 @@ CREATE TABLE lookup_product_conf_result (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- A configurator allows options to be displayed, validated
@@ -351,7 +371,9 @@ CREATE TABLE lookup_product_keyword (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE product_keyword_map (

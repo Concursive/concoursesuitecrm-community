@@ -16,6 +16,7 @@
 package org.aspcfs.modules.pipeline.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -23,6 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 /**
  *  Description of the Class
@@ -31,7 +33,7 @@ import java.util.ArrayList;
  *@version
  *@created    February 1, 2006
  */
-public class OpportunityComponentLogList extends ArrayList {
+public class OpportunityComponentLogList extends ArrayList implements SyncableList {
 
   public final static String tableName = "opportunity_component_log";
   public final static String uniqueField = "id";
@@ -58,23 +60,74 @@ public class OpportunityComponentLogList extends ArrayList {
     this.pagedListInfo = tmp;
   }
 
-
   /**
-   *@return    Returns the tableName.
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
    */
-  public static String getTableName() {
+  public static OpportunityComponentLog getObject(ResultSet rs) throws SQLException {
+    OpportunityComponentLog opportunityComponentLog = new OpportunityComponentLog(rs);
+    return opportunityComponentLog;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
     return tableName;
   }
 
-
-  /**
-   *@return    Returns the uniqueField.
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
    */
-  public static String getUniqueField() {
+  public String getUniqueField() {
     return uniqueField;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    *@return    Returns the componentId.
    */
@@ -114,30 +167,12 @@ public class OpportunityComponentLogList extends ArrayList {
     return lastAnchor;
   }
 
-
-  /**
-   *@param  lastAnchor  The lastAnchor to set.
-   */
-  public void setLastAnchor(java.sql.Timestamp lastAnchor) {
-    this.lastAnchor = lastAnchor;
-  }
-
-
   /**
    *@return    Returns the nextAnchor.
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
   }
-
-
-  /**
-   *@param  nextAnchor  The nextAnchor to set.
-   */
-  public void setNextAnchor(java.sql.Timestamp nextAnchor) {
-    this.nextAnchor = nextAnchor;
-  }
-
 
   /**
    *@return    Returns the pagedListInfo.
@@ -162,14 +197,50 @@ public class OpportunityComponentLogList extends ArrayList {
     return syncType;
   }
 
-
   /**
-   *@param  syncType  The syncType to set.
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
    */
-  public void setSyncType(int syncType) {
-    this.syncType = syncType;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
   }
-
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+    // Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "ocl.*, y.description AS stagename " +
+        "FROM " + tableName + " ocl " +
+        "LEFT JOIN lookup_stage y ON (ocl.stage = y.code) " +
+        "WHERE ocl.id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(db, buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
 
   /**
    *  Builds a list of component log based on several parameters. The parameters
@@ -185,7 +256,6 @@ public class OpportunityComponentLogList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -238,34 +308,16 @@ public class OpportunityComponentLogList extends ArrayList {
       sqlOrder.append("ORDER BY ocl.entered");
     }
 
-    // Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "ocl.*, y.description AS stagename " +
-        "FROM opportunity_component_log ocl " +
-        "LEFT JOIN lookup_stage y ON (ocl.stage = y.code) " +
-        "WHERE ocl.id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
-         + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       OpportunityComponentLog thisOppComponentLog = new OpportunityComponentLog(
           rs);
       this.add(thisOppComponentLog);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
@@ -285,6 +337,17 @@ public class OpportunityComponentLogList extends ArrayList {
     if (componentId != -1) {
       sqlFilter.append("AND ocl.component_id = ? ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND ocl.entered > ? ");
+      }
+      sqlFilter.append("AND ocl.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND ocl.modified > ? ");
+      sqlFilter.append("AND ocl.entered < ? ");
+      sqlFilter.append("AND ocl.modified < ? ");
+    }
   }
 
 
@@ -302,6 +365,17 @@ public class OpportunityComponentLogList extends ArrayList {
     }
     if (componentId != -1) {
       pst.setInt(++i, componentId);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

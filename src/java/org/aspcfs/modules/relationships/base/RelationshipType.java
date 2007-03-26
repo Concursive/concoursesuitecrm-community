@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Represents a relationship type
@@ -39,6 +40,8 @@ public class RelationshipType {
   private int level = -1;
   private boolean defaultItem = false;
   private boolean enabled = false;
+  protected Timestamp entered = null;
+  protected Timestamp modified = null;
 
 
   /**
@@ -290,6 +293,51 @@ public class RelationshipType {
     return defaultItem;
   }
 
+  /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
+
+  /**
+   * Constructor for the RelationshipType object
+   */
   public RelationshipType() {
   }
 
@@ -356,6 +404,8 @@ public class RelationshipType {
     level = rs.getInt("level");
     defaultItem = rs.getBoolean("default_item");
     enabled = rs.getBoolean("enabled");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
   public boolean insert(Connection db) throws SQLException {
@@ -368,12 +418,23 @@ public class RelationshipType {
     if (typeId > -1) {
       sql.append("type_id, ");
     }
-    sql.append("enabled) ");
+    sql.append("enabled, entered, modified) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
     if (typeId > -1) {
       sql.append("?, ");
     }
-    sql.append("?) ");
+    sql.append("?");
+    if(entered == null){
+      sql.append(", CURRENT_TIMESTAMP");
+    }else{
+      sql.append(", ?");
+    }
+    if(modified == null){
+      sql.append(", CURRENT_TIMESTAMP");
+    }else{
+      sql.append(", ?");
+    }
+    sql.append(") ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, categoryIdMapsFrom);
@@ -386,6 +447,12 @@ public class RelationshipType {
       pst.setInt(++i, typeId);
     }
     pst.setBoolean(++i, enabled);
+    if(entered != null){
+      pst.setTimestamp(++i, entered);
+    }
+    if(modified != null){
+      pst.setTimestamp(++i, modified);
+    }
     pst.execute();
     pst.close();
     typeId = DatabaseUtils.getCurrVal(db, "lookup_relationship_types_type_id_seq", typeId);

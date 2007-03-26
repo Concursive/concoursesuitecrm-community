@@ -15,44 +15,53 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.EmailAddressList;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Contains a list of email addresses... currently used to build the list from
- * the database with any of the parameters to limit the results.
+ *  Contains a list of email addresses... currently used to build the list from
+ *  the database with any of the parameters to limit the results.
  *
- * @author Mathur
- * @version $Id$
- * @created January 13, 2003
+ * @author     Mathur
+ * @version    $Id: OrganizationEmailAddressList.java 15647 2006-08-16 14:02:17Z
+ *      matt $
+ * @created    January 13, 2003
  */
-public class OrganizationEmailAddressList extends EmailAddressList {
+public class OrganizationEmailAddressList extends EmailAddressList implements SyncableList{
 
   public final static String tableName = "organization_emailaddress";
   public final static String uniqueField = "emailaddress_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
-
 
   /**
-   * Constructor for the OrganizationEmailAddressList object
+   *  Constructor for the OrganizationEmailAddressList object
    */
-  public OrganizationEmailAddressList() {
+  public OrganizationEmailAddressList() { }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
-   * Constructor for the OrganizationEmailAddressList object
+   *  Constructor for the OrganizationEmailAddressList object
    *
-   * @param request Description of the Parameter
+   * @param  request  Description of the Parameter
    */
   public OrganizationEmailAddressList(HttpServletRequest request) {
     int i = 0;
@@ -73,96 +82,14 @@ public class OrganizationEmailAddressList extends EmailAddressList {
     }
   }
 
-
   /**
-   * Gets the tableName attribute of the OrganizationEmailAddressList object
+   *  Description of the Method
    *
-   * @return The tableName value
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the OrganizationEmailAddressList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   * Gets the lastAnchor attribute of the OrganizationEmailAddressList object
-   *
-   * @return The lastAnchor value
-   */
-  public java.sql.Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   * Gets the nextAnchor attribute of the OrganizationEmailAddressList object
-   *
-   * @return The nextAnchor value
-   */
-  public java.sql.Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   * Gets the syncType attribute of the OrganizationEmailAddressList object
-   *
-   * @return The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   * Sets the lastAnchor attribute of the OrganizationEmailAddressList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the OrganizationEmailAddressList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the syncType attribute of the OrganizationEmailAddressList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
-   */
-  public void buildList(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -241,15 +168,46 @@ public class OrganizationEmailAddressList extends EmailAddressList {
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+
+    return rs;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   */
+  public void buildList(Connection db) throws SQLException {
+    ResultSet rs = queryList(db, null);
     while (rs.next()) {
-      OrganizationEmailAddress thisEmailAddress = new OrganizationEmailAddress(
-          rs);
+      OrganizationEmailAddress thisEmailAddress = this.getObject(rs);
       this.addElement(thisEmailAddress);
     }
     rs.close();
-    pst.close();
   }
 
+
+  /**
+   *  Gets the object attribute of the OrganizationEmailAddressList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public OrganizationEmailAddress getObject(ResultSet rs) throws SQLException {
+    OrganizationEmailAddress thisAddress = new OrganizationEmailAddress(rs);
+    return thisAddress;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void select(Connection db) throws SQLException {
     buildList(db);
   }

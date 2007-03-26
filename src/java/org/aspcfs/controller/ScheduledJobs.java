@@ -23,6 +23,7 @@ import org.aspcfs.modules.admin.jobs.UserCleanupJob;
 import org.aspcfs.modules.pipeline.jobs.ResetGraphDataJob;
 import org.aspcfs.modules.reports.jobs.ReportCleanupJob;
 import org.aspcfs.modules.reports.jobs.ReportRunnerJob;
+import org.aspcfs.modules.service.jobs.CompileSyncDataJob;
 import org.quartz.*;
 
 import java.text.ParseException;
@@ -178,5 +179,23 @@ public class ScheduledJobs {
       scheduler.scheduleJob(job, trigger);
     }
     */
+
+    // Sync Data Compiler
+    if (1 == 1){ 
+      JobDetail job = new JobDetail(
+          "syncDataCompiler",
+          Scheduler.DEFAULT_GROUP,
+          CompileSyncDataJob.class);
+      // Execute every 3 minutes, starting in 5 minutes
+      long startTime = System.currentTimeMillis() + (5L * 60L * 1000L);
+      SimpleTrigger trigger = new SimpleTrigger(
+          "syncDataCompiler",
+          Scheduler.DEFAULT_GROUP,
+          new Date(startTime),
+          null,
+          SimpleTrigger.REPEAT_INDEFINITELY,
+          3L * 60L * 1000L);
+      scheduler.scheduleJob(job, trigger);
+    }
   }
 }

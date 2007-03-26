@@ -16,6 +16,8 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -33,7 +35,7 @@ import java.util.Iterator;
  *          partha Exp $
  * @created October 17, 2005
  */
-public class TicketCategoryPlanMapList extends ArrayList {
+public class TicketCategoryPlanMapList extends ArrayList  implements SyncableList {
   PagedListInfo pagedListInfo = null;
   protected int id = -1;
   protected int categoryId = -1;
@@ -101,7 +103,13 @@ public class TicketCategoryPlanMapList extends ArrayList {
     this.syncType = tmp;
   }
 
-
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Gets the tableName attribute of the TicketCategoryPlanMapList object
    *
@@ -132,7 +140,7 @@ public class TicketCategoryPlanMapList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
+
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -141,7 +149,7 @@ public class TicketCategoryPlanMapList extends ArrayList {
         " SELECT COUNT(*) AS recordcount " +
             " FROM ticket_category_plan_map tpm " +
             " WHERE tpm.map_id > -1 ");
-    createFilter(sqlFilter, db);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -160,43 +168,24 @@ public class TicketCategoryPlanMapList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY tpm.map_id ");
     }
-    //Build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        " tpm.* " +
-            " FROM ticket_category_plan_map tpm " +
-            " WHERE tpm.map_id > -1 ");
-
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       TicketCategoryPlanMap thisMap = new TicketCategoryPlanMap(rs);
       this.add(thisMap);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
   /**
    * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter, Connection db) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -211,14 +200,14 @@ public class TicketCategoryPlanMapList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND tpm.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND tpm.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND tpm.modified > ? ");
+      sqlFilter.append("AND tpm.entered < ? ");
+      sqlFilter.append("AND tpm.modified < ? ");
     }
   }
 
@@ -504,6 +493,49 @@ public class TicketCategoryPlanMapList extends ArrayList {
    */
   public void setPlanId(String tmp) {
     this.planId = Integer.parseInt(tmp);
+  }
+  
+  /**
+   *  Gets the object attribute of the TicketCategoryPlanMapList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public TicketCategoryPlanMap getObject(ResultSet rs) throws SQLException {
+  	TicketCategoryPlanMap obj = new TicketCategoryPlanMap(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  	StringBuffer sqlSelect = new StringBuffer();
+  	 //Build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        " tpm.* " +
+            " FROM ticket_category_plan_map tpm " +
+            " WHERE tpm.map_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+  	return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  	return queryList(db, pst, "", "");
   }
 
 }

@@ -17,15 +17,13 @@ package com.zeroio.iteam.base;
 
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -37,7 +35,7 @@ import java.util.Iterator;
  *          $
  * @created February 8, 2002
  */
-public class FileItemList extends ArrayList {
+public class FileItemList extends ArrayList implements SyncableList{
   public final static String tableName = "project_files";
   public final static String uniqueField = "item_id";
   private java.sql.Timestamp lastAnchor = null;
@@ -66,74 +64,82 @@ public class FileItemList extends ArrayList {
   private int buildPortalRecords = Constants.UNDEFINED;
 
   /**
-   * Sets the lastAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new lastAnchor value
+   * Constructor for the FileItemList object
    */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
+  public FileItemList() {
   }
 
-
-  /**
-   * Sets the lastAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(String tmp) {
-    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-
-  /**
-   * Sets the syncType attribute of the ActionItemList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-  /**
-   * Gets the tableName attribute of the ActionItemList object
-   *
-   * @return The tableName value
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
    */
   public String getTableName() {
     return tableName;
   }
 
-
-  /**
-   * Gets the uniqueField attribute of the ActionItemList object
-   *
-   * @return The uniqueField value
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
    */
   public String getUniqueField() {
     return uniqueField;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+
   /**
+  
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static FileItem getObject(ResultSet rs) throws SQLException {
+    FileItem fileItem = new FileItem(rs);
+    return fileItem;
+  }
+
+   /**
    * Gets the enabled attribute of the FileItemList object
    *
    * @return The enabled value
@@ -181,14 +187,6 @@ public class FileItemList extends ArrayList {
   public void setHtmlJsEvent(String tmp) {
     this.htmlJsEvent = tmp;
   }
-
-
-  /**
-   * Constructor for the FileItemList object
-   */
-  public FileItemList() {
-  }
-
 
   /**
    * Gets the defaultFile attribute of the FileItemList object
@@ -520,8 +518,54 @@ public class FileItemList extends ArrayList {
     this.buildPortalRecords = buildPortalRecords;
   }
 
-
   /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "f.*, t.filename AS thumbnail " +
+            "FROM " + tableName + " f " +
+            "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f." + DatabaseUtils.addQuotes(db, "version") + " = t." + DatabaseUtils.addQuotes(db, "version") + ") " +
+            "WHERE f.item_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(db, buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+
+   /**
    * Generates a list of matching FileItems
    *
    * @param db Description of Parameter
@@ -531,7 +575,6 @@ public class FileItemList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -574,34 +617,17 @@ public class FileItemList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY f.subject ");
     }
-    //Build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "f.*, t.filename AS thumbnail " +
-            "FROM project_files f " +
-            "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f." + DatabaseUtils.addQuotes(db, "version") + " = t." + DatabaseUtils.addQuotes(db, "version") + ") " +
-            "WHERE f.item_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       FileItem thisItem = new FileItem(rs);
       thisItem.setDirectory(fileLibraryPath);
       this.add(thisItem);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
@@ -676,14 +702,14 @@ public class FileItemList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND f.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND f.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND f.modified > ? ");
+      sqlFilter.append("AND f.entered < ? ");
+      sqlFilter.append("AND f.modified < ? ");
     }
   }
 
@@ -695,7 +721,7 @@ public class FileItemList extends ArrayList {
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (linkModuleId > -1) {
       pst.setInt(++i, linkModuleId);

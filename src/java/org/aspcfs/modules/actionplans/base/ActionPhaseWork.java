@@ -892,7 +892,8 @@ public class ActionPhaseWork extends GenericBean {
    * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (level != 0) {
+    if (level <= 0) {
+      //NOTE: If the object is being restored or synced then the level should not be retrieved
       level = this.retrieveNextLevel(db);
     }
     id = DatabaseUtils.getNextSeq(db, "action_phase_work_phase_work_id_seq");
@@ -908,12 +909,7 @@ public class ActionPhaseWork extends GenericBean {
       sql.append("end_date, ");
     }
     sql.append("" + DatabaseUtils.addQuotes(db, "level") + ", ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredby, modifiedby, status_id ) ");
     sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ");
     if (startDate != null) {
@@ -925,9 +921,13 @@ public class ActionPhaseWork extends GenericBean {
     sql.append("?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?, ? ) ");
     int i = 0;

@@ -74,7 +74,7 @@
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th colspan="5">
+    <th colspan="9">
 	    <strong><dhv:label name="documents.permissions.long_html">Permissions</dhv:label></strong>
 	  </th>
   </tr>
@@ -94,6 +94,10 @@
     <td width="40" align="center"><dhv:label name="button.add">Add</dhv:label></td>
     <td width="40" align="center"><dhv:label name="button.edit">Edit</dhv:label></td>
     <td width="40" align="center"><dhv:label name="button.delete">Delete</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="admin.offlineView" param="break=<br />">Offline Access/<br />View</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="admin.offlineAdd" param="break=<br />">Offline<br />Add</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="admin.offlineEdit" param="break=<br />">Offline<br />Edit</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="admin.offlineDelete" param="break=<br />">Offline<br />Delete</dhv:label></td>
   </tr>
 <%
    }    
@@ -154,6 +158,30 @@
 <%
       }
 %>
+    </td><td align="center">
+<% if (thisPermission.getOfflineView()) { %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>offline_view" <%= (Role.getPermissionList().hasPermission(thisPermission.getName(), "offline_view"))?"checked":"" %>>
+<% } else { %>
+      --
+<% } %>
+    </td><td align="center">
+<% if (thisPermission.getOfflineAdd()) { %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>offline_add" <%= (Role.getPermissionList().hasPermission(thisPermission.getName(), "offline_add"))?"checked":"" %>>
+<% } else { %>
+      --
+<% } %>
+    </td><td align="center">
+<% if (thisPermission.getOfflineEdit()) { %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>offline_edit" <%= (Role.getPermissionList().hasPermission(thisPermission.getName(), "offline_edit"))?"checked":"" %>>
+<% } else { %>
+--
+<% } %>
+</td><td align="center">
+<% if (thisPermission.getOfflineDelete()) { %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>offline_delete" <%= (Role.getPermissionList().hasPermission(thisPermission.getName(), "offline_delete"))?"checked":"" %>>
+<% } else { %>
+      --
+<% } %>
     </td>
   </tr>
 <%

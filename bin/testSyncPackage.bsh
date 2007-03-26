@@ -1,0 +1,294 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:/usr/java/tomcat/common/lib/servlet-api.jar:lib/log4j-1.2.9.jar:lib/bsh-2.0b2.jar:build/lib/aspcfs.jar:lib/postgresql-8.1-405.jdbc3.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.service.utils.BackupUtils;
+import org.aspcfs.modules.service.base.SyncClient;
+import org.aspcfs.modules.service.base.SyncClientMap;
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.database.ConnectionElement;
+
+import java.sql.*;
+import java.util.*;
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  testSyncPackage [filename] [prefspath]");
+  print("");
+  print("The specified file will be used to read sync records from a database");
+  System.exit(0);
+}
+
+String url = "jdbc:postgresql://127.0.0.1:5432/f-20070207-offline";
+String user = "postgres";
+String password = "";
+String driver = "org.postgresql.Driver";
+
+// Create a Connection Pool
+ConnectionPool sqlDriver = new ConnectionPool();
+sqlDriver.setDebug(false);
+sqlDriver.setTestConnections(false);
+sqlDriver.setAllowShrinking(true);
+sqlDriver.setMaxConnections(2);
+sqlDriver.setMaxIdleTime(60000);
+sqlDriver.setMaxDeadTime(300000);
+
+ConnectionElement ce = new ConnectionElement(url, user, password);
+ce.setDriver(driver);
+Connection db = sqlDriver.getConnection(ce);
+Connection dbLookup = sqlDriver.getConnection(ce);
+
+String filename = bsh.args[0].trim();
+String prefsPath = bsh.args[1].trim();
+
+String fs = System.getProperty("file.separator") ;
+String mapFile = prefsPath + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
+
+//Add a new Sync client
+SyncClient syncClient = new SyncClient();
+syncClient.setId(-1);
+syncClient.setType("-- Backup --");
+syncClient.setCode("---");
+syncClient.setEnteredBy(0);
+syncClient.setModifiedBy(0);
+syncClient.setEnabled(true);
+syncClient.insert(db);
+
+//Prepare tables that need to be synced
+ArrayList dataRecords = new ArrayList();
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("userList");
+  record.setAction(DataRecord.SYNC);
+  record.setIdentity("0");
+  record.addField("includeDHVAdmin", "true");
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("lookupAccessTypesList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("accountList");
+  record.setAction(DataRecord.SYNC);
+  record.setIdentity("0");
+  record.addField("showMyCompany", "true");
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("contactList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("roleList");
+  record.setAction(DataRecord.SYNC);
+  record.addField("enabledState", String.valueOf(Constants.UNDEFINED));
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("permissionCategoryList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("permissionList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("rolePermissionList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("userList");
+  record.setAction(DataRecord.SELECT);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("lookupDurationTypeList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("lookupStageList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("lookupOpportunityTypesList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("opportunityList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("opportunityComponentList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("moduleFieldCategoryLinkList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("fileFolderList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("fileItemList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("fileItemVersionList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("fileDownloadLogList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("lookupStepActionsList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPlanCategoryList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPlanConstantsList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPlanEditorLookupList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPlanList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPhaseList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionStepList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("stepActionMapList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPlanWorkList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPlanWorkNoteList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionPhaseWorkList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionItemWorkList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionItemWorkNoteList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionStepLookupList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionStepAccountTypesList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("actionItemWorkSelectionList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("ticketCategoryPlanMapList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+if (1 == 1) {
+  DataRecord record = new DataRecord();
+  record.setName("ticketCategoryDraftPlanMapList");
+  record.setAction(DataRecord.SYNC);
+  dataRecords.add(record);
+}
+//Perform backup
+BackupUtils.backup(db, dbLookup, filename, mapFile, syncClient, dataRecords); 
+
+sqlDriver.free(db);
+sqlDriver.free(dbLookup);
+System.exit(0);

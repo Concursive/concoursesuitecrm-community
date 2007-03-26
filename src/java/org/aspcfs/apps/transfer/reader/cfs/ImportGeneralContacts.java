@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader.cfs;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.reader.csvreader.CSVReader;
@@ -37,6 +38,8 @@ import java.util.Locale;
  * @created March 3, 2003
  */
 public class ImportGeneralContacts extends CSVReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfs.ImportGeneralContacts.class);
 
   private int OWNER = 0;
   private int NAME_SALUTATION = 0;

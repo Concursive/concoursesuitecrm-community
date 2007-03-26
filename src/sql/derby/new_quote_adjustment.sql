@@ -15,7 +15,9 @@ CREATE TABLE lookup_quote_delivery (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each quote can have several conditions. They can be entered over the lifetime of a quote.
@@ -25,7 +27,9 @@ CREATE TABLE lookup_quote_condition (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create a new table to group quote versions
@@ -87,7 +91,9 @@ CREATE TABLE lookup_quote_remarks (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create a new table to map remarks to a quote

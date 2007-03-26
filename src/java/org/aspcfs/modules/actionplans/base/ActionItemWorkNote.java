@@ -23,10 +23,10 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author Ananth
- * @created August 30, 2005
+ * @author     Ananth
+ * @created    August 30, 2005
  */
 public class ActionItemWorkNote extends GenericBean {
   private int id = -1;
@@ -34,12 +34,74 @@ public class ActionItemWorkNote extends GenericBean {
   private String description = null;
   private java.sql.Timestamp submitted = null;
   private int submittedBy = -1;
+  protected Timestamp entered = null;
+  protected Timestamp modified = null;
 
 
   /**
-   * Gets the submittedBy attribute of the ActionItemWorkNote object
+   *  Gets the entered attribute of the ActionItemWorkNote object
    *
-   * @return The submittedBy value
+   * @return    The entered value
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActionItemWorkNote object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActionItemWorkNote object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the modified attribute of the ActionItemWorkNote object
+   *
+   * @return    The modified value
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionItemWorkNote object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionItemWorkNote object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the submittedBy attribute of the ActionItemWorkNote object
+   *
+   * @return    The submittedBy value
    */
   public int getSubmittedBy() {
     return submittedBy;
@@ -47,9 +109,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the submittedBy attribute of the ActionItemWorkNote object
+   *  Sets the submittedBy attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new submittedBy value
+   * @param  tmp  The new submittedBy value
    */
   public void setSubmittedBy(int tmp) {
     this.submittedBy = tmp;
@@ -57,9 +119,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the submittedBy attribute of the ActionItemWorkNote object
+   *  Sets the submittedBy attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new submittedBy value
+   * @param  tmp  The new submittedBy value
    */
   public void setSubmittedBy(String tmp) {
     this.submittedBy = Integer.parseInt(tmp);
@@ -67,9 +129,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Gets the id attribute of the ActionItemWorkNote object
+   *  Gets the id attribute of the ActionItemWorkNote object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -77,9 +139,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the ActionItemWorkNote object
+   *  Sets the id attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -87,9 +149,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the ActionItemWorkNote object
+   *  Sets the id attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -97,9 +159,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Gets the itemWorkId attribute of the ActionItemWorkNote object
+   *  Gets the itemWorkId attribute of the ActionItemWorkNote object
    *
-   * @return The itemWorkId value
+   * @return    The itemWorkId value
    */
   public int getItemWorkId() {
     return itemWorkId;
@@ -107,9 +169,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the itemWorkId attribute of the ActionItemWorkNote object
+   *  Sets the itemWorkId attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new itemWorkId value
+   * @param  tmp  The new itemWorkId value
    */
   public void setItemWorkId(int tmp) {
     this.itemWorkId = tmp;
@@ -117,9 +179,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the itemWorkId attribute of the ActionItemWorkNote object
+   *  Sets the itemWorkId attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new itemWorkId value
+   * @param  tmp  The new itemWorkId value
    */
   public void setItemWorkId(String tmp) {
     this.itemWorkId = Integer.parseInt(tmp);
@@ -127,9 +189,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Gets the description attribute of the ActionItemWorkNote object
+   *  Gets the description attribute of the ActionItemWorkNote object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
@@ -137,9 +199,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the description attribute of the ActionItemWorkNote object
+   *  Sets the description attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new description value
+   * @param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -147,9 +209,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Gets the submitted attribute of the ActionItemWorkNote object
+   *  Gets the submitted attribute of the ActionItemWorkNote object
    *
-   * @return The submitted value
+   * @return    The submitted value
    */
   public java.sql.Timestamp getSubmitted() {
     return submitted;
@@ -157,9 +219,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the submitted attribute of the ActionItemWorkNote object
+   *  Sets the submitted attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new submitted value
+   * @param  tmp  The new submitted value
    */
   public void setSubmitted(java.sql.Timestamp tmp) {
     this.submitted = tmp;
@@ -167,9 +229,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Sets the submitted attribute of the ActionItemWorkNote object
+   *  Sets the submitted attribute of the ActionItemWorkNote object
    *
-   * @param tmp The new submitted value
+   * @param  tmp  The new submitted value
    */
   public void setSubmitted(String tmp) {
     this.submitted = DatabaseUtils.parseTimestamp(tmp);
@@ -177,16 +239,17 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Constructor for the ActionItemWorkNote object
+   *  Constructor for the ActionItemWorkNote object
    */
   public ActionItemWorkNote() { }
 
 
   /**
-   * Constructor for the ActionItemWorkNote object
+   *  Constructor for the ActionItemWorkNote object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public ActionItemWorkNote(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -194,11 +257,12 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Constructor for the ActionItemWorkNote object
+   *  Constructor for the ActionItemWorkNote object
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  id                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public ActionItemWorkNote(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -206,11 +270,11 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  id             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -218,8 +282,8 @@ public class ActionItemWorkNote extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT aiwn.* " +
-            "FROM action_item_work_notes aiwn " +
-            "WHERE aiwn.note_id = ? ");
+        "FROM action_item_work_notes aiwn " +
+        "WHERE aiwn.note_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -235,10 +299,10 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("note_id");
@@ -246,25 +310,38 @@ public class ActionItemWorkNote extends GenericBean {
     description = rs.getString("description");
     submitted = rs.getTimestamp("submitted");
     submittedBy = rs.getInt("submittedby");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "action_item_work_notes_note_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO action_item_work_notes " +
-            "(" + (id > -1 ? "note_id, " : "") + "item_work_id, description, submitted, submittedby) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?)");
+        "(" + (id > -1 ? "note_id, " : "") +
+        "entered, modified, " +
+        "item_work_id, description, submitted, submittedby) " +
+        "VALUES (" + (id > -1 ? "?, " : "") +
+        (entered != null ? "?, " : (DatabaseUtils.getCurrentTimestamp(db) + ", ")) +
+        (modified != null ? "?, " : (DatabaseUtils.getCurrentTimestamp(db) + ", ")) +
+        "?, ?, ?, ?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
+    }
+    if (entered != null) {
+      pst.setTimestamp(++i, this.getEntered());
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
     }
     pst.setInt(++i, itemWorkId);
     pst.setString(++i, description);
@@ -278,17 +355,18 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean update(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_item_work_notes " +
-            "SET item_work_id = ?, description = ?, submitted = ?, submittedby = ? " +
-            "WHERE note_id = ? ");
+        "SET item_work_id = ?, description = ?, submitted = ?, submittedby = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE note_id = ? ");
     int i = 0;
     pst.setInt(++i, itemWorkId);
     pst.setString(++i, description);
@@ -302,10 +380,10 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Statement st = db.createStatement();
@@ -315,9 +393,9 @@ public class ActionItemWorkNote extends GenericBean {
 
 
   /**
-   * Gets the timeZoneParams attribute of the ActionItemWorkNote class
+   *  Gets the timeZoneParams attribute of the ActionItemWorkNote class
    *
-   * @return The timeZoneParams value
+   * @return    The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();

@@ -57,9 +57,9 @@ public class LoginUtils {
   /**
    * Constructor for the LoginUtils object
    *
-   * @param username Description of the Parameter
-   * @param password Description of the Parameter
    * @param db       Description of the Parameter
+   * @param username Description of the Parameter
+   * @param password Password value
    * @throws Exception Description of the Exception
    */
   public LoginUtils(Connection db, String username, String password) throws Exception {
@@ -72,8 +72,8 @@ public class LoginUtils {
   /**
    * Constructor for the LoginUtils object
    *
-   * @param loginBean Description of the Parameter
    * @param db        Description of the Parameter
+   * @param loginBean Description of the Parameter
    * @throws Exception Description of the Exception
    */
   public LoginUtils(Connection db, LoginBean loginBean) throws Exception {

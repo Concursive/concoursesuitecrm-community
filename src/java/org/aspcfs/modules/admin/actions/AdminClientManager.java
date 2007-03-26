@@ -125,7 +125,7 @@ public class AdminClientManager extends CFSModule {
           boolean success = syncClient.insert(db);
           resultCount = success ? 1 : 0;
         } else {
-          resultCount = syncClient.update(db, context);
+          resultCount = syncClient.update(db);
         }
       } else {
         context.getRequest().setAttribute("syncClient", syncClient);
@@ -203,7 +203,7 @@ public class AdminClientManager extends CFSModule {
         syncClient = new SyncClient(db, id);
         syncClient.setEnabled(true);
         syncClient.setModifiedBy(user.getId());
-        syncClient.update(db, context);
+        syncClient.update(db);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -239,7 +239,7 @@ public class AdminClientManager extends CFSModule {
         syncClient = new SyncClient(db, id);
         syncClient.setModifiedBy(user.getId());
         syncClient.setEnabled(false);
-        syncClient.update(db, context);
+        syncClient.update(db);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

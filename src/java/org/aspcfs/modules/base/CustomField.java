@@ -915,7 +915,7 @@ public class CustomField extends GenericBean implements Cloneable {
    *
    * @param param The new parameters value
    */
-  public void setParameters(String param) {
+  public void setParameterData(String param) {
     StringTokenizer st = new StringTokenizer(param, "^");
     while (st.hasMoreTokens()) {
       StringTokenizer kv = new StringTokenizer(st.nextToken(), "|");
@@ -1656,11 +1656,29 @@ public class CustomField extends GenericBean implements Cloneable {
       return -1;
     }
     StringBuffer sql = new StringBuffer();
+    int dataId = DatabaseUtils.getNextSeq(db, "custom_field_data_data_id_seq");
     sql.append(
         "INSERT INTO custom_field_data " +
             "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
+    if (dataId > -1) {
+      sql.append("id, ");
+    }
+    sql.append("entered, modified, ");
     sql.append("entered_float ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
+    if (dataId > -1) {
+      sql.append("?, ");
+    }
+    if (entered != null) {
+      sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
     sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1669,6 +1687,15 @@ public class CustomField extends GenericBean implements Cloneable {
     pst.setInt(++i, selectedItemId);
     pst.setString(++i, enteredValue);
     pst.setInt(++i, enteredNumber);
+    if (dataId > -1) {
+      pst.setInt(++i, dataId);
+    }
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
     pst.setDouble(++i, enteredDouble);
     pst.execute();
     pst.close();
@@ -1690,7 +1717,8 @@ public class CustomField extends GenericBean implements Cloneable {
     int result = 1;
     String sql =
         "UPDATE custom_field_info " +
-            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, group_id = ? " +
+            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, group_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1718,11 +1746,24 @@ public class CustomField extends GenericBean implements Cloneable {
         db.setAutoCommit(false);
       }
       id = DatabaseUtils.getNextSeq(db, "custom_field_info_field_id_seq");
-      String sql = "INSERT INTO custom_field_info " +
-          "(" + (id > -1 ? "field_id, " : "") + "group_id, field_name, field_type, required, parameters, additional_text ) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ";
+      StringBuffer sb = new StringBuffer();
+      sb.append("INSERT INTO custom_field_info " +
+          "(" + (id > -1 ? "field_id, " : "") + "group_id, field_name, field_type, required, parameters, ");
+      sb.append("entered, modified, ");
+      sb.append("additional_text ) VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ");
+      if (entered != null) {
+        sb.append("?, ");
+      } else {
+        sb.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      if (modified != null) {
+        sb.append("?, ");
+      } else {
+        sb.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      sb.append("?) ");
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
+      PreparedStatement pst = db.prepareStatement(sb.toString());
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -1731,6 +1772,12 @@ public class CustomField extends GenericBean implements Cloneable {
       pst.setInt(++i, type);
       pst.setBoolean(++i, required);
       pst.setString(++i, this.getParameterData());
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setString(++i, additionalText);
       pst.execute();
       pst.close();
@@ -1796,7 +1843,8 @@ public class CustomField extends GenericBean implements Cloneable {
     String sql =
         "UPDATE custom_field_info " +
             "SET field_name = ?, field_type = ?, required = ?, parameters = ?, " +
-            "additional_text = ? " +
+            "additional_text = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE group_id = ? " +
             "AND field_id = ? ";
     int i = 0;
@@ -2064,15 +2112,13 @@ public class CustomField extends GenericBean implements Cloneable {
     type = rs.getInt("field_type");
     validationType = rs.getInt("validation_type");
     required = rs.getBoolean("required");
-    String param = rs.getString("parameters");
+    this.setParameterData(rs.getString("parameters"));
     startDate = rs.getTimestamp("start_date");
     endDate = rs.getTimestamp("end_date");
     entered = rs.getTimestamp("entered");
-    modified = entered;
+    modified = rs.getTimestamp("modified");
     enabled = rs.getBoolean("enabled");
     additionalText = rs.getString("additional_text");
-
-    this.setParameters(param);
   }
 
   public String toString() {

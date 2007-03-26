@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader.cfs;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.reader.csvreader.CSVReader;
@@ -37,6 +38,9 @@ import java.util.Locale;
  * @created November 17, 2003
  */
 public class ImportAccounts extends CSVReader {
+  
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfs.ImportAccounts.class);
+
   //Column positions matching the file column number
   private int KEY_COMPANY = 0;
   private int OWNER = 0;

@@ -26,6 +26,7 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Import;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.modules.base.UserCentric;
 import org.aspcfs.modules.communications.base.SearchCriteriaElement;
 import org.aspcfs.modules.communications.base.SearchCriteriaGroup;
@@ -47,9 +48,16 @@ import java.util.*;
  * @version $Id$
  * @created August 29, 2001
  */
-public class ContactList extends Vector implements UserCentric {
+public class ContactList extends Vector implements UserCentric, SyncableList {
 
   private static final long serialVersionUID = -8573897895619490285L;
+
+  public final static String tableName = "contact";
+  public final static String uniqueField = "contact_id";
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
+
   //EXCLUDE_PERSONAL excludes all personal contacts, IGNORE_PERSONAL ignores personal contacts. By default the
   // list excludes personal contacts
   public final static int EXCLUDE_PERSONAL = -1;
@@ -197,13 +205,6 @@ public class ContactList extends Vector implements UserCentric {
   private static long milies = -1;
   private static Logger logger = Logger.getLogger(org.aspcfs.modules.contacts.base.ContactList.class);
 
-  static {
-    if (System.getProperty("DEBUG") != null) {
-      logger.setLevel(Level.DEBUG);
-    }
-  }
-
-
   /**
    * Constructor for the ContactList object
    *
@@ -212,7 +213,67 @@ public class ContactList extends Vector implements UserCentric {
   public ContactList() {
   }
 
+  public static Contact getObject(ResultSet rs) throws SQLException {
+    Contact contact = new Contact(rs);
+    return contact;
+  }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Gets the contactUserId attribute of the ContactList object
    *
@@ -2965,9 +3026,8 @@ public class ContactList extends Vector implements UserCentric {
    * @throws SQLException Description of Exception
    * @since 1.1
    */
-  public boolean buildList(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  
     ResultSet rs = null;
     int items = -1;
 
@@ -3127,17 +3187,32 @@ public class ContactList extends Vector implements UserCentric {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = DatabaseUtils.executeQuery(db, pst, logger, pagedListInfo);
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return rs;
+  }
+  
+  
+  /**
+   * Builds a list of contacts based on several parameters. The parameters are
+   * set after this object is constructed, then the buildList method is called
+   * to generate the list.
+   *
+   * @param db Description of Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of Exception
+   * @since 1.1
+   */
+  public boolean buildList(Connection db) throws SQLException {
+    ResultSet rs = queryList(db, null);
     boolean foundDefaultContact = false;
     while (rs.next()) {
-      Contact thisContact = new Contact(rs);
+      Contact thisContact = ContactList.getObject(rs);
       if (thisContact.getId() == defaultContactId) {
         foundDefaultContact = true;
       }
       this.addElement(thisContact);
     }
     rs.close();
-    pst.close();
     if (defaultContactId != -1 && !foundDefaultContact) {
       Contact thisContact = new Contact(db, defaultContactId);
       this.addElement(thisContact);
@@ -4525,6 +4600,18 @@ public class ContactList extends Vector implements UserCentric {
         sqlFilter.append(") ");
       }
     }
+    
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND c.entered > ? ");
+      }
+      sqlFilter.append("AND c.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND c.modified > ? ");
+      sqlFilter.append("AND c.entered < ? ");
+      sqlFilter.append("AND c.modified < ? ");
+    }    
   }
 
   /**
@@ -5027,6 +5114,18 @@ public class ContactList extends Vector implements UserCentric {
           }
         }
       }
+    }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
 
     return i;

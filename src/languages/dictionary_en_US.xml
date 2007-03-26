@@ -41,6 +41,9 @@
     <param name="global.button.Logout">
       <value><![CDATA[Logout]]></value>
     </param>
+    <param name="global.button.Sync">
+      <value><![CDATA[Sync]]></value>
+    </param>
     <param name="global.notUpdateMessage">
       <value><![CDATA[<b>This record could not be updated because someone else updated it first.</b><p> You can hit the back button to review the changes that could not be committed, but you must reload the record and make the changes again.]]></value>
     </param>
@@ -4165,6 +4168,18 @@
     <param name="trails.admin">
       <value><![CDATA[Admin]]></value>
     </param>
+    <param name="trails.sync">
+      <value><![CDATA[Sync]]></value>
+    </param>
+    <param name="trails.sync.history">
+      <value><![CDATA[Synchronization History]]></value>
+    </param>
+    <param name="trails.sync.download">
+      <value><![CDATA[Download Data]]></value>
+    </param>
+    <param name="trails.sync.upload">
+      <value><![CDATA[Upload Data]]></value>
+    </param>
     <param name="trails.configureModules">
       <value><![CDATA[Configure Modules]]></value>
     </param>
@@ -6122,6 +6137,32 @@ while a Guest has very limited functionality.]]></value>
     <param name="account.sc.adjust">
       <value><![CDATA[Adjust]]></value>
     </param>
+    <param name="login.offline.msg">
+      <value><![CDATA[You are currently logged in using offline mode. Some of the features have been turned off intentionally and may
+                 not be available during offline mode. When you regain connectivity, you can perform a sync with your Centric
+                 Server to be up-to-date.]]></value>
+    </param>
+    <param name="login.offline.invalid.state">
+      <value><![CDATA[The Offline Centric CRM system is in an invalid state. Your prior sync was not successful
+                 and the database might be in an un-reliable state. You can continue to review your
+                 offline data, but will not be able to perform any future syncs and add, edit or delete
+                 data. You need to re-install the system by clicking on "Reload" on your Desktop Client.]]></value>
+    </param>
+    <param name="offline.error.systemInConflictingState.text">
+      <value><![CDATA[Centric CRM Offline has detected the system to be in a conflicting state. Some of the required system files could be missing or corrupt.]]></value>
+    </param>
+    <param name="offline.error.systemNeedsToBeRestored.text">
+      <value><![CDATA[The system needs to be restored by reloading the offline client to continue working in offline mode.]]></value>
+    </param>
+    <param name="offline.error.reloadingWillResetYourEntire.text">
+      <value><![CDATA[Reloading an existing Centric Offline System will reset your entire offline database and perform a sync with the server. Any changes made while working offline after the last successful sync will be lost.]]></value>
+    </param>
+    <param name="offline.error.toReloadCloseBrowser.text">
+      <value><![CDATA[To reload Centric Offline System, close the browser and click on the 'Reload' button displayed on the Centric Desktop Client Window.]]></value>
+    </param>
+    <param name="login.offline.lastSyncedOn">
+      <value><![CDATA[Last Synced On]]></value>
+    </param>
     <param name="account.sc.adjustmentHours">
       <value><![CDATA[Adjustment Hours]]></value>
     </param>
@@ -6835,6 +6876,18 @@ reflect those changes.]]></value>
     </param>
     <param name="admin.accessView">
       <value><![CDATA[Access/${break}View]]></value>
+    </param>
+    <param name="admin.offlineView">
+      <value><![CDATA[Offline Access/${break}View]]></value>
+    </param>
+    <param name="admin.offlineAdd">
+      <value><![CDATA[Offline${break}Add]]></value>
+    </param>
+    <param name="admin.offlineEdit">
+      <value><![CDATA[Offline${break}Edit]]></value>
+    </param>
+    <param name="admin.aaccessView">
+      <value><![CDATA[Offline${break}Delete]]></value>
     </param>
     <param name="admin.addRole">
       <value><![CDATA[Add Role]]></value>
@@ -12567,6 +12620,18 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="accountsQuotes.notes.long_html">
       <value>Notes</value>
+    </param>
+    <param name="sync.sync">
+      <value><![CDATA[Synchronization]]></value>
+    </param>
+    <param name="sync.history">
+      <value><![CDATA[Synchronization History]]></value>
+    </param>
+    <param name="sync.download">
+      <value><![CDATA[Download Data]]></value>
+    </param>
+    <param name="sync.upload">
+      <value><![CDATA[Upload Data]]></value>
     </param>
   </config>
 </aspcfs>

@@ -501,6 +501,14 @@ public class Call extends GenericBean {
     this.assignedBy = assignedBy;
   }
 
+  /**
+   * Sets the assignedBy attribute of the Call object
+   *
+   * @param assignedBy The new assignedBy value
+   */
+  public void setAssignedBy(String assignedBy) {
+    this.assignedBy = Integer.parseInt(assignedBy);
+  }
 
   /**
    * Sets the completedBy attribute of the Call object
@@ -1530,12 +1538,7 @@ public class Call extends GenericBean {
         sql.append("call_id, ");
       }
 
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append("enteredBy, modifiedBy ) ");
       sql.append(
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
@@ -1544,9 +1547,13 @@ public class Call extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?) ");
       int i = 0;
@@ -1612,14 +1619,16 @@ public class Call extends GenericBean {
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq", id);
 
-      //mark complete/canceled based on statusId
-      if (this.getStatusId() == COMPLETE || this.getStatusId() == COMPLETE_FOLLOWUP_PENDING) {
-        markComplete(db, this.getEnteredBy());
-      } else if (this.getStatusId() == CANCELED) {
-        markCanceled(db, this.getEnteredBy());
-      }
-      if (actionId > 0) {
-        updateLog(db);
+      if (!offline && !restore) {
+        //mark complete/canceled based on statusId
+        if (this.getStatusId() == COMPLETE || this.getStatusId() == COMPLETE_FOLLOWUP_PENDING) {
+          markComplete(db, this.getEnteredBy());
+        } else if (this.getStatusId() == CANCELED) {
+          markCanceled(db, this.getEnteredBy());
+        }
+        if (actionId > 0) {
+          updateLog(db);
+        }
       }
       if (commit) {
         db.commit();
@@ -1896,7 +1905,8 @@ public class Call extends GenericBean {
     sql.append(
         "UPDATE call_log " +
             "SET completedby = ?, complete_date = " + DatabaseUtils.getCurrentTimestamp(
-            db) + ", status_id = ? " +
+            db) + ", status_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE call_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -1930,7 +1940,8 @@ public class Call extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE call_log " +
-            "SET completedby = ?, complete_date = CURRENT_TIMESTAMP, status_id = ? " +
+            "SET completedby = ?, complete_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", status_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE call_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

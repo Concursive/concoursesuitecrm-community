@@ -16,9 +16,10 @@
 package org.aspcfs.controller;
 
 import com.darkhorseventures.database.ConnectionPool;
+
+import org.apache.log4j.Logger;
 import org.apache.pluto.PortletContainer;
 import org.apache.pluto.PortletContainerFactory;
-import org.apache.log4j.BasicConfigurator;
 import org.aspcfs.apps.workFlowManager.WorkflowManager;
 import org.aspcfs.modules.website.framework.IceletContainerServices;
 import org.aspcfs.modules.website.framework.IceletManager;
@@ -43,6 +44,9 @@ import java.util.Iterator;
  * @created November 11, 2002
  */
 public class ContextListener implements ServletContextListener {
+  
+  private final static Logger log = Logger.getLogger(org.aspcfs.controller.ContextListener.class);
+
   public final static String fs = System.getProperty("file.separator");
 
 
@@ -61,7 +65,7 @@ public class ContextListener implements ServletContextListener {
    */
   public void contextInitialized(ServletContextEvent event) {
     ServletContext context = event.getServletContext();
-    System.out.println("ContextListener-> Initializing");
+    log.info("Initializing");
     //Start the ConnectionPool with default params, these can be adjusted
     //in the InitHook
     try {
@@ -73,7 +77,7 @@ public class ContextListener implements ServletContextListener {
       cp.setMaxDeadTime(300000);
       context.setAttribute("ConnectionPool", cp);
     } catch (SQLException e) {
-      System.err.println(e.toString());
+      log.error(e.toString());
     }
     //All virtual hosts will have an entry in SystemStatus, so this needs
     //to be reset when the context is reset
@@ -85,7 +89,7 @@ public class ContextListener implements ServletContextListener {
       WorkflowManager wfManager = new WorkflowManager();
       context.setAttribute("WorkflowManager", wfManager);
     } catch (Exception e) {
-      System.err.println(e.toString());
+      log.error(e.toString());
     }
     // Setup scheduler
     try {
@@ -93,9 +97,9 @@ public class ContextListener implements ServletContextListener {
       Scheduler scheduler = schedulerFactory.getScheduler();
       context.setAttribute("Scheduler", scheduler);
       scheduler.getContext().put("SystemStatus", systemStatus);
-      System.out.println("ContextListener-> Scheduler added");
+      log.info("Scheduler added");
     } catch (Exception e) {
-      System.err.println(e.toString());
+      log.error(e.toString());
     }
     // Portlet container
     try {
@@ -106,9 +110,9 @@ public class ContextListener implements ServletContextListener {
       portletContainer.init(context);
       context.setAttribute("PortletContainer", portletContainer);
     } catch (Exception e) {
-      System.err.println(e.toString());
+      log.error(e.toString());
     }
-    System.out.println("ContextListener-> Initialized");
+    log.info("Initialized");
   }
 
 
@@ -120,15 +124,13 @@ public class ContextListener implements ServletContextListener {
    */
   public void contextDestroyed(ServletContextEvent event) {
     ServletContext context = event.getServletContext();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ContextListener-> Shutting down");
-    }
+    log.debug("Shutting down");
     //Stop the cron first so that nothing new gets executed
     Crontab crontab = (Crontab) context.getAttribute("Crontab");
     if (crontab != null) {
       crontab.uninit(200);
       context.removeAttribute("Crontab");
-      System.out.println("ContextListener-> CRON stopped");
+      log.info("CRON stopped");
     }
     // Remove scheduler
     try {
@@ -136,10 +138,10 @@ public class ContextListener implements ServletContextListener {
       if (scheduler != null) {
         scheduler.shutdown(true);
         context.removeAttribute("Scheduler");
-        System.out.println("ContextListener-> Scheduler stopped");
+        log.info("Scheduler stopped");
       }
     } catch (Exception e) {
-      System.err.println(e.toString());
+      log.error(e.toString());
     }
     //Stop the work flow manager
     WorkflowManager wfManager = (WorkflowManager) context.getAttribute(
@@ -153,7 +155,7 @@ public class ContextListener implements ServletContextListener {
       try {
         container.destroy();
       } catch (Exception e) {
-        System.err.println(e.toString());
+        log.error(e.toString());
       }
       context.removeAttribute("PortletContainer");
     }
@@ -185,9 +187,7 @@ public class ContextListener implements ServletContextListener {
       cp.destroy();
       context.removeAttribute("ConnectionPool");
     }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("DestroyHook-> Shutdown complete");
-    }
+    log.debug("Shutdown complete");
   }
 }
 

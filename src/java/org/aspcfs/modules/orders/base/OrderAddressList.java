@@ -16,6 +16,7 @@
 package org.aspcfs.modules.orders.base;
 
 import org.aspcfs.modules.base.AddressList;
+import org.aspcfs.modules.base.SyncableList;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
@@ -32,7 +33,7 @@ import java.util.Iterator;
  *          Exp $
  * @created March 23, 2004
  */
-public class OrderAddressList extends AddressList {
+public class OrderAddressList extends AddressList implements SyncableList{
   public final static String tableName = "order_address";
   public final static String uniqueField = "address_id";
 

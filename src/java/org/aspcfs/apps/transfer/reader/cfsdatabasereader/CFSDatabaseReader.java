@@ -17,6 +17,8 @@ package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
+
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataWriter;
 
@@ -48,6 +50,8 @@ import java.util.Iterator;
  * @created September 3, 2002
  */
 public class CFSDatabaseReader implements DataReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReader.class);
 
   private String driver = null;
   private String url = null;

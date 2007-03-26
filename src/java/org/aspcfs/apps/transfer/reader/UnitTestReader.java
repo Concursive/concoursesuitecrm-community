@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
@@ -28,6 +29,7 @@ import org.aspcfs.apps.transfer.DataWriter;
  */
 public class UnitTestReader implements DataReader {
 
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.UnitTestReader.class);
   public final static String lf = System.getProperty("line.separator");
 
 

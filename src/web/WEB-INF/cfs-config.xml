@@ -1058,6 +1058,14 @@
           class="org.aspcfs.modules.service.actions.ProcessPacket">
     <forward name="PacketOK" resource="/service/system_process_packet.jsp"/>
   </action>
+  <!-- Allows a remote sync client to request a sync package for download -->
+  <action name="ProcessSyncPackageDownload"
+          class="org.aspcfs.modules.service.actions.ProcessSyncPackageDownload">
+  </action>
+  <!-- Allows a client to post its sync package for the server to process -->
+  <action name="ProcessClientSyncPackage" 
+          class="org.aspcfs.modules.service.actions.ProcessClientSyncPackage">
+  </action>
   <!-- Allows a remote system to upload files and store in cfs under documents -->
   <action name="ProcessDocument"
           class="org.aspcfs.modules.service.actions.ProcessDocument">
@@ -1079,6 +1087,8 @@
     <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp"
              layout="style"/>
     <forward name="LoginRetry" resource="/Login.do?command=Default"/>
+    <forward name="OfflineLoginERROR" resource="/errors/error_offline_login.jsp"
+             layout="centric"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp"
              layout="centric"/>
     <forward name="CustomerPortalLoginOK"
@@ -5654,6 +5664,10 @@
              layout="centric"/>
     <forward name="SkipRegistrationOK"
              resource="/SetupDirectory.do?command=ConfigureDirectoryCheck"/>
+    <forward name="SetupOfflineOK" resource="/setup/offline_setup.jsp?msg=SetupOfflineOK" />
+    <forward name="SetuptOfflineERROR" resource="/setup/offline_setup.jsp?msg=SetuptOfflineERROR" />
+    <forward name="SetupOfflineNotOfflineERROR" resource="/setup/offline_setup.jsp?msg=SetupOfflineNotOfflineERROR" />
+    <forward name="SetupOfflineAlreadyConfiguredERROR" resource="/setup/offline_setup.jsp?msg=SetupOfflineAlreadyConfiguredERROR" />
   </action>
   <action name="SetupDirectory" class="org.aspcfs.modules.setup.actions.Setup">
     <forward name="ConfigureDirectoryCheckOK"
@@ -5738,6 +5752,11 @@
              resource="/mycfs/resize_global_items_pane.jsp" layout="style"/>
   </action>
 
+  <!-- offline webapp -->
+  <action name="RequestSyncUpdates" class="org.aspcfs.modules.offline.actions.RequestSyncUpdates">
+    <forward name="UpdateOK" resource="/MyCFS.do?command=Home"/>
+  </action>
+  
   <!--
   Handheld default, this is currently unused
   -->
@@ -5753,10 +5772,16 @@
 <!-- Merchant Payment Gateway --> 
 	<action name="MerchantPaymentGateways" class="org.aspcfs.modules.admin.actions.MerchantPaymentGateways">
 		<bean name="MerchantPaymentGateway" class="org.aspcfs.modules.admin.base.MerchantPaymentGateway"
-			scope="request"/>
-            <forward name="ModifyOK" resource="/admin/merchant_payment_gateway.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/admin/merchant_payment_gateway_details.jsp"
-    layout="nav"/>
+		  scope="request"/>
+		<forward name="ModifyOK" resource="/admin/merchant_payment_gateway.jsp" layout="nav"/>
+ 	  <forward name="DetailsOK" resource="/admin/merchant_payment_gateway_details.jsp"
+      layout="nav"/>
     <forward name="DeleteOK" resource="/AdminConfig.do?command=ListGlobalParams" />
-    </action>
+  </action>
+  <action name="Sync" class="org.aspcfs.modules.sync.actions.Sync">
+    <forward name="DefaultOK" resource="/sync/sync.jsp" layout="nav"/>
+    <forward name="HistoryOK" resource="/sync/sync_history.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/sync/sync_upload.jsp" layout="nav"/>
+    <forward name="DownloadOK" resource="/sync/sync_download.jsp" layout="nav"/>
+  </action>
 </mvc-app>

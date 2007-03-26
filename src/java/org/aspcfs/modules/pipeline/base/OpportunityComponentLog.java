@@ -45,6 +45,7 @@ public class OpportunityComponentLog extends GenericBean {
   protected int stage = -1;
   protected String stageName = null;
   protected int owner = -1;
+  protected java.sql.Timestamp modified = null;
   protected java.sql.Timestamp entered = null;
   protected int enteredBy = -1;
   protected String closeDateTimeZone = null;
@@ -492,6 +493,27 @@ public class OpportunityComponentLog extends GenericBean {
 
 
   /**
+   * @return the modified
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(java.sql.Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
+
+  /**
    * Gets the closeDateTimeZone attribute of the OpportunityComponentLog object
    *
    * @return The closeDateTimeZone value
@@ -708,10 +730,7 @@ public class OpportunityComponentLog extends GenericBean {
       if (closed != null) {
         sql.append("closed, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      sql.append("enteredBy ) ");
+      sql.append("modified, entered, enteredBy) ");
 
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -720,8 +739,15 @@ public class OpportunityComponentLog extends GenericBean {
       if (closed != null) {
         sql.append("?, ");
       }
+      if (modified != null) {
+        sql.append("?, ");
+      }else{
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
       if (entered != null) {
         sql.append("?, ");
+      }else{
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("? ) ");
 
@@ -745,6 +771,9 @@ public class OpportunityComponentLog extends GenericBean {
       }
       if (closed != null) {
         pst.setTimestamp(++i, closed);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, this.getModified());
       }
       if (entered != null) {
         pst.setTimestamp(++i, this.getEntered());
@@ -799,6 +828,7 @@ public class OpportunityComponentLog extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     closeDateTimeZone = rs.getString("closedate_timezone");
     closed = rs.getTimestamp("closed");
+    modified = rs.getTimestamp("modified");
   }
 }
 

@@ -10,7 +10,9 @@ CREATE TABLE lookup_site_id (
   short_description VARCHAR(300),
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP  
 );
 
 CREATE SEQUENCE access_user_id_seq MINVALUE 0 START 0;
@@ -25,7 +27,7 @@ CREATE TABLE access (
   endofday INTEGER DEFAULT 18,
   locale VARCHAR(255),
   timezone VARCHAR(255) DEFAULT 'America/New_York',
-  last_ip VARCHAR(15),
+  last_ip VARCHAR(30),
   last_login TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -50,7 +52,9 @@ CREATE TABLE lookup_sic_codes(
   default_item BOOLEAN DEFAULT false,
   level INTEGER,
   enabled BOOLEAN DEFAULT true,
-  constant_id INTEGER UNIQUE NOT NULL
+  constant_id INTEGER UNIQUE NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_industry (
@@ -59,14 +63,16 @@ CREATE TABLE lookup_industry (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE access_log (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
   username VARCHAR(80) NOT NULL,
-  ip VARCHAR(15),
+  ip VARCHAR(30),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   browser VARCHAR(255)
 );
@@ -87,7 +93,9 @@ CREATE TABLE lookup_contact_types (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   user_id INT references access(user_id),
-  category INT NOT NULL DEFAULT 0
+  category INT NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_account_types (
@@ -95,7 +103,9 @@ CREATE TABLE lookup_account_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE state (
@@ -109,7 +119,9 @@ CREATE TABLE lookup_department (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_orgaddress_type_code_seq;
@@ -118,7 +130,9 @@ CREATE TABLE lookup_orgaddress_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_orgemail_types (
@@ -126,7 +140,9 @@ CREATE TABLE lookup_orgemail_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_orgphone_types (
@@ -134,7 +150,9 @@ CREATE TABLE lookup_orgphone_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_im_types (
@@ -142,7 +160,9 @@ CREATE TABLE lookup_im_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_im_services (
@@ -150,7 +170,9 @@ CREATE TABLE lookup_im_services (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_contact_source_code_seq;
@@ -159,7 +181,9 @@ CREATE TABLE lookup_contact_source (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_contact_rating_code_seq;
@@ -168,7 +192,9 @@ CREATE TABLE lookup_contact_rating (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_textmessage_typ_code_seq;
@@ -177,7 +203,9 @@ CREATE TABLE lookup_textmessage_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -187,7 +215,9 @@ CREATE TABLE lookup_employment_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_locale (
@@ -195,7 +225,9 @@ CREATE TABLE lookup_locale (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_contactaddress__code_seq;
@@ -204,7 +236,9 @@ CREATE TABLE lookup_contactaddress_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_contactemail_ty_code_seq;
@@ -213,7 +247,9 @@ CREATE TABLE lookup_contactemail_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_contactphone_ty_code_seq;
@@ -222,7 +258,9 @@ CREATE TABLE lookup_contactphone_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_access_types (
@@ -232,7 +270,9 @@ CREATE TABLE lookup_access_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER,
   enabled BOOLEAN DEFAULT true,
-  rule_id INT NOT NULL
+  rule_id INT NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 create index laccess_types_rule_id on lookup_access_types (rule_id);
 
@@ -241,7 +281,9 @@ CREATE TABLE lookup_account_size (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_segments (
@@ -249,7 +291,9 @@ CREATE TABLE lookup_segments (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_sub_segment (
@@ -258,7 +302,9 @@ CREATE TABLE lookup_sub_segment (
   segment_id  INT REFERENCES lookup_segments(code),
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_title (
@@ -266,7 +312,9 @@ CREATE TABLE lookup_title (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_account_stage (
@@ -486,10 +534,12 @@ CREATE TABLE permission_category (
   object_events BOOLEAN NOT NULL DEFAULT false,
   reports BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
-	logos BOOLEAN NOT NULL DEFAULT false,
+  logos BOOLEAN NOT NULL DEFAULT false,
   constant INT NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
-  custom_list_views BOOLEAN NOT NULL DEFAULT false
+  custom_list_views BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE permission (
@@ -504,7 +554,13 @@ CREATE TABLE permission (
   level INT NOT NULL DEFAULT 0,
   enabled BOOLEAN NOT NULL DEFAULT true,
   active BOOLEAN NOT NULL DEFAULT true,
-  viewpoints BOOLEAN DEFAULT false
+  viewpoints BOOLEAN DEFAULT false,
+  permission_offline_view BOOLEAN NOT NULL DEFAULT false,
+  permission_offline_add BOOLEAN NOT NULL DEFAULT false,
+  permission_offline_edit BOOLEAN NOT NULL DEFAULT false,
+  permission_offline_delete BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE role_permission (
@@ -514,7 +570,13 @@ CREATE TABLE role_permission (
   role_view BOOLEAN NOT NULL DEFAULT false,
   role_add BOOLEAN NOT NULL DEFAULT false,
   role_edit BOOLEAN NOT NULL DEFAULT false,
-  role_delete BOOLEAN NOT NULL DEFAULT false
+  role_delete BOOLEAN NOT NULL DEFAULT false,
+  role_offline_view BOOLEAN NOT NULL DEFAULT false,
+  role_offline_add BOOLEAN NOT NULL DEFAULT false,
+  role_offline_edit BOOLEAN NOT NULL DEFAULT false,
+  role_offline_delete BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -524,7 +586,9 @@ CREATE TABLE lookup_stage (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_delivery_option_code_seq;
@@ -533,7 +597,9 @@ CREATE TABLE lookup_delivery_options (
   description VARCHAR(100) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE news (
@@ -699,7 +765,9 @@ CREATE TABLE notification (
   subject TEXT,
   message TEXT,
   result INT NOT NULL,
-  errorMessage TEXT
+  errorMessage TEXT,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cfsinbox_message (
@@ -733,7 +801,9 @@ CREATE TABLE account_type_levels (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE contact_type_levels_id_seq;
 CREATE TABLE contact_type_levels (
+  id INTEGER DEFAULT nextval('contact_type_levels_id_seq') NOT NULL PRIMARY KEY,
   contact_id INT NOT NULL REFERENCES contact(contact_id),
   type_id INT NOT NULL REFERENCES lookup_contact_types(code),
   level INTEGER not null,
@@ -947,7 +1017,9 @@ CREATE TABLE lookup_relationship_types (
   reciprocal_name_2 VARCHAR(512),
   level INTEGER DEFAULT 0,
   default_item BOOLEAN DEFAULT false,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE relationship (

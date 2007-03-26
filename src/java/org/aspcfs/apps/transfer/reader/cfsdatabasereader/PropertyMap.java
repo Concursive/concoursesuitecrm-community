@@ -18,22 +18,23 @@ package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 import java.util.ArrayList;
 
 /**
- * Contains a list of Property objects and defines an object Mapping
+ *  Contains a list of Property objects and defines an object Mapping
  *
- * @author matt rajkowski
- * @version $Id$
+ * @author     matt rajkowski
+ * @version    $Id$
  * @created September 18, 2002
  */
 public class PropertyMap extends ArrayList {
   private String id = null;
   private String table = null;
+  private String sequence = null;
   private String uniqueField = null;
 
 
   /**
-   * Sets the id attribute of the PropertyMap object
+   *  Sets the id attribute of the PropertyMap object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = tmp;
@@ -41,9 +42,9 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Gets the id attribute of the PropertyMap object
+   *  Gets the id attribute of the PropertyMap object
    *
-   * @return The id value
+   * @return    The id value
    */
   public String getId() {
     return id;
@@ -51,9 +52,9 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Sets the table attribute of the PropertyMap object
+   *  Sets the table attribute of the PropertyMap object
    *
-   * @param tmp The new table value
+   * @param  tmp  The new table value
    */
   public void setTable(String tmp) {
     this.table = tmp;
@@ -61,9 +62,19 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Gets the table attribute of the PropertyMap object
+   *  Sets the sequence attribute of the PropertyMap object
    *
-   * @return The table value
+   * @param  tmp  The new sequence value
+   */
+  public void setSequence(String tmp) {
+    this.sequence = tmp;
+  }
+
+
+  /**
+   *  Gets the table attribute of the PropertyMap object
+   *
+   * @return    The table value
    */
   public String getTable() {
     return table;
@@ -71,9 +82,19 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Sets the uniqueField attribute of the PropertyMap object
+   *  Gets the sequence attribute of the PropertyMap object
    *
-   * @param tmp The new uniqueField value
+   * @return    The sequence value
+   */
+  public String getSequence() {
+    return sequence;
+  }
+
+
+  /**
+   *  Sets the uniqueField attribute of the PropertyMap object
+   *
+   * @param  tmp  The new uniqueField value
    */
   public void setUniqueField(String tmp) {
     this.uniqueField = tmp;
@@ -81,9 +102,9 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Gets the uniqueField attribute of the PropertyMap object
+   *  Gets the uniqueField attribute of the PropertyMap object
    *
-   * @return The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -91,9 +112,9 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasTable() {
     return (table != null && !"".equals(table));
@@ -101,9 +122,19 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
+   */
+  public boolean hasSequence() {
+    return (sequence != null && !"".equals(sequence));
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
    */
   public boolean hasProperties() {
     return (this.size() > 0);
@@ -111,9 +142,9 @@ public class PropertyMap extends ArrayList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasUniqueField() {
     return (uniqueField != null && !"".equals(uniqueField));

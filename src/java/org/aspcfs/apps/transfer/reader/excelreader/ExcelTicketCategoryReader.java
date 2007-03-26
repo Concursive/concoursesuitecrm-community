@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader.excelreader;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -37,6 +38,9 @@ import java.io.IOException;
  * @created September 17, 2002
  */
 public class ExcelTicketCategoryReader implements DataReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.excelreader.ExcelTicketCategoryReader.class);
+
   public boolean ignoreRow1 = true;
 
   private String excelFile = "workbook.xls";

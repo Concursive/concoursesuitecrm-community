@@ -24,12 +24,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Represents an entry in the sync_table database table, used for mapping XML
- * object names to Java classes during an XML Transaction
+ *  Represents an entry in the sync_table database table, used for mapping XML
+ *  object names to Java classes during an XML Transaction
  *
- * @author matt rajkowski
- * @version $Id$
- * @created June 24, 2002
+ * @author     matt rajkowski
+ * @version    $Id$
+ * @created    June 24, 2002
  */
 public class SyncTable extends GenericBean {
 
@@ -49,19 +49,44 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Constructor for the SyncTable object
+   *  Constructor for the SyncTable object
    */
-  public SyncTable() {
+  public SyncTable() { }
+
+
+  /**
+   *  Constructor for the SyncTable object
+   *
+   * @param  db                Description of the Parameter
+   * @param  tableId           Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public SyncTable(Connection db, int tableId) throws SQLException {
+    if (tableId == -1) {
+      throw new SQLException("Table ID Not Specified");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM sync_table " +
+        "WHERE table_id = ? ");
+    pst.setInt(1, tableId);
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
   }
 
 
   /**
-   * Constructor for the SyncTable object
+   *  Constructor for the SyncTable object
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of the Exception
-   * @throws SQLException Description of the Exception
-   * @throws SQLException Description of Exception
+   * @param  rs                Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
+   * @throws  SQLException     Description of the Exception
+   * @throws  SQLException     Description of Exception
    */
   public SyncTable(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -69,21 +94,21 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Looks up a table_id for the given System ID and Class Name.
+   *  Looks up a table_id for the given System ID and Class Name.
    *
-   * @param db        Description of Parameter
-   * @param className Description of Parameter
-   * @param systemId  Description of the Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of Parameter
+   * @param  className      Description of Parameter
+   * @param  systemId       Description of the Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of the Exception
    */
   public static int lookupTableId(Connection db, int systemId, String className) throws SQLException {
     int tableId = -1;
     String sql =
         "SELECT table_id " +
-            "FROM sync_table " +
-            "WHERE system_id = ? " +
-            "AND mapped_class_name = ? ";
+        "FROM sync_table " +
+        "WHERE system_id = ? " +
+        "AND mapped_class_name = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, systemId);
     pst.setString(2, className);
@@ -97,10 +122,30 @@ public class SyncTable extends GenericBean {
   }
 
 
+  public static int lookupElementName(Connection db, int systemId, String elementName) throws SQLException {
+    int tableId = -1;
+    String sql =
+        "SELECT table_id " +
+        "FROM sync_table " +
+        "WHERE system_id = ? " +
+        "AND element_name = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, systemId);
+    pst.setString(2, elementName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      tableId = rs.getInt("table_id");
+    }
+    rs.close();
+    pst.close();
+    return tableId;
+  }
+
+
   /**
-   * Sets the id attribute of the SyncTable object
+   *  Sets the id attribute of the SyncTable object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -108,9 +153,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the systemId attribute of the SyncTable object
+   *  Sets the systemId attribute of the SyncTable object
    *
-   * @param tmp The new systemId value
+   * @param  tmp  The new systemId value
    */
   public void setSystemId(int tmp) {
     this.systemId = tmp;
@@ -118,9 +163,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the name attribute of the SyncTable object
+   *  Sets the name attribute of the SyncTable object
    *
-   * @param tmp The new name value
+   * @param  tmp  The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -128,9 +173,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the mappedClassName attribute of the SyncTable object
+   *  Sets the mappedClassName attribute of the SyncTable object
    *
-   * @param tmp The new mappedClassName value
+   * @param  tmp  The new mappedClassName value
    */
   public void setMappedClassName(String tmp) {
     this.mappedClassName = tmp;
@@ -138,9 +183,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the key attribute of the SyncTable object
+   *  Sets the key attribute of the SyncTable object
    *
-   * @param tmp The new key value
+   * @param  tmp  The new key value
    */
   public void setKey(String tmp) {
     this.key = tmp;
@@ -148,9 +193,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the entered attribute of the SyncTable object
+   *  Sets the entered attribute of the SyncTable object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -158,9 +203,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the modified attribute of the SyncTable object
+   *  Sets the modified attribute of the SyncTable object
    *
-   * @param tmp The new modified value
+   * @param  tmp  The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -168,9 +213,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the createStatement attribute of the SyncTable object
+   *  Sets the createStatement attribute of the SyncTable object
    *
-   * @param tmp The new createStatement value
+   * @param  tmp  The new createStatement value
    */
   public void setCreateStatement(String tmp) {
     this.createStatement = tmp;
@@ -178,9 +223,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the orderId attribute of the SyncTable object
+   *  Sets the orderId attribute of the SyncTable object
    *
-   * @param tmp The new orderId value
+   * @param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -188,9 +233,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Sets the buildTextFields attribute of the SyncTable object
+   *  Sets the buildTextFields attribute of the SyncTable object
    *
-   * @param tmp The new buildTextFields value
+   * @param  tmp  The new buildTextFields value
    */
   public void setBuildTextFields(boolean tmp) {
     this.buildTextFields = tmp;
@@ -198,9 +243,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the id attribute of the SyncTable object
+   *  Gets the id attribute of the SyncTable object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -208,9 +253,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the systemId attribute of the SyncTable object
+   *  Gets the systemId attribute of the SyncTable object
    *
-   * @return The systemId value
+   * @return    The systemId value
    */
   public int getSystemId() {
     return systemId;
@@ -218,9 +263,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the name attribute of the SyncTable object
+   *  Gets the name attribute of the SyncTable object
    *
-   * @return The name value
+   * @return    The name value
    */
   public String getName() {
     return name;
@@ -228,9 +273,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the mappedClassName attribute of the SyncTable object
+   *  Gets the mappedClassName attribute of the SyncTable object
    *
-   * @return The mappedClassName value
+   * @return    The mappedClassName value
    */
   public String getMappedClassName() {
     return mappedClassName;
@@ -238,9 +283,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the key attribute of the SyncTable object
+   *  Gets the key attribute of the SyncTable object
    *
-   * @return The key value
+   * @return    The key value
    */
   public String getKey() {
     return key;
@@ -248,9 +293,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the entered attribute of the SyncTable object
+   *  Gets the entered attribute of the SyncTable object
    *
-   * @return The entered value
+   * @return    The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -258,9 +303,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the modified attribute of the SyncTable object
+   *  Gets the modified attribute of the SyncTable object
    *
-   * @return The modified value
+   * @return    The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -268,9 +313,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the createStatement attribute of the SyncTable object
+   *  Gets the createStatement attribute of the SyncTable object
    *
-   * @return The createStatement value
+   * @return    The createStatement value
    */
   public String getCreateStatement() {
     return createStatement;
@@ -278,9 +323,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the orderId attribute of the SyncTable object
+   *  Gets the orderId attribute of the SyncTable object
    *
-   * @return The orderId value
+   * @return    The orderId value
    */
   public int getOrderId() {
     return orderId;
@@ -288,9 +333,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the syncItem attribute of the SyncTable object
+   *  Gets the syncItem attribute of the SyncTable object
    *
-   * @return The syncItem value
+   * @return    The syncItem value
    */
   public boolean getSyncItem() {
     return syncItem;
@@ -298,9 +343,9 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Gets the buildTextFields attribute of the SyncTable object
+   *  Gets the buildTextFields attribute of the SyncTable object
    *
-   * @return The buildTextFields value
+   * @return    The buildTextFields value
    */
   public boolean getBuildTextFields() {
     return buildTextFields;
@@ -308,10 +353,10 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  rs             Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("table_id");
@@ -330,17 +375,17 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "sync_table_table_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO sync_table " +
-            "(" + (id > -1 ? "table_id, " : "") + "system_id, element_name, mapped_class_name, create_statement, order_id, sync_item, object_key" + ") " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
+        "(" + (id > -1 ? "table_id, " : "") + "system_id, element_name, mapped_class_name, create_statement, order_id, sync_item, object_key" + ") " +
+        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -359,16 +404,16 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void updateKey(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE sync_table " +
-            "SET object_key = ? " +
-            "WHERE system_id = ? AND element_name = ? ");
+        "SET object_key = ? " +
+        "WHERE system_id = ? AND element_name = ? ");
     int i = 0;
     pst.setString(++i, key);
     pst.setInt(++i, systemId);
@@ -379,19 +424,19 @@ public class SyncTable extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db   Description of the Parameter
-   * @param name Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  name           Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public static boolean hasMapping(Connection db, String name) throws SQLException {
     int count = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) as recordcount " +
-            "FROM sync_table " +
-            "WHERE element_name = ? ");
+        "FROM sync_table " +
+        "WHERE element_name = ? ");
     pst.setString(1, name);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

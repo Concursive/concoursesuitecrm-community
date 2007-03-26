@@ -16,6 +16,8 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -33,7 +35,7 @@ import java.util.Iterator;
  *          Exp $
  * @created April 10, 2003
  */
-public class FileFolderList extends ArrayList {
+public class FileFolderList extends ArrayList implements SyncableList {
   public final static String tableName = "project_folders";
   public final static String uniqueField = "folder_id";
   private java.sql.Timestamp lastAnchor = null;
@@ -53,6 +55,18 @@ public class FileFolderList extends ArrayList {
    * Constructor for the FileFolderList object
    */
   public FileFolderList() {
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static FileFolder getObject(ResultSet rs) throws SQLException {
+    FileFolder fileFolder = new FileFolder(rs);
+    return fileFolder;
   }
 
   /**
@@ -104,6 +118,13 @@ public class FileFolderList extends ArrayList {
     this.syncType = tmp;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Gets the tableName attribute of the ActionItemList object
    *
@@ -203,7 +224,52 @@ public class FileFolderList extends ArrayList {
     return pagedListInfo;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
 
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "f.* " +
+            "FROM " + tableName + " f " +
+            "WHERE f.link_module_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+}
+  
   /**
    * Description of the Method
    *
@@ -214,7 +280,6 @@ public class FileFolderList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -241,32 +306,16 @@ public class FileFolderList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY subject ");
     }
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "f.* " +
-            "FROM project_folders f " +
-            "WHERE f.link_module_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       FileFolder thisFolder = new FileFolder(rs);
       this.add(thisFolder);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
     //Build any extra data
     if (buildItemCount) {
       Iterator i = this.iterator();
@@ -301,14 +350,14 @@ public class FileFolderList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND f.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND f.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND f.modified > ? ");
+      sqlFilter.append("AND f.entered < ? ");
+      sqlFilter.append("AND f.modified < ? ");
     }
   }
 
@@ -320,7 +369,7 @@ public class FileFolderList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (linkModuleId > -1) {
       pst.setInt(++i, linkModuleId);

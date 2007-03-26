@@ -1,0 +1,51 @@
+/*
+  Upgrade script that adds a primary key to an existing database table.
+*/
+
+import java.sql.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
+import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.DatabaseSchemaUtils;
+
+String fs = System.getProperty("file.separator") ;
+String mapFile = prefsPath + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
+File importFile = new File(mapFile);
+if (!importFile.exists()) {
+  mapFile = prefsPath + "import-mappings.xml";
+}
+
+PropertyMapList mappings = null;
+ArrayList modules = new ArrayList();
+try {
+  mappings = new PropertyMapList(mapFile, modules);
+} catch (Exception e) {
+  e.printStackTrace(System.out);
+}
+print("Object Mappings loaded successfully....");
+
+HashMap primaryKeys = new HashMap();
+primaryKeys.put("customFieldData", "data_id"); //custom_field_data
+primaryKeys.put("fileItemVersion", "version_id"); //project_files_version
+primaryKeys.put("fileDownloadLog", "download_id"); //project_files_download     
+primaryKeys.put("actionStepAccountTypes", "id"); //action_step_account_types
+primaryKeys.put("contactTypeLevels", "id"); //contact_type_levels
+primaryKeys.put("opportunityComponentLevels", "id"); //opportunity_component_levels
+           
+DatabaseSchemaUtils.addPrimaryKey(db, mappings, primaryKeys);
+
+/*
+DatabaseMetaData dbmd = db.getMetaData();
+ResultSet columns = dbmd.getColumns(null, "%", "custom_field_data", "%");
+
+while (columns.next()) {
+  print("Column Name: " + columns.getString("COLUMN_NAME"));
+  print("Column Type: " + columns.getString("TYPE_NAME"));
+  print("Column Size: " + columns.getInt("COLUMN_SIZE"));
+  print("Allows Null: " + columns.getInt("NULLABLE"));
+}
+*/

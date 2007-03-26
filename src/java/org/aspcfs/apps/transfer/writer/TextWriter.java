@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.writer;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
@@ -33,6 +34,9 @@ import java.util.Iterator;
  * @created January 15, 2003
  */
 public class TextWriter implements DataWriter {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.writer.TextWriter.class);
+
   private String lastResponse = null;
   private String filename = null;
   private boolean overwrite = true;

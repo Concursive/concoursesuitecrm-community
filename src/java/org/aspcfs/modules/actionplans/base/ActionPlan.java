@@ -206,13 +206,9 @@ public class ActionPlan extends GenericBean {
       if (this.getJustApproved() || this.getApproved() != null) {
         sql.append("approved, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("enteredby, ");
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("modifiedby )");
       sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -225,10 +221,14 @@ public class ActionPlan extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("? )");
       int i = 0;

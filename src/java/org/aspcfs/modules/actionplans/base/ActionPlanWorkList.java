@@ -16,6 +16,7 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -35,7 +36,7 @@ import java.util.Iterator;
  *          Exp $
  * @created August 17, 2005
  */
-public class ActionPlanWorkList extends ArrayList {
+public class ActionPlanWorkList extends ArrayList  implements SyncableList {
   private PagedListInfo pagedListInfo = null;
   private int linkModuleId = -1;
   private int linkItemId = -1;
@@ -116,6 +117,13 @@ public class ActionPlanWorkList extends ArrayList {
     this.syncType = tmp;
   }
 
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
 
   /**
    * Gets the tableName attribute of the ActionPlanWorkList object
@@ -779,7 +787,6 @@ public class ActionPlanWorkList extends ArrayList {
     int items = -1;
     isTicket = (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS));
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -790,9 +797,10 @@ public class ActionPlanWorkList extends ArrayList {
             "FROM action_plan_work apw " +
             "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
             "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
+            "LEFT JOIN action_plan_constants apc ON (apw.link_module_id = apc.map_id) " +
             "WHERE apw.plan_work_id > 0 ");
 
-    createFilter(sqlFilter, db);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -829,36 +837,17 @@ public class ActionPlanWorkList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY c.namefirst, c.namelast, apw.entered ");
     }
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append(" SELECT ");
-    }
-    sqlSelect.append(
-        "apw.*, " +
-            "ap.plan_name, ap.description, ap.site_id, " +
-            "c.namefirst, c.namelast " +
-            "FROM action_plan_work apw " +
-            "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
-            "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
-            "WHERE apw.plan_work_id > 0 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    
     while (rs.next()) {
       ActionPlanWork actionPlanWork = new ActionPlanWork(rs);
       this.add(actionPlanWork);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
 
     Iterator i = this.iterator();
     while (i.hasNext()) {
@@ -882,11 +871,10 @@ public class ActionPlanWorkList extends ArrayList {
 
   /**
    * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter, Connection db) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -1001,14 +989,14 @@ public class ActionPlanWorkList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND apw.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND apw.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND apw.modified > ? ");
+      sqlFilter.append("AND apw.entered < ? ");
+      sqlFilter.append("AND apw.modified < ? ");
     }
   }
 
@@ -1020,7 +1008,7 @@ public class ActionPlanWorkList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (linkModuleId > -1) {
       pst.setInt(++i, linkModuleId);
@@ -1224,5 +1212,56 @@ public class ActionPlanWorkList extends ArrayList {
     }
     return result;
   }
+  
+  /**
+   *  Gets the object attribute of the ActionPlanWorkList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionPlanWork getObject(ResultSet rs) throws SQLException {
+  	ActionPlanWork obj = new ActionPlanWork(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  	StringBuffer sqlSelect = new StringBuffer();
+//  Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append(" SELECT ");
+    }
+    sqlSelect.append(
+        "apw.*, " +
+            "ap.plan_name, ap.description, ap.site_id, " +
+            "c.namefirst, c.namelast, apc.constant_id as link_module_id_constant " +
+            "FROM action_plan_work apw " +
+            "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
+            "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
+            "LEFT JOIN action_plan_constants apc ON (apw.link_module_id = apc.map_id) " +
+            "WHERE apw.plan_work_id > 0 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  	return queryList(db, pst, "", "");
+  }
+
+  
 }
 

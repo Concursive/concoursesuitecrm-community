@@ -15,9 +15,9 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.Transfer;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Element;
@@ -29,7 +29,6 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 /**
  * Contains a list of PropertyMaps, used to translate objects into XML
@@ -42,7 +41,7 @@ import java.util.logging.Logger;
 public class PropertyMapList extends HashMap {
 
   private int count = 0;
-  public static Logger logger = Logger.getLogger(Transfer.class.getName());
+  private static Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList.class);
 
 
   /**
@@ -87,6 +86,7 @@ public class PropertyMapList extends HashMap {
       PropertyMap mapProperties = new PropertyMap();
       mapProperties.setId((String) map.getAttribute("id"));
       mapProperties.setTable((String) map.getAttribute("table"));
+      mapProperties.setSequence((String) map.getAttribute("sequence"));
       mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
 
       //Get any property nodes
@@ -117,6 +117,22 @@ public class PropertyMapList extends HashMap {
           String value = ((Element) n).getAttribute("value");
           if (value != null && !"".equals(value)) {
             thisProperty.setValue(value);
+          }
+          String type = ((Element) n).getAttribute("type");
+          if (type != null && !"".equals(type)) {
+            thisProperty.setType(type);
+          }
+          String allowNull = ((Element) n).getAttribute("allowNull");
+          if (allowNull != null && !"".equals(allowNull)) {
+            thisProperty.setAllowNull(allowNull);
+          }
+          String defaultValue = ((Element) n).getAttribute("default");
+          if (defaultValue != null && !"".equals(defaultValue)) {
+            thisProperty.setDefaultValue(defaultValue);
+          }
+          String size = ((Element) n).getAttribute("size");
+          if (size != null && !"".equals(size)) {
+            thisProperty.setSize(size);
           }
           mapProperties.add(thisProperty);
         }

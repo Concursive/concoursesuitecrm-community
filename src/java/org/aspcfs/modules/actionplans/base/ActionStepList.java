@@ -16,6 +16,7 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -35,7 +36,7 @@ import java.util.Iterator;
  *          $
  * @created August 17, 2005
  */
-public class ActionStepList extends ArrayList {
+public class ActionStepList extends ArrayList  implements SyncableList {
   public final static String tableName = "action_step";
   public final static String uniqueField = "step_id";
   private java.sql.Timestamp lastAnchor = null;
@@ -109,7 +110,14 @@ public class ActionStepList extends ArrayList {
     this.syncType = tmp;
   }
 
-
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
+  
   /**
    * Gets the tableName attribute of the ActionItemList object
    *
@@ -139,7 +147,6 @@ public class ActionStepList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -153,7 +160,7 @@ public class ActionStepList extends ArrayList {
             " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (astp.role_id = r.role_id) " +
             " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
             " WHERE astp.step_id > -1 ");
-    createFilter(sqlFilter, db);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -174,50 +181,24 @@ public class ActionStepList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY astp.entered ");
     }
-    //Build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        " astp.*, " +
-            " ldt.description AS duration, ug.group_name as groupname " +
-            " FROM action_step astp " +
-            " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
-            " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
-            " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
-            " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (astp.role_id = r.role_id) " +
-            " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
-            " LEFT JOIN user_group ug ON (astp.group_id = ug.group_id) " +
-            " WHERE astp.step_id > -1 ");
-
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       ActionStep thisPlan = new ActionStep(rs);
       this.add(thisPlan);
     }
     rs.close();
-    pst.close();
+    if (pst != null) { 
+      pst.close();
+    }
   }
 
 
   /**
    * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter, Connection db) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -240,14 +221,14 @@ public class ActionStepList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND astp.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND astp.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND astp.modified > ? ");
+      sqlFilter.append("AND astp.entered < ? ");
+      sqlFilter.append("AND astp.modified < ? ");
     }
   }
 
@@ -770,5 +751,56 @@ public class ActionStepList extends ArrayList {
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
   }
+  
+  /**
+   *  Gets the object attribute of the ActionStepList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionStep getObject(ResultSet rs) throws SQLException {
+  	ActionStep obj = new ActionStep(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+    //Build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        " astp.*, " +
+            " ldt.description AS duration, ug.group_name as groupname " +
+            " FROM action_step astp " +
+            " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
+            " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
+            " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
+            " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (astp.role_id = r.role_id) " +
+            " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
+            " LEFT JOIN user_group ug ON (astp.group_id = ug.group_id) " +
+            " WHERE astp.step_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  	return queryList(db, pst, "", "");
+  }
+  
 }
 

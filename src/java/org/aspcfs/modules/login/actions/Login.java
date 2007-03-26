@@ -21,10 +21,12 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.hooks.CustomHook;
 import org.aspcfs.controller.*;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.RolePermission;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.sync.utils.SyncUtils;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
 import org.aspcfs.utils.DatabaseUtils;
@@ -34,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Hashtable;
 
 /**
@@ -260,8 +263,10 @@ public final class Login extends CFSModule {
             //anymore due to the single-session manager below
             userRecord.setIp(context.getIpAddress());
             userRecord.updateLogin(db);
-            userRecord.checkWebdavAccess(
-                db, context.getRequest().getParameter("password"));
+            if(!CFSModule.isOfflineMode(context)){
+              userRecord.checkWebdavAccess(
+                  db, context.getRequest().getParameter("password"));
+            }
           }
           if (!thisSystem.hasPermissions()) {
             System.out.println("Login-> This system does not have any permissions loaded!");
@@ -287,10 +292,33 @@ public final class Login extends CFSModule {
         sqlDriver.free(db);
       }
     }
+
+    try{
+      if (SyncUtils.isOfflineMode(applicationPrefs)){
+        //Check state of Offline application
+        SyncUtils.checkOfflineState(context.getServletContext());
+        if(SyncUtils.isSyncConflict(applicationPrefs)){
+          RolePermission.setReadOnlyOfflinePermissionsForAll(db, (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl()));
+        }
+      }
+    } catch (SQLException e) {
+      loginBean.setMessage("* Access: " + e.getMessage());
+      thisUser = null;
+    } finally {
+      if (db != null) {
+        sqlDriver.free(db);
+      }
+    }
+
     //If user record is not found, ask them to login again
     if (thisUser == null) {
+      if (isOfflineMode(context)) {
+        //Offline Database Corrupt
+        return "OfflineLoginERROR";
+      }
       return "LoginRetry";
     }
+
     //A valid user must have this information in their session, or the
     //security manager will not let them access any secure pages
     context.getSession().setAttribute("User", thisUser);

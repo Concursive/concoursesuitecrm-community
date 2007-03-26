@@ -742,66 +742,70 @@
 	</target>
 
   <target name="deploy.copy" unless="build.config.war">
-		<!-- Copy the .jars, only if new -->
-		<copy todir="${CENTRIC_HOME}/WEB-INF/lib">
-			<fileset dir="${build.lib.dir}">
-				<include name="*.jar" />
-			</fileset>
-		</copy>
-		<!-- Copy the web data, only if new -->
-		<copy todir="${CENTRIC_HOME}">
-			<fileset dir="${src.web.dir}/jsp">
-				<include name="**" />
-			</fileset>
-		</copy>
-		<copy todir="${CENTRIC_HOME}">
-			<fileset dir="${src.web.dir}/html">
-				<include name="**" />
-			</fileset>
-		</copy>
-		<copy todir="${CENTRIC_HOME}">
-			<fileset dir="${src.web.dir}">
-				<include name="images/**" />
-				<include name="javascript/**" />
-				<include name="css/**" />
-			</fileset>
-		</copy>
-		<!-- Copy the configuration files -->
-		<copy todir="${CENTRIC_HOME}/WEB-INF" verbose="true">
-			<fileset dir="${src.web.dir}/WEB-INF">
-				<include name="*.xml" />
-				<include name="*.tld" />
-				<exclude name="web.xml" />
-			</fileset>
-		</copy>
-		<!-- Copy the dictionary files -->
-		<mkdir dir="${CENTRIC_HOME}/WEB-INF/languages" />
-		<copy todir="${CENTRIC_HOME}/WEB-INF/languages">
-			<fileset dir="${src.dir}/languages">
-				<include name="*.xml" />
-			</fileset>
-		</copy>
-		<mkdir dir="${CENTRIC_HOME}/javascript/languages" />
-		<copy todir="${CENTRIC_HOME}/javascript/languages">
-			<fileset dir="${src.dir}/languages">
-				<include name="*.js" />
-			</fileset>
-		</copy>
-		<!-- Copy the icelet files -->
-		<mkdir dir="${CENTRIC_HOME}/WEB-INF/icelets" />
-		<copy todir="${CENTRIC_HOME}/WEB-INF/icelets">
-			<fileset dir="${src.dir}/icelets">
-				<include name="*.xml" />
-			</fileset>
-		</copy>
-		<!-- Copy the font files-->
-		<mkdir dir="${CENTRIC_HOME}/WEB-INF/fonts" />
-		<copy todir="${CENTRIC_HOME}/WEB-INF/fonts">
-			<fileset dir="${src.dir}/fonts">
-				<include name="*.ttf" />
-			</fileset>
-		</copy>
-	</target>
+    <!-- Copy the .jars, only if new -->
+    <copy todir="${CENTRIC_HOME}/WEB-INF/lib">
+      <fileset dir="${build.lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <!-- Copy the web data, only if new -->
+    <copy todir="${CENTRIC_HOME}">
+      <fileset dir="${src.web.dir}/jsp">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${CENTRIC_HOME}">
+      <fileset dir="${src.web.dir}/html">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${CENTRIC_HOME}">
+      <fileset dir="${src.web.dir}">
+        <include name="images/**"/>
+        <include name="javascript/**"/>
+        <include name="css/**"/>
+      </fileset>
+    </copy>
+    <!-- Copy the configuration files -->
+    <copy todir="${CENTRIC_HOME}/WEB-INF" verbose="true">
+      <fileset dir="${src.web.dir}/WEB-INF">
+        <include name="*.xml"/>
+        <include name="*.tld"/>
+        <exclude name="web.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy the object mappings file -->
+    <copy file="${pref.dir}/cfs/transfer/import-mappings.xml" 
+        todir="${CENTRIC_HOME}/WEB-INF" verbose="true" />
+  
+    <!-- Copy the dictionary files -->
+    <mkdir dir="${CENTRIC_HOME}/WEB-INF/languages"/>
+    <copy todir="${CENTRIC_HOME}/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${CENTRIC_HOME}/javascript/languages"/>
+    <copy todir="${CENTRIC_HOME}/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
+    <!-- Copy the icelet files -->
+    <mkdir dir="${CENTRIC_HOME}/WEB-INF/icelets"/>
+    <copy todir="${CENTRIC_HOME}/WEB-INF/icelets">
+      <fileset dir="${src.dir}/icelets">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy the font files-->
+    <mkdir dir="${CENTRIC_HOME}/WEB-INF/fonts"/>
+    <copy todir="${CENTRIC_HOME}/WEB-INF/fonts">
+      <fileset dir="${src.dir}/fonts">
+        <include name="*.ttf"/>
+      </fileset>
+    </copy>
+  </target>
 
 	<target name="deploy.jasper.check" depends="init" unless="build.config.war">
 		<uptodate property="deploy.jasper.uptodate">
@@ -992,32 +996,54 @@
           depends="classes.prepare,build,dist.archive">
 	</target>
 
-	<target name="war.setup">
-		<property name="build.config.war" value="true" />
-	</target>
+  <target name="war.setup">
+    <property name="build.config.war" value="true"/>
+    <property name="archive.filename" value="centric_war.zip" />
+  </target>
 
-	<target name="war" description="Compile, build, and generate web archive" depends="war.setup,war.create">
+  <target name="war" 
+          description="Compile, build, and generate web archive" 
+          depends="war.setup,war.create">
+  </target>
 
-	</target>
+  <target name="offline.setup">
+    <property name="build.config.war" value="true" />
+    <property name="for.offline" value="true" />
+    <property name="archive.filename" value="centric_war_offline.zip" />
+  </target>
+
+  <target name="offline"
+    description="Compile, build, and generate offline web archive"
+    depends="offline.setup,war.create">
+  </target>
 
   <target name="dist.archive" depends="taskdef.jasper" if="build.config.war">
-		<delete dir="${dist.dir}" />
-		<mkdir dir="${dist.dir}" />
-		<!-- Copy the common .jars -->
-		<copy todir="${dist.dir}/cfs/WEB-INF/lib">
-			<fileset dir="${lib.dir}">
-				<include name="*.jar" />
-			</fileset>
-		</copy>
-		<!-- Copy the .jars -->
-		<copy todir="${dist.dir}/cfs/WEB-INF/lib">
-			<fileset dir="${build.lib.dir}">
-				<include name="*.jar" />
-				<exclude name="aspcfs.jar" />
-			</fileset>
-		</copy>
-		<!-- aspcfs.jar -->
-		<jar jarfile="${dist.dir}/cfs/WEB-INF/lib/aspcfs.jar"
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <!-- Copy the common .jars -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+        <exclude name="commons-logging*.jar" if="for.offline"/> 
+        <exclude name="log4j-*.jar" if="for.offline"/> 
+        <exclude name="oracle-*.jar" if="for.offline"/> 
+        <exclude name="jtds-*.jar" if="for.offline"/> 
+        <exclude name="jaybird-*.jar" if="for.offline"/> 
+        <exclude name="DaffodilDB*.jar" if="for.offline"/> 
+        <exclude name="postgresql-*.jar" if="for.offline"/> 
+        <exclude name="derby-*.jar" if="for.offline"/> 
+      </fileset>
+    </copy>
+    <!-- Copy the .jars -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/lib">
+      <fileset dir="${build.lib.dir}">
+        <include name="*.jar"/>
+        <exclude name="aspcfs.jar"/>
+        <exclude name="webdav.jar" if="for.offline"/> 
+      </fileset>
+    </copy>
+    <!-- aspcfs.jar -->
+    <jar jarfile="${dist.dir}/cfs/WEB-INF/lib/aspcfs.jar"
          basedir="${build.classes.dir}"
          includes="org/aspcfs/**/*.class log4j.properties" />
 		<!-- Copy the web data -->
@@ -1046,25 +1072,35 @@
 				<exclude name="web.xml" />
 			</fileset>
 		</copy>
+    <!-- Copy the object mappings file -->
+    <copy todir="${dist.dir}/cfs/WEB-INF"
+        file="${pref.dir}/cfs/transfer/import-mappings.xml" verbose="true" />
     <!-- Copy the default preference files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup/init" verbose="true">
       <fileset dir="${pref.dir}/cfs/system">
         <include name="*.xml"/>
       </fileset>
     </copy>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup/init" verbose="true">
-      <fileset dir="${pref.dir}/cfs/transfer">
-        <include name="import-mappings.xml"/>
-      </fileset>
-    </copy>
+    
     <!-- Copy the database files (all databases) -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup">
       <fileset dir="${src.sql.dir}">
-        <exclude name="**/upgrade/**"/>
-        <exclude name="**/init"/>
+        <exclude name="upgrade/**"/>
+        <exclude name="init/**"/>
+        <!-- Drop if="for.offline" for exclude DB scripts from war -->
+        <exclude name="postgresql/**" if="for.offline" />
+        <exclude name="mssql/**" if="for.offline" />
+        <exclude name="daffodildb/**" if="for.offline" />
+        <exclude name="db2/**" if="for.offline" />
+        <exclude name="firebird/**" if="for.offline" />
+        <exclude name="oracle/**" if="for.offline" />
+        <exclude name="mysql/**" if="for.offline" />
+        <exclude name="interbase/**" if="for.offline" />
+        <!-- Derby needs always:  exclude name="mysql/**" / -->
         <include name="**/*"/>
       </fileset>
     </copy>
+
     <!-- Copy the database upgrade files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup/upgrade">
       <fileset dir="${src.sql.dir}/upgrade">
@@ -1075,10 +1111,6 @@
     <copy todir="${dist.dir}/cfs/WEB-INF/setup/init">
       <fileset dir="${src.sql.dir}/init">
         <include name="*.bsh"/>
-      </fileset>
-    </copy>
-    <copy todir="${dist.dir}/cfs/WEB-INF/setup/init">
-      <fileset dir="${src.sql.dir}/init">
         <include name="*.xml"/>
       </fileset>
     </copy>
@@ -1101,50 +1133,58 @@
         <include name="**/*"/>
       </fileset>
     </copy>
-		<!-- Copy and compile the reports -->
-		<mkdir dir="${dist.dir}/cfs/WEB-INF/reports" />
-		<copy todir="${dist.dir}/cfs/WEB-INF/reports">
-			<fileset dir="${src.dir}/jasper_reports">
-				<include name="*.xml" />
-			</fileset>
-		</copy>
-		<compileJasperReport srcdir="${dist.dir}/cfs/WEB-INF/reports" destdir="${dist.dir}/cfs/WEB-INF/reports" compiler="net.sf.jasperreports.compilers.JRBshCompiler" />
-		<delete>
-			<fileset dir="${dist.dir}/cfs/WEB-INF/reports" includes="*.xml" />
-		</delete>
-		<!-- Copy the language files -->
-		<mkdir dir="${dist.dir}/cfs/WEB-INF/languages" />
-		<copy todir="${dist.dir}/cfs/WEB-INF/languages">
-			<fileset dir="${src.dir}/languages">
-				<include name="*.xml" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dist.dir}/cfs/javascript/languages" />
-		<copy todir="${dist.dir}/cfs/javascript/languages">
-			<fileset dir="${src.dir}/languages">
-				<include name="*.js" />
-			</fileset>
-		</copy>
-		<!-- Copy the fonts -->
-		<mkdir dir="${dist.dir}/cfs/WEB-INF/fonts" />
-		<copy todir="${dist.dir}/cfs/WEB-INF/fonts">
-			<fileset dir="${src.dir}/fonts">
-				<include name="*.ttf" />
-			</fileset>
-		</copy>
-		<!-- Archive the folder -->
-		<war destfile="${dist.dir}/centric.war" webxml="${src.web.dir}/WEB-INF/web.xml" basedir="${dist.dir}/cfs" compress="true" manifest="${pref.dir}/cfs/war/MANIFEST.MF" />
-		<!-- Create the distributable .zip file -->
-		<zip destfile="${dist.dir}/centric_war.zip">
-			<fileset dir="${doc.dir}" includes="Binary*EULA.rtf" />
-			<fileset dir="${doc.dir}" includes="CRM*Installation*and*Setup.pdf" />
-			<fileset dir="${base.dir}" includes="CHANGES.txt" />
-			<fileset dir="${dist.dir}" includes="centric.war" />
-		</zip>
-		<!-- Cleanup files -->
-		<delete dir="${dist.dir}/cfs"/>
-		<echo message=".war file created: ${dist.dir}${fs}centric.war" />
-	</target>
+    <!-- Copy and compile the reports -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/reports">
+      <fileset dir="${src.dir}/jasper_reports">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <compileJasperReport
+        srcdir="${dist.dir}/cfs/WEB-INF/reports"
+        destdir="${dist.dir}/cfs/WEB-INF/reports"
+        compiler="net.sf.jasperreports.compilers.JRBshCompiler"/>
+    <delete>
+      <fileset dir="${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
+    </delete>
+    <!-- Copy the language files -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/languages"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/cfs/javascript/languages"/>
+    <copy todir="${dist.dir}/cfs/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
+    <!-- Copy the fonts -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/fonts"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/fonts">
+      <fileset dir="${src.dir}/fonts">
+        <include name="*.ttf"/>
+      </fileset>
+    </copy>
+    <!-- Archive the folder -->
+    <war destfile="${dist.dir}/centric.war"
+         webxml="${src.web.dir}/WEB-INF/web.xml"
+         basedir="${dist.dir}/cfs"
+         compress="true"
+         manifest="${pref.dir}/cfs/war/MANIFEST.MF"
+        />
+    <!-- Create the distributable .zip file -->
+    <zip destfile="${dist.dir}/${archive.filename}">
+      <fileset dir="${doc.dir}" includes="Binary*EULA.rtf"/>
+      <fileset dir="${doc.dir}" includes="CRM*Installation*and*Setup.pdf"/>
+      <fileset dir="${base.dir}" includes="CHANGES.txt"/>
+      <fileset dir="${dist.dir}" includes="centric.war"/>
+    </zip>
+    <!-- Cleanup files -->
+    <delete dir="${dist.dir}/cfs"/>
+    <echo message=".war file created: ${dist.dir}${fs}centric.war"/>
+  </target>
 
 	<!-- Create sourcecode distribution -->
 	<target name="source" description="Compile, build, and generate source archive" depends="deploy,source.archive">
@@ -1247,60 +1287,72 @@
 	<target name="tools" description="Compile, build, and generate tools archive" depends="deploy,tools.archive">
 	</target>
 
-	<target name="tools.archive">
-		<property name="zip.dir" value="centric_crm_tools" />
-		<property name="tools.version" value="4.1" />
-		<delete dir="${dist.dir}" />
-		<mkdir dir="${dist.dir}" />
-		<!-- Update the build number -->
-		<copy file="${base.dir}/pref/cfs/tools/readme.txt" todir="${dist.dir}" verbose="true" />
-		<buildnumber file="tools.number" />
-		<replace file="${dist.dir}/readme.txt" token="@BUILD.NUMBER@" value="${build.number}" />
-		<replace file="${dist.dir}/readme.txt" token="@BUILD.DATE@" value="${date.long}" />
-		<copy file="${base.dir}/pref/cfs/transfer/import-mappings.xml" todir="${dist.dir}" verbose="true" />
-		<!-- Ignore certain code when zipping -->
-		<mkdir dir="${dist.dir}/files/src" />
-		<copy todir="${dist.dir}/files" verbose="true">
-			<fileset dir="${base.dir}">
-				<!-- src/java -->
-				<include name="src/java/org/aspcfs/utils/CRMConnection.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/Transfer.java" />
-				<include name="src/java/org/aspcfs/utils/XMLUtils.java" />
-				<include name="src/java/org/aspcfs/utils/HTTPUtils.java" />
-				<include name="src/java/org/aspcfs/utils/HttpsTrustManager.java" />
-				<include name="src/java/org/aspcfs/utils/HttpsHostnameVerifier.java" />
-				<include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java" />
-				<include name="src/java/org/aspcfs/utils/StringUtils.java" />
-				<include name="src/java/org/aspcfs/utils/ObjectUtils.java" />
-				<include name="src/java/org/aspcfs/utils/PasswordHash.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/DataRecord.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/DataField.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/DataWriter.java" />
-				<include name="src/java/org/aspcfs/apps/transfer/DataReader.java" />
-				<include name="src/java/org/aspcfs/modules/service/base/TransactionStatus.java" />
-				<include name="src/java/org/aspcfs/modules/service/base/RecordList.java" />
-				<include name="src/java/org/aspcfs/modules/service/base/Record.java" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dist.dir}/files/classes" />
-		<javac srcdir="${dist.dir}/files/src/java" destdir="${dist.dir}/files/classes" verbose="off" deprecation="off" fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
-		</javac>
-		<jar jarfile="${dist.dir}/${zip.dir}-${tools.version}.jar" basedir="${dist.dir}/files/classes" />
-		<!-- Create the distributable .zip file -->
-		<zip destfile="${dist.dir}/${zip.dir}.zip">
-			<!-- main directory -->
-			<zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}" />
-			<zipfileset dir="${dist.dir}" includes="import-mappings.xml" prefix="${zip.dir}" />
-			<zipfileset dir="${dist.dir}" includes="${zip.dir}-${tools.version}.jar" prefix="${zip.dir}" />
-		</zip>
-		<!-- delete temporary files -->
-		<delete>
-			<fileset dir="${dist.dir}" includes="*.txt" />
-		</delete>
-		<delete dir="${dist.dir}/files" />
-	</target>
+  <target name="tools.archive">
+    <property name="zip.dir" value="centric_crm_tools"/>
+    <property name="tools.version" value="4.1"/>
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <!-- Update the build number -->
+    <copy file="${base.dir}/pref/cfs/tools/readme.txt" todir="${dist.dir}"
+          verbose="true"/>
+    <buildnumber file="tools.number"/>
+    <replace file="${dist.dir}/readme.txt"
+             token="@BUILD.NUMBER@" value="${build.number}"/>
+    <replace file="${dist.dir}/readme.txt"
+             token="@BUILD.DATE@" value="${date.long}"/>
+    <copy file="${base.dir}/pref/cfs/transfer/import-mappings.xml"
+          todir="${dist.dir}" verbose="true"/>
+    <!-- Ignore certain code when zipping -->
+    <mkdir dir="${dist.dir}/files/src"/>
+    <copy todir="${dist.dir}/files" verbose="true">
+      <fileset dir="${base.dir}">
+        <!-- src/java -->
+        <include name="src/java/org/aspcfs/utils/CRMConnection.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/Transfer.java"/>
+        <include name="src/java/org/aspcfs/utils/XMLUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/HTTPUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsTrustManager.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifier.java"/>
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java"/>
+        <include name="src/java/org/aspcfs/utils/StringUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/ObjectUtils.java"/>
+        <include name="src/java/org/aspcfs/utils/PasswordHash.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataRecord.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataField.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataWriter.java"/>
+        <include name="src/java/org/aspcfs/apps/transfer/DataReader.java"/>
+        <include name="src/java/org/aspcfs/modules/service/base/TransactionStatus.java"/>
+        <include name="src/java/org/aspcfs/modules/service/base/RecordList.java"/>
+        <include name="src/java/org/aspcfs/modules/service/base/Record.java"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/files/classes"/>
+    <javac srcdir="${dist.dir}/files/src/java"
+           destdir="${dist.dir}/files/classes" verbose="off" deprecation="off"
+           fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+    </javac>
+    <jar jarfile="${dist.dir}/${zip.dir}-${tools.version}.jar"
+         basedir="${dist.dir}/files/classes"/>
+    <!-- Create the distributable .zip file -->
+    <zip destfile="${dist.dir}/${zip.dir}.zip">
+      <!-- main directory -->
+      <zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}"/>
+      <zipfileset dir="${dist.dir}" includes="import-mappings.xml"
+                  prefix="${zip.dir}"/>
+      <zipfileset dir="${dist.dir}" includes="${zip.dir}-${tools.version}.jar"
+                  prefix="${zip.dir}"/>
+    </zip>
+    <!-- delete temporary files -->
+    <delete>
+      <fileset dir="${dist.dir}" includes="*.txt"/>
+    </delete>
+    <delete dir="${dist.dir}/files"/>
+  </target>
 
 	<!-- Remove the build folder -->
 	<target name="clean" description="Delete the temporary build folder used by the install" depends="init">

@@ -45,12 +45,42 @@ public class ActionPhase extends GenericBean {
   protected boolean global = false;
   // record status
   protected Timestamp entered = null;
-
+  protected Timestamp modified = null;
   //other related records
   protected boolean buildSteps = false;
   protected ActionStepList steps = new ActionStepList();
   protected ActionPhaseList phaseList = new ActionPhaseList();
   protected boolean buildCompletePhaseList = false;
+
+
+  /**
+   *  Gets the modified attribute of the ActionPhase object
+   *
+   * @return    The modified value
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionPhase object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionPhase object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
 
 
   /**
@@ -130,6 +160,7 @@ public class ActionPhase extends GenericBean {
     description = rs.getString("description");
     enabled = rs.getBoolean("enabled");
     entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
     random = rs.getBoolean("random");
     global = rs.getBoolean("global");
   }
@@ -172,10 +203,8 @@ public class ActionPhase extends GenericBean {
       if (id > -1) {
         sql.append("phase_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      sql.append(" enabled, random, " + DatabaseUtils.addQuotes(db, "global")+ ")");
+      sql.append("entered, modified, ");
+      sql.append(" enabled, random, " + DatabaseUtils.addQuotes(db, "global") + ")");
       sql.append(" VALUES (?, ?, ?, ");
       if (parentId > 0) {
         sql.append("?, ");
@@ -185,6 +214,13 @@ public class ActionPhase extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ? )");
       int i = 0;
@@ -200,6 +236,9 @@ public class ActionPhase extends GenericBean {
       }
       if (entered != null) {
         pst.setTimestamp(++i, this.getEntered());
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
       }
       pst.setBoolean(++i, this.getEnabled());
       pst.setBoolean(++i, this.getRandom());
@@ -247,7 +286,8 @@ public class ActionPhase extends GenericBean {
         " description = ?, " +
         " enabled = ?, " +
         " random = ?, " +
-        " " + DatabaseUtils.addQuotes(db, "global")+ " = ? " +
+        " " + DatabaseUtils.addQuotes(db, "global") + " = ?, " +
+        " modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         " WHERE phase_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

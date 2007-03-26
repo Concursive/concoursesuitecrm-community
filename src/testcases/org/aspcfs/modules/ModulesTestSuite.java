@@ -23,7 +23,14 @@ public class ModulesTestSuite {
   public static Test suite() {
     TestSuite suite = new TestSuite("Test for org.aspcfs.modules");
     //$JUnit-BEGIN$
+    suite.addTest(org.aspcfs.modules.base.BaseTestSuite.suite());
+    suite.addTest(org.aspcfs.modules.actionplans.ActionplansTestSuite.suite());
+    suite.addTest(org.aspcfs.modules.contacts.ContactsTestSuite.suite());
+    suite.addTest(org.aspcfs.modules.pipeline.PipelineTestSuite.suite());
     suite.addTest(org.aspcfs.modules.products.ProductsTestSuite.suite());
+    suite.addTest(org.aspcfs.modules.relationships.RelationshipsTestSuite.suite());
+    suite.addTest(org.aspcfs.modules.service.ServiceTestSuite.suite());
+    suite.addTest(org.aspcfs.modules.troubletickets.TroubleticketsTestSuite.suite());
     //$JUnit-END$
     return suite;
   }

@@ -16,12 +16,14 @@
 package org.aspcfs.modules.admin.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 /**
@@ -31,7 +33,15 @@ import java.util.Vector;
  * @version $Id$
  * @created January 13, 2003
  */
-public class PermissionList extends Vector {
+public class PermissionList extends Vector implements SyncableList{
+
+  private static final long serialVersionUID = -3101139259287703124L;
+
+  public final static String tableName = "permission";
+  public final static String uniqueField = "permission_id";
+  protected java.sql.Timestamp lastAnchor = null;
+  protected java.sql.Timestamp nextAnchor = null;
+  protected int syncType = Constants.NO_SYNC;
 
   private String currentCategory = "!new";
   private boolean viewpointsOnly = false;
@@ -55,6 +65,17 @@ public class PermissionList extends Vector {
   public PermissionList() {
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static Permission getObject(ResultSet rs) throws SQLException {
+    Permission permission = new Permission(rs);
+    return permission;
+  }
 
   /**
    * Constructor for the PermissionList object
@@ -66,7 +87,63 @@ public class PermissionList extends Vector {
     buildList(db);
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Sets the viewpointsOnly attribute of the PermissionList object
    *
@@ -94,10 +171,23 @@ public class PermissionList extends Vector {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
+    ResultSet rs = this.queryList(db, null);
+    while (rs.next()) {
+      this.addElement(PermissionList.getObject(rs));
+    }
+    rs.close();
+  }
 
-    PreparedStatement pst = null;
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
-    int items = -1;
 
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
@@ -113,17 +203,10 @@ public class PermissionList extends Vector {
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
+    prepareFilter(pst);
     rs = pst.executeQuery();
-    while (rs.next()) {
-      Permission thisPermission = new Permission(rs);
-      this.addElement(thisPermission);
-      thisPermission.setEnabled(true);
-    }
-    rs.close();
-    pst.close();
+    return rs;
   }
-
 
   /**
    * Description of the Method
@@ -144,6 +227,18 @@ public class PermissionList extends Vector {
       sqlFilter.append("AND p.viewpoints = ? ");
       sqlFilter.append("AND c.viewpoints = ? ");
     }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND p.entered > ? ");
+      }
+      sqlFilter.append("AND p.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND p.modified > ? ");
+      sqlFilter.append("AND p.entered < ? ");
+      sqlFilter.append("AND p.modified < ? ");
+    }
   }
 
 
@@ -163,6 +258,17 @@ public class PermissionList extends Vector {
     if (viewpointsOnly) {
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

@@ -14,11 +14,11 @@
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
 package org.aspcfs.modules.service.base;
+import org.aspcfs.apps.transfer.DataRecord;
 
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.apps.transfer.DataRecord;
 import org.w3c.dom.Element;
 
 import java.sql.Connection;
@@ -36,11 +36,13 @@ import java.util.Iterator;
  *  After the object is built, the transaction items can be executed.
  *
  * @author     matt rajkowski
- * @version    $Id$
+ * @version    $Id: Transaction.java 16911 2006-11-01 09:09:22Z
+ *      andrei.holub@corratech.com $
  * @created    April 10, 2002
  */
 public class Transaction extends ArrayList {
 
+  private static final long serialVersionUID = 4393255075249052599L;
   private int id = -1;
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
@@ -165,6 +167,7 @@ public class Transaction extends ArrayList {
       Element objectElement = (Element) i.next();
       TransactionItem thisItem = new TransactionItem(
           objectElement, packetContext.getObjectMap(), packetContext.getUserBean());
+      thisItem.setDisableSyncMap(packetContext.getDisableSyncMap());
       thisItem.setPacketContext(packetContext);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
@@ -190,6 +193,35 @@ public class Transaction extends ArrayList {
     TransactionItem item = new TransactionItem(record, packetContext.getObjectMap());
     item.setPacketContext(packetContext);
     this.add(item);
+  }
+
+
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  records  Description of the Parameter
+   */
+  public void build(ArrayList records) {
+    Iterator i = records.iterator();
+    while (i.hasNext()) {
+      DataRecord record = (DataRecord) i.next();
+      TransactionItem thisItem = new TransactionItem(record,
+          packetContext.getObjectMap());
+      thisItem.setDisableSyncMap(packetContext.getDisableSyncMap());
+      thisItem.setPacketContext(packetContext);
+      if (thisItem.getName().equals("meta")) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Transaction-> Meta data found");
+        }
+        meta = (TransactionMeta) thisItem.getObject();
+      } else {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Transaction-> Adding transaction item");
+        }
+        this.add(thisItem);
+      }
+    }
   }
 
 
@@ -315,6 +347,23 @@ public class Transaction extends ArrayList {
       }
       errorMessage.append(tmp);
     }
+  }
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Returned Value
+   */
+  public boolean allowed() {
+    Iterator items = this.iterator();
+    while (items.hasNext()) {
+      TransactionItem thisItem = (TransactionItem) items.next();
+      if (!thisItem.allowed()) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 

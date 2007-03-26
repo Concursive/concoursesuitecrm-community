@@ -146,10 +146,11 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
     //Build the graphic menu and the module submenu
     Iterator menuItemsList = menuItems.iterator();
+    boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(context, "OFFLINE_MODE"));
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem) menuItemsList.next();
       if ("".equals(thisMenu.getPermission()) || (systemStatus != null && systemStatus.hasPermission(
-          thisUser.getUserId(), thisMenu.getPermission()))) {
+          thisUser.getUserId(), thisMenu.getPermission() + (isOfflineMode?"-offline":"")))) {
         //Check if the system status has a preference for this menu
         String pageTitle = null;
         String shortHtml = null;

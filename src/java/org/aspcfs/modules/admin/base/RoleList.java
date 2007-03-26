@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
@@ -35,8 +36,9 @@ import java.util.Iterator;
  * @version $Id$
  * @created January 14, 2002
  */
-public class RoleList extends ArrayList {
+public class RoleList extends ArrayList implements SyncableList {
 
+  private static final long serialVersionUID = -3640700750213144515L;
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int enabledState = Constants.TRUE;
@@ -46,12 +48,96 @@ public class RoleList extends ArrayList {
   private int excludeRoleType = -1;
   private String jsEvent = null;
 
+  //Sync variables
+  public final static String tableName = "role";
+  public final static String uniqueField = "role_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  
   /**
    * Constructor for the RoleList object
    */
   public RoleList() {
   }
 
+  /**
+   * Gets the tableName attribute of the UserList object
+   *
+   * @return The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   * Gets the uniqueField attribute of the UserList object
+   *
+   * @return The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+  
+  /**
+   * Sets the lastAnchor attribute of the UserList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the lastAnchor attribute of the UserList object
+   *
+   * @param tmp The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the UserList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   * Sets the nextAnchor attribute of the UserList object
+   *
+   * @param tmp The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   * Sets the syncType attribute of the UserList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   * Sets the syncType attribute of the UserList object
+   *
+   * @param tmp The new syncType value
+   */
+  public void setSyncType(String tmp) {
+    this.syncType = Integer.parseInt(tmp);
+  }
 
   /**
    * Sets the pagedListInfo attribute of the RoleList object
@@ -82,6 +168,9 @@ public class RoleList extends ArrayList {
     enabledState = booleanInt;
   }
 
+  public void setEnabledState(String booleanInt) {
+    enabledState = Integer.parseInt(booleanInt);
+  }
 
   /**
    * Sets the buildUsers attribute of the RoleList object
@@ -203,7 +292,112 @@ public class RoleList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
+    ResultSet rs = this.queryList(db, null);
+    while (rs.next()) {
+      this.add(RoleList.getObject(rs));
+    }
+    rs.close();
+
+    //Build resources
+    if (buildUsers || buildUserCount) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        Role thisRole = (Role) i.next();
+        if (buildUsers) {
+          thisRole.buildUserList(db);
+        }
+        if (buildUserCount) {
+          thisRole.buildUserCount(db, true);
+        }
+      }
+    }
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static Role getObject(ResultSet rs) throws SQLException {
+    Role role = new Role(rs);
+    return role;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param sqlFilter Description of the Parameter
+   */
+  private void createFilter(StringBuffer sqlFilter) {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+    if (roleType != -1) {
+      sqlFilter.append("AND role_type = ? ");
+    }
+    if (excludeRoleType != -1) {
+      sqlFilter.append("AND role_type <> ? ");
+    }
+    if (enabledState != Constants.UNDEFINED) {
+      sqlFilter.append("AND enabled = ? ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND entered > ? ");
+      }
+      sqlFilter.append("AND entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND modified > ? ");
+      sqlFilter.append("AND entered < ? ");
+      sqlFilter.append("AND modified < ? ");
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
+   */
+  private int prepareFilter(PreparedStatement pst) throws SQLException {
+    int i = 0;
+    if (roleType != -1) {
+      pst.setInt(++i, roleType);
+    }
+    if (excludeRoleType != -1) {
+      pst.setInt(++i, excludeRoleType);
+    }
+    if (enabledState != Constants.UNDEFINED) {
+      pst.setBoolean(++i, enabledState == Constants.TRUE);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    return i;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlSelect = new StringBuffer();
@@ -271,71 +465,10 @@ public class RoleList extends ArrayList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    while (rs.next()) {
-      Role thisRole = new Role(rs);
-      this.add(thisRole);
-    }
-    rs.close();
-    pst.close();
-    //Build resources
-    if (buildUsers || buildUserCount) {
-      Iterator i = this.iterator();
-      while (i.hasNext()) {
-        Role thisRole = (Role) i.next();
-        if (buildUsers) {
-          thisRole.buildUserList(db);
-        }
-        if (buildUserCount) {
-          thisRole.buildUserCount(db, true);
-        }
-      }
-    }
+
+    return rs;
   }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
-   */
-  private void createFilter(StringBuffer sqlFilter) {
-    if (sqlFilter == null) {
-      sqlFilter = new StringBuffer();
-    }
-    if (roleType != -1) {
-      sqlFilter.append("AND role_type = ? ");
-    }
-    if (excludeRoleType != -1) {
-      sqlFilter.append("AND role_type <> ? ");
-    }
-    if (enabledState > -1) {
-      sqlFilter.append("AND enabled = ? ");
-    }
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
-   */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
-    int i = 0;
-    if (roleType != -1) {
-      pst.setInt(++i, roleType);
-    }
-    if (excludeRoleType != -1) {
-      pst.setInt(++i, excludeRoleType);
-    }
-    if (enabledState > -1) {
-      pst.setBoolean(++i, enabledState == Constants.TRUE);
-    }
-    return i;
-  }
-
-
+  
   /**
    * Gets the roleNameFromId attribute of the RoleList object
    *

@@ -44,24 +44,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * An HTTP connector for incoming XML packet requests. Requests must include
- * credentials and transactions to perform. There can be multiple transactions
- * per request.<p>
- * <p/>
- * After processing is complete, a response is sent with a request status.
+ *  An HTTP connector for incoming XML packet requests. Requests must include
+ *  credentials and transactions to perform. There can be multiple transactions
+ *  per request.<p>
+ *  <p/>
+ *  After processing is complete, a response is sent with a request status.
  *
- * @author matt rajkowski
- * @version $Id: ProcessPacket.java,v 1.36 2003/01/13 22:01:24 mrajkowski Exp
- *          $
- * @created April 24, 2002
+ * @author     matt rajkowski
+ * @version    $Id: ProcessPacket.java,v 1.36 2003/01/13 22:01:24 mrajkowski Exp
+ *      $
+ * @created    April 24, 2002
  */
 public final class ProcessPacket extends CFSModule {
 
   /**
-   * XML API for HTTP requests.
+   *  XML API for HTTP requests.
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
     ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute(
@@ -133,6 +133,9 @@ public final class ProcessPacket extends CFSModule {
         proceed = (thisUser != null);
       } else if (auth.getType() == AuthenticationItem.SYNC_CLIENT) {
         proceed = isClientValid(context, db, auth);
+      } else if (auth.getType() == AuthenticationItem.SYNC_CLIENT_USER_BASED) {
+        thisUser = isClientUserBasedValid(context, db, auth, applicationPrefs);
+        proceed = (thisUser != null);
       }
 
       if (proceed) {
@@ -141,6 +144,7 @@ public final class ProcessPacket extends CFSModule {
         packetContext.setActionContext(context);
         packetContext.setAuthenticationItem(auth);
         packetContext.setUserBean(thisUser);
+        packetContext.setApplicationPrefs(applicationPrefs);
 
         //Prepare the SyncClientManager
         SyncClientManager clientManager = new SyncClientManager();
@@ -202,8 +206,9 @@ public final class ProcessPacket extends CFSModule {
             } else if (auth.getType() == AuthenticationItem.SYNC_CLIENT) {
               //TODO: determine access definitions
               proceed = true;
+            } else if (auth.getType() == AuthenticationItem.SYNC_CLIENT_USER_BASED) {
+              proceed = thisTransaction.allowed();
             }
-
             if (proceed) {
               int statusCode = thisTransaction.execute(db, dbLookup);
               //Build a status from the transaction response
@@ -212,6 +217,16 @@ public final class ProcessPacket extends CFSModule {
               thisStatus.setId(thisTransaction.getId());
               thisStatus.setMessage(thisTransaction.getErrorMessage());
               thisStatus.setRecordList(thisTransaction.getRecordList());
+              statusMessages.add(thisStatus);
+            } else {
+              //The packet was rejected by the server
+              TransactionStatus thisStatus = new TransactionStatus();
+              thisStatus.setStatusCode(1);
+              if (thisTransaction.hasError()) {
+                thisStatus.setMessage(thisTransaction.getErrorMessage());
+              } else {
+                thisStatus.setMessage("Transaction contained in the packet is not allowed for this User. Packet was rejected by the server and was not processed");
+              }
               statusMessages.add(thisStatus);
             }
           }
@@ -292,16 +307,17 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
-   * Gets the userValid attribute of the ProcessPacket object
+   *  Gets the userValid attribute of the ProcessPacket object
    *
-   * @param context          Description of the Parameter
-   * @param db               Description of the Parameter
-   * @param auth             Description of the Parameter
-   * @param applicationPrefs Description of the Parameter
-   * @return The userValid value
+   * @param  context           Description of the Parameter
+   * @param  db                Description of the Parameter
+   * @param  auth              Description of the Parameter
+   * @param  applicationPrefs  Description of the Parameter
+   * @return                   The userValid value
+   * @exception  Exception     Description of the Exception
    */
   private UserBean isUserValid(ActionContext context, Connection db,
-                               AuthenticationItem auth, ApplicationPrefs applicationPrefs) throws Exception {
+      AuthenticationItem auth, ApplicationPrefs applicationPrefs) throws Exception {
     //Perform User Validation similar to Login
     LoginUtils loginUtils = new LoginUtils(db, auth.getUsername(), auth.getCode());
     loginUtils.setApplicationPrefs(applicationPrefs);
@@ -315,12 +331,13 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
-   * Gets the clientValid attribute of the ProcessPacket object
+   *  Gets the clientValid attribute of the ProcessPacket object
    *
-   * @param context Description of the Parameter
-   * @param db      Description of the Parameter
-   * @param auth    Description of the Parameter
-   * @return The clientValid value
+   * @param  context        Description of the Parameter
+   * @param  db             Description of the Parameter
+   * @param  auth           Description of the Parameter
+   * @return                The clientValid value
+   * @exception  Exception  Description of the Exception
    */
   private boolean isClientValid(ActionContext context, Connection db, AuthenticationItem auth) throws Exception {
     // Perform a lookup in the sync client table to set the authcode
@@ -339,11 +356,40 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
-   * Clears the sync map that may have been cached in memory. The sync map only
-   * needs to be cleared when the sync table has been modified.
+   *  Gets the clientUserBasedValid attribute of the ProcessPacket object
    *
-   * @param context Description of Parameter
-   * @return Description of the Returned Value
+   * @param  context           Description of the Parameter
+   * @param  db                Description of the Parameter
+   * @param  auth              Description of the Parameter
+   * @param  applicationPrefs  Description of the Parameter
+   * @return                   The clientUserBasedValid value
+   * @exception  Exception     Description of the Exception
+   */
+  private UserBean isClientUserBasedValid(ActionContext context, Connection db, AuthenticationItem auth, ApplicationPrefs applicationPrefs) throws Exception {
+    // Perform a lookup in the sync client table to set the authcode
+    SyncClient client = new SyncClient(db, auth.getClientId());
+    UserBean userBean = null;
+
+    LoginUtils loginUtils = new LoginUtils(db, auth.getUsername(), auth.getCode());
+    loginUtils.setApplicationPrefs(applicationPrefs);
+    if (loginUtils.isUserValid(context, db)) {
+      if (loginUtils.hasHttpApiAccess(db)) {
+        userBean = loginUtils.getUserBean();
+      }
+    }
+    if (!client.getEnabled() || userBean == null || userBean.getUserId() != client.getUserId()) {
+      return null;
+    }
+    return userBean;
+  }
+
+
+  /**
+   *  Clears the sync map that may have been cached in memory. The sync map only
+   *  needs to be cleared when the sync table has been modified.
+   *
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandReloadSyncMap(ActionContext context) {
     context.getServletContext().removeAttribute("SyncObjectMap");
@@ -352,12 +398,12 @@ public final class ProcessPacket extends CFSModule {
 
 
   /**
-   * Gets the objectMap attribute of the ProcessPacket object
+   *  Gets the objectMap attribute of the ProcessPacket object
    *
-   * @param context Description of Parameter
-   * @param db      Description of Parameter
-   * @param auth    Description of the Parameter
-   * @return The objectMap value
+   * @param  context  Description of Parameter
+   * @param  db       Description of Parameter
+   * @param  auth     Description of the Parameter
+   * @return          The objectMap value
    */
   private HashMap getObjectMap(ActionContext context, Connection db, AuthenticationItem auth) {
     SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute(

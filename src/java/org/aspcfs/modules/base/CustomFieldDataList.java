@@ -15,12 +15,14 @@
  */
 package org.aspcfs.modules.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -30,8 +32,13 @@ import java.util.ArrayList;
  * @version
  * @created    April 3, 2006
  */
-public class CustomFieldDataList extends ArrayList {
+public class CustomFieldDataList extends ArrayList implements SyncableList {
 
+  public final static String tableName = "custom_field_data";
+  public final static String uniqueField = "data_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
 
   //Properties for building the list
@@ -41,7 +48,79 @@ public class CustomFieldDataList extends ArrayList {
   private int linkItemId = -1;
   private int categoryId = -1;
 
+  /**
+   *  Constructor for the CustomFieldDataList object
+   */
+  public CustomFieldDataList() { }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static CustomFieldData getObject(ResultSet rs) throws SQLException {
+    CustomFieldData customFieldData = new CustomFieldData(rs);
+    return customFieldData;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    *  Gets the fieldId attribute of the CustomFieldDataList object
    *
@@ -161,14 +240,6 @@ public class CustomFieldDataList extends ArrayList {
     this.categoryId = Integer.parseInt(tmp);
   }
 
-
-
-  /**
-   *  Constructor for the CustomFieldDataList object
-   */
-  public CustomFieldDataList() { }
-
-
   /**
    *  Sets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
@@ -208,6 +279,51 @@ public class CustomFieldDataList extends ArrayList {
     return recordId;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "cfd.* " +
+        "FROM " + tableName + " cfd " +
+        "WHERE cfd.record_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
 
   /**
    *  Description of the Method
@@ -253,32 +369,14 @@ public class CustomFieldDataList extends ArrayList {
       sqlOrder.append("ORDER BY record_id, field_id ");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "cfd.* " +
-        "FROM custom_field_data cfd " +
-        "WHERE cfd.record_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
     while (rs.next()) {
       CustomFieldData thisField = new CustomFieldData(rs);
       this.add(thisField);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
@@ -295,14 +393,23 @@ public class CustomFieldDataList extends ArrayList {
     if (fieldId > -1) {
       sqlFilter.append("AND cfd.field_id = ? ");
     }
-
     if (recordId > -1) {
       sqlFilter.append("AND cfd.record_id = ? ");
     }
-
     if (linkModuleId > -1 && linkItemId > -1 && categoryId > -1) {
       sqlFilter.append("AND cfd.record_id IN (SELECT record_id FROM custom_field_record WHERE " +
           "link_module_id = ? AND link_item_id = ? AND category_id = ? ) ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND cfd.entered > ? ");
+      }
+      sqlFilter.append("AND cfd.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND cfd.modified > ? ");
+      sqlFilter.append("AND cfd.entered < ? ");
+      sqlFilter.append("AND cfd.modified < ? ");
     }
   }
 
@@ -314,7 +421,7 @@ public class CustomFieldDataList extends ArrayList {
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (fieldId > -1) {
       pst.setInt(++i, fieldId);
@@ -327,6 +434,18 @@ public class CustomFieldDataList extends ArrayList {
       pst.setInt(++i, linkItemId);
       pst.setInt(++i, categoryId);
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+
     return i;
   }
 

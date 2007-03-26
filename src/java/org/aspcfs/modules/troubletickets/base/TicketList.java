@@ -160,7 +160,13 @@ public class TicketList extends ArrayList implements SyncableList {
     this.syncType = tmp;
   }
 
-
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    *  Sets the Id attribute of the TicketList object
    *

@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author partha
- * @version $Id: ContactHistoryList.java,v 1.1.2.6 2005/06/06 20:23:50 partha
- *          Exp $
- * @created May 27, 2005
+ * @author     partha
+ * @version    $Id: ContactHistoryList.java,v 1.1.2.6 2005/06/06 20:23:50 partha
+ *      Exp $
+ * @created    May 27, 2005
  */
 public class ContactHistoryList extends ArrayList implements SyncableList {
   //sync api
@@ -64,9 +64,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the tableName attribute of the ContactHistoryList object
+   *  Gets the tableName attribute of the ContactHistoryList object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -74,9 +74,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the uniqueField attribute of the ContactHistoryList object
+   *  Gets the uniqueField attribute of the ContactHistoryList object
    *
-   * @return The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -84,9 +84,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the lastAnchor attribute of the ContactHistoryList object
+   *  Gets the lastAnchor attribute of the ContactHistoryList object
    *
-   * @return The lastAnchor value
+   * @return    The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -94,9 +94,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the lastAnchor attribute of the ContactHistoryList object
+   *  Sets the lastAnchor attribute of the ContactHistoryList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -104,9 +104,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the lastAnchor attribute of the ContactHistoryList object
+   *  Sets the lastAnchor attribute of the ContactHistoryList object
    *
-   * @param tmp The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -114,9 +114,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the nextAnchor attribute of the ContactHistoryList object
+   *  Gets the nextAnchor attribute of the ContactHistoryList object
    *
-   * @return The nextAnchor value
+   * @return    The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -124,9 +124,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the nextAnchor attribute of the ContactHistoryList object
+   *  Sets the nextAnchor attribute of the ContactHistoryList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -134,9 +134,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the nextAnchor attribute of the ContactHistoryList object
+   *  Sets the nextAnchor attribute of the ContactHistoryList object
    *
-   * @param tmp The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
@@ -144,9 +144,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the syncType attribute of the ContactHistoryList object
+   *  Gets the syncType attribute of the ContactHistoryList object
    *
-   * @return The syncType value
+   * @return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -154,9 +154,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the syncType attribute of the ContactHistoryList object
+   *  Sets the syncType attribute of the ContactHistoryList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -164,9 +164,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the syncType attribute of the ContactHistoryList object
+   *  Sets the syncType attribute of the ContactHistoryList object
    *
-   * @param tmp The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -174,9 +174,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the pagedListInfo attribute of the ContactHistoryList object
+   *  Gets the pagedListInfo attribute of the ContactHistoryList object
    *
-   * @return The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -184,9 +184,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the pagedListInfo attribute of the ContactHistoryList object
+   *  Sets the pagedListInfo attribute of the ContactHistoryList object
    *
-   * @param tmp The new pagedListInfo value
+   * @param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -194,9 +194,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the id attribute of the ContactHistoryList object
+   *  Gets the id attribute of the ContactHistoryList object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -204,9 +204,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the id attribute of the ContactHistoryList object
+   *  Sets the id attribute of the ContactHistoryList object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -214,9 +214,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the id attribute of the ContactHistoryList object
+   *  Sets the id attribute of the ContactHistoryList object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -224,9 +224,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the contactId attribute of the ContactHistoryList object
+   *  Gets the contactId attribute of the ContactHistoryList object
    *
-   * @return The contactId value
+   * @return    The contactId value
    */
   public int getContactId() {
     return contactId;
@@ -234,9 +234,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the contactId attribute of the ContactHistoryList object
+   *  Sets the contactId attribute of the ContactHistoryList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -244,9 +244,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the contactId attribute of the ContactHistoryList object
+   *  Sets the contactId attribute of the ContactHistoryList object
    *
-   * @param tmp The new contactId value
+   * @param  tmp  The new contactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -254,9 +254,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the level attribute of the ContactHistoryList object
+   *  Gets the level attribute of the ContactHistoryList object
    *
-   * @return The level value
+   * @return    The level value
    */
   public int getLevel() {
     return level;
@@ -264,9 +264,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the level attribute of the ContactHistoryList object
+   *  Sets the level attribute of the ContactHistoryList object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -274,9 +274,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the level attribute of the ContactHistoryList object
+   *  Sets the level attribute of the ContactHistoryList object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -284,9 +284,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the startDateRange attribute of the ContactHistoryList object
+   *  Gets the startDateRange attribute of the ContactHistoryList object
    *
-   * @return The startDateRange value
+   * @return    The startDateRange value
    */
   public java.sql.Date getStartDateRange() {
     return startDateRange;
@@ -294,9 +294,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the startDateRange attribute of the ContactHistoryList object
+   *  Sets the startDateRange attribute of the ContactHistoryList object
    *
-   * @param tmp The new startDateRange value
+   * @param  tmp  The new startDateRange value
    */
   public void setStartDateRange(java.sql.Date tmp) {
     this.startDateRange = tmp;
@@ -304,9 +304,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the endDateRange attribute of the ContactHistoryList object
+   *  Gets the endDateRange attribute of the ContactHistoryList object
    *
-   * @return The endDateRange value
+   * @return    The endDateRange value
    */
   public java.sql.Date getEndDateRange() {
     return endDateRange;
@@ -314,9 +314,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the endDateRange attribute of the ContactHistoryList object
+   *  Sets the endDateRange attribute of the ContactHistoryList object
    *
-   * @param tmp The new endDateRange value
+   * @param  tmp  The new endDateRange value
    */
   public void setEndDateRange(java.sql.Date tmp) {
     this.endDateRange = tmp;
@@ -324,9 +324,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the notes attribute of the ContactHistoryList object
+   *  Gets the notes attribute of the ContactHistoryList object
    *
-   * @return The notes value
+   * @return    The notes value
    */
   public boolean getNotes() {
     return notes;
@@ -334,9 +334,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the notes attribute of the ContactHistoryList object
+   *  Sets the notes attribute of the ContactHistoryList object
    *
-   * @param tmp The new notes value
+   * @param  tmp  The new notes value
    */
   public void setNotes(boolean tmp) {
     this.notes = tmp;
@@ -344,9 +344,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the notes attribute of the ContactHistoryList object
+   *  Sets the notes attribute of the ContactHistoryList object
    *
-   * @param tmp The new notes value
+   * @param  tmp  The new notes value
    */
   public void setNotes(String tmp) {
     this.notes = DatabaseUtils.parseBoolean(tmp);
@@ -354,9 +354,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the activities attribute of the ContactHistoryList object
+   *  Gets the activities attribute of the ContactHistoryList object
    *
-   * @return The activities value
+   * @return    The activities value
    */
   public boolean getActivities() {
     return activities;
@@ -364,9 +364,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the activities attribute of the ContactHistoryList object
+   *  Sets the activities attribute of the ContactHistoryList object
    *
-   * @param tmp The new activities value
+   * @param  tmp  The new activities value
    */
   public void setActivities(boolean tmp) {
     this.activities = tmp;
@@ -374,9 +374,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the activities attribute of the ContactHistoryList object
+   *  Sets the activities attribute of the ContactHistoryList object
    *
-   * @param tmp The new activities value
+   * @param  tmp  The new activities value
    */
   public void setActivities(String tmp) {
     this.activities = DatabaseUtils.parseBoolean(tmp);
@@ -384,9 +384,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the email attribute of the ContactHistoryList object
+   *  Gets the email attribute of the ContactHistoryList object
    *
-   * @return The email value
+   * @return    The email value
    */
   public boolean getEmail() {
     return email;
@@ -394,9 +394,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the email attribute of the ContactHistoryList object
+   *  Sets the email attribute of the ContactHistoryList object
    *
-   * @param tmp The new email value
+   * @param  tmp  The new email value
    */
   public void setEmail(boolean tmp) {
     this.email = tmp;
@@ -404,9 +404,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the email attribute of the ContactHistoryList object
+   *  Sets the email attribute of the ContactHistoryList object
    *
-   * @param tmp The new email value
+   * @param  tmp  The new email value
    */
   public void setEmail(String tmp) {
     this.email = DatabaseUtils.parseBoolean(tmp);
@@ -414,9 +414,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the quotes attribute of the ContactHistoryList object
+   *  Gets the quotes attribute of the ContactHistoryList object
    *
-   * @return The quotes value
+   * @return    The quotes value
    */
   public boolean getQuotes() {
     return quotes;
@@ -424,9 +424,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the quotes attribute of the ContactHistoryList object
+   *  Sets the quotes attribute of the ContactHistoryList object
    *
-   * @param tmp The new quotes value
+   * @param  tmp  The new quotes value
    */
   public void setQuotes(boolean tmp) {
     this.quotes = tmp;
@@ -434,9 +434,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the quotes attribute of the ContactHistoryList object
+   *  Sets the quotes attribute of the ContactHistoryList object
    *
-   * @param tmp The new quotes value
+   * @param  tmp  The new quotes value
    */
   public void setQuotes(String tmp) {
     this.quotes = DatabaseUtils.parseBoolean(tmp);
@@ -444,9 +444,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the opportunities attribute of the ContactHistoryList object
+   *  Gets the opportunities attribute of the ContactHistoryList object
    *
-   * @return The opportunities value
+   * @return    The opportunities value
    */
   public boolean getOpportunities() {
     return opportunities;
@@ -454,9 +454,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the opportunities attribute of the ContactHistoryList object
+   *  Sets the opportunities attribute of the ContactHistoryList object
    *
-   * @param tmp The new opportunities value
+   * @param  tmp  The new opportunities value
    */
   public void setOpportunities(boolean tmp) {
     this.opportunities = tmp;
@@ -464,9 +464,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the opportunities attribute of the ContactHistoryList object
+   *  Sets the opportunities attribute of the ContactHistoryList object
    *
-   * @param tmp The new opportunities value
+   * @param  tmp  The new opportunities value
    */
   public void setOpportunities(String tmp) {
     this.opportunities = DatabaseUtils.parseBoolean(tmp);
@@ -474,9 +474,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the serviceContracts attribute of the ContactHistoryList object
+   *  Gets the serviceContracts attribute of the ContactHistoryList object
    *
-   * @return The serviceContracts value
+   * @return    The serviceContracts value
    */
   public boolean getServiceContracts() {
     return serviceContracts;
@@ -484,9 +484,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the serviceContracts attribute of the ContactHistoryList object
+   *  Sets the serviceContracts attribute of the ContactHistoryList object
    *
-   * @param tmp The new serviceContracts value
+   * @param  tmp  The new serviceContracts value
    */
   public void setServiceContracts(boolean tmp) {
     this.serviceContracts = tmp;
@@ -494,9 +494,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the serviceContracts attribute of the ContactHistoryList object
+   *  Sets the serviceContracts attribute of the ContactHistoryList object
    *
-   * @param tmp The new serviceContracts value
+   * @param  tmp  The new serviceContracts value
    */
   public void setServiceContracts(String tmp) {
     this.serviceContracts = DatabaseUtils.parseBoolean(tmp);
@@ -504,9 +504,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the tickets attribute of the ContactHistoryList object
+   *  Gets the tickets attribute of the ContactHistoryList object
    *
-   * @return The tickets value
+   * @return    The tickets value
    */
   public boolean getTickets() {
     return tickets;
@@ -514,9 +514,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the tickets attribute of the ContactHistoryList object
+   *  Sets the tickets attribute of the ContactHistoryList object
    *
-   * @param tmp The new tickets value
+   * @param  tmp  The new tickets value
    */
   public void setTickets(boolean tmp) {
     this.tickets = tmp;
@@ -524,9 +524,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the tickets attribute of the ContactHistoryList object
+   *  Sets the tickets attribute of the ContactHistoryList object
    *
-   * @param tmp The new tickets value
+   * @param  tmp  The new tickets value
    */
   public void setTickets(String tmp) {
     this.tickets = DatabaseUtils.parseBoolean(tmp);
@@ -534,9 +534,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the tasks attribute of the ContactHistoryList object
+   *  Gets the tasks attribute of the ContactHistoryList object
    *
-   * @return The tasks value
+   * @return    The tasks value
    */
   public boolean getTasks() {
     return tasks;
@@ -544,9 +544,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the tasks attribute of the ContactHistoryList object
+   *  Sets the tasks attribute of the ContactHistoryList object
    *
-   * @param tmp The new tasks value
+   * @param  tmp  The new tasks value
    */
   public void setTasks(boolean tmp) {
     this.tasks = tmp;
@@ -554,9 +554,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the tasks attribute of the ContactHistoryList object
+   *  Sets the tasks attribute of the ContactHistoryList object
    *
-   * @param tmp The new tasks value
+   * @param  tmp  The new tasks value
    */
   public void setTasks(String tmp) {
     this.tasks = DatabaseUtils.parseBoolean(tmp);
@@ -564,9 +564,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the assets attribute of the ContactHistoryList object
+   *  Gets the assets attribute of the ContactHistoryList object
    *
-   * @return The assets value
+   * @return    The assets value
    */
   public boolean getAssets() {
     return assets;
@@ -574,9 +574,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the assets attribute of the ContactHistoryList object
+   *  Sets the assets attribute of the ContactHistoryList object
    *
-   * @param tmp The new assets value
+   * @param  tmp  The new assets value
    */
   public void setAssets(boolean tmp) {
     this.assets = tmp;
@@ -584,9 +584,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the assets attribute of the ContactHistoryList object
+   *  Sets the assets attribute of the ContactHistoryList object
    *
-   * @param tmp The new assets value
+   * @param  tmp  The new assets value
    */
   public void setAssets(String tmp) {
     this.assets = DatabaseUtils.parseBoolean(tmp);
@@ -594,10 +594,10 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Gets the showDisabledWithEnabled attribute of the ContactHistoryList
-   * object
+   *  Gets the showDisabledWithEnabled attribute of the ContactHistoryList
+   *  object
    *
-   * @return The showDisabledWithEnabled value
+   * @return    The showDisabledWithEnabled value
    */
   public boolean getShowDisabledWithEnabled() {
     return showDisabledWithEnabled;
@@ -605,10 +605,10 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the showDisabledWithEnabled attribute of the ContactHistoryList
-   * object
+   *  Sets the showDisabledWithEnabled attribute of the ContactHistoryList
+   *  object
    *
-   * @param tmp The new showDisabledWithEnabled value
+   * @param  tmp  The new showDisabledWithEnabled value
    */
   public void setShowDisabledWithEnabled(boolean tmp) {
     this.showDisabledWithEnabled = tmp;
@@ -616,10 +616,10 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the showDisabledWithEnabled attribute of the ContactHistoryList
-   * object
+   *  Sets the showDisabledWithEnabled attribute of the ContactHistoryList
+   *  object
    *
-   * @param tmp The new showDisabledWithEnabled value
+   * @param  tmp  The new showDisabledWithEnabled value
    */
   public void setShowDisabledWithEnabled(String tmp) {
     this.showDisabledWithEnabled = DatabaseUtils.parseBoolean(tmp);
@@ -627,20 +627,20 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Constructor for the ContactHistoryList object
+   *  Constructor for the ContactHistoryList object
    */
-  public ContactHistoryList() {
-  }
+  public ContactHistoryList() { }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -652,9 +652,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-            "FROM history " +
-            "WHERE history_id > 0 " +
-            "AND org_id IS NULL ");
+        "FROM history " +
+        "WHERE history_id > 0 " +
+        "AND org_id IS NULL ");
 
     createFilter(db, sqlFilter);
 
@@ -662,7 +662,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(
           sqlCount.toString() +
-              sqlFilter.toString());
+          sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -701,9 +701,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         "ch.* " +
-            "FROM history ch " +
-            "WHERE history_id > 0 " +
-            "AND org_id IS NULL ");
+        "FROM history ch " +
+        "WHERE history_id > 0 " +
+        "AND org_id IS NULL ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -714,8 +714,23 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
+
+    return rs;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   */
+  public void buildList(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+
     while (rs.next()) {
-      ContactHistory thisHistoryElement = new ContactHistory(rs);
+      ContactHistory thisHistoryElement = this.getObject(rs);
       this.add(thisHistoryElement);
     }
     rs.close();
@@ -726,9 +741,23 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Gets the object attribute of the ContactHistoryList object
    *
-   * @param sqlFilter Description of the Parameter
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ContactHistory getObject(ResultSet rs) throws SQLException {
+    ContactHistory thisHistoryElement = new ContactHistory(rs);
+    return thisHistoryElement;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  sqlFilter  Description of the Parameter
+   * @param  db         Description of the Parameter
    */
   protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -795,11 +824,11 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param pst Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  pst            Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -866,9 +895,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the defaultFilters attribute of the ContactHistoryList object
+   *  Sets the defaultFilters attribute of the ContactHistoryList object
    *
-   * @param value The new defaultFilters value
+   * @param  value  The new defaultFilters value
    */
   public void setDefaultFilters(boolean value) {
     notes = value;
@@ -884,11 +913,11 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db    Description of the Parameter
-   * @param value Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  value          Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void disableNotesInHistory(Connection db, boolean value) throws SQLException {
     Iterator iterator = (Iterator) this.iterator();

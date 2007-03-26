@@ -67,6 +67,7 @@ public class ActionPlanWork extends GenericBean {
   private String planDescription = null;
   private int planSiteId = -1;
   //resources
+  private int linkModuleIdConstant = -1;
   private boolean buildPhaseWork = false;
   private boolean buildStepWork = false;
   private boolean buildLinkedObject = false;
@@ -77,6 +78,36 @@ public class ActionPlanWork extends GenericBean {
   private Ticket ticket = null;
   private boolean buildCurrentPhaseWork = false;
   private boolean buildCurrentStepWork = false;
+
+
+  /**
+   *  Gets the linkModuleIdConstant attribute of the ActionPlanWork object
+   *
+   * @return    The linkModuleIdConstant value
+   */
+  public int getLinkModuleIdConstant() {
+    return linkModuleIdConstant;
+  }
+
+
+  /**
+   *  Sets the linkModuleIdConstant attribute of the ActionPlanWork object
+   *
+   * @param  tmp  The new linkModuleIdConstant value
+   */
+  public void setLinkModuleIdConstant(int tmp) {
+    this.linkModuleIdConstant = tmp;
+  }
+
+
+  /**
+   *  Sets the linkModuleIdConstant attribute of the ActionPlanWork object
+   *
+   * @param  tmp  The new linkModuleIdConstant value
+   */
+  public void setLinkModuleIdConstant(String tmp) {
+    this.linkModuleIdConstant = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -557,7 +588,8 @@ public class ActionPlanWork extends GenericBean {
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
   }
- 
+
+
   /**
    *  Gets the linkItemName attribute of the ActionPlanWork object
    *
@@ -576,6 +608,8 @@ public class ActionPlanWork extends GenericBean {
   public void setLinkItemName(String tmp) {
     this.linkItemName = tmp;
   }
+
+
   /**
    *  Sets the linkItemId attribute of the ActionPlanWork object
    *
@@ -849,10 +883,11 @@ public class ActionPlanWork extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT apw.*, " +
         "ap.plan_name, ap.description, ap.site_id, " +
-        "c.namefirst, c.namelast " +
+        "c.namefirst, c.namelast, apc.constant_id as link_module_id_constant " +
         "FROM action_plan_work apw " +
         "LEFT JOIN action_plan ap ON (apw.action_plan_id = ap.plan_id) " +
         "LEFT JOIN contact c ON (apw.assignedTo = c.user_id) " +
+        "LEFT JOIN action_plan_constants apc ON (apw.link_module_id = apc.map_id) " +
         "WHERE apw.plan_work_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -899,6 +934,12 @@ public class ActionPlanWork extends GenericBean {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void buildCurrentPhaseWork(Connection db) throws SQLException {
     if (phaseWorkList == null) {
       phaseWorkList = new ActionPhaseWorkList();
@@ -924,26 +965,26 @@ public class ActionPlanWork extends GenericBean {
     if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS)) {
       if (contact == null || contact.getId() == -1) {
         contact = new Contact(db, linkItemId);
-        linkItemName= contact.getNameFirstLast();
+        linkItemName = contact.getNameFirstLast();
       }
     } else
         if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
       if (organization == null || organization.getOrgId() == -1) {
         organization = new Organization(db, linkItemId);
-        linkItemName= organization.getName();
+        linkItemName = organization.getName();
       }
     } else
         if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
       if (ticket == null || ticket.getId() == -1) {
         ticket = new Ticket(db, linkItemId);
-       
+
         if (organization == null || organization.getOrgId() == -1) {
           organization = new Organization(db, ticket.getOrgId());
-          linkItemName= organization.getName();
+          linkItemName = organization.getName();
         }
         if (contact == null || contact.getId() == -1) {
           contact = new Contact(db, ticket.getContactId());
-          linkItemName= contact.getNameFirstLast();
+          linkItemName = contact.getNameFirstLast();
         }
       }
     }
@@ -974,6 +1015,8 @@ public class ActionPlanWork extends GenericBean {
     planName = rs.getString("plan_name");
     planDescription = rs.getString("description");
     planSiteId = DatabaseUtils.getInt(rs, "site_id");
+    //Action Plan Constants
+    linkModuleIdConstant = rs.getInt("link_module_id_constant");
   }
 
 
@@ -991,19 +1034,18 @@ public class ActionPlanWork extends GenericBean {
         "INSERT INTO action_plan_work (" +
         (id > -1 ? "plan_work_id, " : "") +
         "action_plan_id, manager, assignedTo, enabled, link_module_id, link_item_id, current_phase, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredby, modifiedby ) ");
     sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ? ) ");
     int i = 0;
@@ -1441,8 +1483,9 @@ public class ActionPlanWork extends GenericBean {
     return actionPlanWork;
   }
 
+
   /**
-   *  Gets the DisplayInPlanSteps  attribute of the ActionPlanWork object
+   *  Gets the DisplayInPlanSteps attribute of the ActionPlanWork object
    *
    * @return    The DisplayInPlanSteps value
    */
@@ -1455,18 +1498,19 @@ public class ActionPlanWork extends GenericBean {
       while (items.hasNext()) {
         ActionItemWork thisItem = (ActionItemWork) items.next();
         ActionStep step = thisItem.getStep();
-        if (step!=null && step.getDisplayInPlanList()){
-          if (items.hasNext()) {        	
-            steps+=step.getPlanListLabel()+",";
-          }else{
-        	steps+=step.getPlanListLabel();  
-          }	
+        if (step != null && step.getDisplayInPlanList()) {
+          if (items.hasNext()) {
+            steps += step.getPlanListLabel() + ",";
+          } else {
+            steps += step.getPlanListLabel();
+          }
         }
       }
     }
     return steps;
   }
-  
+
+
   /**
    *  Gets the steps attribute of the ActionPlanWork object
    *
@@ -1579,7 +1623,7 @@ public class ActionPlanWork extends GenericBean {
       }
       userId = rs.getInt("assignedTo");
     }
-    
+
     rs.close();
     pst.close();
     //Handle the last user record
@@ -1695,26 +1739,51 @@ public class ActionPlanWork extends GenericBean {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Gets the completed attribute of the ActionPlanWork object
+   *
+   * @return    The completed value
+   */
   public boolean isCompleted() {
-	boolean completed = true;
-	    Iterator phases = phaseWorkList.iterator();
-		if (phases != null) {		
-			while (phases.hasNext()) {
-				ActionPhaseWork thisPhase = (ActionPhaseWork) phases.next();
-				if (thisPhase != null) {
-					Iterator items = thisPhase.getItemWorkList().iterator();
-					while (items.hasNext()) {
-						ActionItemWork itemWork = (ActionItemWork) items.next();
-						if (itemWork != null && !itemWork.isComplete()) {
-							completed = false;
-						}
-					}
-				}
-			}
-		}
-		return completed;
-	}
-  
+    boolean completed = true;
+    Iterator phases = phaseWorkList.iterator();
+    if (phases != null) {
+      while (phases.hasNext()) {
+        ActionPhaseWork thisPhase = (ActionPhaseWork) phases.next();
+        if (thisPhase != null) {
+          Iterator items = thisPhase.getItemWorkList().iterator();
+          while (items.hasNext()) {
+            ActionItemWork itemWork = (ActionItemWork) items.next();
+            if (itemWork != null && !itemWork.isComplete()) {
+              completed = false;
+            }
+          }
+        }
+      }
+    }
+    return completed;
+  }
+
+
+
+  /**
+   *  Gets the referenceTable attribute of the ActionPlanWork object
+   *
+   * @param  field  Description of the Parameter
+   * @return        The referenceTable value
+   */
+  public String getReferenceTable(String field) {
+    if ("linkModuleIdConstant".equals(field)) {
+      int constant = this.getLinkModuleIdConstant();
+      if (constant == ActionPlan.ACCOUNTS) {
+        return "account";
+      } else if (constant == ActionPlan.TICKETS) {
+        return "ticket";
+      }
+    }
+    return null;
+  }
 }
 

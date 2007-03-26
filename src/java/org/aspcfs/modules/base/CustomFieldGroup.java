@@ -569,7 +569,7 @@ public class CustomFieldGroup extends ArrayList {
         "FROM custom_field_info cfi " +
         "WHERE cfi.group_id = " + id + " ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
     sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", field_id, field_name ");
 
     pst = db.prepareStatement(
@@ -634,9 +634,7 @@ public class CustomFieldGroup extends ArrayList {
     if (id > -1) {
       sql.append("group_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("description, " + DatabaseUtils.addQuotes(db, "level") + " ) ");
     sql.append("VALUES (?, ?, ");
     if (id > -1) {
@@ -644,6 +642,13 @@ public class CustomFieldGroup extends ArrayList {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -655,6 +660,9 @@ public class CustomFieldGroup extends ArrayList {
     }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
     }
     pst.setString(++i, this.getDescription());
     pst.setInt(++i, level);
@@ -681,7 +689,8 @@ public class CustomFieldGroup extends ArrayList {
 
     String sql =
         "UPDATE custom_field_group " +
-        "SET group_name = ?, description = ? " +
+        "SET group_name = ?, description = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? " +
         "AND group_id = ? ";
     int i = 0;
@@ -707,7 +716,8 @@ public class CustomFieldGroup extends ArrayList {
     int result = 1;
     String sql =
         "UPDATE custom_field_group " +
-        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE group_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -838,7 +848,7 @@ public class CustomFieldGroup extends ArrayList {
     startDate = rs.getTimestamp("start_date");
     endDate = rs.getTimestamp("end_date");
     entered = rs.getTimestamp("entered");
-    modified = entered;
+    modified = rs.getTimestamp("modified");;
     enabled = rs.getBoolean("enabled");
   }
 
@@ -848,17 +858,17 @@ public class CustomFieldGroup extends ArrayList {
    *
    * @param  sqlFilter  Description of Parameter
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
 
     if (includeScheduled == TRUE) {
       sqlFilter.append(
-          "AND CURRENT_TIMESTAMP > cfi.start_date AND (CURRENT_TIMESTAMP < cfi.end_date OR cfi.end_date IS NULL) ");
+          "AND " + DatabaseUtils.getCurrentTimestamp(db) + " > cfi.start_date AND (" + DatabaseUtils.getCurrentTimestamp(db) + " < cfi.end_date OR cfi.end_date IS NULL) ");
     } else if (includeScheduled == FALSE) {
       sqlFilter.append(
-          "AND (CURRENT_TIMESTAMP < cfi.start_date OR (CURRENT_TIMESTAMP > cfi.end_date AND cfi.end_date IS NOT NULL)) ");
+          "AND (" + DatabaseUtils.getCurrentTimestamp(db) + " < cfi.start_date OR (" + DatabaseUtils.getCurrentTimestamp(db) + " > cfi.end_date AND cfi.end_date IS NOT NULL)) ");
     }
 
     if (includeEnabled == TRUE || includeEnabled == FALSE) {

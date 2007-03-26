@@ -219,7 +219,7 @@ public class Organization extends GenericBean {
     pst.setInt(1, org_id);
     pst.setBoolean(2, true);
     pst.setBoolean(3, true);
-    ResultSet rs = DatabaseUtils.executeQuery(db, pst, log);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       buildRecord(rs);
     }
@@ -473,6 +473,14 @@ public class Organization extends GenericBean {
     this.potential = tmp;
   }
 
+  /**
+   *  Sets the potential attribute of the Organization object
+   *
+   * @param  tmp  The new potential value
+   */
+  public void setPotential(String tmp) {
+    this.potential = Double.parseDouble(tmp);
+  }
 
   /**
    *  Gets the alertDateTimeZone attribute of the Organization object
@@ -825,6 +833,14 @@ public class Organization extends GenericBean {
     this.duplicateId = duplicateId;
   }
 
+  /**
+   *  Sets the DuplicateId attribute of the Organization object
+   *
+   * @param  duplicateId  The new DuplicateId value
+   */
+  public void setDuplicateId(String duplicateId) {
+    this.duplicateId = Integer.parseInt(duplicateId);
+  }
 
   /**
    *  Sets the orgId attribute of the Organization object
@@ -868,7 +884,15 @@ public class Organization extends GenericBean {
     this.accountNumber = accountNumber;
   }
 
-
+  /**
+   *  Sets the OrgId attribute of the Organization object
+   *
+   * @param  tmp  The new OrgId value
+   */
+  public void setId(String tmp) {
+    this.setOrgId(Integer.parseInt(tmp));
+  }
+  
   /**
    *  Sets the OrgId attribute of the Organization object
    *
@@ -2685,7 +2709,9 @@ public class Organization extends GenericBean {
     boolean success = false;
 
     sql.append(
-        "UPDATE organization set enabled = ? " +
+        "UPDATE organization " +
+        "SET enabled = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE org_id = ? ");
 
     sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
@@ -2727,7 +2753,9 @@ public class Organization extends GenericBean {
     boolean success = false;
 
     sql.append(
-        "UPDATE organization SET enabled = ? " +
+        "UPDATE organization " +
+        "SET enabled = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE org_id = ? ");
     sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
@@ -2934,9 +2962,7 @@ public class Organization extends GenericBean {
       if (orgId > -1) {
         sql.append("org_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       if (statusId > -1) {
         sql.append("status_id, ");
       }
@@ -2946,9 +2972,7 @@ public class Organization extends GenericBean {
       if (importId > -1) {
         sql.append("import_id, ");
       }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("enteredBy, modifiedBy) ");
       sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,");
       sql.append("?,?,?,?,?,?,");
@@ -2957,6 +2981,8 @@ public class Organization extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (statusId > -1) {
         sql.append("?, ");
@@ -2969,6 +2995,8 @@ public class Organization extends GenericBean {
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?) ");
       int i = 0;
@@ -3340,7 +3368,8 @@ public class Organization extends GenericBean {
     // the stored org_name in contact needs to be updated
     pst = db.prepareStatement(
         "UPDATE contact " +
-        "SET org_name = ? " +
+        "SET org_name = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE org_id = ? " +
         "AND org_name NOT LIKE ? ");
     pst.setString(1, name);
@@ -3378,7 +3407,8 @@ public class Organization extends GenericBean {
   public static void renameMyCompany(Connection db, String newName) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization " +
-        "SET name = ? " +
+        "SET name = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE org_id = 0 ");
     pst.setString(1, newName);
     pst.execute();
@@ -3651,7 +3681,8 @@ public class Organization extends GenericBean {
         db.setAutoCommit(false);
       }
       String sql = "UPDATE organization " +
-          "SET status_id = ? " +
+          "SET status_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE import_id = ? ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -4163,9 +4194,9 @@ public class Organization extends GenericBean {
   public static void updateEmployeeCount(Connection db, int id, int employeeCount) throws SQLException {
     StringBuffer sql = new StringBuffer();
     if (employeeCount != -1) {
-      sql.append("UPDATE organization SET employees = ? WHERE org_id = ? AND employees <> ? ");
+      sql.append("UPDATE organization SET employees = ?, " + "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " WHERE org_id = ? AND employees <> ? ");
     } else {
-      sql.append("UPDATE organization SET employees = ? WHERE org_id = ? AND employees IS NOT NULL ");
+      sql.append("UPDATE organization SET employees = ?, " + "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " WHERE org_id = ? AND employees IS NOT NULL ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, 1, employeeCount);

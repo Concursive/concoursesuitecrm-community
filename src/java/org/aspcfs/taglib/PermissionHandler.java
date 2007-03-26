@@ -16,6 +16,8 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
+
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.login.beans.UserBean;
 
@@ -110,10 +112,11 @@ public class PermissionHandler extends TagSupport implements TryCatchFinally {
       SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
           "SystemStatus")).get(ce.getUrl());
       StringTokenizer st = new StringTokenizer(permissionName, ",");
+      boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(pageContext.getServletContext(), "OFFLINE_MODE"));
       while (st.hasMoreTokens()) {
         String thisPermission = st.nextToken();
         ++checks;
-        if (systemStatus.hasPermission(thisUser.getUserId(), thisPermission)) {
+        if (systemStatus.hasPermission(thisUser.getUserId(), thisPermission + (isOfflineMode?"-offline":""))) {
           ++matches;
         }
       }

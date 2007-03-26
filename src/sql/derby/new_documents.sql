@@ -13,7 +13,9 @@ CREATE TABLE lookup_document_store_permission_category (
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
   enabled CHAR(1) DEFAULT '1',
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Store the document store roles (e.g., owner, contributor, guest, etc.)
@@ -23,7 +25,9 @@ CREATE TABLE lookup_document_store_role (
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
   enabled CHAR(1) DEFAULT '1',
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Store the permissions in a document store (e.g., upload file, create version, create folder, download file, etc.)
@@ -36,7 +40,9 @@ CREATE TABLE lookup_document_store_permission (
   "level" INTEGER DEFAULT 0,
   enabled CHAR(1) DEFAULT '1',
   group_id INTEGER NOT NULL DEFAULT 0,
-  default_role INTEGER REFERENCES lookup_document_store_role(code)
+  default_role INTEGER REFERENCES lookup_document_store_role(code),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Store the document store details

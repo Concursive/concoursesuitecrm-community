@@ -21,6 +21,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -35,6 +36,10 @@ import java.util.Vector;
  */
 public class PhoneNumberList extends Vector {
 
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
   protected PagedListInfo pagedListInfo = null;
   protected int orgId = -1;
   protected int type = -1;
@@ -42,6 +47,48 @@ public class PhoneNumberList extends Vector {
   protected String number = null;
   protected String extension = null;
   protected boolean usersOnly = false;
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
 
   /**
    * Sets the PagedListInfo attribute of the AddressList object
@@ -52,7 +99,6 @@ public class PhoneNumberList extends Vector {
   protected void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-
 
   /**
    * Sets the OrgId attribute of the AddressList object
@@ -208,6 +254,17 @@ public class PhoneNumberList extends Vector {
     if (usersOnly) {
       sqlFilter.append("AND contact_id IN (SELECT contact_id FROM " + DatabaseUtils.addQuotes(db, "access") + " WHERE enabled = ? AND (expires IS NULL OR expires < CURRENT_TIMESTAMP)) ");
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND p.entered > ? ");
+      }
+      sqlFilter.append("AND p.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND p.modified > ? ");
+      sqlFilter.append("AND p.entered < ? ");
+      sqlFilter.append("AND p.modified < ? ");
+    }
   }
 
 
@@ -239,6 +296,17 @@ public class PhoneNumberList extends Vector {
     }
     if (usersOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

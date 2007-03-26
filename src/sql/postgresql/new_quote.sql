@@ -9,7 +9,9 @@ CREATE TABLE lookup_quote_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each quote has a type
@@ -19,7 +21,9 @@ CREATE TABLE lookup_quote_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each quote has terms in which the quote was placed
@@ -28,7 +32,9 @@ CREATE TABLE lookup_quote_terms (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
 	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each quote has a type of origination
@@ -38,7 +44,9 @@ CREATE TABLE lookup_quote_source (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
 	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 

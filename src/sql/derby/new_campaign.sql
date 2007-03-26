@@ -97,7 +97,9 @@ CREATE TABLE lookup_survey_types (
   description VARCHAR(50) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE survey (
@@ -182,7 +184,7 @@ CREATE TABLE active_survey_responses (
   active_survey_id INT NOT NULL REFERENCES active_survey(active_survey_id),
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
-  ip_address VARCHAR(15) NOT NULL,
+  ip_address VARCHAR(30) NOT NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   address_updated INT
 );

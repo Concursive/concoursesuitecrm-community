@@ -30,7 +30,6 @@ import java.net.URLConnection;
  * @created January 21, 2002
  */
 public class HttpPost {
-
   /**
    * Description of the Method
    *
@@ -39,7 +38,7 @@ public class HttpPost {
    * @param out      Description of the Parameter
    * @param boundary Description of the Parameter
    */
-  private static void writeParam(String name, String value, DataOutputStream out, String boundary) {
+  public static void writeParam(String name, String value, DataOutputStream out, String boundary) {
     try {
       out.writeBytes(
           "content-disposition: form-data; name=\"" + name + "\"\r\n\r\n");
@@ -59,7 +58,10 @@ public class HttpPost {
    * @param out      Description of the Parameter
    * @param boundary Description of the Parameter
    */
-  private static void writeFile(String name, String filePath, DataOutputStream out, String boundary) {
+  public static void writeFile(String name, String filePath, DataOutputStream out, String boundary) {
+    int BUFF_SIZE = 1024;
+    byte[] buffer = new byte[BUFF_SIZE];
+    
     try {
       out.writeBytes(
           "content-disposition: form-data; name=\"" + name + "\"; filename=\""
@@ -81,11 +83,6 @@ public class HttpPost {
       System.out.println(e.toString());
     }
   }
-
-
-  final static int BUFF_SIZE = 1024;
-  final static byte[] buffer = new byte[BUFF_SIZE];
-
 
   /**
    * Creates a new instance

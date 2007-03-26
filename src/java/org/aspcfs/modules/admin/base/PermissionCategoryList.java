@@ -16,6 +16,7 @@
 package org.aspcfs.modules.admin.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -24,6 +25,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -36,7 +38,9 @@ import java.util.Vector;
  *          mrajkowski Exp $
  * @created January 13, 2003
  */
-public class PermissionCategoryList extends Vector {
+public class PermissionCategoryList extends Vector implements SyncableList {
+
+  private static final long serialVersionUID = 1457263321295437190L;
 
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
@@ -55,9 +59,76 @@ public class PermissionCategoryList extends Vector {
   /**
    * Constructor for the PermissionCategoryList object
    */
-  public PermissionCategoryList() {
+  public PermissionCategoryList() {  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+
+  
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static PermissionCategory getObject(ResultSet rs) throws SQLException {
+    PermissionCategory pc = new PermissionCategory(rs);
+    return pc;
+  }
 
   /**
    * Sets the pagedListInfo attribute of the PermissionCategoryList object
@@ -102,26 +173,6 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
-   * Gets the tableName attribute of the PermissionCategoryList object
-   *
-   * @return The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the PermissionCategoryList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
    * Gets the lastAnchor attribute of the PermissionCategoryList object
    *
    * @return The lastAnchor value
@@ -149,37 +200,6 @@ public class PermissionCategoryList extends Vector {
   public int getSyncType() {
     return syncType;
   }
-
-
-  /**
-   * Sets the lastAnchor attribute of the PermissionCategoryList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the PermissionCategoryList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the syncType attribute of the PermissionCategoryList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
 
   /**
    * Sets the enabledState attribute of the PermissionCategoryList object
@@ -283,7 +303,22 @@ public class PermissionCategoryList extends Vector {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
+    ResultSet rs = this.queryList(db, null);
+    while (rs.next()) {
+      this.add(PermissionCategoryList.getObject(rs));
+    }
+    rs.close();
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -356,15 +391,9 @@ public class PermissionCategoryList extends Vector {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    while (rs.next()) {
-      PermissionCategory thisCategory = new PermissionCategory(rs);
-      this.add(thisCategory);
-    }
-    rs.close();
-    pst.close();
+    return rs;
   }
-
-
+  
   /**
    * Description of the Method
    *
@@ -385,6 +414,17 @@ public class PermissionCategoryList extends Vector {
     }
     if (modulesWithReportsOnly) {
       sqlFilter.append("AND reports = ? ");
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND entered > ? ");
+      }
+      sqlFilter.append("AND entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND modified > ? ");
+      sqlFilter.append("AND entered < ? ");
+      sqlFilter.append("AND modified < ? ");
     }
   }
 
@@ -413,6 +453,17 @@ public class PermissionCategoryList extends Vector {
     }
     if (modulesWithReportsOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
     return i;
   }

@@ -42,6 +42,68 @@ public class ActionPlanCategory extends GenericBean {
   private int level = -1;
   private TicketCategoryDraftList shortChildList = new TicketCategoryDraftList();
   private int siteId = -1;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
+
+
+  /**
+   *  Gets the entered attribute of the ActionPlanCategory object
+   *
+   * @return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActionPlanCategory object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActionPlanCategory object
+   *
+   * @param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the modified attribute of the ActionPlanCategory object
+   *
+   * @return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionPlanCategory object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionPlanCategory object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
 
 
 
@@ -106,9 +168,21 @@ public class ActionPlanCategory extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "action_plan_category_id_seq");
       sql.append(
           "INSERT INTO action_plan_category " +
-          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level") +
-          ", enabled, site_id) " +
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?) ");
+          "(" + (id > -1 ? "id, " : "") + "cat_level, parent_cat_code, description, " + DatabaseUtils.addQuotes(db, "level"));
+      sql.append(", entered, modified ");
+      sql.append(", enabled, site_id) " +
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ");
+      if (entered != null) {
+        sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (id > -1) {
@@ -122,6 +196,12 @@ public class ActionPlanCategory extends GenericBean {
       }
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getLevel());
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setBoolean(++i, this.getEnabled());
       DatabaseUtils.setInt(pst, ++i, this.getSiteId());
       pst.execute();
@@ -156,7 +236,8 @@ public class ActionPlanCategory extends GenericBean {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_plan_category " +
           "SET description = ?, cat_level = ?, parent_cat_code = ?, " +
-          DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ? " +
+          DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getCategoryLevel());
@@ -191,6 +272,8 @@ public class ActionPlanCategory extends GenericBean {
     level = rs.getInt("level");
     enabled = rs.getBoolean("enabled");
     siteId = DatabaseUtils.getInt(rs, "site_id");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 

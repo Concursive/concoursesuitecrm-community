@@ -36,6 +36,8 @@ import java.util.Iterator;
  * @created September 19, 2001
  */
 public class Role extends GenericBean {
+
+  private static final long serialVersionUID = 3296299115328316895L;
   //Role Properties
   protected int id = -1;
   protected String role = null;
@@ -459,7 +461,8 @@ public class Role extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE " + DatabaseUtils.addQuotes(db, "role") + " " +
-              "SET " + DatabaseUtils.addQuotes(db, "role") + " = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
+              "SET " + DatabaseUtils.addQuotes(db, "role") + " = ?, description = ?, role_type = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
               "modifiedby = ?, enabled = ? " +
               "WHERE modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ") +
               "AND role_id = ? ");
@@ -541,15 +544,10 @@ public class Role extends GenericBean {
       }
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO " + DatabaseUtils.addQuotes(db, "role") + " (" + DatabaseUtils.addQuotes(db, "role") + ", description, role_type, ");
-      if (entered != null) {
-        sql.append("entered, ");
-      }
       if (id > -1) {
         sql.append("role_id, ");
       }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append(
           "enteredby, modifiedby, enabled ) " +
               "VALUES (?, ?, ?, ");
@@ -558,9 +556,13 @@ public class Role extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?) ");
       int i = 0;
@@ -568,11 +570,11 @@ public class Role extends GenericBean {
       pst.setString(++i, getRole());
       pst.setString(++i, getDescription());
       DatabaseUtils.setInt(pst, ++i, getRoleType());
-      if (entered != null) {
-        pst.setTimestamp(++i, entered);
-      }
       if (id > -1) {
         pst.setInt(++i, id);
+      }
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
       }
       if (modified != null) {
         pst.setTimestamp(++i, modified);
@@ -622,7 +624,8 @@ public class Role extends GenericBean {
       if (buildUserCount(db, false)) {
         pst = db.prepareStatement(
             "UPDATE " + DatabaseUtils.addQuotes(db, "role") + " " +
-                "SET enabled = ? " +
+                "SET enabled = ?, " +
+                "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
                 "WHERE role_id = ? ");
         pst.setBoolean(1, false);
         pst.setInt(2, id);
@@ -654,28 +657,40 @@ public class Role extends GenericBean {
   /**
    * Adds a feature to the Permission attribute of the Role object
    *
-   * @param db           The feature to be added to the Permission
-   *                     attribute
-   * @param permissionId The feature to be added to the Permission
-   *                     attribute
-   * @param add          The feature to be added to the Permission
-   *                     attribute
-   * @param view         The feature to be added to the Permission
-   *                     attribute
-   * @param edit         The feature to be added to the Permission
-   *                     attribute
-   * @param delete       The feature to be added to the Permission
-   *                     attribute
+   * @param db            The feature to be added to the Permission
+   *                      attribute
+   * @param permissionId  The feature to be added to the Permission
+   *                      attribute
+   * @param add           The feature to be added to the Permission
+   *                      attribute
+   * @param view          The feature to be added to the Permission
+   *                      attribute
+   * @param edit          The feature to be added to the Permission
+   *                      attribute
+   * @param delete        The feature to be added to the Permission
+   *                      attribute
+   * @param offlineAdd    The feature to be added to the Permission
+   *                      attribute
+   * @param offlineView   The feature to be added to the Permission
+   *                      attribute
+   * @param offlineEdit   The feature to be added to the Permission
+   *                      attribute
+   * @param offlineDelete The feature to be added to the Permission
+   *                      attribute
    * @throws SQLException Description of Exception
    */
-  public void addPermission(Connection db, int permissionId, boolean add, boolean view, boolean edit, boolean delete) throws SQLException {
+  public void addPermission(Connection db, int permissionId, boolean add, boolean view, boolean edit, boolean delete, boolean offlineAdd, boolean offlineView, boolean offlineEdit, boolean offlineDelete) throws SQLException {
     int i = 0;
     int rolePermissionId = DatabaseUtils.getNextSeq(
         db, "role_permission_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO role_permission " +
-            "(" + (rolePermissionId > -1 ? "id, " : "") + "role_id, permission_id, role_add, role_view, role_edit, role_delete) " +
-            "VALUES (" + (rolePermissionId > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? ) ");
+        "(" + (rolePermissionId > -1 ? "id, " : "") + "role_id, permission_id, role_add, role_view, role_edit, role_delete" +
+        ", role_offline_add, role_offline_view, role_offline_edit, role_offline_delete" +
+        ") " +
+        "VALUES (" + (rolePermissionId > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ? " +
+        ", ?, ?, ?, ?" +
+        ") ");
     if (rolePermissionId > -1) {
       pst.setInt(++i, rolePermissionId);
     }
@@ -685,6 +700,10 @@ public class Role extends GenericBean {
     pst.setBoolean(++i, view);
     pst.setBoolean(++i, edit);
     pst.setBoolean(++i, delete);
+    pst.setBoolean(++i, offlineAdd);
+    pst.setBoolean(++i, offlineView);
+    pst.setBoolean(++i, offlineEdit);
+    pst.setBoolean(++i, offlineDelete);
     pst.execute();
     pst.close();
   }
@@ -846,7 +865,12 @@ public class Role extends GenericBean {
             thisPermission.getAdd(),
             thisPermission.getView(),
             thisPermission.getEdit(),
-            thisPermission.getDelete());
+            thisPermission.getDelete(),
+            thisPermission.getOfflineAdd(),
+            thisPermission.getOfflineView(),
+            thisPermission.getOfflineEdit(),
+            thisPermission.getOfflineDelete()
+        );
       }
     }
   }

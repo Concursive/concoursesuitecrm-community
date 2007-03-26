@@ -39,8 +39,12 @@ import java.util.Locale;
  */
 public class DatabaseUtils {
 
+  private static Logger log = Logger.getLogger(org.aspcfs.utils.DatabaseUtils.class);
   public final static String CRLF = System.getProperty("line.separator");
 
+  //Possible time in milies for SQL query
+  static final long POSSIBLE_QUERY_TIME = 3000;
+  
   // Quote symbols
   public final static String qsDefault = "\"";
   public final static String qsMySQL = "`";
@@ -58,7 +62,8 @@ public class DatabaseUtils {
   public final static String sqlReservedWords = ",language,password,level,type,position,second," +
       "minute,hour,month,dayofweek,year,length,message," +
       "active,role,number,module,section,value,size," +
-      "version,display,parameter,action,global,access,lock,comment,";
+      "version,display,parameter,action,global,access,lock,comment," +
+      "offset,";
   //intervals
   public final static int DAY = 1;
   public final static int WEEK = 2;
@@ -459,7 +464,7 @@ public class DatabaseUtils {
         if (units == WEEK) {
           customUnits = "SQL_TSI_WEEK";
         }
-        addTimestampIntervalString = "fn{ TIMESTAMPADD(" + customUnits + ", CAST(" + termsColumnName + " + " + (defaultTerms + 1) + " AS INTEGER)," + timestampColumnName + ")}";
+        addTimestampIntervalString = "{fn TIMESTAMPADD(" + customUnits + ", CAST(" + termsColumnName + " + " + (defaultTerms + 1) + " AS INTEGER)," + timestampColumnName + ")}";
         break;
     }
     return addTimestampIntervalString;
@@ -1454,7 +1459,7 @@ public class DatabaseUtils {
    */
   public static String parseReservedWord(Connection db, String reservedWord) {
     if (DatabaseUtils.getType(db) == FIREBIRD ||
-    	DatabaseUtils.getType(db) == INTERBASE ||
+        DatabaseUtils.getType(db) == INTERBASE ||
         DatabaseUtils.getType(db) == ORACLE ||
         DatabaseUtils.getType(db) == DB2 ||
         DatabaseUtils.getType(db) == MYSQL ||
@@ -1466,7 +1471,7 @@ public class DatabaseUtils {
         return (part1 + "." + parseReservedWord(db, part2));
       }
       if (sqlReservedWords.indexOf("," + reservedWord + ",") != -1) {
-        return DatabaseUtils.getQuote(db) + reservedWord + DatabaseUtils.getQuote(db);
+        return addQuotes(db, reservedWord);
       }
     }
     return reservedWord;
@@ -1501,7 +1506,7 @@ public class DatabaseUtils {
    * @return Description of the Return Value
    */
   public static String addQuotes(Connection db, String stringToQuote) {
-    String quoteSymbol = DatabaseUtils.getQuote(db);
+    String quoteSymbol = getQuote(db);
     return quoteSymbol + stringToQuote + quoteSymbol;
   }
 
@@ -1714,20 +1719,70 @@ public class DatabaseUtils {
     return truncSQL;
   }
 
-  //Possible time in millies for SQL query
-  static final long POSSIBLE_QUERY_TIME = 3000;
-  
+  /**
+   *  Gets the maxId attribute of the DatabaseUtils class
+   *
+   * @param  db                Description of the Parameter
+   * @param  origTableName         Description of the Parameter
+   * @param  origSequenceName  Description of the Parameter
+   * @param  uniqueField       Description of the Parameter
+   * @return                   The maxId value
+   * @exception  SQLException  Description of the Exception
+   */
+  public static int getMaxId(Connection db, String origTableName, String origSequenceName, String uniqueField) throws SQLException {
+    //TODO: Verify the working of this method for all supported databases
+    int typeId = DatabaseUtils.getType(db);
+    
+    int id = -1;
+    Statement st = db.createStatement();
+    ResultSet rs = null;
+    String sequenceName = getSequenceName(db, origSequenceName);
+    String tableName = getTableName(db, origTableName);
+    
+    switch (typeId) {
+      case DatabaseUtils.POSTGRESQL:
+        rs = st.executeQuery(
+            "SELECT nextval('" + sequenceName + "')");
+        break;
+      case DatabaseUtils.MSSQL:
+      case DatabaseUtils.DERBY:
+        rs = st.executeQuery(
+            "SELECT MAX(" + uniqueField + ") FROM " + parseReservedWord(db, tableName));
+        break;
+      case DatabaseUtils.FIREBIRD:
+        rs = st.executeQuery(
+            "SELECT GEN_ID (" + sequenceName + ",1) FROM RDB$DATABASE");
+        break;
+      case DatabaseUtils.DAFFODILDB:
+        rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
+        break;
+      case DatabaseUtils.ORACLE:
+        rs = st.executeQuery("SELECT " + sequenceName + ".nextval from dual");
+        break;
+      case DatabaseUtils.DB2:
+        rs = st.executeQuery("VALUES NEXTVAL FOR " + sequenceName);
+        break;
+      default:
+        break;
+    }
+    if (rs.next()) {
+      id = rs.getInt(1);
+    }
+    rs.close();
+    st.close();
+    return id;
+  }
+
   /**
    * Description of the Method
    *
    * @param db
    * @param pst
-   * @param log
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public static ResultSet executeQuery(Connection db, PreparedStatement pst, Logger log) throws SQLException{
-    return executeQuery(db, pst, log, null);
+  public static ResultSet executeQuery(Connection db, PreparedStatement pst) throws SQLException{
+    return executeQuery(db, pst, null);
   }
 
    /**
@@ -1736,11 +1791,10 @@ public class DatabaseUtils {
    * @param db
    * @param pst
    * @param pagedListInfo
-   * @param log
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public static ResultSet executeQuery(Connection db, PreparedStatement pst, Logger log, PagedListInfo pagedListInfo) throws SQLException{
+  public static ResultSet executeQuery(Connection db, PreparedStatement pst, PagedListInfo pagedListInfo) throws SQLException{
     ResultSet rs = null;
     long milies = System.currentTimeMillis();
     if (pagedListInfo != null) {

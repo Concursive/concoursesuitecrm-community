@@ -21,6 +21,7 @@ public class AllTests {
   public static Test suite() {
     TestSuite suite = new TestSuite("All Tests for default package");
     //$JUnit-BEGIN$
+    suite.addTest(com.ComTestSuite.suite());
     suite.addTest(org.OrgTestSuite.suite());
     //$JUnit-END$
     return suite;

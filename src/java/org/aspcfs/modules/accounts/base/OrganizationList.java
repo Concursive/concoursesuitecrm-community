@@ -802,6 +802,10 @@ public class OrganizationList extends Vector implements SyncableList {
   public void setShowMyCompany(boolean showMyCompany) {
     this.showMyCompany = showMyCompany;
   }
+  
+  public void setShowMyCompany(String showMyCompany) {
+    this.showMyCompany = DatabaseUtils.parseBoolean(showMyCompany);
+  }
 
 
   /**
@@ -1640,13 +1644,23 @@ public class OrganizationList extends Vector implements SyncableList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("o.name", null);
+      if (showMyCompany) {
+        //NOTE: order by org_id is important for sync api to send mycompany record first
+        pagedListInfo.setDefaultSort("o.org_id", null);
+      } else {
+        pagedListInfo.setDefaultSort("o.name", null);
+      }
       pagedListInfo.appendSqlTail(db, sqlOrder);
 
       //Optimize SQL Server Paging
       //sqlFilter.append("AND o.org_id NOT IN (SELECT TOP 10 org_id FROM organization " + sqlOrder.toString());
     } else {
-      sqlOrder.append("ORDER BY o.name ");
+      if (showMyCompany) {
+        //NOTE: order by org_id is important for sync api to send mycompany record first
+        sqlOrder.append("ORDER BY o.org_id ");
+      } else {
+        sqlOrder.append("ORDER BY o.name ");
+      }
     }
 
     //Need to build a base SQL statement for returning records
@@ -1687,7 +1701,7 @@ public class OrganizationList extends Vector implements SyncableList {
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, pst);
     }
-    rs = DatabaseUtils.executeQuery(db, pst, log);
+    rs = DatabaseUtils.executeQuery(db, pst);
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }

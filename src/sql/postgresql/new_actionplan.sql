@@ -10,7 +10,9 @@ CREATE TABLE action_plan_category (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Action Plan Category Draft
@@ -31,7 +33,9 @@ CREATE TABLE action_plan_category_draft (
 CREATE TABLE action_plan_constants (
   map_id SERIAL PRIMARY KEY,
   constant_id INTEGER NOT NULL,
-  description VARCHAR(300)
+  description VARCHAR(300),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX action_plan_constant_id ON action_plan_constants(constant_id);
 
@@ -43,7 +47,8 @@ CREATE TABLE action_plan_editor_lookup (
   level INTEGER DEFAULT 0,
   description TEXT,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-  category_id INT NOT NULL
+  category_id INT NOT NULL,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Action Plan
@@ -53,10 +58,10 @@ CREATE TABLE action_plan (
   description VARCHAR(2048),
   enabled boolean NOT NULL DEFAULT true,
   approved TIMESTAMP(3) DEFAULT NULL,
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
-	modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
   archive_date TIMESTAMP(3),
   cat_code INT REFERENCES action_plan_category(id),
   subcat_code1 INT REFERENCES action_plan_category(id),
@@ -74,9 +79,10 @@ CREATE TABLE action_phase (
   phase_name VARCHAR(255) NOT NULL,
   description VARCHAR(2048),
   enabled boolean NOT NULL DEFAULT true,
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   random BOOLEAN DEFAULT false,
-  global BOOLEAN DEFAULT false
+  global BOOLEAN DEFAULT false,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each action step can have an estimated duration type
@@ -87,7 +93,9 @@ CREATE TABLE lookup_duration_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_step_actions_code_seq;
@@ -96,8 +104,10 @@ CREATE TABLE lookup_step_actions (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
-  constant_id INT UNIQUE NOT NULL
+  enabled BOOLEAN DEFAULT true,
+  constant_id INT UNIQUE NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Action Step table
@@ -114,7 +124,7 @@ CREATE TABLE action_step (
   role_id INTEGER REFERENCES role(role_id),
   department_id INTEGER REFERENCES lookup_department(code),
   enabled boolean NOT NULL DEFAULT true,
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   allow_skip_to_here boolean NOT NULL DEFAULT FALSE,
   label VARCHAR(80),
   action_required boolean NOT NULL DEFAULT FALSE,
@@ -126,18 +136,21 @@ CREATE TABLE action_step (
   allow_duplicate_recipient boolean NOT NULL DEFAULT FALSE,
   display_in_plan_list boolean NOT NULL DEFAULT FALSE,
   plan_list_label varchar(300),
-  quick_complete boolean DEFAULT false NOT NULL
+  quick_complete boolean DEFAULT false NOT NULL,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE step_action_map (
   map_id SERIAL PRIMARY KEY,
   constant_id INTEGER NOT NULL REFERENCES action_plan_constants(map_id),
-  action_constant_id INTEGER NOT NULL REFERENCES lookup_step_actions(constant_id)
+  action_constant_id INTEGER NOT NULL REFERENCES lookup_step_actions(constant_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Action Plan Work
 CREATE TABLE action_plan_work (
-  plan_work_id SERIAL PRIMARY KEY, 
+  plan_work_id SERIAL PRIMARY KEY,
   action_plan_id INTEGER NOT NULL REFERENCES action_plan(plan_id),
   manager INTEGER,
   assignedTo INTEGER NOT NULL REFERENCES access(user_id),
@@ -157,12 +170,14 @@ CREATE TABLE action_plan_work_notes (
   plan_work_id INTEGER NOT NULL REFERENCES action_plan_work(plan_work_id),
   description VARCHAR(4096) NOT NULL,
   submitted TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  submittedby INTEGER NOT NULL REFERENCES access(user_id)
+  submittedby INTEGER NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Action Phase Work
 CREATE TABLE action_phase_work (
-  phase_work_id SERIAL PRIMARY KEY, 
+  phase_work_id SERIAL PRIMARY KEY,
   plan_work_id INTEGER NOT NULL REFERENCES action_plan_work(plan_work_id),
   action_phase_id INTEGER NOT NULL REFERENCES action_phase(phase_id),
   status_id INTEGER,
@@ -199,7 +214,9 @@ CREATE TABLE action_item_work_notes (
   item_work_id INTEGER NOT NULL REFERENCES action_item_work(item_work_id),
   description VARCHAR(4096) NOT NULL,
   submitted TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  submittedby INTEGER NOT NULL REFERENCES access(user_id)
+  submittedby INTEGER NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Action Step lookup
@@ -209,32 +226,44 @@ CREATE TABLE action_step_lookup (
   description VARCHAR(255) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Action Step Account Types
+CREATE SEQUENCE action_step_account_types_id_seq;
 CREATE TABLE action_step_account_types (
+  id INTEGER DEFAULT nextval('action_step_account_types_id_seq') NOT NULL PRIMARY KEY,
   step_id INTEGER NOT NULL REFERENCES action_step(step_id),
-  type_id INTEGER NOT NULL REFERENCES lookup_account_types(code)
+  type_id INTEGER NOT NULL REFERENCES lookup_account_types(code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Action Item Work Selection
 CREATE TABLE action_item_work_selection (
   selection_id SERIAL PRIMARY KEY,
   item_work_id INTEGER NOT NULL REFERENCES action_item_work(item_work_id),
-  selection INTEGER NOT NULL REFERENCES action_step_lookup(code)
+  selection INTEGER NOT NULL REFERENCES action_step_lookup(code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Ticket Category To Action Plan map table
 CREATE TABLE ticket_category_plan_map (
   map_id SERIAL PRIMARY KEY,
   plan_id INTEGER NOT NULL REFERENCES action_plan(plan_id),
-  category_id INTEGER NOT NULL REFERENCES ticket_category(id)
+  category_id INTEGER NOT NULL REFERENCES ticket_category(id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Ticket Category Draft To Action Plan map table
 CREATE TABLE ticket_category_draft_plan_map (
   map_id SERIAL PRIMARY KEY,
   plan_id INTEGER NOT NULL REFERENCES action_plan(plan_id),
-  category_id INTEGER NOT NULL REFERENCES ticket_category_draft(id)
+  category_id INTEGER NOT NULL REFERENCES ticket_category_draft(id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

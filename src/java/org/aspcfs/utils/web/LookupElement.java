@@ -21,12 +21,12 @@ import java.sql.*;
 import java.io.Serializable;
 
 /**
- * Represents an item from a Lookup table, to be used primarily with HtmlSelect
- * objects and the LookupList object.
+ *  Represents an item from a Lookup table, to be used primarily with HtmlSelect
+ *  objects and the LookupList object.
  *
- * @author mrajkowski
- * @version $Id: LookupElement.java,v 1.13 2003/01/13 14:42:24 mrajkowski Exp
- *          $
+ * @author     mrajkowski
+ * @version    $Id: LookupElement.java,v 1.13 2003/01/13 14:42:24 mrajkowski Exp
+ *      $
  * @created September 5, 2001
  */
 public class LookupElement implements Serializable {
@@ -45,21 +45,21 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Constructor for the LookupElement object
+   *  Constructor for the LookupElement object
    *
-   * @since 1.1
+   * @since    1.1
    */
-  public LookupElement() {
-  }
+  public LookupElement() { }
 
 
   /**
-   * Constructor for the LookupElement object
+   *  Constructor for the LookupElement object
    *
-   * @param db        Description of the Parameter
-   * @param code      Description of the Parameter
-   * @param tableName Description of the Parameter
-   * @throws java.sql.SQLException Description of the Exception
+   * @param  db                         Description of the Parameter
+   * @param  code                       Description of the Parameter
+   * @param  tableName                  Description of the Parameter
+   * @exception  java.sql.SQLException  Description of the Exception
+   * @throws  java.sql.SQLException     Description of the Exception
    */
   public LookupElement(Connection db, int code, String tableName) throws java.sql.SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -67,7 +67,8 @@ public class LookupElement implements Serializable {
           "LookupElement-> Retrieving ID: " + code + " from table: " + tableName);
     }
     String sql =
-        "SELECT code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled " +
+        "SELECT code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, " +
+        "entered, modified " +
         "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
         "WHERE code = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
@@ -83,15 +84,16 @@ public class LookupElement implements Serializable {
     rs.close();
     pst.close();
   }
- 
-  
+
+
   /**
-   * Constructor for the LookupElement object
+   *  Constructor for the LookupElement object
    *
-   * @param db        Description of the Parameter
-   * @param description   Description of the Parameter
-   * @param tableName Description of the Parameter
-   * @throws java.sql.SQLException Description of the Exception
+   * @param  db                         Description of the Parameter
+   * @param  description                Description of the Parameter
+   * @param  tableName                  Description of the Parameter
+   * @exception  java.sql.SQLException  Description of the Exception
+   * @throws  java.sql.SQLException     Description of the Exception
    */
   private LookupElement(Connection db, String description, String tableName) throws java.sql.SQLException {
     if (System.getProperty("DEBUG") != null) {
@@ -104,7 +106,8 @@ public class LookupElement implements Serializable {
         (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
         (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
-        "code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled " +
+        "code, description, default_item, " + DatabaseUtils.addQuotes(db, "level") + ", enabled, " +
+        "entered, modified " +
         "FROM " + DatabaseUtils.getTableName(db, tableName) + " " +
         "WHERE description = ? " +
         (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
@@ -124,13 +127,14 @@ public class LookupElement implements Serializable {
     pst.close();
   }
 
-  
+
   /**
-   * Constructor for the LookupElement object
+   *  Constructor for the LookupElement object
    *
-   * @param rs Description of Parameter
-   * @throws java.sql.SQLException Description of Exception
-   * @since 1.1
+   * @param  rs                         Description of Parameter
+   * @exception  java.sql.SQLException  Description of the Exception
+   * @throws  java.sql.SQLException     Description of Exception
+   * @since                             1.1
    */
   public LookupElement(ResultSet rs) throws java.sql.SQLException {
     build(rs);
@@ -138,10 +142,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws java.sql.SQLException Description of the Exception
+   * @param  rs                      Description of the Parameter
+   * @throws  java.sql.SQLException  Description of the Exception
    */
   public void build(ResultSet rs) throws java.sql.SQLException {
     code = rs.getInt("code");
@@ -156,16 +160,15 @@ public class LookupElement implements Serializable {
     if (!(this.getEnabled())) {
       description += " (X)";
     }
-    //not guaranteed to be here
-    //entered = rs.getTimestamp("entered");
-    //modified = rs.getTimestamp("modified");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
   /**
-   * Sets the tableName attribute of the LookupElement object
+   *  Sets the tableName attribute of the LookupElement object
    *
-   * @param tmp The new tableName value
+   * @param  tmp  The new tableName value
    */
   public void setTableName(String tmp) {
     this.tableName = tmp;
@@ -173,12 +176,12 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the newOrder attribute of the LookupElement object
+   *  Sets the newOrder attribute of the LookupElement object
    *
-   * @param db        The new newOrder value
-   * @param tableName The new newOrder value
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  db             The new newOrder value
+   * @param  tableName      The new newOrder value
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public int setNewOrder(Connection db, String tableName) throws SQLException {
     int resultCount = 0;
@@ -192,7 +195,8 @@ public class LookupElement implements Serializable {
 
     sql.append(
         "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
-        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE code = ? ");
 
     int i = 0;
@@ -209,12 +213,12 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the newDescription attribute of the LookupElement object
+   *  Sets the newDescription attribute of the LookupElement object
    *
-   * @param db        The new newDescription value
-   * @param tableName The new newDescription value
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             The new newDescription value
+   * @param  tableName      The new newDescription value
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int setNewDescription(Connection db, String tableName) throws SQLException {
     int resultCount = 0;
@@ -225,7 +229,8 @@ public class LookupElement implements Serializable {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
-        "SET description = ? " +
+        "SET description = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " + 
         "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -238,10 +243,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the Code attribute of the LookupElement object
+   *  Sets the Code attribute of the LookupElement object
    *
-   * @param tmp The new Code value
-   * @since 1.1
+   * @param  tmp  The new Code value
+   * @since       1.1
    */
   public void setCode(int tmp) {
     this.code = tmp;
@@ -249,9 +254,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the code attribute of the LookupElement object
+   *  Sets the code attribute of the LookupElement object
    *
-   * @param tmp The new code value
+   * @param  tmp  The new code value
    */
   public void setCode(String tmp) {
     this.code = Integer.parseInt(tmp);
@@ -259,9 +264,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the id attribute of the LookupElement object
+   *  Sets the id attribute of the LookupElement object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.code = tmp;
@@ -269,9 +274,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the id attribute of the LookupElement object
+   *  Sets the id attribute of the LookupElement object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.code = Integer.parseInt(tmp);
@@ -279,10 +284,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the Description attribute of the LookupElement object
+   *  Sets the Description attribute of the LookupElement object
    *
-   * @param tmp The new Description value
-   * @since 1.1
+   * @param  tmp  The new Description value
+   * @since       1.1
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -290,10 +295,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the DefaultItem attribute of the LookupElement object
+   *  Sets the DefaultItem attribute of the LookupElement object
    *
-   * @param tmp The new DefaultItem value
-   * @since 1.2
+   * @param  tmp  The new DefaultItem value
+   * @since       1.2
    */
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
@@ -301,9 +306,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the defaultItem attribute of the LookupElement object
+   *  Sets the defaultItem attribute of the LookupElement object
    *
-   * @param tmp The new defaultItem value
+   * @param  tmp  The new defaultItem value
    */
   public void setDefaultItem(String tmp) {
     this.defaultItem = DatabaseUtils.parseBoolean(tmp);
@@ -311,10 +316,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the Level attribute of the LookupElement object
+   *  Sets the Level attribute of the LookupElement object
    *
-   * @param tmp The new Level value
-   * @since 1.2
+   * @param  tmp  The new Level value
+   * @since       1.2
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -322,9 +327,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the level attribute of the LookupElement object
+   *  Sets the level attribute of the LookupElement object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -332,10 +337,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the Enabled attribute of the LookupElement object
+   *  Sets the Enabled attribute of the LookupElement object
    *
-   * @param tmp The new Enabled value
-   * @since 1.1
+   * @param  tmp  The new Enabled value
+   * @since       1.1
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -343,9 +348,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the enabled attribute of the LookupElement object
+   *  Sets the enabled attribute of the LookupElement object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = DatabaseUtils.parseBoolean(tmp);
@@ -353,9 +358,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the fieldId attribute of the LookupElement object
+   *  Sets the fieldId attribute of the LookupElement object
    *
-   * @param tmp The new fieldId value
+   * @param  tmp  The new fieldId value
    */
   public void setFieldId(int tmp) {
     this.fieldId = tmp;
@@ -363,27 +368,39 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Sets the fieldId attribute of the LookupElement object
+   *  Sets the fieldId attribute of the LookupElement object
    *
-   * @param tmp The new fieldId value
+   * @param  tmp  The new fieldId value
    */
   public void setFieldId(String tmp) {
     this.fieldId = Integer.parseInt(tmp);
   }
 
 
+  /**
+   *  Sets the constantId attribute of the LookupElement object
+   *
+   * @param  constantId  The new constantId value
+   */
   public void setConstantId(int constantId) {
     this.constantId = constantId;
   }
 
+
+  /**
+   *  Sets the constantId attribute of the LookupElement object
+   *
+   * @param  constantId  The new constantId value
+   */
   public void setConstantId(String constantId) {
     this.constantId = Integer.parseInt(constantId);
   }
 
+
   /**
-   * Sets the group attribute of the LookupElement object
+   *  Sets the group attribute of the LookupElement object
    *
-   * @param tmp The new group value
+   * @param  tmp  The new group value
    */
   public void setGroup(boolean tmp) {
     this.group = tmp;
@@ -399,9 +416,9 @@ public class LookupElement implements Serializable {
   }
 
   /**
-   * Sets the group attribute of the LookupElement object
+   *  Sets the group attribute of the LookupElement object
    *
-   * @param tmp The new group value
+   * @param  tmp  The new group value
    */
   public void setGroup(String tmp) {
     this.group = DatabaseUtils.parseBoolean(tmp);
@@ -409,9 +426,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the tableName attribute of the LookupElement object
+   *  Gets the tableName attribute of the LookupElement object
    *
-   * @return The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -419,10 +436,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the Code attribute of the LookupElement object
+   *  Gets the Code attribute of the LookupElement object
    *
-   * @return The Code value
-   * @since 1.1
+   * @return    The Code value
+   * @since     1.1
    */
   public int getCode() {
     return code;
@@ -430,9 +447,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Returns the code in String form for use in reflection.
+   *  Returns the code in String form for use in reflection.
    *
-   * @return The codeString value
+   * @return    The codeString value
    */
   public String getCodeString() {
     return String.valueOf(code);
@@ -440,10 +457,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the id attribute of the LookupElement object, id is a required name
-   * for some reflection parsing
+   *  Gets the id attribute of the LookupElement object, id is a required name
+   *  for some reflection parsing
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return code;
@@ -451,10 +468,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the Description attribute of the LookupElement object
+   *  Gets the Description attribute of the LookupElement object
    *
-   * @return The Description value
-   * @since 1.1
+   * @return    The Description value
+   * @since     1.1
    */
   public String getDescription() {
     return description;
@@ -462,10 +479,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the DefaultItem attribute of the LookupElement object
+   *  Gets the DefaultItem attribute of the LookupElement object
    *
-   * @return The DefaultItem value
-   * @since 1.2
+   * @return    The DefaultItem value
+   * @since     1.2
    */
   public boolean getDefaultItem() {
     return defaultItem;
@@ -473,10 +490,10 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the Level attribute of the LookupElement object
+   *  Gets the Level attribute of the LookupElement object
    *
-   * @return The Level value
-   * @since 1.2
+   * @return    The Level value
+   * @since     1.2
    */
   public int getLevel() {
     return level;
@@ -484,19 +501,30 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the Enabled attribute of the LookupElement object
+   *  Gets the Enabled attribute of the LookupElement object
    *
-   * @return The Enabled value
-   * @since 1.1
+   * @return    The Enabled value
+   * @since     1.1
    */
   public boolean getEnabled() {
     return enabled;
   }
 
+
   /**
-   * Gets the modified attribute of the LookupElement object
+   *  Gets the entered attribute of the LookupElement object
    *
-   * @return The modified value
+   * @return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the LookupElement object
+   *
+   * @return    The modified value
    */
   public java.sql.Timestamp getModified() {
     if (modified == null) {
@@ -508,23 +536,29 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the fieldId attribute of the LookupElement object
+   *  Gets the fieldId attribute of the LookupElement object
    *
-   * @return The fieldId value
+   * @return    The fieldId value
    */
   public int getFieldId() {
     return fieldId;
   }
 
 
+  /**
+   *  Gets the constantId attribute of the LookupElement object
+   *
+   * @return    The constantId value
+   */
   public int getConstantId() {
     return constantId;
   }
 
+
   /**
-   * Gets the group attribute of the LookupElement object
+   *  Gets the group attribute of the LookupElement object
    *
-   * @return The group value
+   * @return    The group value
    */
   public boolean isGroup() {
     return group;
@@ -532,9 +566,9 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the group attribute of the LookupElement object
+   *  Gets the group attribute of the LookupElement object
    *
-   * @return The group value
+   * @return    The group value
    */
   public boolean getGroup() {
     return group;
@@ -548,17 +582,13 @@ public class LookupElement implements Serializable {
     return enabled;
   }
 
-  public Timestamp getEntered() {
-    return entered;
-  }
-
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of Parameter
-   * @param tableName Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @param  tableName      Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public int disableElement(Connection db, String tableName) throws SQLException {
     int resultCount = 0;
@@ -569,7 +599,8 @@ public class LookupElement implements Serializable {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
-        "SET enabled = ? " +
+        "SET enabled = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " + 
         "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -582,12 +613,12 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of the Parameter
-   * @param tableName Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  tableName      Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public int enableElement(Connection db, String tableName) throws SQLException {
     int resultCount = 0;
@@ -598,7 +629,8 @@ public class LookupElement implements Serializable {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE " + DatabaseUtils.getTableName(db, tableName) + " " +
-        "SET enabled = ? " +
+        "SET enabled = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " + 
         "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -611,12 +643,12 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Gets the disabled attribute of the LookupElement object
+   *  Gets the disabled attribute of the LookupElement object
    *
-   * @param db        Description of the Parameter
-   * @param tableName Description of the Parameter
-   * @return The disabled value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  tableName      Description of the Parameter
+   * @return                The disabled value
+   * @throws  SQLException  Description of the Exception
    */
   public int isDisabled(Connection db, String tableName) throws SQLException {
     if (this.getDescription() == null) {
@@ -646,12 +678,12 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of Parameter
-   * @param tableName Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @param  tableName      Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public boolean insertElement(Connection db, String tableName) throws SQLException {
     return insertElement(db, tableName, -1);
@@ -659,13 +691,13 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db        Description of Parameter
-   * @param tableName Description of Parameter
-   * @param fieldId   Description of Parameter
-   * @return Description of the Returned Value
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @param  tableName      Description of Parameter
+   * @param  fieldId        Description of Parameter
+   * @return                Description of the Returned Value
+   * @throws  SQLException  Description of Exception
    */
   public boolean insertElement(Connection db, String tableName, int fieldId) throws SQLException {
     this.tableName = tableName;
@@ -675,11 +707,11 @@ public class LookupElement implements Serializable {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -719,10 +751,10 @@ public class LookupElement implements Serializable {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  tableName         Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  tableName         Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public static int retrieveMaxLevel(Connection db, String tableName) throws SQLException {
     int maxLevel = 0;
@@ -742,9 +774,8 @@ public class LookupElement implements Serializable {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -757,14 +788,31 @@ public class LookupElement implements Serializable {
     pst.execute();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
   public String toString() {
-    return String.valueOf(code +"-"+description);
+    return String.valueOf(code + "-" + description);
   }
 
-  public static int getCodeByDescription( Connection db, String description, String tableName) throws java.sql.SQLException {
-    LookupElement lookupElement = new LookupElement(db,description,tableName);
-    return lookupElement.getCode(); 
+
+  /**
+   *  Gets the codeByDescription attribute of the LookupElement class
+   *
+   * @param  db                         Description of the Parameter
+   * @param  description                Description of the Parameter
+   * @param  tableName                  Description of the Parameter
+   * @return                            The codeByDescription value
+   * @exception  java.sql.SQLException  Description of the Exception
+   */
+  public static int getCodeByDescription(Connection db, String description, String tableName) throws java.sql.SQLException {
+    LookupElement lookupElement = new LookupElement(db, description, tableName);
+    return lookupElement.getCode();
   }
 
 }
+

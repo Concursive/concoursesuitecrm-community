@@ -17,6 +17,7 @@ package org.aspcfs.modules.pipeline.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -25,6 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +42,7 @@ import java.util.TimeZone;
  * @created January 7, 2003
  */
 
-public class OpportunityComponentList extends ArrayList {
+public class OpportunityComponentList extends ArrayList implements SyncableList {
 
   public final static String tableName = "opportunity_component";
   public final static String uniqueField = "id";
@@ -83,6 +85,73 @@ public class OpportunityComponentList extends ArrayList {
   public OpportunityComponentList() {
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static OpportunityComponent getObject(ResultSet rs) throws SQLException {
+    OpportunityComponent opportunityComponent = new OpportunityComponent(rs);
+    return opportunityComponent;
+  }
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
 
   /**
    * Sets the pagedListInfo attribute of the OpportunityComponentList object
@@ -212,27 +281,6 @@ public class OpportunityComponentList extends ArrayList {
   public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
   }
-
-
-  /**
-   * Gets the tableName attribute of the OpportunityComponentList object
-   *
-   * @return The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the OpportunityComponentList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
 
   /**
    * Gets the closeDateStart attribute of the OpportunityComponentList object
@@ -799,6 +847,63 @@ public class OpportunityComponentList extends ArrayList {
     pst.close();
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "oc.*, y.description AS stagename " +
+            "FROM " + tableName + " oc " +
+            "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
+            "WHERE y.code = oc.stage " +
+            "AND oc.opp_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(db, buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 
   /**
    * Builds a list of contacts based on several parameters. The parameters are
@@ -814,7 +919,6 @@ public class OpportunityComponentList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -866,36 +970,15 @@ public class OpportunityComponentList extends ArrayList {
       sqlOrder.append("ORDER BY oc.closed");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "oc.*, y.description AS stagename " +
-            "FROM opportunity_component oc " +
-            "LEFT JOIN lookup_stage y ON (oc.stage = y.code) " +
-            "WHERE y.code = oc.stage " +
-            "AND oc.opp_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() +
-            sqlFilter.toString() +
-            sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       OpportunityComponent thisOppComponent = new OpportunityComponent(rs);
       this.add(thisOppComponent);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
 
@@ -1008,14 +1091,14 @@ public class OpportunityComponentList extends ArrayList {
 
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND oc.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND oc.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND oc.modified > ? ");
+      sqlFilter.append("AND oc.entered < ? ");
+      sqlFilter.append("AND oc.modified < ? ");
     }
   }
 

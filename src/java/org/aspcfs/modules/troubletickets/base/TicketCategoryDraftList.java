@@ -16,6 +16,7 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -36,8 +37,8 @@ import java.util.Iterator;
  * @version $Id$
  * @created May 23, 2003
  */
-public class TicketCategoryDraftList extends ArrayList {
-  public final static String tableName = "ticket_category_draft";
+public class TicketCategoryDraftList extends ArrayList implements SyncableList{
+  public final static String tableName = "ticket_category";
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
@@ -60,6 +61,18 @@ public class TicketCategoryDraftList extends ArrayList {
    * Constructor for the TicketCategoryDraftList object
    */
   public TicketCategoryDraftList() {
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static TicketCategoryDraft getObject(ResultSet rs) throws SQLException {
+    TicketCategoryDraft ticketCategoryDraft = new TicketCategoryDraft(rs);
+    return ticketCategoryDraft;
   }
 
   /**
@@ -111,6 +124,13 @@ public class TicketCategoryDraftList extends ArrayList {
     this.syncType = tmp;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Gets the tableName attribute of the TicketCategoryDraftList object
    *
@@ -119,7 +139,6 @@ public class TicketCategoryDraftList extends ArrayList {
   public String getTableName() {
     return tableName;
   }
-
 
   /**
    * Gets the uniqueField attribute of the TicketCategoryDraftList object
@@ -440,6 +459,52 @@ public class TicketCategoryDraftList extends ArrayList {
     return catListSelect.getHtml(selectName, defaultKey);
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "", tableName);
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder, String tableName) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "tc.* " +
+            "FROM " + DatabaseUtils.getTableName(db, tableName + "_draft") + " tc " +
+            "WHERE tc.id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
 
   /**
    * Description of the Method
@@ -452,7 +517,6 @@ public class TicketCategoryDraftList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -502,35 +566,17 @@ public class TicketCategoryDraftList extends ArrayList {
       sqlOrder.append("ORDER BY tc.description");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "tc.* " +
-            "FROM " + DatabaseUtils.getTableName(db, tableName + "_draft") + " tc " +
-            "WHERE tc.id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString(), tableName);
     while (rs.next()) {
       TicketCategoryDraft thisCat = new TicketCategoryDraft(rs);
       thisCat.setBaseTableName(tableName);
       this.add(thisCat);
     }
     rs.close();
-    pst.close();
+    if(pst != null){
+      pst.close();
+    }
   }
-
 
   /**
    * Description of the Method
@@ -565,14 +611,14 @@ public class TicketCategoryDraftList extends ArrayList {
 
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND tc.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND tc.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND tc.modified > ? ");
+      sqlFilter.append("AND tc.entered < ? ");
+      sqlFilter.append("AND tc.modified < ? ");
     }
   }
 

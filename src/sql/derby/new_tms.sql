@@ -14,7 +14,9 @@ CREATE TABLE ticket_level (
   description VARCHAR(300) NOT NULL UNIQUE,
   default_item CHAR(1) DEFAULT '0',
   "level" INT DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -25,6 +27,8 @@ CREATE TABLE ticket_severity (
   ,default_item CHAR(1) DEFAULT '0'
   ,"level" INTEGER DEFAULT 0
   ,enabled CHAR(1) DEFAULT '1'
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -34,6 +38,8 @@ CREATE TABLE lookup_ticketsource (
   ,default_item CHAR(1) DEFAULT '0'
   ,"level" INTEGER DEFAULT 0
   ,enabled CHAR(1) DEFAULT '1'
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -43,6 +49,8 @@ CREATE TABLE lookup_ticket_status (
   ,default_item CHAR(1) DEFAULT '0'
   ,"level" INTEGER DEFAULT 0
   ,enabled CHAR(1) DEFAULT '1'
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -53,6 +61,8 @@ CREATE TABLE ticket_priority (
   ,default_item CHAR(1) DEFAULT '0'
   ,"level" INTEGER DEFAULT 0
   ,enabled CHAR(1) DEFAULT '1'
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -62,6 +72,8 @@ CREATE TABLE lookup_ticket_escalation(
   ,default_item CHAR(1) DEFAULT '0'
   ,"level" INTEGER DEFAULT 0
   ,enabled CHAR(1) DEFAULT '1'
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE ticket_category ( 
@@ -74,6 +86,8 @@ CREATE TABLE ticket_category (
   ,"level" INTEGER DEFAULT 0
   ,enabled CHAR(1) DEFAULT '1'
   ,site_id INTEGER REFERENCES lookup_site_id(code)
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE ticket_category_draft (
@@ -86,7 +100,9 @@ CREATE TABLE ticket_category_draft (
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
   enabled CHAR(1) DEFAULT '1',
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Ticket Category Draft Assignment table
@@ -237,7 +253,9 @@ CREATE TABLE lookup_ticket_cause (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Ticket Resolution lookup
@@ -246,7 +264,9 @@ CREATE TABLE lookup_ticket_resolution (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Ticket Defect table
@@ -267,6 +287,8 @@ CREATE TABLE lookup_ticket_state (
   description VARCHAR(300) NOT NULL,
   default_item CHAR(1) DEFAULT '0',
   "level" INTEGER DEFAULT 0,
-  enabled CHAR(1) DEFAULT '1'
+  enabled CHAR(1) DEFAULT '1',
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

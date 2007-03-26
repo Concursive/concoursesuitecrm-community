@@ -34,6 +34,7 @@ public class FileItemVersion extends GenericBean {
   public final static String fs = System.getProperty("file.separator");
 
   private int id = -1;
+  private int itemId = -1;
   private String subject = "";
   private String clientFilename = "";
   private String filename = "";
@@ -124,7 +125,7 @@ public class FileItemVersion extends GenericBean {
    * @param tmp The new itemId value
    */
   public void setItemId(int tmp) {
-    this.id = tmp;
+    this.itemId = tmp;
   }
 
 
@@ -134,10 +135,14 @@ public class FileItemVersion extends GenericBean {
    * @param tmp The new itemId value
    */
   public void setItemId(String tmp) {
-    this.id = Integer.parseInt(tmp);
+    this.itemId = Integer.parseInt(tmp);
   }
 
 
+  public int getItemId() {
+    return itemId;
+  }
+  
   /**
    * Sets the subject attribute of the FileItem object
    *
@@ -692,6 +697,12 @@ public class FileItemVersion extends GenericBean {
 		this.allowPortalAccess = allowPortalAccess;
 	}
 
+  /**
+   * @param allowPortalAccess The allowPortalAccess to set.
+   */
+  public void setAllowPortalAccess(String allowPortalAccess) {
+    this.allowPortalAccess = DatabaseUtils.parseBoolean(allowPortalAccess);
+  }
 
 	/**
    * Description of the Method
@@ -702,28 +713,34 @@ public class FileItemVersion extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
+    id = DatabaseUtils.getNextSeq(db, "project_files_version_version_id_seq");
     sql.append("INSERT INTO project_files_version ");
     sql.append(
         "(item_id, subject, client_filename, filename, " + DatabaseUtils.addQuotes(db, "version")+ ", " + DatabaseUtils.addQuotes(db, "size")+ ", ");
     sql.append("enabled, downloads, ");
-    if (entered != null) {
-      sql.append("entered, ");
+    if (id > -1) {
+      sql.append("version_id, ");
     }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy, allow_portal_access ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+    if (id > -1) {
+      sql.append("?, ");
+    }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, id);
+    pst.setInt(++i, itemId);
     pst.setString(++i, subject);
     pst.setString(++i, clientFilename);
     pst.setString(++i, filename);
@@ -731,6 +748,9 @@ public class FileItemVersion extends GenericBean {
     pst.setInt(++i, size);
     pst.setBoolean(++i, enabled);
     pst.setInt(++i, downloads);
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -742,6 +762,7 @@ public class FileItemVersion extends GenericBean {
     pst.setBoolean(++i, allowPortalAccess);
     pst.execute();
     pst.close();
+    id = DatabaseUtils.getCurrVal(db, "project_files_version_version_id_seq", id);
     return true;
   }
 
@@ -756,7 +777,8 @@ public class FileItemVersion extends GenericBean {
   public boolean update(Connection db) throws SQLException {
     String sql =
         "UPDATE project_files_version " +
-        "SET subject = ?, client_filename = ?, " + DatabaseUtils.addQuotes(db, "size")+ " = ?, allow_portal_access = ?  " +
+        "SET subject = ?, client_filename = ?, " + DatabaseUtils.addQuotes(db, "size")+ " = ?, allow_portal_access = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE item_id = ? " +
         "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ";
     int i = 0;
@@ -765,7 +787,7 @@ public class FileItemVersion extends GenericBean {
     pst.setString(++i, clientFilename);
     pst.setInt(++i, size);
     pst.setBoolean(++i, allowPortalAccess);
-    pst.setInt(++i, this.getId());
+    pst.setInt(++i, this.getItemId());
     pst.setDouble(++i, this.getVersion());
     pst.execute();
     pst.close();
@@ -783,7 +805,7 @@ public class FileItemVersion extends GenericBean {
    */
   public synchronized boolean updateCounter(Connection db) throws SQLException {
     FileDownloadLog thisLog = new FileDownloadLog();
-    thisLog.setItemId(id);
+    thisLog.setItemId(itemId);
     thisLog.setVersion(version);
     thisLog.setUserId(enteredBy);
     thisLog.setFileSize(size);
@@ -815,7 +837,7 @@ public class FileItemVersion extends GenericBean {
         "WHERE item_id = ? " +
         "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(1, this.getId());
+    pst.setInt(1, this.getItemId());
     pst.setDouble(2, this.getVersion());
     pst.execute();
     pst.close();
@@ -825,7 +847,7 @@ public class FileItemVersion extends GenericBean {
         "DELETE FROM project_files_thumbnail " +
         "WHERE item_id = ? " +
         "AND " + DatabaseUtils.addQuotes(db, "version")+ " = ? ");
-    pst.setInt(1, this.getId());
+    pst.setInt(1, this.getItemId());
     pst.setDouble(2, this.getVersion());
     pst.execute();
     pst.close();
@@ -841,7 +863,8 @@ public class FileItemVersion extends GenericBean {
    * @throws SQLException Description of Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("item_id");
+    id = rs.getInt("version_id");
+    itemId = rs.getInt("item_id");
     clientFilename = rs.getString("client_filename");
     filename = rs.getString("filename");
     subject = rs.getString("subject");

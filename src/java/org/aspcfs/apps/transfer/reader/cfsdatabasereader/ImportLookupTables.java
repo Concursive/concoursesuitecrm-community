@@ -36,9 +36,6 @@ import java.util.Iterator;
  * @created September 4, 2002
  */
 public class ImportLookupTables implements CFSDatabaseReaderImportModule {
-  Connection db = null;
-  DataWriter writer = null;
-
 
   /**
    * Description of the Method
@@ -50,9 +47,6 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
    * @throws SQLException Description of the Exception
    */
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
-    this.writer = writer;
-    this.db = db;
-
     boolean processOK = true;
     Iterator mapList = mappings.keySet().iterator();
     while (mapList.hasNext() && processOK) {
@@ -61,7 +55,7 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
       if (mapClass.indexOf(".LookupList") > 0) {
         PropertyMap thisMap = (PropertyMap) mappings.get(mapClass);
         logger.info("ImportLookupTables-> Processing: " + thisMap.getTable());
-        processOK = saveLookupList(thisMap.getId(), thisMap.getTable());
+        processOK = saveLookupList(writer, db, thisMap.getId(), thisMap.getTable());
       }
       processOK = writer.commit();
       writer.setAutoCommit(true);
@@ -78,7 +72,7 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public boolean saveLookupList(String uniqueId, String tableName) throws SQLException {
+  public static boolean saveLookupList(DataWriter writer, Connection db, String uniqueId, String tableName) throws SQLException {
     LookupList thisList = new LookupList(db, tableName);
     Iterator i = thisList.iterator();
     while (i.hasNext()) {

@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -38,7 +39,8 @@ public class ActionItemWorkSelection extends GenericBean {
   private int selection = -1;
   //resources
   private String description = null;
-
+  private Timestamp entered = null;
+  private Timestamp modified = null;
 
   /**
    * Gets the description attribute of the ActionItemWorkSelection object
@@ -149,6 +151,47 @@ public class ActionItemWorkSelection extends GenericBean {
     this.itemWorkId = Integer.parseInt(tmp);
   }
 
+  /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    * Constructor for the ActionItemWorkSelection object
@@ -221,6 +264,8 @@ public class ActionItemWorkSelection extends GenericBean {
     itemWorkId = rs.getInt("item_work_id");
     selection = rs.getInt("selection");
     description = rs.getString("description");
+    setEntered(rs.getTimestamp("entered"));
+    setModified(rs.getTimestamp("modified"));
   }
 
 
@@ -233,16 +278,38 @@ public class ActionItemWorkSelection extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "action_item_work_selection_selection_id_seq");
-    PreparedStatement pst = db.prepareStatement(
+    StringBuffer sql = new StringBuffer();
+    sql.append(
         "INSERT INTO action_item_work_selection " +
-            "(" + (id > -1 ? "selection_id, " : "") + "item_work_id, selection) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?)");
+        "(" + (id > -1 ? "selection_id, " : "") + "item_work_id, selection");
+    sql.append(", entered, modified");
+    sql.append(") VALUES (" + (id > -1 ? "?, " : "") + "?, ?");
+    if(this.getEntered() != null){
+      sql.append(", ?");
+    } else {
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+    }
+    if(this.getModified() != null){
+      sql.append(", ?");
+    } else {
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+    }
+    sql.append(")");
+
     int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     if (id > -1) {
       pst.setInt(++i, id);
     }
     pst.setInt(++i, itemWorkId);
     pst.setInt(++i, selection);
+    if(this.getEntered() != null){
+      DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
+    }
+    if(this.getModified() != null){
+      DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
+    }
+
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "action_item_work_selection_selection_id_seq", id);
@@ -267,7 +334,8 @@ public class ActionItemWorkSelection extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_item_work " +
-              "SET link_item_id = ? " +
+              "SET link_item_id = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE link_module_id = ? " +
               "AND link_item_id = ? ");
       DatabaseUtils.setInt(pst, ++i, -1);

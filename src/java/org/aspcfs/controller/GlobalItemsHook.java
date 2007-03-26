@@ -90,7 +90,9 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     StringBuffer items = new StringBuffer();
 
     //Site Search
-    if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
+    boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(servlet.getServletConfig().getServletContext(), "OFFLINE_MODE"));
+    String om = isOfflineMode?"-offline":"";
+    if (systemStatus.hasPermission(userId, "globalitems-search-view" + om)) {
       items.append(
           "<!-- Site Search -->" +
           "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
@@ -110,7 +112,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     //Quick Items
     if (!systemStatus.hasField("global.quickactions")) {
-      if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
+      if (systemStatus.hasPermission(userId, "globalitems-search-view" + om)) {
         items.append(
             "<!-- Quick Action -->" +
             "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
@@ -126,42 +128,42 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
             "<option value='0'>" + systemStatus.getLabel(
                 "quickactions.select") + "</option>");
         /*
-         *  if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
+         *  if (systemStatus.hasPermission(userId, "pipeline-opportunities-add" + om)) {
          *  items.append("<option value='opportunity'>Add an Opportunity</option>");
          *  }
          */
-        if (systemStatus.hasPermission(userId, "accounts-accounts-add")) {
+        if (systemStatus.hasPermission(userId, "accounts-accounts-add" + om)) {
           items.append(
               "<option value='account'>" + systemStatus.getLabel(
                   "quickactions.addAccount") + "</option>");
         } 
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add" + om)) {
           items.append(
               "<option value='call'>" + systemStatus.getLabel(
                   "quickactions.logActivity") + "</option>");
         }
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add" + om)) {
           items.append(
               "<option value='schedule'>" + systemStatus.getLabel(
                   "quickactions.scheduleActivity") + "</option>");
         }       
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-add")) {
+        if (systemStatus.hasPermission(userId, "contacts-external_contacts-add" + om)) {
           items.append(
               "<option value='contact'>" + systemStatus.getLabel(
                   "quickactions.addContact") + "</option>");
         }
-        if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
+        if (systemStatus.hasPermission(userId, "myhomepage-tasks-add" + om)) {
           items.append(
               "<option value='task'>" + systemStatus.getLabel(
                   "quickactions.addTask") + "</option>");
         }
-        if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
+        if (systemStatus.hasPermission(userId, "tickets-tickets-add" + om)) {
           items.append(
               "<option value='ticket'>" + systemStatus.getLabel(
                   "quickactions.addTicket") + "</option>");
         }
         /*
-         *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
+         *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add" + om)) {
          *  items.append("<option value='message'>Send a Message</option>");
          *  }
          */
@@ -175,7 +177,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     }
 
     //My Items
-    if (systemStatus.hasPermission(userId, "globalitems-myitems-view")) {
+    if (systemStatus.hasPermission(userId, "globalitems-myitems-view" + om)) {
       ConnectionPool sqlDriver = (ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute(
           "ConnectionPool");
       Connection db = null;
@@ -197,7 +199,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
         //External Contact Calls
         if (systemStatus.hasPermission(
-            userId, "contacts-external_contacts-calls-view")) {
+            userId, "contacts-external_contacts-calls-view" + om)) {
           int callCount = 0;
           sql =
               "SELECT COUNT(*) as callcount " +
@@ -228,7 +230,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 
         //Project Activities
-        if (systemStatus.hasPermission(userId, "projects-view")) {
+        if (systemStatus.hasPermission(userId, "projects-view" + om)) {
           int activityCount = 0;
           sql =
               "SELECT count(*) as activitycount " +
@@ -257,7 +259,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 
         //Tickets Assigned to me
-        if (systemStatus.hasPermission(userId, "tickets-view")) {
+        if (systemStatus.hasPermission(userId, "tickets-view" + om)) {
           int ticketCount = 0;
           sql =
               "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ";
@@ -281,7 +283,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
         
         //Action Plans
-        if (systemStatus.hasPermission(userId, "myhomepage-action-plans-view")) {
+        if (systemStatus.hasPermission(userId, "myhomepage-action-plans-view" + om)) {
           int i = 0;
           int planCount = 0;
           sql =
@@ -331,7 +333,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 
         //Project Tickets Assigned to me
-        if (systemStatus.hasPermission(userId, "tickets-view")) {
+        if (systemStatus.hasPermission(userId, "tickets-view" + om)) {
           int ticketCount = 0;
           sql =
               "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid IN (SELECT ticket_id FROM ticketlink_project) ";
@@ -356,7 +358,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
         
         //Tickets Unassigned
-        if (systemStatus.hasPermission(userId, "tickets-view")) {
+        if (systemStatus.hasPermission(userId, "tickets-view" + om)) {
           int ticketCount = 0;
           sql =
               "SELECT COUNT(*) as ticketcount " +
@@ -387,7 +389,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 
         //CFS Inbox Items
-        if (systemStatus.hasPermission(userId, "myhomepage-inbox-view")) {
+        if (systemStatus.hasPermission(userId, "myhomepage-inbox-view" + om)) {
           int inboxCount = 0;
           sql =
               "SELECT COUNT(*) as inboxcount " +
@@ -412,7 +414,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         }
 
         //Tasks Items
-        if (systemStatus.hasPermission(userId, "myhomepage-tasks-view")) {
+        if (systemStatus.hasPermission(userId, "myhomepage-tasks-view" + om)) {
           int taskCount = TaskList.queryPendingCount(db, userId);
           if (taskCount > 0) {
             items.append(
@@ -441,7 +443,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     }
 
     //Recent Items
-    if (systemStatus.hasPermission(userId, "globalitems-recentitems-view")) {
+    if (systemStatus.hasPermission(userId, "globalitems-recentitems-view" + om)) {
       items.append(
           "<!-- Recent Items -->" +
           "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +

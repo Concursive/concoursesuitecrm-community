@@ -774,7 +774,6 @@ public class Campaign extends GenericBean {
     this.approvedBy = approvedBy;
   }
 
-
   /**
    * Sets the approvedBy attribute of the Campaign object
    *
@@ -784,6 +783,26 @@ public class Campaign extends GenericBean {
     this.approvedBy = Integer.parseInt(approvedBy);
   }
 
+  /**
+   * @return the approvalDate
+   */
+  public java.sql.Timestamp getApprovalDate() {
+    return approvalDate;
+  }
+
+  /**
+   * @param approvalDate the approvalDate to set
+   */
+  public void setApprovalDate(java.sql.Timestamp approvalDate) {
+    this.approvalDate = approvalDate;
+  }
+
+  /**
+   * @param approvalDate the approvalDate to set
+   */
+  public void setApprovalDate(String approvalDate) {
+    this.approvalDate = DatabaseUtils.parseTimestamp(approvalDate);
+  }
 
   /**
    * Sets the id attribute of the Campaign object
@@ -1059,6 +1078,12 @@ public class Campaign extends GenericBean {
     this.activeDate = DatabaseUtils.parseDateToTimestamp(tmp);
   }
 
+  /**
+   * @return the inactiveDate
+   */
+  public java.sql.Timestamp getInactiveDate() {
+    return inactiveDate;
+  }
 
   /**
    * Sets the inactiveDate attribute of the Campaign object

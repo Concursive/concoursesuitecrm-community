@@ -1,7 +1,5 @@
 package org.aspcfs.apps.transfer;
 
-import java.util.logging.Logger;
-
 /**
  * Represents the necessary items for DataReader and DataWriter classes.
  *
@@ -11,9 +9,6 @@ import java.util.logging.Logger;
  * @created September 3, 2002
  */
 public interface DataImportHandler {
-  public static Logger logger = Logger.getLogger(Transfer.class.getName());
-
-
   /**
    * Gets the configured attribute of the DataImportHandler object
    *

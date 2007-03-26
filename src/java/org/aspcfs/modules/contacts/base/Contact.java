@@ -56,6 +56,9 @@ import java.util.*;
  * @created August 29, 2001
  */
 public class Contact extends GenericBean {
+
+  private static final long serialVersionUID = -177466129659625417L;
+
   /**
    * HTTP API User Mode checks to see if the user has the required permission
    * to execute the corresponding method on the object. If the object can exist
@@ -192,6 +195,17 @@ public class Contact extends GenericBean {
     }
   }
 
+  //filter used by xml api to retrieve the contact info for a particular user
+  private String username = null;
+  
+  public void setUsername(String tmp) {
+    this.username = tmp;
+  }
+  
+  public String getUsername() {
+    return username;
+  }
+  
   /**
    * Gets the permission attribute of the Contact object
    *
@@ -574,6 +588,18 @@ public class Contact extends GenericBean {
     this.revenue = tmp;
   }
 
+  /**
+   * Sets the revenue attribute of the Contact object
+   *
+   * @param tmp The new revenue value
+   */
+  public void setRevenue(String tmp) {
+    try{
+      this.revenue = Double.parseDouble(tmp);
+    }catch (Exception e) {
+      this.revenue = 0;
+    }
+  }
 
   /**
    * Sets the potential attribute of the Contact object
@@ -3547,12 +3573,7 @@ public class Contact extends GenericBean {
       if (this.getIsLead()) {
         sql.append("lead, lead_status,");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       if (employee || orgId == 0) {
         sql.append("employee, ");
       }
@@ -3577,9 +3598,13 @@ public class Contact extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (employee || orgId == 0) {
         sql.append("?, ");
@@ -4104,7 +4129,7 @@ public class Contact extends GenericBean {
             "SELECT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
     pst.setInt(1, OrganizationHistory.CFSNOTE);
     pst.setInt(2, this.getId());
-    boolean result = pst.execute();
+    pst.execute();
     pst.close();
 
     // delete all inbox message links associated with this contact
@@ -4143,7 +4168,8 @@ public class Contact extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(
         "UPDATE action_item_work " +
-            "SET link_item_id = ? " +
+            "SET link_item_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE link_module_id = ? " +
             "AND link_item_id = ? ");
     DatabaseUtils.setInt(pst, ++i, -1);
@@ -4184,7 +4210,8 @@ public class Contact extends GenericBean {
     i = 0;
     pst = db.prepareStatement(
         "UPDATE contact " +
-            "set employee = ? " +
+            "set employee = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE contact_id = ? ");
     pst.setBoolean(++i, false);
     pst.setInt(++i, this.getId());
@@ -4556,6 +4583,7 @@ public class Contact extends GenericBean {
             "title = ?, " +
             "" + DatabaseUtils.addQuotes(db, "role") + " = ?, " +
             "information_update_date = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE contact_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -5243,7 +5271,8 @@ public class Contact extends GenericBean {
   public void disable(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
-            "SET enabled = ? " +
+            "SET enabled = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE contact_id = ?");
     pst.setBoolean(1, false);
     pst.setInt(2, this.getId());
@@ -5277,7 +5306,8 @@ public class Contact extends GenericBean {
         db.setAutoCommit(false);
       }
       String sql = "UPDATE contact " +
-          "SET status_id = ? " +
+          "SET status_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE import_id = ? ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -5350,7 +5380,6 @@ public class Contact extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, ActionContext context, boolean toTrash, int tmpUserId) throws SQLException {
-    int count = 0;
     boolean commit = true;
     try {
       commit = db.getAutoCommit();
@@ -5378,7 +5407,7 @@ public class Contact extends GenericBean {
        *  If the contact is being reverted back to lead, trash only related data and history
        */
       if (!this.getCheckRevertingBackToLead()) {
-        count = pst.executeUpdate();
+        pst.executeUpdate();
       }
       pst.close();
 
@@ -5477,7 +5506,8 @@ public class Contact extends GenericBean {
       int contactLinkModuleId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.CONTACTS);
       pst = db.prepareStatement(
           "UPDATE action_item_work " +
-              "SET link_item_id = ? " +
+              "SET link_item_id = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE link_module_id = ? " +
               "AND link_item_id = ? ");
       DatabaseUtils.setInt(pst, ++i, -1);
@@ -5512,7 +5542,8 @@ public class Contact extends GenericBean {
   public void enable(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact " +
-            "SET enabled = ? " +
+            "SET enabled = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE contact_id = ?");
     pst.setBoolean(1, true);
     pst.setInt(2, this.getId());
@@ -5537,7 +5568,7 @@ public class Contact extends GenericBean {
             "SELECT id FROM cfsinbox_messagelink WHERE sent_to = ?) ");
     pst.setInt(1, OrganizationHistory.CFSNOTE);
     pst.setInt(2, this.getId());
-    boolean result = pst.execute();
+    pst.execute();
     pst.close();
 
     // delete all inbox message links associated with this contact
@@ -5754,7 +5785,8 @@ public class Contact extends GenericBean {
    */
   public void updatePrimaryContactInformation(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "UPDATE contact SET primary_contact = ? " +
+        "UPDATE contact SET primary_contact = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE contact_id = ? ");
     pst.setBoolean(1, this.getPrimaryContact());
     pst.setInt(2, this.getId());
@@ -5837,6 +5869,29 @@ public class Contact extends GenericBean {
       result = false;
     }
     return result;
+  }
+  
+  public void select(Connection db) throws SQLException {
+    int contactId = -1;
+    
+    if (username != null) {
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT c.contact_id " +
+        "FROM contact c " +
+        "LEFT JOIN access a ON (c.user_id = a.user_id) " +
+        "WHERE a.username = ? ");
+      pst.setString(1, this.username);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        contactId = rs.getInt("contact_id");
+      }
+      rs.close();
+      pst.close();
+      
+      if (contactId > -1) {
+        queryRecord(db, contactId);
+      }
+    }
   }
 }
 

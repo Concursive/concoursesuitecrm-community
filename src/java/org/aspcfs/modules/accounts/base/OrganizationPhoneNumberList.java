@@ -16,9 +16,9 @@
 package org.aspcfs.modules.accounts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.PhoneNumber;
 import org.aspcfs.modules.base.PhoneNumberList;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 
@@ -37,23 +37,31 @@ import java.util.Iterator;
  *      chris Exp $
  * @created    September 4, 2001
  */
-public class OrganizationPhoneNumberList extends PhoneNumberList {
+public class OrganizationPhoneNumberList extends PhoneNumberList implements SyncableList{
 
   public final static String tableName = "organization_phone";
   public final static String uniqueField = "phone_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
-
 
   /**
    *  Constructor for the OrganizationPhoneNumberList object
    *
    * @since    1.1
    */
-  public OrganizationPhoneNumberList() {
+  public OrganizationPhoneNumberList() { }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
   }
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    *  Constructor for the OrganizationPhoneNumberList object
@@ -78,87 +86,6 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
       }
     }
   }
-
-
-  /**
-   *  Sets the lastAnchor attribute of the OrganizationPhoneNumberList object
-   *
-   * @param  tmp  The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the OrganizationPhoneNumberList object
-   *
-   * @param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the syncType attribute of the OrganizationPhoneNumberList object
-   *
-   * @param  tmp  The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   *  Gets the tableName attribute of the OrganizationPhoneNumberList object
-   *
-   * @return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the OrganizationPhoneNumberList object
-   *
-   * @return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   *  Gets the lastAnchor attribute of the OrganizationPhoneNumberList object
-   *
-   * @return    The lastAnchor value
-   */
-  public java.sql.Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   *  Gets the nextAnchor attribute of the OrganizationPhoneNumberList object
-   *
-   * @return    The nextAnchor value
-   */
-  public java.sql.Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   *  Gets the syncType attribute of the OrganizationPhoneNumberList object
-   *
-   * @return    The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
 
   /**
    *  Gets the htmlSelect attribute of the OrganizationPhoneNumberList object
@@ -186,17 +113,13 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   *  Builds a list of addresses based on several parameters. The parameters are
-   *  set after this object is constructed, then the buildList method is called
-   *  to generate the list.
+   *  Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -275,13 +198,39 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    return rs;
+  }
+
+
+  /**
+   *  Builds a list of addresses based on several parameters. The parameters are
+   *  set after this object is constructed, then the buildList method is called
+   *  to generate the list.
+   *
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
+   */
+  public void buildList(Connection db) throws SQLException {
+    ResultSet rs = queryList(db, null);
     while (rs.next()) {
-      OrganizationPhoneNumber thisPhoneNumber = new OrganizationPhoneNumber(
-          rs);
+      OrganizationPhoneNumber thisPhoneNumber = this.getObject(rs);
       this.addElement(thisPhoneNumber);
     }
     rs.close();
-    pst.close();
+  }
+
+
+  /**
+   *  Gets the object attribute of the OrganizationPhoneNumberList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public OrganizationPhoneNumber getObject(ResultSet rs) throws SQLException {
+    OrganizationPhoneNumber thisNumber = new OrganizationPhoneNumber(rs);
+    return thisNumber;
   }
 
 

@@ -15,6 +15,7 @@
  */
 package org.aspcfs.utils;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataField;
 
@@ -37,6 +38,8 @@ import java.util.Iterator;
  */
 public class ObjectUtils {
 
+  private static final Logger log = Logger.getLogger(org.aspcfs.utils.ObjectUtils.class);
+
   /**
    *  Sets the param attribute of the ObjectUtils class
    *
@@ -50,6 +53,7 @@ public class ObjectUtils {
       if (value != null) {
         param = param.substring(0, 1).toUpperCase() + param.substring(1);
         Class[] argTypes = new Class[]{value.getClass()};
+        log.debug(target.getClass().getName() + ".set" + param + "(" + value.getClass().getName() + " " + value + ")");
         Method method = target.getClass().getMethod("set" + param, argTypes);
         method.invoke(target, new Object[]{value});
       }
@@ -72,6 +76,7 @@ public class ObjectUtils {
     try {
       param = param.substring(0, 1).toUpperCase() + param.substring(1);
       Class[] argTypes = new Class[]{double.class};
+      log.debug(target.getClass().getName() + ".set" + param + "(" + double.class.getName() + " " + value + ")");
       Method method = target.getClass().getMethod("set" + param, argTypes);
       method.invoke(target, new Object[]{new Double(value)});
     } catch (Exception e) {
@@ -93,6 +98,7 @@ public class ObjectUtils {
     try {
       param = param.substring(0, 1).toUpperCase() + param.substring(1);
       Class[] argTypes = new Class[]{boolean.class};
+      log.debug(target.getClass().getName() + ".set" + param + "(" + boolean.class.getName() + " " + value + ")");
       Method method = target.getClass().getMethod("set" + param, argTypes);
       method.invoke(target, new Object[]{new Boolean(value)});
     } catch (Exception e) {

@@ -187,3 +187,6 @@ WEB-INF/lib/db2jcc-8.2.jar
 
 ## 2006-07-25 upgrade to 2.1
 WEB-INF/lib/jaybird-full-2.0.1.jar
+
+## 2007-03-15 upgrade to 10.2.2
+WEB-INF/lib/derby-10.1.3.jar

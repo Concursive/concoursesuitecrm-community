@@ -16,6 +16,7 @@
 package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -35,7 +36,7 @@ import java.util.Iterator;
  *          ananth Exp $
  * @created August 17, 2005
  */
-public class ActionItemWorkList extends ArrayList {
+public class ActionItemWorkList extends ArrayList  implements SyncableList {
   private PagedListInfo pagedListInfo = null;
   private int phaseWorkId = -1;
   private int planWorkId = -1;
@@ -102,6 +103,13 @@ public class ActionItemWorkList extends ArrayList {
     this.syncType = tmp;
   }
 
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
   /**
    * Sets the PagedListInfo attribute of the ActionItemWorkList object. <p>
    * <p/>
@@ -405,7 +413,6 @@ public class ActionItemWorkList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -418,7 +425,7 @@ public class ActionItemWorkList extends ArrayList {
             "LEFT JOIN action_phase_work apw ON (aiw.phase_work_id = apw.phase_work_id) " +
             "WHERE aiw.item_work_id > 0 ");
 
-    createFilter(sqlFilter, db);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -457,37 +464,19 @@ public class ActionItemWorkList extends ArrayList {
           ", aiw." + DatabaseUtils.addQuotes(db, "level") +
           ", acs.description ");
     }
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append(" SELECT ");
-    }
-    sqlSelect.append(
-        "aiw.*, " +
-            "acs.description, acs.estimated_duration, acs.parent_id, acs.action_id, " +
-            "acs.permission_type, acs.allow_skip_to_here, acs.action_required, acs.label, acs.target_relationship, acs.allow_update " +
-            "FROM action_item_work aiw " +
-            "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
-            "LEFT JOIN action_phase_work apw ON (aiw.phase_work_id = apw.phase_work_id) " +
-            "WHERE aiw.item_work_id > 0 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+
+    
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    
     while (rs.next()) {
       ActionItemWork actionItemWork = new ActionItemWork(rs);
       actionItemWork.setPlanWork(planWork);
       this.add(actionItemWork);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
 
     if (buildLinkedObject || buildStep) {
       Iterator i = this.iterator();
@@ -528,7 +517,7 @@ public class ActionItemWorkList extends ArrayList {
    * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
    */
-  private void createFilter(StringBuffer sqlFilter, Connection db) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -552,14 +541,14 @@ public class ActionItemWorkList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND aiw.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND aiw.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND aiw.modified > ? ");
+      sqlFilter.append("AND aiw.entered < ? ");
+      sqlFilter.append("AND aiw.modified < ? ");
     }
   }
 
@@ -571,7 +560,7 @@ public class ActionItemWorkList extends ArrayList {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  private int prepareFilter(PreparedStatement pst) throws SQLException {
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (phaseWorkId > -1) {
       pst.setInt(++i, phaseWorkId);
@@ -752,5 +741,54 @@ public class ActionItemWorkList extends ArrayList {
     }
     return result;
   }
+  
+  /**
+   *  Gets the object attribute of the ActionItemWorkList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionItemWork getObject(ResultSet rs) throws SQLException {
+  	ActionItemWork obj = new ActionItemWork(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append(" SELECT ");
+    }
+    sqlSelect.append(
+        "aiw.*, " +
+            "acs.description, acs.estimated_duration, acs.parent_id, acs.action_id, " +
+            "acs.permission_type, acs.allow_skip_to_here, acs.action_required, acs.label, acs.target_relationship, acs.allow_update " +
+            "FROM action_item_work aiw " +
+            "LEFT JOIN action_step acs ON (aiw.action_step_id = acs.step_id) " +
+            "LEFT JOIN action_phase_work apw ON (aiw.phase_work_id = apw.phase_work_id) " +
+            "WHERE aiw.item_work_id > 0 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+     return queryList(db, pst, "", "");
+  }
+
+  
 }
 

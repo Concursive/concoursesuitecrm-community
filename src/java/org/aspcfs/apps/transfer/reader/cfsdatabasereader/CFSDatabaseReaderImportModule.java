@@ -15,12 +15,11 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataWriter;
-import org.aspcfs.apps.transfer.Transfer;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
 /**
  * Interface for all modules that will be executed by the CFSDatabaseReader
@@ -31,8 +30,7 @@ import java.util.logging.Logger;
  * @created September 4, 2002
  */
 public interface CFSDatabaseReaderImportModule {
-  public static Logger logger = Logger.getLogger(Transfer.class.getName());
-
+  public static Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfsdatabasereader.CFSDatabaseReaderImportModule.class.getName());
 
   /**
    * Description of the Method

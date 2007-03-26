@@ -14,7 +14,8 @@ CREATE TABLE module_field_categorylink (
   category_id INT UNIQUE NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
  
 /* Each module can have multiple categories or folders of custom data */
@@ -31,7 +32,8 @@ CREATE TABLE custom_field_category (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
   multiple_records BOOLEAN DEFAULT false,
-  read_only BOOLEAN DEFAULT false
+  read_only BOOLEAN DEFAULT false,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" USING btree ("module_id");
@@ -47,7 +49,8 @@ CREATE TABLE custom_field_group (
   start_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   end_date TIMESTAMP(3),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX "custom_field_grp_idx" ON "custom_field_group" USING btree ("category_id");
@@ -67,7 +70,8 @@ CREATE TABLE custom_field_info (
   end_date TIMESTAMP(3) DEFAULT NULL,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
-  additional_text VARCHAR(255)
+  additional_text VARCHAR(255),
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX "custom_field_inf_idx" ON "custom_field_info" USING btree ("group_id");
@@ -82,7 +86,8 @@ CREATE TABLE custom_field_lookup (
   start_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   end_date TIMESTAMP,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
 
 /* The saved records in a folder associated with each category_id */
@@ -102,13 +107,17 @@ CREATE TABLE custom_field_record (
 CREATE INDEX "custom_field_rec_idx" ON "custom_field_record" USING btree ("link_module_id", "link_item_id", "category_id");
 
 /* The saved custom field data related to a record_id (link_id) */
+CREATE SEQUENCE custom_field_data_data_id_seq;
 CREATE TABLE custom_field_data (
   record_id INTEGER NOT NULL REFERENCES custom_field_record(record_id),
   field_id INTEGER NOT NULL REFERENCES custom_field_info(field_id),
   selected_item_id INTEGER DEFAULT 0,
   entered_value TEXT,
   entered_number INTEGER,
-  entered_float FLOAT
+  entered_float FLOAT,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  data_id INTEGER DEFAULT nextval('custom_field_data_data_id_seq') NOT NULL PRIMARY KEY
 );
 
 CREATE INDEX "custom_field_dat_idx" ON "custom_field_data" USING btree ("record_id", "field_id");

@@ -33,6 +33,8 @@ import java.sql.SQLException;
  */
 public class SyncSystem extends GenericBean {
 
+  public final static int HTTP_XML_API = 4;
+  
   private int id = -1;
   private String applicationName = null;
   private boolean enabled = false;

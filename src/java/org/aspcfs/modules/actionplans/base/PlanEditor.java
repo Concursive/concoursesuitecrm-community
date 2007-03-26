@@ -25,10 +25,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author partha
- * @version $Id$
+ * @author     partha
+ * @version    $Id$
  * @created September 9, 2005
  */
 public class PlanEditor extends GenericBean {
@@ -40,14 +40,45 @@ public class PlanEditor extends GenericBean {
   private int level = -1;
   private String description = null;
   private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
   // Helper properties for working with editors
   private SystemStatus systemStatus = null;
 
 
   /**
-   * Gets the entered attribute of the PlanEditor object
+   *  Gets the modified attribute of the PlanEditor object
    *
-   * @return The entered value
+   * @return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the PlanEditor object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the PlanEditor object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the entered attribute of the PlanEditor object
+   *
+   * @return    The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -55,9 +86,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the entered attribute of the PlanEditor object
+   *  Sets the entered attribute of the PlanEditor object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -65,9 +96,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the entered attribute of the PlanEditor object
+   *  Sets the entered attribute of the PlanEditor object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -75,17 +106,17 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Constructor for the PlanEditor object
+   *  Constructor for the PlanEditor object
    */
-  public PlanEditor() {
-  }
+  public PlanEditor() { }
 
 
   /**
-   * Constructor for the PlanEditor object
+   *  Constructor for the PlanEditor object
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public PlanEditor(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -93,18 +124,19 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Constructor for the PlanEditor object
+   *  Constructor for the PlanEditor object
    *
-   * @param db         Description of the Parameter
-   * @param constantId Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  constantId        Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public PlanEditor(Connection db, int constantId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT apel.* " +
-            "FROM action_plan_editor_lookup apel " +
-            "LEFT JOIN action_plan_constants apc ON (apel.constant_id = apc.map_id) " +
-            "WHERE apc.constant_id = ? ");
+        "FROM action_plan_editor_lookup apel " +
+        "LEFT JOIN action_plan_constants apc ON (apel.constant_id = apc.map_id) " +
+        "WHERE apc.constant_id = ? ");
     pst.setInt(1, constantId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -116,10 +148,10 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("id");
@@ -128,23 +160,38 @@ public class PlanEditor extends GenericBean {
     level = rs.getInt("level");
     description = rs.getString("description");
     entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
     categoryId = rs.getInt("category_id");
   }
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
     id = DatabaseUtils.getNextSeq(db, "action_plan_editor_loo_id_seq");
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO action_plan_editor_lookup " +
-            "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, " + DatabaseUtils.addQuotes(db, "level") +
-            ", description, category_id) " +
-            "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?) ");
+    StringBuffer sql = new StringBuffer();
+    sql.append("INSERT INTO action_plan_editor_lookup " +
+        "(" + (id > -1 ? "id, " : "") + "module_id, constant_id, " + DatabaseUtils.addQuotes(db, "level") +
+        ", description, ");
+    sql.append("entered, modified, ");
+    sql.append("category_id) ");
+    sql.append("VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ");
+    if (entered != null) {
+      sql.append("?, ");
+    }  else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    }  else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+    sql.append("? ) ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -153,6 +200,12 @@ public class PlanEditor extends GenericBean {
     pst.setInt(++i, constantId);
     pst.setInt(++i, level);
     pst.setString(++i, description);
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
     pst.setInt(++i, categoryId);
     pst.executeUpdate();
     pst.close();
@@ -164,9 +217,9 @@ public class PlanEditor extends GenericBean {
    *  Get and Set methods
    */
   /**
-   * Gets the id attribute of the PlanEditor object
+   *  Gets the id attribute of the PlanEditor object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -174,9 +227,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the PlanEditor object
+   *  Sets the id attribute of the PlanEditor object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -184,9 +237,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the id attribute of the PlanEditor object
+   *  Sets the id attribute of the PlanEditor object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -194,9 +247,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Gets the moduleId attribute of the PlanEditor object
+   *  Gets the moduleId attribute of the PlanEditor object
    *
-   * @return The moduleId value
+   * @return    The moduleId value
    */
   public int getModuleId() {
     return moduleId;
@@ -204,9 +257,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the moduleId attribute of the PlanEditor object
+   *  Sets the moduleId attribute of the PlanEditor object
    *
-   * @param tmp The new moduleId value
+   * @param  tmp  The new moduleId value
    */
   public void setModuleId(int tmp) {
     this.moduleId = tmp;
@@ -214,9 +267,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the moduleId attribute of the PlanEditor object
+   *  Sets the moduleId attribute of the PlanEditor object
    *
-   * @param tmp The new moduleId value
+   * @param  tmp  The new moduleId value
    */
   public void setModuleId(String tmp) {
     this.moduleId = Integer.parseInt(tmp);
@@ -224,9 +277,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Gets the categoryId attribute of the PlanEditor object
+   *  Gets the categoryId attribute of the PlanEditor object
    *
-   * @return The categoryId value
+   * @return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -234,9 +287,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the categoryId attribute of the PlanEditor object
+   *  Sets the categoryId attribute of the PlanEditor object
    *
-   * @param tmp The new categoryId value
+   * @param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -244,9 +297,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the categoryId attribute of the PlanEditor object
+   *  Sets the categoryId attribute of the PlanEditor object
    *
-   * @param tmp The new categoryId value
+   * @param  tmp  The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -254,9 +307,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Gets the constantId attribute of the PlanEditor object
+   *  Gets the constantId attribute of the PlanEditor object
    *
-   * @return The constantId value
+   * @return    The constantId value
    */
   public int getConstantId() {
     return constantId;
@@ -264,9 +317,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the constantId attribute of the PlanEditor object
+   *  Sets the constantId attribute of the PlanEditor object
    *
-   * @param tmp The new constantId value
+   * @param  tmp  The new constantId value
    */
   public void setConstantId(int tmp) {
     this.constantId = tmp;
@@ -274,9 +327,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the constantId attribute of the PlanEditor object
+   *  Sets the constantId attribute of the PlanEditor object
    *
-   * @param tmp The new constantId value
+   * @param  tmp  The new constantId value
    */
   public void setConstantId(String tmp) {
     this.constantId = Integer.parseInt(tmp);
@@ -284,9 +337,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Gets the level attribute of the PlanEditor object
+   *  Gets the level attribute of the PlanEditor object
    *
-   * @return The level value
+   * @return    The level value
    */
   public int getLevel() {
     return level;
@@ -294,9 +347,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the level attribute of the PlanEditor object
+   *  Sets the level attribute of the PlanEditor object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -304,9 +357,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the level attribute of the PlanEditor object
+   *  Sets the level attribute of the PlanEditor object
    *
-   * @param tmp The new level value
+   * @param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -314,9 +367,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Gets the description attribute of the PlanEditor object
+   *  Gets the description attribute of the PlanEditor object
    *
-   * @return The description value
+   * @return    The description value
    */
   public String getDescription() {
     return description;
@@ -324,9 +377,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the description attribute of the PlanEditor object
+   *  Sets the description attribute of the PlanEditor object
    *
-   * @param tmp The new description value
+   * @param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -334,9 +387,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Gets the systemStatus attribute of the PlanEditor object
+   *  Gets the systemStatus attribute of the PlanEditor object
    *
-   * @return The systemStatus value
+   * @return    The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -344,9 +397,9 @@ public class PlanEditor extends GenericBean {
 
 
   /**
-   * Sets the systemStatus attribute of the PlanEditor object
+   *  Sets the systemStatus attribute of the PlanEditor object
    *
-   * @param tmp The new systemStatus value
+   * @param  tmp  The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;

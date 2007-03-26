@@ -16,9 +16,9 @@
 package org.aspcfs.modules.contacts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.PhoneNumber;
 import org.aspcfs.modules.base.PhoneNumberList;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 
@@ -29,36 +29,47 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 /**
- * Contains a list of phone numbers... currently used to build the list from
- * the database with any of the parameters to limit the results.
+ *  Contains a list of phone numbers... currently used to build the list from
+ *  the database with any of the parameters to limit the results.
  *
- * @author mrajkowski
- * @version $Id: ContactPhoneNumberList.java,v 1.4 2003/01/15 15:51:07
- *          mrajkowski Exp $
- * @created September 4, 2001
+ * @author     mrajkowski
+ * @version    $Id: ContactPhoneNumberList.java,v 1.4 2003/01/15 15:51:07
+ *      mrajkowski Exp $
+ * @created    September 4, 2001
  */
-public class ContactPhoneNumberList extends PhoneNumberList {
+public class ContactPhoneNumberList extends PhoneNumberList implements SyncableList{
+
+  private static final long serialVersionUID = -3110613598478184780L;
 
   public final static String tableName = "contact_emailaddress";
   public final static String uniqueField = "emailaddress_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
-
 
   /**
-   * Constructor for the ContactPhoneNumberList object
+   *  Constructor for the ContactPhoneNumberList object
    *
-   * @since 1.1
+   * @since    1.1
    */
-  public ContactPhoneNumberList() {
+  public ContactPhoneNumberList() { }
+
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
   }
 
-
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+  
   /**
-   * Constructor for the ContactPhoneNumberList object
+   *  Constructor for the ContactPhoneNumberList object
    *
-   * @param context Description of the Parameter
+   * @param  context  Description of the Parameter
    */
   public ContactPhoneNumberList(ActionContext context) {
     int i = 0;
@@ -79,93 +90,12 @@ public class ContactPhoneNumberList extends PhoneNumberList {
     }
   }
 
-
   /**
-   * Gets the tableName attribute of the ContactPhoneNumberList object
+   *  Gets the htmlSelect attribute of the ContactPhoneNumberList object
    *
-   * @return The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the ContactPhoneNumberList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   * Gets the lastAnchor attribute of the ContactPhoneNumberList object
-   *
-   * @return The lastAnchor value
-   */
-  public java.sql.Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   * Gets the nextAnchor attribute of the ContactPhoneNumberList object
-   *
-   * @return The nextAnchor value
-   */
-  public java.sql.Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   * Gets the syncType attribute of the ContactPhoneNumberList object
-   *
-   * @return The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   * Sets the lastAnchor attribute of the ContactPhoneNumberList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ContactPhoneNumberList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the syncType attribute of the ContactPhoneNumberList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   * Gets the htmlSelect attribute of the ContactPhoneNumberList object
-   *
-   * @param selectName Description of the Parameter
-   * @param defaultKey Description of the Parameter
-   * @return The htmlSelect value
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect emailListSelect = new HtmlSelect();
@@ -186,17 +116,14 @@ public class ContactPhoneNumberList extends PhoneNumberList {
 
 
   /**
-   * Builds a list of addresses based on several parameters. The parameters are
-   * set after this object is constructed, then the buildList method is called
-   * to generate the list.
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -276,14 +203,55 @@ public class ContactPhoneNumberList extends PhoneNumberList {
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+
+    return rs;
+  }
+
+
+  /**
+   *  Builds a list of addresses based on several parameters. The parameters are
+   *  set after this object is constructed, then the buildList method is called
+   *  to generate the list.
+   *
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
+   */
+  public void buildList(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+
     while (rs.next()) {
-      ContactPhoneNumber thisPhoneNumber = new ContactPhoneNumber(rs);
+      ContactPhoneNumber thisPhoneNumber = this.getObject(rs);
       this.addElement(thisPhoneNumber);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
   }
 
+
+  /**
+   *  Gets the object attribute of the ContactPhoneNumberList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ContactPhoneNumber getObject(ResultSet rs) throws SQLException {
+    ContactPhoneNumber thisPhoneNumber = new ContactPhoneNumber(rs);
+    return thisPhoneNumber;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
   public void select(Connection db) throws SQLException {
     buildList(db);
   }

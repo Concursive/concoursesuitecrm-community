@@ -15,48 +15,52 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.AddressList;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
-
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Builds an address list for an organization using a custom query that extends
- * the fields and methods of a typical AddressList.
+ *  Builds an address list for an organization using a custom query that extends
+ *  the fields and methods of a typical AddressList.
  *
- * @author mrajkowski
- * @version $Id: OrganizationAddressList.java,v 1.3 2002/09/11 19:22:26 chris
- *          Exp $
- * @created September 1, 2001
+ * @author     mrajkowski
+ * @version    $Id: OrganizationAddressList.java,v 1.3 2002/09/11 19:22:26 chris
+ *      Exp $
+ * @created    September 1, 2001
  */
-public class OrganizationAddressList extends AddressList {
+public class OrganizationAddressList extends AddressList implements SyncableList {
 
   private static Logger log = Logger.getLogger(org.aspcfs.modules.accounts.base.OrganizationAddressList.class);
-  static {
-    if (System.getProperty("DEBUG") != null) {
-      log.setLevel(Level.DEBUG);
-    }
-  }
 
   public final static String tableName = "organization_address";
   public final static String uniqueField = "address_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
 
   /**
    *  Constructor for the OrganizationAddressList object
    *
    * @since    1.1
    */
-  public OrganizationAddressList() {
+  public OrganizationAddressList() { }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
   }
 
   /**
@@ -83,99 +87,14 @@ public class OrganizationAddressList extends AddressList {
     }
   }
 
-
   /**
-   *  Gets the tableName attribute of the OrganizationAddressList object
+   *  Description of the Method
    *
-   * @return    The tableName value
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the OrganizationAddressList object
-   *
-   * @return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   *  Gets the lastAnchor attribute of the OrganizationAddressList object
-   *
-   * @return    The lastAnchor value
-   */
-  public java.sql.Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   *  Gets the nextAnchor attribute of the OrganizationAddressList object
-   *
-   * @return    The nextAnchor value
-   */
-  public java.sql.Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   *  Gets the syncType attribute of the OrganizationAddressList object
-   *
-   * @return    The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   *  Sets the lastAnchor attribute of the OrganizationAddressList object
-   *
-   * @param  tmp  The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the OrganizationAddressList object
-   *
-   * @param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the syncType attribute of the OrganizationAddressList object
-   *
-   * @param  tmp  The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   *  Builds a list of addresses based on several parameters. The parameters are
-   *  set after this object is constructed, then the buildList method is called
-   *  to generate the list.
-   *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
-   * @since                 1.1
-   */
-  public void buildList(Connection db) throws SQLException {
-
-    PreparedStatement pst = null;
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -256,14 +175,43 @@ public class OrganizationAddressList extends AddressList {
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = DatabaseUtils.executeQuery(db, pst, log);
+    rs = DatabaseUtils.executeQuery(db, pst);
+
+    return rs;
+  }
+
+
+  /**
+   *  Builds a list of addresses based on several parameters. The parameters are
+   *  set after this object is constructed, then the buildList method is called
+   *  to generate the list.
+   *
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
+   */
+  public void buildList(Connection db) throws SQLException {
+    ResultSet rs = queryList(db, null);
     while (rs.next()) {
-      OrganizationAddress thisAddress = new OrganizationAddress(rs);
+      OrganizationAddress thisAddress = this.getObject(rs);
       this.addElement(thisAddress);
     }
     rs.close();
-    pst.close();
   }
+
+
+  /**
+   *  Gets the object attribute of the OrganizationAddressList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public OrganizationAddress getObject(ResultSet rs) throws SQLException {
+    OrganizationAddress thisAddress = new OrganizationAddress(rs);
+    return thisAddress;
+  }
+
 
   /**
    *  Description of the Method

@@ -30,11 +30,11 @@ import java.util.HashMap;
 import java.util.TimeZone;
 
 /**
- * @author Kevin Duffey
- * @author Matt Rajkowski
- * @version $Id: GenericBean.java,v 1.4.166.1 2004/07/29 19:49:44 kbhoopal
- *          Exp $
- * @created Novemeber 19, 2000
+ * @author     Kevin Duffey
+ * @author     Matt Rajkowski
+ * @created    Novemeber 19, 2000
+ * @version    $Id: GenericBean.java,v 1.4.166.1 2004/07/29 19:49:44 kbhoopal
+ *      Exp $
  */
 
 public class GenericBean implements Serializable {
@@ -51,22 +51,86 @@ public class GenericBean implements Serializable {
   private final static String[] HTMLChars = new String[]{"&", "\"", "<", ">"};
   private final static String[] HTMLRepl = new String[]{"&amp;", "&quot;", "&lt;", "&gt;"};
 
+  //helper properties to disable some of the business login while in restore or offline mode
+  protected boolean restore = false; //backup-restore
+  protected boolean offline = false; //centric crm offline
+
 
   /**
-   * Creates new DefaultBean
+   *  Gets the restore attribute of the GenericBean object
    *
-   * @since 1.1
+   * @return    The restore value
    */
-  public GenericBean() {
+  public boolean getRestore() {
+    return restore;
   }
 
 
   /**
-   * Sets the entity that this bean (or descendant of this bean) will use as
-   * its internal entity type
+   *  Sets the restore attribute of the GenericBean object
    *
-   * @param value The new Entity value
-   * @since 1.1
+   * @param  tmp  The new restore value
+   */
+  public void setRestore(boolean tmp) {
+    this.restore = tmp;
+  }
+
+
+  /**
+   *  Sets the restore attribute of the GenericBean object
+   *
+   * @param  tmp  The new restore value
+   */
+  public void setRestore(String tmp) {
+    this.restore = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the offline attribute of the GenericBean object
+   *
+   * @return    The offline value
+   */
+  public boolean getOffline() {
+    return offline;
+  }
+
+
+  /**
+   *  Sets the offline attribute of the GenericBean object
+   *
+   * @param  tmp  The new offline value
+   */
+  public void setOffline(boolean tmp) {
+    this.offline = tmp;
+  }
+
+
+  /**
+   *  Sets the offline attribute of the GenericBean object
+   *
+   * @param  tmp  The new offline value
+   */
+  public void setOffline(String tmp) {
+    this.offline = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
+  /**
+   *  Creates new DefaultBean
+   *
+   * @since    1.1
+   */
+  public GenericBean() { }
+
+
+  /**
+   *  Sets the entity that this bean (or descendant of this bean) will use as
+   *  its internal entity type
+   *
+   * @param  value  The new Entity value
+   * @since         1.1
    */
   public void setEntity(Object value) {
     entity = value;
@@ -74,10 +138,10 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Set the EJB Reference
+   *  Set the EJB Reference
    *
-   * @param o The new EjbRef value
-   * @since 1.1
+   * @param  o  The new EjbRef value
+   * @since     1.1
    */
   public void setEjbRef(Object o) {
     ejbRef = o;
@@ -85,13 +149,13 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Used to set a bean message that can be used in JSP pages that are being
-   * used as part of an XSL transformation. This is done because request
-   * attributes are not passed on to the JSP page. Therefore the bean must keep
-   * track of the message.
+   *  Used to set a bean message that can be used in JSP pages that are being
+   *  used as part of an XSL transformation. This is done because request
+   *  attributes are not passed on to the JSP page. Therefore the bean must keep
+   *  track of the message.
    *
-   * @param value The new Message value
-   * @since 1.1
+   * @param  value  The new Message value
+   * @since         1.1
    */
   public void setMessage(String value) {
     displayMessage = true;
@@ -101,11 +165,11 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns this bean's (or descendant bean's) entity reference (Whether it be
-   * EJB or a core class)
+   *  Returns this bean's (or descendant bean's) entity reference (Whether it be
+   *  EJB or a core class)
    *
-   * @return The Entity value
-   * @since 1.1
+   * @return    The Entity value
+   * @since     1.1
    */
   public Object getEntity() {
     return entity;
@@ -113,10 +177,10 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns the EJB reference if one is used
+   *  Returns the EJB reference if one is used
    *
-   * @return The EjbRef value
-   * @since 1.1
+   * @return    The EjbRef value
+   * @since     1.1
    */
   public Object getEjbRef() {
     return ejbRef;
@@ -124,16 +188,16 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns a message if one exists, otherwise its an empty string. Because
-   * this is a session scope object, we need a way to return this message only
-   * once, unless the flag is set again. Every time the flag is set, we return
-   * the message and also reset the flag. If its not set, we don't return the
-   * message, even if a call to getMessage() is made. This way, only one
-   * message per request is displayed. Also, we reset the message back to "" if
-   * the flag is not set and the getMessage() call is made.
+   *  Returns a message if one exists, otherwise its an empty string. Because
+   *  this is a session scope object, we need a way to return this message only
+   *  once, unless the flag is set again. Every time the flag is set, we return
+   *  the message and also reset the flag. If its not set, we don't return the
+   *  message, even if a call to getMessage() is made. This way, only one
+   *  message per request is displayed. Also, we reset the message back to "" if
+   *  the flag is not set and the getMessage() call is made.
    *
-   * @return The Message value
-   * @since 1.1
+   * @return    The Message value
+   * @since     1.1
    */
   public String getMessage() {
     if (displayMessage) {
@@ -147,13 +211,15 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Gets the Errors attribute of the GenericBean object<p>
-   * <p/>
-   * The HashMap is used for form validation when errors need to be presented
-   * in the resulting JSP
+   *  Gets the Errors attribute of the GenericBean object<p>
    *
-   * @return The Errors value
-   * @since 1.4
+   *  <p/>
+   *
+   *  The HashMap is used for form validation when errors need to be presented
+   *  in the resulting JSP
+   *
+   * @return    The Errors value
+   * @since     1.4
    */
   public HashMap getErrors() {
     return errors;
@@ -161,10 +227,10 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns whether the object has added any errors to the error HashMap
+   *  Returns whether the object has added any errors to the error HashMap
    *
-   * @return Description of the Returned Value
-   * @since 1.4
+   * @return    Description of the Returned Value
+   * @since     1.4
    */
   public boolean hasErrors() {
     return (errors.size() > 0);
@@ -172,9 +238,9 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Gets the warnings attribute of the GenericBean object
+   *  Gets the warnings attribute of the GenericBean object
    *
-   * @return The warnings value
+   * @return    The warnings value
    */
   public HashMap getWarnings() {
     return warnings;
@@ -182,9 +248,9 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns whether the object has added any warnings to the warning HashMap
+   *  Returns whether the object has added any warnings to the warning HashMap
    *
-   * @return Description of the Return Value
+   * @return    Description of the Return Value
    */
   public boolean hasWarnings() {
     return (warnings.size() > 0);
@@ -192,9 +258,9 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Sets the onlyWarnings attribute of the GenericBean object
+   *  Sets the onlyWarnings attribute of the GenericBean object
    *
-   * @param tmp The new onlyWarnings value
+   * @param  tmp  The new onlyWarnings value
    */
   public void setOnlyWarnings(boolean tmp) {
     this.onlyWarnings = tmp;
@@ -202,9 +268,9 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Sets the onlyWarnings attribute of the GenericBean object
+   *  Sets the onlyWarnings attribute of the GenericBean object
    *
-   * @param tmp The new onlyWarnings value
+   * @param  tmp  The new onlyWarnings value
    */
   public void setOnlyWarnings(String tmp) {
     this.onlyWarnings = "on".equalsIgnoreCase(tmp);
@@ -212,9 +278,9 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Gets the onlyWarnings attribute of the GenericBean object
+   *  Gets the onlyWarnings attribute of the GenericBean object
    *
-   * @return The onlyWarnings value
+   * @return    The onlyWarnings value
    */
   public boolean getOnlyWarnings() {
     return onlyWarnings;
@@ -222,18 +288,18 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns a decoded HTML string that replaces & with &amp; < with &lt; >
-   * with &gt; and " with &quot; Just make sure if you want to replace a single
-   * character that also appears in another position of a replacement string,
-   * you will end up replacing the replaced string unless it is first in the
-   * list. For example, & = &amp; " = &quot; If you replace " first, then &,
-   * all the &quot; that were replaced will now appear in the final string as
-   * &amp;quot; because the & of the &quot; was replaced with &amp; since the &
-   * replacement started "after" the " replacement did.
+   *  Returns a decoded HTML string that replaces & with &amp; < with &lt; >
+   *  with &gt; and " with &quot; Just make sure if you want to replace a single
+   *  character that also appears in another position of a replacement string,
+   *  you will end up replacing the replaced string unless it is first in the
+   *  list. For example, & = &amp; " = &quot; If you replace " first, then &,
+   *  all the &quot; that were replaced will now appear in the final string as
+   *  &amp;quot; because the & of the &quot; was replaced with &amp; since the &
+   *  replacement started "after" the " replacement did.
    *
-   * @param value Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  value  Description of Parameter
+   * @return        Description of the Returned Value
+   * @since         1.1
    */
   public final static String decodeHtml(String value) {
     return decode(value, HTMLChars, HTMLRepl);
@@ -241,11 +307,11 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param value Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  value  Description of Parameter
+   * @return        Description of the Returned Value
+   * @since         1.1
    */
   public final static String decode(String value) {
     // if the input is null, no need to go further.
@@ -263,20 +329,20 @@ public class GenericBean implements Serializable {
         char c = value.charAt(cntr);
 
         switch (c) {
-          case'&':
-            sb.append("&amp;");
-            break;
-          case'"':
-            sb.append("&quot;");
-            break;
-          case'<':
-            sb.append("&lt;");
-            break;
-          case'>':
-            sb.append("&gt;");
-            break;
-          default:
-            sb.append(c);
+            case '&':
+              sb.append("&amp;");
+              break;
+            case '"':
+              sb.append("&quot;");
+              break;
+            case '<':
+              sb.append("&lt;");
+              break;
+            case '>':
+              sb.append("&gt;");
+              break;
+            default:
+              sb.append(c);
         }
       }
 
@@ -288,15 +354,15 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Returns a string that has any strings matching the chars[] array with
-   * those in the repl[] array element at the same element the match was found
-   * in the chars[] array
+   *  Returns a string that has any strings matching the chars[] array with
+   *  those in the repl[] array element at the same element the match was found
+   *  in the chars[] array
    *
-   * @param value Description of Parameter
-   * @param chars Description of Parameter
-   * @param repl  Description of Parameter
-   * @return Description of the Returned Value
-   * @since 1.1
+   * @param  value  Description of Parameter
+   * @param  chars  Description of Parameter
+   * @param  repl   Description of Parameter
+   * @return        Description of the Returned Value
+   * @since         1.1
    */
   public final static String decode(String value, String[] chars, String[] repl) {
     // return null if the value, chars[], repl[] are null or the number
@@ -324,12 +390,12 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Converts a string to a date object
+   *  Converts a string to a date object
    *
-   * @param thisString Description of Parameter
-   * @param dateFormat Description of the Parameter
-   * @return Description of the Returned Value
-   * @since 1.5
+   * @param  thisString  Description of Parameter
+   * @param  dateFormat  Description of the Parameter
+   * @return             Description of the Returned Value
+   * @since              1.5
    */
   public final static java.util.Date convertStringToDate(String thisString, int dateFormat) {
     java.util.Date thisDate = null;
@@ -343,12 +409,12 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Converts a string to a SQLDate object
+   *  Converts a string to a SQLDate object
    *
-   * @param thisString Description of Parameter
-   * @param dateFormat Description of the Parameter
-   * @return Description of the Returned Value
-   * @since 1.5
+   * @param  thisString  Description of Parameter
+   * @param  dateFormat  Description of the Parameter
+   * @return             Description of the Returned Value
+   * @since              1.5
    */
   public final static java.sql.Date convertStringToSqlDate(String thisString, int dateFormat) {
     java.util.Date thisDate = null;
@@ -363,12 +429,12 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Rounds a float to the specified decimal places
+   *  Rounds a float to the specified decimal places
    *
-   * @param x        Description of the Parameter
-   * @param decimals Description of the Parameter
-   * @return Description of the Returned Value
-   * @since 1.6
+   * @param  x         Description of the Parameter
+   * @param  decimals  Description of the Parameter
+   * @return           Description of the Returned Value
+   * @since            1.6
    */
   public final static double round(double x, int decimals) {
     // rounds to the nearest integer
@@ -385,15 +451,15 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Converts dates based on the time zone. This method is called when the
-   * autopopulate does not have access to the attributes through the bean. This
-   * method also considers the time of day component if provided to determine
-   * the date and time.
+   *  Converts dates based on the time zone. This method is called when the
+   *  autopopulate does not have access to the attributes through the bean. This
+   *  method also considers the time of day component if provided to determine
+   *  the date and time.
    *
-   * @param request Description of the Parameter
-   * @param value   Description of the Parameter
-   * @param param   Description of the Parameter
-   * @throws java.text.ParseException Description of the Exception
+   * @param  request                    Description of the Parameter
+   * @param  value                      Description of the Parameter
+   * @param  param                      Description of the Parameter
+   * @throws  java.text.ParseException  Description of the Exception
    */
   protected void sanitizeDate(HttpServletRequest request, String value, String param) throws java.text.ParseException {
     String field = param;
@@ -456,11 +522,11 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Sets the timeZoneForDateFields attribute of the GenericBean object
+   *  Sets the timeZoneForDateFields attribute of the GenericBean object
    *
-   * @param request The new timeZoneForDateFields value
-   * @param value   The new timeZoneForDateFields value
-   * @param field   The new timeZoneForDateFields value
+   * @param  request  The new timeZoneForDateFields value
+   * @param  value    The new timeZoneForDateFields value
+   * @param  field    The new timeZoneForDateFields value
    */
   public void setTimeZoneForDateFields(HttpServletRequest request, String value, String field) {
     try {
@@ -474,11 +540,11 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Gets the fileLibraryPath attribute of the GenericBean object
+   *  Gets the fileLibraryPath attribute of the GenericBean object
    *
-   * @param basePath         Description of the Parameter
-   * @param moduleFolderName Description of the Parameter
-   * @return The fileLibraryPath value
+   * @param  basePath          Description of the Parameter
+   * @param  moduleFolderName  Description of the Parameter
+   * @return                   The fileLibraryPath value
    */
   public String getFileLibraryPath(String basePath, String moduleFolderName) {
     if (basePath.indexOf(moduleFolderName) == -1) {
@@ -491,9 +557,9 @@ public class GenericBean implements Serializable {
 
 
   /**
-   * Gets the permission attribute of the GenericBean object
+   *  Gets the permission attribute of the GenericBean object
    *
-   * @return The permission value
+   * @return    The permission value
    */
   public String getPermission() {
     return permission;

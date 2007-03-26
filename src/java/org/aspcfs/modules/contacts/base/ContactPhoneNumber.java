@@ -164,12 +164,7 @@ public class ContactPhoneNumber extends PhoneNumber {
     if (id > -1) {
       sql.append("phone_id, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
-    if (this.getModified() != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -177,9 +172,13 @@ public class ContactPhoneNumber extends PhoneNumber {
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (this.getModified() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -226,7 +225,7 @@ public class ContactPhoneNumber extends PhoneNumber {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_phone " +
         "SET phone_type = ?, " + DatabaseUtils.addQuotes(db, "number")+ " = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE phone_id = ? ");
     int i = 0;
     if (this.getType() > -1) {

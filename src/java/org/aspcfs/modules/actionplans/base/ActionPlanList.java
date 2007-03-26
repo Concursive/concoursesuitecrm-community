@@ -17,6 +17,7 @@ package org.aspcfs.modules.actionplans.base;
 
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -37,7 +38,7 @@ import java.util.Iterator;
  *          $
  * @created August 17, 2005
  */
-public class ActionPlanList extends ArrayList {
+public class ActionPlanList extends ArrayList  implements SyncableList {
   public String tableName = "action_plan";
   public String uniqueField = "plan_id";
   private java.sql.Timestamp lastAnchor = null;
@@ -135,6 +136,13 @@ public class ActionPlanList extends ArrayList {
     this.syncType = tmp;
   }
 
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
 
   /**
    * Sets the tableName attribute of the ActionPlanList object
@@ -196,7 +204,7 @@ public class ActionPlanList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-    StringBuffer sqlSelect = new StringBuffer();
+    
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -207,7 +215,7 @@ public class ActionPlanList extends ArrayList {
             " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
             " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
             " WHERE ap.plan_id > -1 ");
-    createFilter(sqlFilter, db);
+    createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -241,35 +249,17 @@ public class ActionPlanList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY ap.archive_date, ap.entered ");
     }
-    //Build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        " ap.*, ls.description AS site_name " +
-            " FROM action_plan ap " +
-            " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
-            " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
-            " WHERE ap.plan_id > -1 ");
-
-    pst = db.prepareStatement(
-        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    
     while (rs.next()) {
       ActionPlan thisPlan = new ActionPlan(rs);
       this.add(thisPlan);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
     if (buildPhases || buildSteps || buildRelatedRecords) {
       Iterator iterator = (Iterator) this.iterator();
       while (iterator.hasNext()) {
@@ -289,11 +279,10 @@ public class ActionPlanList extends ArrayList {
 
   /**
    * Description of the Method
-   *
-   * @param sqlFilter Description of the Parameter
    * @param db        Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
-  protected void createFilter(StringBuffer sqlFilter, Connection db) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -365,14 +354,14 @@ public class ActionPlanList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND ap.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND ap.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND ap.modified > ? ");
+      sqlFilter.append("AND ap.entered < ? ");
+      sqlFilter.append("AND ap.modified < ? ");
     }
   }
 
@@ -1622,6 +1611,53 @@ public class ActionPlanList extends ArrayList {
   public void setExclusiveToSite(String tmp) {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
   }
+  
+  /**
+   *  Gets the object attribute of the ActionPlanList object
+   *
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ActionPlan getObject(ResultSet rs) throws SQLException {
+  	ActionPlan obj = new ActionPlan(rs);
+    return obj;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  	StringBuffer sqlSelect = new StringBuffer();
+    //Build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        " ap.*, ls.description AS site_name " +
+            " FROM action_plan ap " +
+            " LEFT JOIN action_plan_constants apc ON (ap.link_object_id = apc.map_id) " +
+            " LEFT JOIN lookup_site_id ls ON (ap.site_id = ls.code) " +
+            " WHERE ap.plan_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+    	StringBuffer buff = new StringBuffer();
+    	createFilter(db, buff);
+    	sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
+
+  
+  /**
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  	return queryList(db, pst, "", "");
+  }
+
   /**
    * Gets the DisplayInPlanStepsCount attribute of the ActionPlanWorkList object
    *

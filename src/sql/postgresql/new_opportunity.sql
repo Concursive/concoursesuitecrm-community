@@ -11,7 +11,9 @@ CREATE TABLE lookup_call_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_call_priority (
@@ -20,7 +22,9 @@ CREATE TABLE lookup_call_priority (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  weight INTEGER NOT NULL
+  weight INTEGER NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_call_reminder (
@@ -29,7 +33,9 @@ CREATE TABLE lookup_call_reminder (
   base_value INTEGER DEFAULT 0 NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_call_result (
@@ -40,7 +46,9 @@ CREATE TABLE lookup_call_result (
   next_required BOOLEAN NOT NULL DEFAULT false,
   next_days INT NOT NULL DEFAULT 0,
   next_call_type_id INTEGER,
-  canceled_type BOOLEAN NOT NULL DEFAULT false
+  canceled_type BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_opportunity_typ_code_seq;
@@ -50,7 +58,9 @@ CREATE TABLE lookup_opportunity_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Environment - What stuff is the account already using
@@ -60,7 +70,9 @@ CREATE TABLE lookup_opportunity_environment (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Competitors - Who else is competing for this business
@@ -70,7 +82,9 @@ CREATE TABLE lookup_opportunity_competitors (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Compelling Event - What event is driving the timeline for purchase
@@ -80,7 +94,9 @@ CREATE TABLE lookup_opportunity_event_compelling (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 --Budget - Where are they getting the money to pay for the purchasse
@@ -90,7 +106,9 @@ CREATE TABLE lookup_opportunity_budget (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE opportunity_header (
@@ -154,8 +172,9 @@ CREATE INDEX "oppcomplist_header_idx" ON "opportunity_component" (opp_id);
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
 CREATE INDEX "oppcomplist_description" ON "opportunity_component" (description);
 
-
+CREATE SEQUENCE opportunity_component_levels_id_seq;
 CREATE TABLE opportunity_component_levels (
+  id INTEGER DEFAULT nextval('opportunity_component_levels_id_seq') NOT NULL PRIMARY KEY,
   opp_id INT NOT NULL REFERENCES opportunity_component(id),
   type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
   level INTEGER NOT NULL,
@@ -204,7 +223,6 @@ CREATE INDEX "call_org_id_idx" ON "call_log" (org_id);
 CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
 CREATE INDEX call_fcontact_id_idx  ON call_log (followup_contact_id);
 
-
 ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id); 
 
 CREATE TABLE opportunity_component_log(
@@ -224,6 +242,7 @@ CREATE TABLE opportunity_component_log(
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   closedate_timezone VARCHAR(255),
-  closed TIMESTAMP(3) 
+  closed TIMESTAMP(3),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

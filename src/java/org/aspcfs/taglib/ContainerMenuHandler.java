@@ -16,6 +16,8 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
+
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SubmenuItem;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.login.beans.UserBean;
@@ -299,14 +301,15 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                       "  <tr>\n");
               // Draw the menu tabs
               Iterator i = submenuItems.iterator();
+              boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(pageContext.getServletContext(), "OFFLINE_MODE"));
               while (i.hasNext()) {
                 SubmenuItem thisItem = (SubmenuItem) i.next();
                 if (thisItem.getPermission() == null ||
                     (thisItem.getPermission() != null && thisItem.getPermission().equals(
                         "")) ||
                     (thisUser != null && systemStatus != null &&
-                        systemStatus.hasPermission(
-                            thisUser.getUserId(), thisItem.getPermission()))) {
+                    systemStatus.hasPermission(
+                    thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
                   Template linkText = new Template(thisItem.getLink());
                   linkText.setParseElements(params);
                   if (thisItem.getName().equals(selected)) {
@@ -341,8 +344,8 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                     (thisItem.getPermission() != null && thisItem.getPermission().equals(
                         "")) ||
                     (thisUser != null && systemStatus != null &&
-                        systemStatus.hasPermission(
-                            thisUser.getUserId(), thisItem.getPermission()))) {
+                    systemStatus.hasPermission(
+                    thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
                   Template linkText = new Template(thisItem.getLink());
                   linkText.setParseElements(params);
                   if (thisItem.getName().equals(selected)) {
@@ -386,14 +389,15 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
           LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
           // Draw the menu tabs
           Iterator i = submenuItems.iterator();
+          boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(pageContext.getServletContext(), "OFFLINE_MODE"));
           while (i.hasNext()) {
             SubmenuItem thisItem = (SubmenuItem) i.next();
             if (thisItem.getPermission() == null ||
                 (thisItem.getPermission() != null && thisItem.getPermission().equals(
                     "")) ||
                 (thisUser != null && systemStatus != null &&
-                    systemStatus.hasPermission(
-                        thisUser.getUserId(), thisItem.getPermission()))) {
+                systemStatus.hasPermission(
+                thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
               if (thisItem.getName().equals(selected)) {
@@ -482,14 +486,15 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                   "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" /></td></tr>");
         }
         Iterator i = submenuItems.iterator();
+        boolean isOfflineMode = Boolean.parseBoolean(ApplicationPrefs.getPref(pageContext.getServletContext(), "OFFLINE_MODE"));
         while (i.hasNext()) {
           SubmenuItem thisItem = (SubmenuItem) i.next();
           if (thisItem.getPermission() == null ||
               (thisItem.getPermission() != null && thisItem.getPermission().equals(
                   "")) ||
               (thisUser != null && systemStatus != null &&
-                  systemStatus.hasPermission(
-                      thisUser.getUserId(), thisItem.getPermission()))) {
+              systemStatus.hasPermission(
+              thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
             if (style == LINKS && itemOutput) {
               this.pageContext.getOut().write(" | ");
             }

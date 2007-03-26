@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader.cfs;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
@@ -35,6 +36,9 @@ import java.util.*;
  * @created January 23, 2003
  */
 public class InitPermissionsAndRoles implements DataReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfs.InitPermissionsAndRoles.class);
+
   public final static String fs = System.getProperty("file.separator");
   private String processConfigFile = "InitPermissions.xml";
 
@@ -216,6 +220,15 @@ public class InitPermissionsAndRoles implements DataReader {
               "edit", String.valueOf(attributes.indexOf("e") > -1));
           permissionRecord.addField(
               "delete", String.valueOf(attributes.indexOf("d") > -1));
+          String offline = (String) permission.getAttribute("offline");
+          permissionRecord.addField(
+              "offlineView", String.valueOf(offline.indexOf("v") > -1));
+          permissionRecord.addField(
+              "offlineAdd", String.valueOf(offline.indexOf("a") > -1));
+          permissionRecord.addField(
+              "offlineEdit", String.valueOf(offline.indexOf("e") > -1));
+          permissionRecord.addField(
+              "offlineDelete", String.valueOf(offline.indexOf("d") > -1));
           //The default is true, if not set in the XML
           if ("false".equals((String) permission.getAttribute("enabled"))) {
             permissionRecord.addField("enabled", "false");
@@ -419,6 +432,16 @@ public class InitPermissionsAndRoles implements DataReader {
               "edit", String.valueOf(attributes.indexOf("e") > -1));
           rolePermissionRecord.addField(
               "delete", String.valueOf(attributes.indexOf("d") > -1));
+          String offline = (String) rolePermission.getAttribute(
+          "attributes");
+          rolePermissionRecord.addField(
+              "offlineView", String.valueOf(offline.indexOf("v") > -1));
+          rolePermissionRecord.addField(
+              "offlineAdd", String.valueOf(offline.indexOf("a") > -1));
+          rolePermissionRecord.addField(
+              "offlineEdit", String.valueOf(offline.indexOf("e") > -1));
+          rolePermissionRecord.addField(
+              "offlineDelete", String.valueOf(offline.indexOf("d") > -1));
           writer.save(rolePermissionRecord);
         }
       }

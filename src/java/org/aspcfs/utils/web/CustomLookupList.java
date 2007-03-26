@@ -15,6 +15,10 @@
  */
 package org.aspcfs.utils.web;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,19 +27,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ *  Description of the Class
  *
- * @author mrajkowski
- * @version $Id$
- * @created January 14, 2003
+ * @author     mrajkowski
+ * @created    January 14, 2003
+ * @version    $Id: CustomLookupList.java 12404 2005-08-05 17:37:07Z mrajkowski
+ *      $
  */
-public class CustomLookupList extends LookupList {
+public class CustomLookupList extends LookupList implements SyncableList{
 
   ArrayList fields = new ArrayList();
 
 
   /**
-   * Constructor for the CustomLookupList object
+   *  Constructor for the CustomLookupList object
    */
   public CustomLookupList() {
     super();
@@ -43,40 +48,95 @@ public class CustomLookupList extends LookupList {
 
 
   /**
-   * Description of the Method
+   *  Gets the object attribute of the CustomLookupList object
    *
-   * @param db Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
    */
-  public void buildList(Connection db) throws SQLException {
-    int items = -1;
-    StringBuffer sql = new StringBuffer();
-    sql.append("SELECT ");
-    Iterator i = fields.iterator();
-    while (i.hasNext()) {
-      sql.append((String) i.next());
-      if (i.hasNext()) {
-        sql.append(",");
-      }
-      sql.append(" ");
-    }
-    sql.append("FROM " + tableName);
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+  public Object getObject(ResultSet rs) throws SQLException {
+    CustomLookupElement thisElement = new CustomLookupElement(rs);
+    thisElement.setTableName(tableName);
+    thisElement.setUniqueField(uniqueField);
 
-    ResultSet rs = pst.executeQuery();
-    while (rs.next()) {
-      CustomLookupElement thisElement = new CustomLookupElement(rs);
-      this.add(thisElement);
-    }
-    rs.close();
-    pst.close();
+    return thisElement;
   }
 
 
   /**
-   * Adds a feature to the Field attribute of the CustomLookupList object
+   *  Description of the Method
    *
-   * @param fieldName The feature to be added to the Field attribute
+   * @param  db             Description of the Parameter
+   * @throws  SQLException  Description of the Exception
+   */
+  public void buildList(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      CustomLookupElement thisElement = (CustomLookupElement) this.getObject(rs);
+      this.add(thisElement);
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    ResultSet rs = null;
+    int items = -1;
+
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlSelect = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append("SELECT ");
+    Iterator i = fields.iterator();
+    while (i.hasNext()) {
+      String field = (String) i.next();
+      sqlSelect.append(
+         DatabaseUtils.parseReservedWord(db, field));
+      if (i.hasNext()) {
+        sqlSelect.append(",");
+      }
+      sqlSelect.append(" ");
+    }
+    sqlSelect.append("FROM " + tableName + " ");
+
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString());
+
+    items = prepareFilter(pst);
+    rs = pst.executeQuery();
+
+    return rs;
+  }
+
+
+  /**
+   *  Sets the property attribute of the CustomLookupList object
+   *
+   * @param  tmp  The new property value
+   */
+  public void setProperty(String tmp) {
+    addField(tmp);
+  }
+
+
+  /**
+   *  Adds a feature to the Field attribute of the CustomLookupList object
+   *
+   * @param  fieldName  The feature to be added to the Field attribute
    */
   public void addField(String fieldName) {
     if (fields == null) {
@@ -85,5 +145,53 @@ public class CustomLookupList extends LookupList {
     fields.add(fieldName);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  sqlFilter  Description of the Parameter
+   */
+  private void createFilter(StringBuffer sqlFilter) {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("WHERE entered > ? ");
+      }
+      sqlFilter.append(lastAnchor != null ? "AND entered < ? " : "WHERE entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("WHERE modified > ? ");
+      sqlFilter.append("AND entered < ? ");
+      sqlFilter.append("AND modified < ? ");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  private int prepareFilter(PreparedStatement pst) throws SQLException {
+    int i = 0;
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
+
+    return i;
+  }
 }
 

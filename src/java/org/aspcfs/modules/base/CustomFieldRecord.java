@@ -15,9 +15,11 @@
  */
 package org.aspcfs.modules.base;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.modules.base.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,14 +28,16 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 
 /**
- * Represents all of the data that is entered for a CustomFieldCategory
+ *  Represents all of the data that is entered for a CustomFieldCategory
  *
- * @author matt rajkowski
- * @version $Id: CustomFieldRecord.java,v 1.6 2002/07/12 21:56:40 mrajkowski
- *          Exp $
- * @created March 22, 2002
+ * @author     matt rajkowski
+ * @created    March 22, 2002
+ * @version    $Id: CustomFieldRecord.java,v 1.6 2002/07/12 21:56:40 mrajkowski
+ *      Exp $
  */
 public class CustomFieldRecord {
+
+  private static Logger log = Logger.getLogger(org.aspcfs.modules.base.CustomFieldRecord.class);
 
   //Properties for a Field
   private int id = -1;
@@ -53,18 +57,18 @@ public class CustomFieldRecord {
 
 
   /**
-   * Constructor for the CustomFieldRecord object
+   *  Constructor for the CustomFieldRecord object
    */
-  public CustomFieldRecord() {
-  }
+  public CustomFieldRecord() { }
 
 
   /**
-   * Constructor for the CustomFieldRecord object
+   *  Constructor for the CustomFieldRecord object
    *
-   * @param db       Description of the Parameter
-   * @param recordId Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  recordId          Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of the Exception
    */
   public CustomFieldRecord(Connection db, int recordId) throws SQLException {
     String sql =
@@ -83,10 +87,11 @@ public class CustomFieldRecord {
 
 
   /**
-   * Constructor for the CustomFieldRecord object
+   *  Constructor for the CustomFieldRecord object
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  rs                Description of Parameter
+   * @exception  SQLException  Description of the Exception
+   * @throws  SQLException     Description of Exception
    */
   public CustomFieldRecord(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -94,9 +99,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the id attribute of the CustomFieldRecord object
+   *  Sets the id attribute of the CustomFieldRecord object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -104,9 +109,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the id attribute of the CustomFieldRecord object
+   *  Sets the id attribute of the CustomFieldRecord object
    *
-   * @param tmp The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -114,9 +119,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the entered attribute of the CustomFieldRecord object
+   *  Sets the entered attribute of the CustomFieldRecord object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -124,9 +129,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the entered attribute of the CustomFieldRecord object
+   *  Sets the entered attribute of the CustomFieldRecord object
    *
-   * @param tmp The new entered value
+   * @param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -134,9 +139,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the enteredBy attribute of the CustomFieldRecord object
+   *  Sets the enteredBy attribute of the CustomFieldRecord object
    *
-   * @param tmp The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -144,9 +149,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the enteredBy attribute of the CustomFieldRecord object
+   *  Sets the enteredBy attribute of the CustomFieldRecord object
    *
-   * @param tmp The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -154,9 +159,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the modified attribute of the CustomFieldRecord object
+   *  Sets the modified attribute of the CustomFieldRecord object
    *
-   * @param tmp The new modified value
+   * @param  tmp  The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -164,9 +169,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the modified attribute of the CustomFieldRecord object
+   *  Sets the modified attribute of the CustomFieldRecord object
    *
-   * @param tmp The new modified value
+   * @param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -174,9 +179,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the modifiedBy attribute of the CustomFieldRecord object
+   *  Sets the modifiedBy attribute of the CustomFieldRecord object
    *
-   * @param tmp The new modifiedBy value
+   * @param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -184,9 +189,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the modifiedBy attribute of the CustomFieldRecord object
+   *  Sets the modifiedBy attribute of the CustomFieldRecord object
    *
-   * @param tmp The new modifiedBy value
+   * @param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -194,9 +199,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the linkModuleId attribute of the CustomFieldRecord object
+   *  Sets the linkModuleId attribute of the CustomFieldRecord object
    *
-   * @param tmp The new linkModuleId value
+   * @param  tmp  The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -204,9 +209,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the linkModuleId attribute of the CustomFieldRecord object
+   *  Sets the linkModuleId attribute of the CustomFieldRecord object
    *
-   * @param tmp The new linkModuleId value
+   * @param  tmp  The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -214,9 +219,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the linkItemId attribute of the CustomFieldRecord object
+   *  Sets the linkItemId attribute of the CustomFieldRecord object
    *
-   * @param tmp The new linkItemId value
+   * @param  tmp  The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -224,9 +229,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the linkItemId attribute of the CustomFieldRecord object
+   *  Sets the linkItemId attribute of the CustomFieldRecord object
    *
-   * @param tmp The new linkItemId value
+   * @param  tmp  The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     this.linkItemId = Integer.parseInt(tmp);
@@ -234,9 +239,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the categoryId attribute of the CustomFieldRecord object
+   *  Sets the categoryId attribute of the CustomFieldRecord object
    *
-   * @param tmp The new categoryId value
+   * @param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -244,9 +249,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the categoryId attribute of the CustomFieldRecord object
+   *  Sets the categoryId attribute of the CustomFieldRecord object
    *
-   * @param tmp The new categoryId value
+   * @param  tmp  The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -254,9 +259,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the enabled attribute of the CustomFieldRecord object
+   *  Sets the enabled attribute of the CustomFieldRecord object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
@@ -264,9 +269,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Sets the enabled attribute of the CustomFieldRecord object
+   *  Sets the enabled attribute of the CustomFieldRecord object
    *
-   * @param tmp The new enabled value
+   * @param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
     this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
@@ -274,9 +279,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the id attribute of the CustomFieldRecord object
+   *  Gets the id attribute of the CustomFieldRecord object
    *
-   * @return The id value
+   * @return    The id value
    */
   public int getId() {
     return id;
@@ -284,9 +289,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the entered attribute of the CustomFieldRecord object
+   *  Gets the entered attribute of the CustomFieldRecord object
    *
-   * @return The entered value
+   * @return    The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -294,9 +299,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the enteredString attribute of the CustomFieldRecord object
+   *  Gets the enteredString attribute of the CustomFieldRecord object
    *
-   * @return The enteredString value
+   * @return    The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -310,9 +315,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the enteredBy attribute of the CustomFieldRecord object
+   *  Gets the enteredBy attribute of the CustomFieldRecord object
    *
-   * @return The enteredBy value
+   * @return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -320,9 +325,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the modified attribute of the CustomFieldRecord object
+   *  Gets the modified attribute of the CustomFieldRecord object
    *
-   * @return The modified value
+   * @return    The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -330,9 +335,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the modifiedDateTimeString attribute of the CustomFieldRecord object
+   *  Gets the modifiedDateTimeString attribute of the CustomFieldRecord object
    *
-   * @return The modifiedDateTimeString value
+   * @return    The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     String tmp = "";
@@ -346,9 +351,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the modifiedBy attribute of the CustomFieldRecord object
+   *  Gets the modifiedBy attribute of the CustomFieldRecord object
    *
-   * @return The modifiedBy value
+   * @return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -356,9 +361,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the fieldData attribute of the CustomFieldRecord object
+   *  Gets the fieldData attribute of the CustomFieldRecord object
    *
-   * @return The fieldData value
+   * @return    The fieldData value
    */
   public CustomField getFieldData() {
     return fieldData;
@@ -366,9 +371,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the enabled attribute of the CustomFieldRecord object
+   *  Gets the enabled attribute of the CustomFieldRecord object
    *
-   * @return The enabled value
+   * @return    The enabled value
    */
   public boolean getEnabled() {
     return enabled;
@@ -376,9 +381,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the linkModuleId attribute of the CustomFieldRecord object
+   *  Gets the linkModuleId attribute of the CustomFieldRecord object
    *
-   * @return The linkModuleId value
+   * @return    The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -386,9 +391,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the linkItemId attribute of the CustomFieldRecord object
+   *  Gets the linkItemId attribute of the CustomFieldRecord object
    *
-   * @return The linkItemId value
+   * @return    The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -396,9 +401,9 @@ public class CustomFieldRecord {
 
 
   /**
-   * Gets the categoryId attribute of the CustomFieldRecord object
+   *  Gets the categoryId attribute of the CustomFieldRecord object
    *
-   * @return The categoryId value
+   * @return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -406,10 +411,10 @@ public class CustomFieldRecord {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db Description of Parameter
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @throws  SQLException  Description of Exception
    */
   public void insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -420,12 +425,7 @@ public class CustomFieldRecord {
     if (id > -1) {
       sql.append("record_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ");
     if (id > -1) {
@@ -433,9 +433,13 @@ public class CustomFieldRecord {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -461,19 +465,21 @@ public class CustomFieldRecord {
 
 
   /**
-   * When a CustomFieldCategory is deleted, then all of the associated data
-   * needs to go.
+   *  When a CustomFieldCategory is deleted, then all of the associated data
+   *  needs to go.
    *
-   * @param db Description of Parameter
-   * @return Description of the Return Value
-   * @throws SQLException Description of Exception
+   * @param  db             Description of Parameter
+   * @return                Description of the Return Value
+   * @throws  SQLException  Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
     int i = 0;
     StringBuffer sql = new StringBuffer();
     int accountMapId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS);
     //Delete the action item work data.
-    sql.append("UPDATE action_item_work SET link_item_id = NULL WHERE link_item_id = ? AND link_module_id = ? ");
+    sql.append("UPDATE action_item_work SET link_item_id = NULL, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE link_item_id = ? AND link_module_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getId());
     pst.setInt(++i, accountMapId);
@@ -544,11 +550,11 @@ public class CustomFieldRecord {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param rs Description of Parameter
-   * @throws SQLException Description of Exception
-   * @since 1.1
+   * @param  rs             Description of Parameter
+   * @throws  SQLException  Description of Exception
+   * @since                 1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     linkModuleId = rs.getInt("link_module_id");
@@ -564,57 +570,81 @@ public class CustomFieldRecord {
 
 
   /**
-   * Description of the Method
+   *  Description of the Method
    *
-   * @param db           Description of the Parameter
-   * @param thisCategory Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param  db             Description of the Parameter
+   * @param  thisCategory   Description of the Parameter
+   * @throws  SQLException  Description of the Exception
    */
   public void buildColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
     //Get the first CustomField, then populate it
-    String sql =
-        (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? "SELECT * FROM ( " : "") +
-        "SELECT " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
-        "cfi.* " +
-        "FROM custom_field_info cfi " +
-        "WHERE cfi.group_id IN " +
-        " (SELECT " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
-        "    group_id " +
-        "  FROM custom_field_group " +
-        "  WHERE category_id = ? " +
-        "  AND enabled = ? " +
-        "  ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", group_id, group_name " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.INTERBASE ? "ROWS 1 TO 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "") +
-        " ) " +
-        "AND enabled = ? " +
-        "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", field_id, field_name " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.INTERBASE ? "ROWS 1 TO 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.DB2 ? "FETCH FIRST 1 ROWS ONLY " : "") +
-        (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? ") WHERE ROWNUM <= 1 " : "");
+    String sql = " SELECT " +
+      (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+      (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
+      (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
+      "    cfg.group_id " +
+      "  FROM custom_field_group cfg " +
+      "  WHERE cfg.category_id = ? " +
+      "  AND cfg.enabled = ? " +
+      "  ORDER BY cfg." + DatabaseUtils.addQuotes(db, "level") + ", cfg.group_id, cfg.group_name " +
+      (DatabaseUtils.getType(db) == DatabaseUtils.INTERBASE ? "ROWS 1 TO 1 " : "") +
+      (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+      (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "");
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, thisCategory.getId());
     pst.setBoolean(2, true);
-    pst.setBoolean(3, true);
+    if(DatabaseUtils.getType(db) == DatabaseUtils.DERBY){
+      pst.setMaxRows(1);
+    }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      fieldData = new CustomField(rs);
-      fieldData.setRecordId(this.id);
-      fieldData.buildResources(db);
+      int group_id = rs.getInt("group_id");
+      rs.close();
+      pst.close();
+
+      sql =
+          (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? "SELECT * FROM ( " : "") +
+          "SELECT " +
+          (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+          (DatabaseUtils.getType(db) == DatabaseUtils.DAFFODILDB ? "TOP (1) " : "") +
+          (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD ? "FIRST 1 " : "") +
+          "cfi.* " +
+          "FROM custom_field_info cfi " +
+          "WHERE cfi.group_id = ? " +
+          "AND cfi.enabled = ? " +
+          "ORDER BY cfi." + DatabaseUtils.addQuotes(db, "level") + ", cfi.field_id, cfi.field_name " +
+          (DatabaseUtils.getType(db) == DatabaseUtils.INTERBASE ? "ROWS 1 TO 1 " : "") +
+          (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+          (DatabaseUtils.getType(db) == DatabaseUtils.MYSQL ? "LIMIT 1 " : "") +
+          (DatabaseUtils.getType(db) == DatabaseUtils.DB2 ? "FETCH FIRST 1 ROWS ONLY " : "") +
+          (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE ? ") WHERE ROWNUM <= 1 " : "");
+      pst = db.prepareStatement(sql);
+      pst.setInt(1, group_id);
+      pst.setBoolean(2, true);
+      if(DatabaseUtils.getType(db) == DatabaseUtils.DERBY){
+        pst.setMaxRows(1);
+      }
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        fieldData = new CustomField(rs);
+        fieldData.setRecordId(this.id);
+        fieldData.buildResources(db);
+      }
+      rs.close();
+      pst.close();
     }
     rs.close();
     pst.close();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
   public boolean deleteData(Connection db) throws SQLException {
     //Delete the related data
     PreparedStatement pst = db.prepareStatement(
@@ -624,6 +654,31 @@ public class CustomFieldRecord {
     pst.executeUpdate();
     pst.close();
     return true;
+  }
+
+
+  /**
+   *  Gets the referenceTable attribute of the CustomFieldRecord object
+   *
+   * @param  constant  Description of the Parameter
+   * @return           The referenceTable value
+   */
+  public String getReferenceTable(String constant) {
+    if ("linkModuleId".equals(constant)) {
+      int module = this.getLinkModuleId();
+      if (module == Constants.ACCOUNTS) {
+        return "account";
+      } else if (module == Constants.CONTACTS) {
+        return "contact";
+      } else if (module == Constants.FOLDERS_PIPELINE) {
+        return "opportunity";
+      } else if (module == Constants.FOLDERS_TICKETS) {
+        return "ticket";
+      } else if (module == Constants.FOLDERS_EMPLOYEES) {
+        return "contact";
+      }
+    }
+    return null;
   }
 }
 

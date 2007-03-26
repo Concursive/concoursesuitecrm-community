@@ -16,6 +16,7 @@
 package com.zeroio.iteam.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -34,7 +36,7 @@ import java.util.Iterator;
  *          Exp $
  * @created August 10, 2003
  */
-public class PermissionList extends HashMap {
+public class PermissionList extends HashMap implements SyncableList{
 
   public final static String tableName = "project_permissions";
   public final static String uniqueField = "id";
@@ -47,76 +49,64 @@ public class PermissionList extends HashMap {
   /**
    * Constructor for the PermissionList object
    */
-  public PermissionList() {
-  }
+  public PermissionList() {  }
 
-  /**
-   * Sets the lastAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the lastAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new lastAnchor value
-   */
-  public void setLastAnchor(String tmp) {
-    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-
-  /**
-   * Sets the syncType attribute of the ActionItemList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-  /**
-   * Gets the tableName attribute of the ActionItemList object
-   *
-   * @return The tableName value
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
    */
   public String getTableName() {
     return tableName;
   }
 
-
-  /**
-   * Gets the uniqueField attribute of the ActionItemList object
-   *
-   * @return The uniqueField value
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
    */
   public String getUniqueField() {
     return uniqueField;
   }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+ 
 
   /**
    * Sets the projectId attribute of the PermissionList object
@@ -167,14 +157,14 @@ public class PermissionList extends HashMap {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND p.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND p.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND p.modified > ? ");
+      sqlFilter.append("AND p.entered < ? ");
+      sqlFilter.append("AND p.modified < ? ");
     }
   }
 

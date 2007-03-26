@@ -17,11 +17,13 @@ package org.aspcfs.modules.admin.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Represents a module category that has capabilities (lists, reports, etc.)
@@ -52,6 +54,8 @@ public class PermissionCategory extends GenericBean {
   private boolean logos = false;
   private boolean actionPlans = false;
   private boolean customListViews = false;
+  private Timestamp entered = null;
+  private Timestamp modified = null;
 
   private int constant = -1;
 
@@ -829,6 +833,49 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
+   * @return the entered
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DateUtils.parseTimestampString(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DateUtils.parseTimestampString(modified);
+  }
+
+  /**
    *  Inserts a permission category object into the database
    *
    * @param  db             Description of the Parameter
@@ -840,13 +887,30 @@ public class PermissionCategory extends GenericBean {
       throw new SQLException("PermissionCategory constantId cannot be -1");
     }
     id = DatabaseUtils.getNextSeq(db, "permission_cate_category_id_seq");
-    PreparedStatement pst = db.prepareStatement(
+    StringBuffer sqlInsert = new StringBuffer(
         "INSERT INTO permission_category (" + (id > -1 ? "category_id, " : "") + "category, description, " +
         DatabaseUtils.addQuotes(db, "level") +
         ", enabled, " + DatabaseUtils.addQuotes(db, "active") +
         ", lookups, folders, viewpoints, categories, scheduled_events, " +
-        "object_events, reports, webdav, logos, constant, action_plans, custom_list_views) " +
-        "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "object_events, reports, webdav, logos, constant, action_plans, custom_list_views"
+    );
+    sqlInsert.append(", entered, modified");
+    sqlInsert.append(
+        ") VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+    );
+    if(entered != null){
+      sqlInsert.append(", ?");
+    } else {
+      sqlInsert.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+    }
+    if(modified != null){
+      sqlInsert.append(", ?");
+    } else {
+      sqlInsert.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+    }
+    sqlInsert.append(") ");
+
+    PreparedStatement pst = db.prepareStatement(sqlInsert.toString());
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -868,6 +932,12 @@ public class PermissionCategory extends GenericBean {
     pst.setInt(++i, constant);
     pst.setBoolean(++i, actionPlans);
     pst.setBoolean(++i, customListViews);
+    if(entered != null){
+      pst.setTimestamp(++i, entered);
+    }
+    if(modified != null){
+      pst.setTimestamp(++i, modified);
+    }
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq", id);
@@ -900,6 +970,8 @@ public class PermissionCategory extends GenericBean {
     constant = rs.getInt("constant");
     actionPlans = rs.getBoolean("action_plans");
     customListViews = rs.getBoolean("custom_list_views");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 
@@ -915,7 +987,8 @@ public class PermissionCategory extends GenericBean {
   public static void updateReportAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
-        "SET reports = ? " +
+        "SET reports = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);
@@ -935,7 +1008,8 @@ public class PermissionCategory extends GenericBean {
   public static void updateWebdavAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
-        "SET webdav = ? " +
+        "SET webdav = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);
@@ -955,7 +1029,8 @@ public class PermissionCategory extends GenericBean {
   public static void updateLogosAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
-        "SET logos = ? " +
+        "SET logos = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);
@@ -975,7 +1050,8 @@ public class PermissionCategory extends GenericBean {
   public static void updateFoldersAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
-        "SET folders = ? " +
+        "SET folders = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);
@@ -995,7 +1071,8 @@ public class PermissionCategory extends GenericBean {
   public static void updateActionPlansAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
-        "SET action_plans = ? " +
+        "SET action_plans = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);
@@ -1015,7 +1092,8 @@ public class PermissionCategory extends GenericBean {
   public static void updateCustomListViewsAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
-        "SET custom_list_views = ? " +
+        "SET custom_list_views = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);

@@ -72,7 +72,8 @@ public class UserPermissionList extends Vector {
 
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
-        "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete " +
+        "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete, " +
+        "role_offline_view, role_offline_add, role_offline_edit, role_offline_delete " +
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = r.permission_id ");
@@ -92,6 +93,10 @@ public class UserPermissionList extends Vector {
       thisPermission.setView(rs.getBoolean("role_view"));
       thisPermission.setEdit(rs.getBoolean("role_edit"));
       thisPermission.setDelete(rs.getBoolean("role_delete"));
+      thisPermission.setOfflineView(rs.getBoolean("role_offline_view"));
+      thisPermission.setOfflineAdd(rs.getBoolean("role_offline_add"));
+      thisPermission.setOfflineEdit(rs.getBoolean("role_offline_edit"));
+      thisPermission.setOfflineDelete(rs.getBoolean("role_offline_delete"));
       this.addElement(thisPermission);
     }
     rs.close();

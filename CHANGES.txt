@@ -2,10 +2,20 @@
 Centric CRM 4.2 Alpha
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log
-February 6, 2007
+March 15, 2007
 ----------------------------------------------------------------------------
 
 New:
+- Centric CRM webapp in Offline mode
+  - Permissions and Role permissions have offline settings
+- Added Sync capabilities for a Centric CRM Offline Client
+- Sync API allows various authentication modes.
+  - Sync Client: Allows regular HTTP-XML api access with sync capabilities
+  - CRM User: Allows regular HTTP-XML api access without the overhead of sync
+  - User based Sync Client authentication: Allows offline crm users to authenticate
+- Sync Clients can request Sync Packages that contains all the sync records
+  for the user based on user's permissions
+- Reader/Writer combination to read sync data using sync reflection api
 - Website public file attachments from a document store
 - Quickly complete an action plan
 - Website preview feature

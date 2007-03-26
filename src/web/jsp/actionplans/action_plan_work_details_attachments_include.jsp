@@ -14,7 +14,7 @@
                       <td valign="middle">
                         <a href="javascript:popContactsListSingle('contactid','changecontact<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&siteId=<%= actionPlanWork.getOrganization().getSiteId() %>&listView=accountcontacts&reset=true&addNewContact=true&hiddensource=attachplan&actionplan=true&actionStepWork=<%= thisItemWork.getId() %>');">
                           <div id="changecontact<%= thisItemWork.getId() %>">
-                            <%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlan.attachContact\">Attach Contact</dhv:label>" %>
+                            <%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlan.attachContact\">Attach Contact</dhv:label>" %>
                           </div>
                         </a>
                       </td>
@@ -32,7 +32,7 @@
                       <td valign="middle"><a href="javascript:popOppForm('opportunityid','changeopportunity<%= thisItemWork.getId() %>','<%= thisItemWork.getComponent().getHeaderId() %>','<%= thisItemWork.getComponent().getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&actionplan=true&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changeopportunity<%= thisItemWork.getId() %>"><%= toHtml(CurrencyFormat.getCurrencyString(thisItemWork.getComponent().getGuess(), User.getLocale(), applicationPrefs.get("SYSTEM.CURRENCY")) + " " + NumberFormat.getPercentInstance().format(thisItemWork.getComponent().getCloseProb())) %></div></a></td>
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= thisItemWork.getComponent() == null %>">
-                      <td valign="middle"><a href="javascript:popOppForm('opportunityid','changeopportunity<%= thisItemWork.getId() %>','-1','-1','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&actionplan=true&source=attachplan&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changeopportunity<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachOpportunity.text\">Attach Opportunity</dhv:label>" %></div></a></td>
+                      <td valign="middle"><a href="javascript:popOppForm('opportunityid','changeopportunity<%= thisItemWork.getId() %>','-1','-1','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&actionplan=true&source=attachplan&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changeopportunity<%= thisItemWork.getId() %>"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachOpportunity.text\">Attach Opportunity</dhv:label>" %></div></a></td>
                     </dhv:evaluate>
                   </tr>
                 </table>
@@ -56,7 +56,7 @@
                       <td valign="middle">
                         <a href="javascript:popAccountFileItemList('fileitemid','changefileitem<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&addNewFile=true&source=attachplan&actionplan=true&actionStepWork=<%= thisItemWork.getId() %>');">
                           <div id="changefileitem<%= thisItemWork.getId() %>">
-                            <%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachDocument.text\">Attach Document</dhv:label>" %>
+                            <%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachDocument.text\">Attach Document</dhv:label>" %>
                           </div>
                         </a>
                       </td>
@@ -87,7 +87,7 @@
                       <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><zeroio:tz timestamp="<%=  thisItemWork.getNote().getSubmitted() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>" dateOnly="true"/></div></a></td>
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= thisItemWork.getNote() == null %>">
-                      <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachDate.text\">Attach Date</dhv:label>" %></div></a></td>
+                      <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachDate.text\">Attach Date</dhv:label>" %></div></a></td>
                     </dhv:evaluate> 
                   </tr>
                 </table>
@@ -102,7 +102,7 @@
                       <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><zeroio:tz timestamp="<%=  thisItemWork.getNote().getSubmitted() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>" dateOnly="true"/></div></a></td>
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= thisItemWork.getNote() == null %>">
-                      <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachNote.text\">Attach Note</dhv:label>" %></div></a></td>
+                      <td valign="middle"><a href="javascript:popActionPlanAttachment('note', 'noteid','changenote<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachnote&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changenote<%= thisItemWork.getId() %>"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachNote.text\">Attach Note</dhv:label>" %></div></a></td>
                     </dhv:evaluate>
                   </tr>
                 </table>
@@ -117,7 +117,7 @@
                       <td valign="middle"><a href="javascript:popActionPlanAttachment('selection', 'selectionid','changeselection<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachselection&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changeselection<%= thisItemWork.getId() %>"><%= toHtml(thisItemWork.getSelectionList().getDisplayHtml()) %></div></a></td>
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= thisItemWork.getSelectionList() == null %>">
-                      <td valign="middle"><a href="javascript:popActionPlanAttachment('selection' ,'selectionid','changeselection<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachselection&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changeselection<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachItems.text\">Attach Items</dhv:label>" %></div></a></td>
+                      <td valign="middle"><a href="javascript:popActionPlanAttachment('selection' ,'selectionid','changeselection<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&source=attachselection&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changeselection<%= thisItemWork.getId() %>"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.attachItems.text\">Attach Items</dhv:label>" %></div></a></td>
                     </dhv:evaluate>
                   </tr>
                 </table>
@@ -132,7 +132,7 @@
                       <td valign="middle"><a href="javascript:popActionPlanAttachment('relation', 'relationid','changerelation<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&init=true&source=attachrelation&planWorkId=<%= actionPlanWork.getId() %>&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changerelation<%= thisItemWork.getId() %>"><%= toHtml(thisItemWork.getRelationshipList().getDisplayHtml()) %></div></a></td>
                     </dhv:evaluate>
                     <dhv:evaluate if="<%= thisItemWork.getRelationshipList() == null %>">
-                      <td valign="middle"><a href="javascript:popActionPlanAttachment('relation' ,'relationid','changerelation<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&init=true&source=attachrelation&planWorkId=<%= actionPlanWork.getId() %>&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changerelation<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.addRelationships.text\">Add Relationship</dhv:label>" %></div></a>
+                      <td valign="middle"><a href="javascript:popActionPlanAttachment('relation' ,'relationid','changerelation<%= thisItemWork.getId() %>','orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&init=true&source=attachrelation&planWorkId=<%= actionPlanWork.getId() %>&actionStepWork=<%= thisItemWork.getId() %>');"><div id="changerelation<%= thisItemWork.getId() %>"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.addRelationships.text\">Add Relationship</dhv:label>" %></div></a>
                     </dhv:evaluate>
                   </tr>
                 </table>
@@ -143,7 +143,7 @@
                 <table class="empty" border="0">
                   <tr>
                     <td><img border="0" src="images/icons/stock_account-16.gif" align="absmiddle" /></td>
-                    <td valign="middle"><a href="javascript:popURL('Accounts.do?command=Details&orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&actionplan=true&popup=true','Action_Plan','700','425','yes','yes');"><%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.reviewAccount.text\">Review Account</dhv:label>" %></a></td>
+                    <td valign="middle"><a href="javascript:popURL('Accounts.do?command=Details&orgId=<%= actionPlanWork.getOrganization().getOrgId() %>&actionplan=true&popup=true','Action_Plan','700','425','yes','yes');"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlans.reviewAccount.text\">Review Account</dhv:label>" %></a></td>
                   </tr>
                 </table>
               </dhv:evaluate>
@@ -174,7 +174,7 @@
                 <dhv:evaluate if="<%= thisItemWork.getCustomFieldCategory() == null %>">
                   <table class="empty" border="0"><tr><td><img border="0" src="images/icons/stock_bcard-16.gif" align="absmiddle" /></td>
                     <td valign="middle"><a href="javascript:popFolderForm('recordid<%= thisItemWork.getId() %>','changefolder<%= thisItemWork.getId() %>','<%= thisItemWork.getStep().getCustomFieldCategoryId() %>','-1','<%= thisItemWork.getPlanWork().getOrganization().getOrgId() %>','actionplan=true&source=attachplan&actionStepId=<%= thisItemWork.getId() %>');">
-                      <div id="changefolder<%= thisItemWork.getId() %>"><%= thisItemWork.getLabel() != null && !"".equals(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlan.attachFolder\">Attach Folder</dhv:label>" %></div></a></td></tr></table>
+                      <div id="changefolder<%= thisItemWork.getId() %>"><%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"actionPlan.attachFolder\">Attach Folder</dhv:label>" %></div></a></td></tr></table>
                 </dhv:evaluate>
                 <input type="hidden" name="recordid<%= thisItemWork.getId() %>" id="recordid<%= thisItemWork.getId() %>" value=""/>
               </dhv:evaluate>
@@ -200,7 +200,7 @@
                       <td align="middle" valign="top">
                         <a href="javascript:popContactsListSingle('recipientId','<%= thisItemWork.getStep().getCampaignId() %>','<%= User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %>&recipient=true&orgId=<%= (actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1) %>&hiddensource=actionplanrecipients&actionItemId=<%= thisItemWork.getId() %>&allowDuplicateRecipient=<%= thisItemWork.getStep().getAllowDuplicateRecipient() %>&listView=accountcontacts&filters=accountcontacts');">
                           <div id="changerecipient<%= thisItemWork.getId() %>">
-                            <%= thisItemWork.getLabel() != null ? thisItemWork.getLabel() : "<dhv:label name=\"\">Add Recipient</dhv:label>" %>
+                            <%= hasText(thisItemWork.getLabel()) ? thisItemWork.getLabel() : "<dhv:label name=\"\">Add Recipient</dhv:label>" %>
                           </div>
                         </a> (<a href="CampaignManager.do?command=PreviewRecipients&id=<%= thisItemWork.getStep().getCampaignId() %>"><dhv:label name="accounts.accounts_contacts_messages_details.Campaign">Campaign</dhv:label></a>)
                       </td>

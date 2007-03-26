@@ -14,7 +14,9 @@ CREATE TABLE lookup_project_activity (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
-  template_id INTEGER DEFAULT 0
+  template_id INTEGER DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_project_priorit_code_seq;
@@ -26,7 +28,9 @@ CREATE TABLE lookup_project_priority (
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
   graphic VARCHAR(75),
-  type INTEGER NOT NULL
+  type INTEGER NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_project_status (
@@ -37,7 +41,9 @@ CREATE TABLE lookup_project_status (
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
   graphic VARCHAR(75),
-  type INTEGER NOT NULL
+  type INTEGER NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_project_loe (
@@ -47,7 +53,9 @@ CREATE TABLE lookup_project_loe (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_project_role (
@@ -56,7 +64,9 @@ CREATE TABLE lookup_project_role (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE SEQUENCE lookup_project_cat_code_seq;
@@ -66,7 +76,9 @@ CREATE TABLE lookup_project_category (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_news_template (
@@ -81,7 +93,9 @@ CREATE TABLE lookup_news_template (
   load_article_linked_list BOOLEAN DEFAULT false,
   load_public_projects BOOLEAN DEFAULT false,
   load_article_category_list BOOLEAN DEFAULT false,
-  mapped_jsp VARCHAR(255) NOT NULL
+  mapped_jsp VARCHAR(255) NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -324,7 +338,9 @@ CREATE TABLE project_files (
 CREATE INDEX "project_files_cidx" ON "project_files" 
   USING btree ("link_module_id", "link_item_id");
 
+CREATE SEQUENCE project_files_version_version_id_seq;
 CREATE TABLE project_files_version (
+  version_id INTEGER DEFAULT nextval('project_files_version_version_id_seq') NOT NULL PRIMARY KEY,
   item_id INTEGER REFERENCES project_files(item_id),
   client_filename VARCHAR(255) NOT NULL,
   filename VARCHAR(255) NOT NULL,
@@ -340,11 +356,15 @@ CREATE TABLE project_files_version (
   allow_portal_access BOOLEAN DEFAULT false
 );
 
+CREATE SEQUENCE project_files_download_download_id_seq;
 CREATE TABLE project_files_download (
+  download_id INTEGER DEFAULT nextval('project_files_download_download_id_seq') NOT NULL PRIMARY KEY,
   item_id INTEGER NOT NULL REFERENCES project_files(item_id),
   version FLOAT DEFAULT 0 ,
   user_download_id INTEGER NULL REFERENCES access(user_id),
-  download_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  download_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE project_files_thumbnail (
@@ -428,7 +448,9 @@ CREATE TABLE lookup_project_permission_category (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_project_permission (
@@ -440,7 +462,9 @@ CREATE TABLE lookup_project_permission (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
-  default_role INTEGER REFERENCES lookup_project_role(code)
+  default_role INTEGER REFERENCES lookup_project_role(code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE project_permissions (

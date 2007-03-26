@@ -165,12 +165,7 @@ public class ContactEmailAddress
     if (id > -1) {
       sql.append("emailaddress_id, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
-    if (this.getModified() != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ");
     if (id > -1) {
@@ -178,9 +173,13 @@ public class ContactEmailAddress
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (this.getModified() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -229,7 +228,7 @@ public class ContactEmailAddress
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_emailaddress " +
         "SET emailaddress_type = ?, email = ?, primary_email = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE emailaddress_id = ? ");
     int i = 0;
     if (this.getType() > -1) {

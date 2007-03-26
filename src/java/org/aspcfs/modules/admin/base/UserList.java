@@ -95,7 +95,8 @@ public class UserList extends Vector implements SyncableList {
   // to a particular site
   private int siteId = -1;
   private boolean includeUsersWithAccessToAllSites = false;
-
+  private boolean includeDHVAdmin = false;
+  
 
   /**
    * Constructor for the UserList object
@@ -842,6 +843,14 @@ public class UserList extends Vector implements SyncableList {
   }
 
 
+  public void setIncludeDHVAdmin(boolean includeDHVAdmin) {
+    this.includeDHVAdmin = includeDHVAdmin;
+  }
+  
+  public void setIncludeDHVAdmin(String includeDHVAdmin) {
+    this.includeDHVAdmin = DatabaseUtils.parseBoolean(includeDHVAdmin);
+  }
+  
   /**
    * Gets the HtmlSelect attribute of the UserList object
    *
@@ -1487,10 +1496,20 @@ public class UserList extends Vector implements SyncableList {
         pst.close();
       }
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("a.enabled DESC,c.namelast", null);
+      if (includeDHVAdmin) {
+        //NOTE: order by user_id is important for sync api to send dhvadmin record first
+        pagedListInfo.setDefaultSort("a.user_id ", null);
+      } else {
+        pagedListInfo.setDefaultSort("a.enabled DESC,c.namelast", null);
+      }
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY a.enabled DESC,c.namelast ");
+      if (includeDHVAdmin) {
+        //NOTE: order by user_id is important for sync api to send dhvadmin record first
+        sqlOrder.append("ORDER BY a.user_id ");
+      } else {
+        sqlOrder.append("ORDER BY a.enabled DESC,c.namelast ");
+      }
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -1610,9 +1629,10 @@ public class UserList extends Vector implements SyncableList {
     } else {
       if (topLevel) {
         sqlFilter.append("AND a.manager_id = -1 ");
-      } else {
-        sqlFilter.append("AND a.contact_id > -1 ");
-      }
+      } 
+    }
+    if (!includeDHVAdmin) {
+      sqlFilter.append("AND a.contact_id > -1 ");
     }
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND a.enabled = ? ");
@@ -1857,7 +1877,6 @@ public class UserList extends Vector implements SyncableList {
    */
   public int getUserIdByName(String name) {
     int result = -1;
-    StringTokenizer str = null;
     String[] names = StringUtils.getFirstLastNames(name);
     Iterator iterator = (Iterator) this.iterator();
     while (iterator.hasNext()) {

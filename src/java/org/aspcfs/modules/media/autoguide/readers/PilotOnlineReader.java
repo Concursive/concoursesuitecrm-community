@@ -17,6 +17,8 @@ package org.aspcfs.modules.media.autoguide.readers;
 
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
+
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
@@ -49,6 +51,9 @@ import java.util.Iterator;
  * @created October 7, 2002
  */
 public class PilotOnlineReader implements DataReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.modules.media.autoguide.readers.PilotOnlineReader.class);
+  
   /**
    * Description of the Field
    */

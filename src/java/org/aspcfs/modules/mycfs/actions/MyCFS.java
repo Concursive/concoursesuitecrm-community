@@ -32,6 +32,7 @@ import org.aspcfs.modules.mycfs.base.CFSNoteList;
 import org.aspcfs.modules.mycfs.base.CalendarEventList;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
 import org.aspcfs.modules.tasks.base.Task;
+import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 
@@ -848,7 +849,7 @@ public final class MyCFS extends CFSModule {
     }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
-
+    
     //this is how we get the multiple-level heirarchy...recursive function.
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(
@@ -864,6 +865,20 @@ public final class MyCFS extends CFSModule {
     userListSelect.addAttribute("id", "userId");
     context.getRequest().setAttribute("NewUserList", userListSelect);
 
+    if (isOfflineMode(context)) {
+      Connection db = null;
+      try {
+        db = this.getConnection(context);
+        SyncClient syncClient = new SyncClient(db, 0);
+        context.getRequest().setAttribute("syncClient", syncClient);
+      } catch (Exception errorMessage) {
+        context.getRequest().setAttribute("Error", errorMessage);
+        return "SystemError";
+      } finally {
+        this.freeConnection(context, db);
+      }
+    }
+    
     SystemStatus systemStatus = this.getSystemStatus(context);
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute(
         "CalendarInfo");

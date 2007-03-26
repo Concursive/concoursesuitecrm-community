@@ -15,6 +15,7 @@
  */
 package org.aspcfs.apps.transfer.reader.csvreader;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
  * @created June 9, 2003
  */
 public class CSVReader implements DataReader {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.csvreader.CSVReader.class);
 
   public final static String lf = System.getProperty("line.separator");
   public final static String fs = System.getProperty("file.separator");

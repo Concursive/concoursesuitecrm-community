@@ -263,6 +263,9 @@ public class CustomLookupElement extends HashMap {
    * @return The id value
    */
   public int getId() {
+    if (uniqueField != null && getValue(uniqueField) != null) {
+      return Integer.parseInt(getValue(uniqueField));
+    }
     return id;
   }
 
@@ -333,9 +336,11 @@ public class CustomLookupElement extends HashMap {
     }
 
     String seqName = null;
-    if (this.getUniqueField() != null && !"".equals(this.getUniqueField().trim())) {
-      seqName = getPostgresSeqName(tableName, getUniqueField());
-      id = DatabaseUtils.getNextSeq(db, seqName);
+    if (id < 0) {
+      if (this.getUniqueField() != null && !"".equals(this.getUniqueField().trim())) {
+        seqName = getPostgresSeqName(tableName, getUniqueField());
+        id = DatabaseUtils.getNextSeq(db, seqName);
+      }
     }
     tableName = DatabaseUtils.getTableName(db, tableName);
 
@@ -409,8 +414,10 @@ public class CustomLookupElement extends HashMap {
     }
     pst.execute();
     pst.close();
-    if (this.getUniqueField() != null && !"".equals(this.getUniqueField().trim())) {
-      id = DatabaseUtils.getCurrVal(db, seqName, id);
+    if (id < 0) {
+      if (this.getUniqueField() != null && !"".equals(this.getUniqueField().trim())) {
+        id = DatabaseUtils.getCurrVal(db, seqName, id);
+      }
     }
     return true;
   }

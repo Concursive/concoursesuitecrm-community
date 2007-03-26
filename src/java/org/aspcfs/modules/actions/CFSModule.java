@@ -409,9 +409,15 @@ public class CFSModule {
   protected boolean hasPermission(ActionContext context, String permission) {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    return (systemStatus.hasPermission(thisUser.getUserId(), permission));
+    return (systemStatus.hasPermission(thisUser.getUserId(), permission + (CFSModule.isOfflineMode(context)?"-offline":"")));
   }
 
+  protected static boolean isOfflineMode(ActionContext context) {
+    return (Boolean.parseBoolean(
+              ApplicationPrefs.getPref(
+                context.getServletContext(), 
+                "OFFLINE_MODE")));
+  }
 
   /**
    * Description of the Method

@@ -16,7 +16,9 @@ CREATE TABLE sync_client (
   modifiedby INT NOT NULL,
   anchor TIMESTAMP(3) DEFAULT NULL,
   enabled BOOLEAN DEFAULT false,
-  code VARCHAR(255)
+  code VARCHAR(255),
+  user_id INT REFERENCES access(user_id),
+  package_file_id INT REFERENCES project_files(item_id)
 );
 
 CREATE TABLE sync_system (
@@ -60,7 +62,7 @@ CREATE TABLE sync_log (
   log_id SERIAL PRIMARY KEY,
   system_id INT NOT NULL REFERENCES sync_system(system_id),
   client_id INT NOT NULL REFERENCES sync_client(client_id),
-  ip VARCHAR(15),
+  ip VARCHAR(30),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -86,4 +88,31 @@ CREATE TABLE process_log (
   process_version VARCHAR(20),
   status INT,
   message TEXT
+);
+
+CREATE TABLE sync_package (
+  package_id SERIAL PRIMARY KEY,
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  type INT NOT NULL,
+  size INT DEFAULT 0,
+  status_id INT NOT NULL,
+  recipient INT NOT NULL,
+  status_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_anchor TIMESTAMP(3) DEFAULT NULL,
+  next_anchor TIMESTAMP(3) NOT NULL,
+  package_file_id INT REFERENCES project_files(item_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sync_package_data (
+  data_id SERIAL PRIMARY KEY,
+  package_id INT NOT NULL REFERENCES sync_package(package_id),
+  table_id INT NOT NULL REFERENCES sync_table(table_id),
+  action INT NOT NULL,
+  identity_start INT NOT NULL,
+  "offset" INT,
+  items INT,
+  last_anchor TIMESTAMP(3) DEFAULT NULL,
+  next_anchor TIMESTAMP(3) NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -20,10 +20,13 @@
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.accounts.base.NewsArticle,org.aspcfs.modules.mycfs.beans.*" %>
 <%@ page import="org.aspcfs.modules.quotes.base.*" %>
 <%@ page import="org.aspcfs.modules.troubletickets.base.*" %>
+<%@page import="org.aspcfs.modules.sync.utils.SyncUtils"%>
 <jsp:useBean id="NewsList" class="org.aspcfs.modules.accounts.base.NewsArticleList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="IndSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="syncClient" class="org.aspcfs.modules.service.base.SyncClient" scope="request"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%
@@ -50,8 +53,36 @@
 </script>
 
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td>
+  <dhv:evaluate if="<%= SyncUtils.isOfflineMode(applicationPrefs) %>">
+    <tr>
+      <td>
+        <table class="note" cellspacing="0"><tr>
+          <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+          <td>
+            <dhv:evaluate if="<%= SyncUtils.isSyncConflict(applicationPrefs) %>">
+              <dhv:label name="login.offline.invalid.state">
+                The Offline Centric CRM system is in an invalid state. Your prior sync was not successful
+                and the database might be in an un-reliable state. You can continue to review your
+                offline data, but will not be able to perform any future syncs and add, edit or delete
+                data. You need to re-install the system by clicking on "Reload" on your Desktop Client.
+	            </dhv:label>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= !SyncUtils.isSyncConflict(applicationPrefs) %>">
+              <dhv:label name="login.offline.msg">
+	              You are currently logged in using offline mode. Some of the features have been turned off intentionally and may
+	              not be available during offline mode. When you regain connectivity, you can perform a sync with your Centric CRM
+	              Server to be up-to-date.
+	            </dhv:label><br /><br />
+	          <dhv:label name="login.offline.lastSyncedOn">Last Synced on</dhv:label>: <%= syncClient.getAnchor() %>&nbsp;&nbsp;
+	          <input type="button" value="<dhv:label name="global.button.Sync">Sync</dhv:label>" onClick="javascript:window.location.href='RequestSyncUpdates.do?command=Default'"/>
+           </dhv:evaluate>
+          </td>
+        </tr></table>
+      </td>
+    </tr>
+  </dhv:evaluate>
+    <tr>
+      <td>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <%-- User Selected Info --%>
   <dhv:permission name="products-view" none="true">

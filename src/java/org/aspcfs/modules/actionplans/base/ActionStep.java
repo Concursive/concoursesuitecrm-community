@@ -80,6 +80,7 @@ public class ActionStep extends GenericBean {
   protected int departmentId = -1;
   protected boolean enabled = false;
   protected Timestamp entered = null;
+  protected Timestamp modified = null;
   protected boolean allowSkipToHere = false;
   protected boolean actionRequired = false;
   protected String label = null;
@@ -100,6 +101,37 @@ public class ActionStep extends GenericBean {
   protected boolean displayInPlanList = false;
   protected String  planListLabel = null;
   protected boolean quickComplete = false;
+
+
+  /**
+   *  Gets the modified attribute of the ActionStep object
+   *
+   * @return    The modified value
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionStep object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the ActionStep object
+   *
+   * @param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
 
   /**
    *  Constructor for the ActionStep object
@@ -148,7 +180,7 @@ public class ActionStep extends GenericBean {
         " LEFT JOIN lookup_duration_type ldt ON (astp.duration_type_id = ldt.code) " +
         " LEFT JOIN custom_field_category cfc ON (astp.category_id = cfc.category_id) " +
         " LEFT JOIN custom_field_info cfi ON (astp.field_id = cfi.field_id) " +
-        " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role")+ " r ON (astp.role_id = r.role_id) " +
+        " LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (astp.role_id = r.role_id) " +
         " LEFT JOIN lookup_department dpt ON (astp.department_id = dpt.code) " +
         " LEFT JOIN user_group ug ON (astp.group_id = ug.group_id) " +
         " WHERE astp.step_id = ? ");
@@ -247,7 +279,8 @@ public class ActionStep extends GenericBean {
     displayInPlanList = rs.getBoolean("display_in_plan_list");
     planListLabel = rs.getString("plan_list_label");
     quickComplete = rs.getBoolean("quick_complete");
-  }
+    modified = rs.getTimestamp("modified");
+ }
 
 
   /**
@@ -299,9 +332,7 @@ public class ActionStep extends GenericBean {
       if (id > -1) {
         sql.append("step_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, modified, ");
       sql.append("enabled, permission_type, role_id, department_id, " +
           " allow_skip_to_here, action_required, label, group_id, target_relationship, allow_update, campaign_id, " +
           " allow_duplicate_recipient, display_in_plan_list, plan_list_label, quick_complete)");
@@ -323,6 +354,13 @@ public class ActionStep extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
       int i = 0;
@@ -348,6 +386,9 @@ public class ActionStep extends GenericBean {
       }
       if (entered != null) {
         pst.setTimestamp(++i, this.getEntered());
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
       }
       pst.setBoolean(++i, this.getEnabled());
       DatabaseUtils.setInt(pst, ++i, this.getPermissionType());
@@ -440,7 +481,8 @@ public class ActionStep extends GenericBean {
           " allow_duplicate_recipient = ?, " +
           " display_in_plan_list = ?, " +
           " plan_list_label = ?, " +
-          " quick_complete = ? " +
+          " quick_complete = ?, " +
+          " modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           " WHERE step_id = ? ");
 
       int i = 0;
@@ -616,34 +658,34 @@ public class ActionStep extends GenericBean {
    */
   public static String getActionString(int actionId) {
     switch (actionId) {
-      case ActionStep.ATTACH_ACCOUNT_CONTACT:
-        return "actionPlan.attachAccountContact.text";
-      case ActionStep.ATTACH_ACTIVITY:
-        return "actionPlan.attachActivity.text";
-      case ActionStep.ATTACH_DOCUMENT:
-        return "actionPlan.attachDocument.text";
-      case ActionStep.ATTACH_OPPORTUNITY:
-        return "actionPlan.attachOpportunity.text";
-      case ActionStep.ATTACH_FOLDER:
-        return "actionPlan.attachFolder.text";
-      case ActionStep.ATTACH_NOTHING:
-        return "actionPlan.noAdditionalActionRequired.text";
-      case UPDATE_RATING:
-        return "actionPlan.updateRating.text";
-      case ATTACH_NOTE_SINGLE:
-        return "actionPlan.attachNoteSingle.text";
-      case ATTACH_NOTE_MULTIPLE:
-        return "actionPlan.attachNoteMultiple.text";
-      case ATTACH_LOOKUPLIST_MULTIPLE:
-        return "actionPlan.attachLookupListMultiple.text";
-      case VIEW_ACCOUNT:
-        return "actionPlan.viewAccount.text";
-      case ATTACH_RELATIONSHIP:
-        return "actionPlan.attachRelationship.text";
-      case ADD_RECIPIENT:
-        return "admin.actionPlan.addRecipient.text";
-      default:
-        return "actionPlan.noAdditionalActionRequired.text";
+        case ActionStep.ATTACH_ACCOUNT_CONTACT:
+          return "actionPlan.attachAccountContact.text";
+        case ActionStep.ATTACH_ACTIVITY:
+          return "actionPlan.attachActivity.text";
+        case ActionStep.ATTACH_DOCUMENT:
+          return "actionPlan.attachDocument.text";
+        case ActionStep.ATTACH_OPPORTUNITY:
+          return "actionPlan.attachOpportunity.text";
+        case ActionStep.ATTACH_FOLDER:
+          return "actionPlan.attachFolder.text";
+        case ActionStep.ATTACH_NOTHING:
+          return "actionPlan.noAdditionalActionRequired.text";
+        case UPDATE_RATING:
+          return "actionPlan.updateRating.text";
+        case ATTACH_NOTE_SINGLE:
+          return "actionPlan.attachNoteSingle.text";
+        case ATTACH_NOTE_MULTIPLE:
+          return "actionPlan.attachNoteMultiple.text";
+        case ATTACH_LOOKUPLIST_MULTIPLE:
+          return "actionPlan.attachLookupListMultiple.text";
+        case VIEW_ACCOUNT:
+          return "actionPlan.viewAccount.text";
+        case ATTACH_RELATIONSHIP:
+          return "actionPlan.attachRelationship.text";
+        case ADD_RECIPIENT:
+          return "admin.actionPlan.addRecipient.text";
+        default:
+          return "actionPlan.noAdditionalActionRequired.text";
     }
   }
 
@@ -1128,7 +1170,7 @@ public class ActionStep extends GenericBean {
     this.actionRequired = DatabaseUtils.parseBoolean(tmp);
   }
 
-  
+
   /**
    *  Gets the quickComplete attribute of the ActionStep object
    *
@@ -1147,7 +1189,7 @@ public class ActionStep extends GenericBean {
   public void setQuickComplete(boolean tmp) {
     this.quickComplete = tmp;
   }
-  
+
   /**
    *  Sets the quickComplete attribute of the ActionStep object
    *
@@ -1156,7 +1198,7 @@ public class ActionStep extends GenericBean {
   public void setQuickComplete(String tmp) {
     this.quickComplete = DatabaseUtils.parseBoolean(tmp);
   }
-  
+
   /**
    *  Gets the displayInPlanList attribute of the ActionStep object
    *
@@ -1175,7 +1217,8 @@ public class ActionStep extends GenericBean {
   public void setDisplayInPlanList(boolean tmp) {
     this.displayInPlanList = tmp;
   }
-  
+
+
   /**
    *  Sets the displayInPlanList attribute of the ActionStep object
    *
@@ -1184,8 +1227,8 @@ public class ActionStep extends GenericBean {
   public void setDisplayInPlanList(String tmp) {
     this.displayInPlanList = DatabaseUtils.parseBoolean(tmp);
   }
-  
-  
+
+
   /**
    *  Gets the planListLabel attribute of the ActionStep object
    *
@@ -1204,7 +1247,7 @@ public class ActionStep extends GenericBean {
   public void setPlanListLabel(String tmp) {
     this.planListLabel = tmp;
   }
-  
+
 
   /**
    *  Gets the id attribute of the ActionStep object

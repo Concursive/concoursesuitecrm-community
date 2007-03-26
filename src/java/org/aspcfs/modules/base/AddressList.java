@@ -19,6 +19,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.HashMap;
@@ -34,7 +35,11 @@ import java.util.HashMap;
  * @version    $Id: AddressList.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05
  *      Aug 2005) mrajkowski $
  */
-public class AddressList extends Vector {
+public class AddressList extends Vector{
+
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   protected PagedListInfo pagedListInfo = null;
   protected int orgId = -1;
@@ -42,6 +47,47 @@ public class AddressList extends Vector {
   protected int contactId = -1;
   protected int orderId = -1;
 
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+  
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
 
   /**
    *  Sets the PagedListInfo attribute of the AddressList object
@@ -157,17 +203,26 @@ public class AddressList extends Vector {
     if (orgId != -1) {
       sqlFilter.append("AND org_id = ? ");
     }
-
     if (type != -1) {
       sqlFilter.append("AND address_type = ? ");
     }
-
     if (contactId != -1) {
       sqlFilter.append("AND contact_id = ? ");
     }
-
     if (orderId != -1) {
       sqlFilter.append("AND order_id = ? ");
+    }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND a.entered > ? ");
+      }
+      sqlFilter.append("AND a.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND a.modified > ? ");
+      sqlFilter.append("AND a.entered < ? ");
+      sqlFilter.append("AND a.modified < ? ");
     }
   }
 
@@ -186,17 +241,26 @@ public class AddressList extends Vector {
     if (orgId != -1) {
       pst.setInt(++i, orgId);
     }
-
     if (type != -1) {
       pst.setInt(++i, type);
     }
-
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-
     if (orderId != -1) {
       pst.setInt(++i, orderId);
+    }
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
     }
 
     return i;

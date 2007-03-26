@@ -18,6 +18,8 @@ package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.database.ConnectionPool;
 import com.zeroio.webdav.base.WebdavModule;
+
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.modules.actionplans.base.ActionPlan;
@@ -38,8 +40,10 @@ import java.sql.SQLException;
  *          mrajkowski Exp $
  * @created January 23, 2003
  */
-public class PermissionsAndRolesWriter
-    implements DataWriter {
+public class PermissionsAndRolesWriter implements DataWriter {
+
+  private static final Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.writer.cfsdatabasewriter.PermissionsAndRolesWriter.class);
+
   private ConnectionPool sqlDriver = null;
   private Connection db = null;
   private int id = -1;
@@ -275,6 +279,10 @@ public class PermissionsAndRolesWriter
         thisPermission.setAdd(record.getValue("add"));
         thisPermission.setEdit(record.getValue("edit"));
         thisPermission.setDelete(record.getValue("delete"));
+        thisPermission.setOfflineView(record.getValue("offlineView"));
+        thisPermission.setOfflineAdd(record.getValue("offlineAdd"));
+        thisPermission.setOfflineEdit(record.getValue("offlineEdit"));
+        thisPermission.setOfflineDelete(record.getValue("offlineDelete"));
         thisPermission.setEnabled(record.getValue("enabled"));
         thisPermission.setActive(record.getValue("active"));
         thisPermission.setViewpoints(record.getValue("viewpoints"));
@@ -377,6 +385,10 @@ public class PermissionsAndRolesWriter
         thisRolePermission.setAdd(record.getValue("add"));
         thisRolePermission.setEdit(record.getValue("edit"));
         thisRolePermission.setDelete(record.getValue("delete"));
+        thisRolePermission.setOfflineView(record.getValue("offlineView"));
+        thisRolePermission.setOfflineAdd(record.getValue("offlineAdd"));
+        thisRolePermission.setOfflineEdit(record.getValue("offlineEdit"));
+        thisRolePermission.setOfflineDelete(record.getValue("offlineDelete"));
         thisRolePermission.insert(db);
         id = thisRolePermission.getId();
         return true;

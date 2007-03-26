@@ -18,6 +18,7 @@ package org.aspcfs.modules.pipeline.base;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -25,6 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +39,7 @@ import java.util.Iterator;
  *          mrajkowski Exp $
  * @created December, 2003
  */
-public class OpportunityHeaderList extends ArrayList {
+public class OpportunityHeaderList extends ArrayList implements SyncableList {
 
   public final static String tableName = "opportunity_header";
   public final static String uniqueField = "opp_id";
@@ -80,7 +82,80 @@ public class OpportunityHeaderList extends ArrayList {
   //Build component info if only one component is allowed per opportunity
   private boolean allowMultipleComponents = true;
 
+  /**
+   * Constructor for the OpportunityHeaderList object
+   */
+  public OpportunityHeaderList() {
+  }
 
+  /**
+   * Description of the Method
+   *
+   * @param rs
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public static OpportunityHeader getObject(ResultSet rs) throws SQLException {
+    OpportunityHeader opportunityHeader = new OpportunityHeader(rs);
+    return opportunityHeader;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getTableName()
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+   */
+  public void setLastAnchor(Timestamp lastAnchor) {
+    this.lastAnchor = lastAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+   */
+  public void setLastAnchor(String lastAnchor) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+   */
+  public void setNextAnchor(Timestamp nextAnchor) {
+    this.nextAnchor = nextAnchor;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+   */
+  public void setNextAnchor(String nextAnchor) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+   */
+  public void setSyncType(int syncType) {
+    this.syncType = syncType;
+  }
+
+  /* (non-Javadoc)
+   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+   */
+  public void setSyncType(String syncType) {
+    this.syncType = Integer.parseInt(syncType);
+  }
+  
   /**
    * Sets the allowMultipleComponents attribute of the OpportunityHeaderList
    * object
@@ -141,62 +216,6 @@ public class OpportunityHeaderList extends ArrayList {
    */
   public void setBuildActionPlans(String tmp) {
     this.buildActionPlans = DatabaseUtils.parseBoolean(tmp);
-  }
-
-
-  /**
-   * Constructor for the OpportunityHeaderList object
-   */
-  public OpportunityHeaderList() {
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   * Sets the nextAnchor attribute of the ActionItemList object
-   *
-   * @param tmp The new nextAnchor value
-   */
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-
-  /**
-   * Sets the syncType attribute of the ActionItemList object
-   *
-   * @param tmp The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-  /**
-   * Gets the tableName attribute of the ActionItemList object
-   *
-   * @return The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   * Gets the uniqueField attribute of the ActionItemList object
-   *
-   * @return The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
   }
 
   /**
@@ -857,6 +876,67 @@ public class OpportunityHeaderList extends ArrayList {
     this.exclusiveToSite = DatabaseUtils.parseBoolean(tmp);
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+    return queryList(db, pst, "", "");
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param pst
+   * @param sqlFilter
+   * @param sqlOrder
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+    StringBuffer sqlSelect = new StringBuffer();
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "x.opp_id AS header_opp_id, " +
+            "x.description AS header_description, " +
+            "x.acctlink AS header_acctlink, " +
+            "x.contactlink AS header_contactlink, " +
+            "x.entered AS header_entered, " +
+            "x.enteredby AS header_enteredby, " +
+            "x.modified AS header_modified, " +
+            "x.modifiedby AS header_modifiedby, " +
+            "x.trashed_date AS header_trashed_date, " +
+            "x.manager AS header_manager, x.access_type AS header_access_type, " +
+            "x." + DatabaseUtils.addQuotes(db, "lock") + " AS header_lock, " +
+            "x.custom1_integer AS header_custom1_integer, x.site_id AS header_site_id, " +
+            "org.name as acct_name, org.enabled as accountenabled, " +
+            "ct.namelast as last_name, ct.namefirst as first_name, " +
+            "ct.org_name as ctcompany, lsi.description as sitename " +
+            "FROM " + tableName + " x " +
+            "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
+            "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id) " +
+            "LEFT JOIN lookup_site_id lsi ON (x.site_id = lsi.code) " +
+            "WHERE x.opp_id > -1 ");
+    if(sqlFilter == null || sqlFilter.length() == 0){
+      StringBuffer buff = new StringBuffer();
+      createFilter(db, buff);
+      sqlFilter = buff.toString();
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    prepareFilter(pst);
+    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  }
 
   /**
    * Builds a list of contacts based on several parameters. The parameters are
@@ -873,7 +953,6 @@ public class OpportunityHeaderList extends ArrayList {
     ResultSet rs = null;
     int items = -1;
 
-    StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -923,51 +1002,15 @@ public class OpportunityHeaderList extends ArrayList {
       sqlOrder.append("ORDER BY x.entered");
     }
 
-    //Need to build a base SQL statement for returning records
-    if (pagedListInfo != null) {
-      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
-    } else {
-      sqlSelect.append("SELECT ");
-    }
-    sqlSelect.append(
-        "x.opp_id AS header_opp_id, " +
-            "x.description AS header_description, " +
-            "x.acctlink AS header_acctlink, " +
-            "x.contactlink AS header_contactlink, " +
-            "x.entered AS header_entered, " +
-            "x.enteredby AS header_enteredby, " +
-            "x.modified AS header_modified, " +
-            "x.modifiedby AS header_modifiedby, " +
-            "x.trashed_date AS header_trashed_date, " +
-            "x.manager AS header_manager, x.access_type AS header_access_type, " +
-            "x." + DatabaseUtils.addQuotes(db, "lock") + " AS header_lock, " +
-            "x.custom1_integer AS header_custom1_integer, x.site_id AS header_site_id, " +
-            "org.name as acct_name, org.enabled as accountenabled, " +
-            "ct.namelast as last_name, ct.namefirst as first_name, " +
-            "ct.org_name as ctcompany, lsi.description as sitename " +
-            "FROM opportunity_header x " +
-            "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
-            "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id) " +
-            "LEFT JOIN lookup_site_id lsi ON (x.site_id = lsi.code) " +
-            "WHERE x.opp_id > -1 ");
-    pst = db.prepareStatement(
-        sqlSelect.toString() +
-            sqlFilter.toString() +
-            sqlOrder.toString());
-    items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
     while (rs.next()) {
       OpportunityHeader thisOppHeader = new OpportunityHeader(rs);
       this.add(thisOppHeader);
     }
     rs.close();
-    pst.close();
+    if (pst != null) {
+      pst.close();
+    }
 
     Iterator i = this.iterator();
     while (i.hasNext()) {
@@ -1146,17 +1189,16 @@ public class OpportunityHeaderList extends ArrayList {
     } else {
       sqlFilter.append("AND x.trashed_date IS NULL ");
     }
-
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND x.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND x.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND x.modified > ? ");
+      sqlFilter.append("AND x.entered < ? ");
+      sqlFilter.append("AND x.modified < ? ");
     }
   }
 
