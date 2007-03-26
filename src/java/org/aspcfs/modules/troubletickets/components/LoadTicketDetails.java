@@ -77,7 +77,7 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
     Ticket previousTicket = (Ticket) context.getPreviousObject();
     Connection db = null;
     try {
-      db = this.getConnection(context);
+      db = getConnection(context);
       context.setAttribute(ENTERED_DATE, thisTicket.getEnteredString(DateFormat.LONG, DateFormat.SHORT));
       if (thisTicket.getOrgId() > -1) {
         Organization organization = new Organization(
@@ -95,18 +95,21 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
         user.setBuildContact(true);
         user.buildRecord(db, thisTicket.getAssignedTo());
         context.setAttribute(ASSIGNED_TO_CONTACT, user.getContact());
+      } else {
+        context.setAttribute(ASSIGNED_TO_CONTACT, new Contact());
       }
       if (thisTicket.getContactId() > 0) {
         Contact contact = new Contact(db, thisTicket.getContactId());
         context.setAttribute(CONTACT, contact);
+      } else {
+        context.setAttribute(CONTACT, new Contact());
       }
       if (thisTicket.getCatCode() > 0) {
         TicketCategory categoryLookup = new TicketCategory(
             db, thisTicket.getCatCode());
         context.setAttribute(CATEGORY_LOOKUP, categoryLookup);
       } else {
-        TicketCategory temp = new TicketCategory();
-        context.setAttribute(CATEGORY_LOOKUP, temp);
+        context.setAttribute(CATEGORY_LOOKUP, new TicketCategory());
       }
       if (thisTicket.getSubCat1() > 0) {
         TicketCategory subCategory1Lookup = new TicketCategory(
@@ -136,16 +139,23 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
         LookupElement severityLookup = new LookupElement(
             db, thisTicket.getSeverityCode(), "ticket_severity");
         context.setAttribute(SEVERITY_LOOKUP, severityLookup);
+      } else {
+        context.setAttribute(SEVERITY_LOOKUP, new LookupElement());
       }
       if (thisTicket.getPriorityCode() > 0) {
         LookupElement priorityLookup = new LookupElement(
             db, thisTicket.getPriorityCode(), "ticket_priority");
+        context.setAttribute(PRIORITY_LOOKUP, priorityLookup);
+      } else {
+        LookupElement priorityLookup = new LookupElement();
         context.setAttribute(PRIORITY_LOOKUP, priorityLookup);
       }
       if (thisTicket.getModifiedBy() > 0) {
         User user = new User(db, thisTicket.getModifiedBy());
         Contact contact = new Contact(db, user.getContactId());
         context.setAttribute(MODIFIED_BY_CONTACT, contact);
+      } else {
+        context.setAttribute(MODIFIED_BY_CONTACT, new Contact());
       }
       if (thisTicket.getEnteredBy() > 0) {
         User user = null;
@@ -156,12 +166,14 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
         }
         Contact contact = new Contact(db, user.getContactId());
         context.setAttribute(ENTERED_BY_CONTACT, contact);
+      } else {
+        context.setAttribute(ENTERED_BY_CONTACT, new Contact());
       }
       result = true;
     } catch (Exception e) {
 
     } finally {
-      this.freeConnection(context, db);
+      freeConnection(context, db);
     }
     return result;
   }
