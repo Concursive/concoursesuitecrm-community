@@ -16,35 +16,23 @@
 
 package org.aspcfs.modules.products.utils;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import org.aspcfs.utils.DatabaseUtils;
-
 /**
  * Description of the Class
  *
  * @author Aliaksei.Yarotski
- * @version $Id: 
+ * @version $Id:
  *          Exp $
  * @created October 04, 2006
  */
 public class ProductCategoryCounter {
-
-  private final static String QUERY = 
-    "select pc.category_id as category_id,"+
-    "       pccm.count_of_product as count_of_product,"+
-    "       pc.parent_id as parent_id" + 
-    "    from product_category pc"+
-    "    left join (select category_id, "+
-    "                      count('x') as count_of_product"+
-    "                    from product_catalog_category_map pccm"+
-    "                          join product_catalog p on p.product_id = pccm.product_id and active = ? and enabled = ?"+
-    "                  group by category_id) pccm  on (pccm.category_id = pc.category_id)" +
-    "order by pc.parent_id desc";
 
   private HashMap rawData;
   private HashMap result;
@@ -59,7 +47,18 @@ public class ProductCategoryCounter {
     int itemId = 0;
     int count = 0;
 
-    PreparedStatement ps = db.prepareStatement(QUERY);
+    PreparedStatement ps = db.prepareStatement(
+        "select pc.category_id as category_id," +
+            "       pccm.count_of_product as count_of_product," +
+            "       pc.parent_id as parent_id" +
+            "    from product_category pc" +
+            "    left join (select category_id, " +
+            "                      count('x') as count_of_product" +
+            "                    from product_catalog_category_map pccm" +
+            "                          join product_catalog p on p.product_id = pccm.product_id and " + DatabaseUtils.parseReservedWord(db, "active") + " = ? and enabled = ?" +
+            "                  group by category_id) pccm  on (pccm.category_id = pc.category_id)" +
+            "order by pc.parent_id desc"
+    );
     ps.setBoolean(1, true);
     ps.setBoolean(2, true);
     ResultSet rs = ps.executeQuery();
@@ -120,6 +119,7 @@ public class ProductCategoryCounter {
       return (ProductCategoryCount) result.get(id);
     return null;
   }
+
   /**
    * @return the productCategoryCounter
    */
