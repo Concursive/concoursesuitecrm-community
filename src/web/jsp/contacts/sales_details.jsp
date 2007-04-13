@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -12,7 +12,7 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id$
   - Description:
   --%>
@@ -95,8 +95,8 @@
   }
 
   function continueWorkLead() {
-    var rating = document.forms['details'].rating.value;
-    var comments = document.forms['details'].comments.value;
+    var rating = escape(document.forms['details'].rating.value);
+    var comments = escape(document.forms['details'].comments.value);
     popURL('Sales.do?command=WorkLead&id=<%= ContactDetails.getId() %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null?listForm:"") %>','WorkLead','650','500','yes','yes');
     hideSpan("worklead");
     showSpan("nextlead");
@@ -128,7 +128,7 @@
 
   function continueModifyLead() {
     var rating = '<%= ContactDetails.getRating() %>';
-    var comments = '<%= toHtml(ContactDetails.getComments()) %>';
+    var comments = '<%= StringUtils.jsEscape(ContactDetails.getComments()) %>';
     var contactId = '<%= ContactDetails.getId() %>';
     var owner = '<%= ContactDetails.getOwner() %>';
     if (owner == '-1') {
@@ -159,7 +159,7 @@
 
   function continueTrashLead() {
     var rating = '<%= ContactDetails.getRating() %>';
-    var comments = '<%= toHtml(ContactDetails.getComments()) %>';
+    var comments = '<%= StringUtils.jsEscape(ContactDetails.getComments()) %>';
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
     var contactId = '<%= ContactDetails.getId() %>';
     var nextTo = '<%= from %>';
@@ -247,7 +247,7 @@
        <input type="hidden" name="siteId" value="<%=ContactDetails.getSiteId()%>" >
     </td>
   </tr>
-  </dhv:evaluate> 
+  </dhv:evaluate>
   <dhv:evaluate if="<%= SiteIdList.size() <= 2 %>">
     <input type="hidden" name="siteId" id="siteId" value="-1" />
   </dhv:evaluate>
