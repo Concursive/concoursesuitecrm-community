@@ -68,8 +68,7 @@ public final class Accounts extends CFSModule {
    * @return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
-
-    return executeCommandDashboard(context);
+    return executeCommandDashboards(context);
   }
 
 
@@ -1581,7 +1580,7 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Accounts", "Custom Fields Details");
-    return this.getReturn(context, "FolderList");
+    return getReturn(context, "FolderList");
   }
 
 
@@ -1967,7 +1966,6 @@ public final class Accounts extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-    boolean popup = false;
     String source = context.getRequest().getParameter("source");
     String actionStepId = context.getRequest().getParameter("actionStepId");
     if (source != null && !"".equals(source.trim())) {
@@ -1976,8 +1974,6 @@ public final class Accounts extends CFSModule {
     if (actionStepId != null && !"".equals(actionStepId.trim())) {
       context.getRequest().setAttribute("actionStepId", actionStepId);
     }
-    String popupString = context.getRequest().getParameter("popup");
-    popup = (popupString != null && !"".equals(popupString.trim()) && "true".equals(popupString));
     Organization thisOrganization = null;
     int resultCount = 0;
     boolean isValid = false;
@@ -2202,8 +2198,6 @@ public final class Accounts extends CFSModule {
       return ("PermissionError");
     }
     String source = context.getRequest().getParameter("source");
-    String popupString = context.getRequest().getParameter("popup");
-    boolean popup = (popupString != null && "true".equals(popupString.trim()));
     boolean returnToList = true;
     String actionStepId = context.getRequest().getParameter("actionStepId");
     ActionItemWork item = null;
@@ -2475,6 +2469,19 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("selected", defaultValue);
     }
     return "StatesOK";
+  }
+  
+  public String executeCommandDashboards(ActionContext context) {
+    if (!hasPermission(context, "accounts-dashboards-view")) {
+    	return executeCommandDashboard(context);
+    }
+    
+  	String moduleId = Integer.toString(Constants.ACCOUNTS);
+  	String dashboardsContainerName = "dashboards" + moduleId;
+  	context.getRequest().setAttribute("moduleId", moduleId);
+  	context.getRequest().setAttribute("dashboardsContainerName", dashboardsContainerName);
+  	context.getRequest().setAttribute("action", context.getRequest().getAttribute("moduleAction"));
+  	return "DashboardsViewOK";
   }
 }
 

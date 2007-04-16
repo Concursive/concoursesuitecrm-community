@@ -382,7 +382,7 @@ public class ControllerServlet
    *@param  response  Description of Parameter
    */
   public void service(HttpServletRequest request, HttpServletResponse response) {
-    String actionPath = getActionPath(request);
+  	String actionPath = getActionPath(request);
     Object beanRef = null;
     if (System.getProperty("DEBUG") != null) {
       System.out.println("");
@@ -496,7 +496,6 @@ public class ControllerServlet
       // javabean (if the request attribute was passed in to indicate so). We are now ready to
       // attempt to get the class instance if it exists (already loaded), or if not, we
       // will dynamically load it (one time only) and store it in our lists of classes.
-
       Object classRef = null;
       if (classes.containsKey(actionPath) && cacheModules) {
         classRef = classes.get(actionPath);
@@ -548,7 +547,8 @@ public class ControllerServlet
           result = (String) method.invoke(classRef, new Object[]{context});
         }
       } catch (NoSuchMethodException nm) {
-        System.out.println("No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
+        System.out.println(
+            "No Such Method Exception for method executeCommand" + context.getCommand() + ". MESSAGE = " + nm.getMessage());
       } catch (IllegalAccessException ia) {
         System.out.println("Illegal Access Exception. MESSAGE = " + ia.getMessage());
       } catch (Exception e) {
@@ -648,11 +648,9 @@ public class ControllerServlet
         // Transform the xml output using the xsl stylesheet and the XALAN XSLT
         // engine, placing the output stream of the transformation in the
         // HttpServletResponse output stream.
-
 //        response.setBufferSize(8192);
         response.setContentType(getResponseOutput(templates));
         // always assume HTML output from this controller
-
         try {
           StringBuffer link = new StringBuffer();
           link.append(request.getScheme());
@@ -842,15 +840,12 @@ public class ControllerServlet
    */
   private String getActionPath(HttpServletRequest request) {
     String s = request.getServletPath();
-
     // For extension matching, we want to strip the extension (if any)
     int slash = s.lastIndexOf("/");
     int period = s.lastIndexOf(".");
-
     if ((period >= 0) && (slash >= 0) && (period > slash)) {
       return s.substring(slash + 1, period);
     }
-
     return s;
   }
 }

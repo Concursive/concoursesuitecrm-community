@@ -3,6 +3,22 @@
  *
  *@version    $Id: new_website.sql 14246 2006-02-15 21:06:34Z mrajkowski $
  */
+
+CREATE TABLE lookup_container_menu (
+  code SERIAL PRIMARY KEY,
+  cname VARCHAR(300),
+  description VARCHAR(300),
+  default_item BOOLEAN DEFAULT FALSE,
+  level INTEGER,
+  enabled BOOLEAN DEFAULT TRUE,
+  link_module_id INT,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+--CREATE UNIQUE INDEX u_lcontmenu_cname ON lookup_container_menu (cname);
+
+
 CREATE TABLE web_layout (
   layout_id SERIAL PRIMARY KEY,
   layout_constant INT UNIQUE,
@@ -31,7 +47,7 @@ CREATE TABLE web_site (
   enabled BOOLEAN NOT NULL DEFAULT true,
   layout_id INT REFERENCES web_layout(layout_id),
   style_id INT REFERENCES web_style(style_id),
-	logo_image_id INT REFERENCES project_files(item_id),
+  logo_image_id INT REFERENCES project_files(item_id),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -109,7 +125,9 @@ CREATE TABLE web_page (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  page_alias INT REFERENCES web_page(page_id)
+  page_alias INT REFERENCES web_page(page_id),
+  link_module_id int REFERENCES permission_category (category_id),
+  link_container_id int REFERENCES lookup_container_menu(code)
 );
 
 ALTER TABLE web_page_version ADD COLUMN page_id INT REFERENCES web_page(page_id);
@@ -214,9 +232,9 @@ CREATE TABLE web_product_access_log (
 
 CREATE TABLE web_product_email_log (
   product_id INT,
-	emails_to TEXT NOT NULL,
-	from_name VARCHAR(300) NOT NULL,
-	comments VARCHAR(1024),
+  emails_to TEXT NOT NULL,
+  from_name VARCHAR(300) NOT NULL,
+  comments VARCHAR(1024),
   site_log_id INT,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
 );
@@ -225,5 +243,53 @@ CREATE TABLE url_map (
   url_id SERIAL PRIMARY KEY,
   time_in_millis NUMERIC(19) NOT NULL,
   url TEXT
+);
+
+--CREATE TABLE web_icelet_appearance_map (
+--  icelet_module_map_id SERIAL PRIMARY KEY,
+--  link_icelet_id INT NOT NULL REFERENCES web_icelet(icelet_id),
+--  link_module_id INT,
+--  link_container_id INT REFERENCES lookup_container_menu (code),
+--  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+--);
+
+CREATE TABLE web_page_role_map (
+  page_role_map_id SERIAL PRIMARY KEY,
+  web_page_id INT NOT NULL REFERENCES web_page(page_id),
+  role_id INT NOT NULL REFERENCES role(role_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES "access"(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES "access"(user_id)
+);
+
+create table web_icelet_dashboard_map (
+  dashboard_map_id serial PRIMARY KEY,
+  icelet_id INT REFERENCES web_icelet(icelet_id),
+  link_module_id INT,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL references access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL references access(user_id)
+);
+
+create table web_icelet_customtab_map (
+  custom_map_id serial PRIMARY KEY,
+  icelet_id INT REFERENCES web_icelet(icelet_id),
+  link_container_id int REFERENCES lookup_container_menu (code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL references access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL references access(user_id)
+);
+
+create table web_icelet_publicwebsite (
+  icelet_publicwebsite_id serial PRIMARY KEY,
+  icelet_id INT references web_icelet(icelet_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL references access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL references access(user_id)
 );
 

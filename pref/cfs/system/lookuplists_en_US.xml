@@ -29,7 +29,7 @@
       <record LUID="2005022514"><![CDATA[1e-1]]></record>
     </lookup>                              
     <lookup table="lookup_l11">
-      <attribute name="link_id" type="look_upl1.LUID"/>
+      <attribute name="link_id" type="lookup_l1.LUID"/>
       <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record>
       <record link_id="lookup_l1.2005022511"><![CDATA[11b-1]]></record>
       <record link_id="lookup_l1.2005022512"><![CDATA[11c-1]]></record>
@@ -37,28 +37,28 @@
     </lookup>
 
   The values of attribute 'link_id' (lookup_l1.NUM) of table 'lookup_l11' refers to the value
-  of the attribute 'LUID' (Locally Unique Identifier) attribute of 'lookup_l1'. 
-  
-  In the element <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record> the 
+  of the attribute 'LUID' (Locally Unique Identifier) attribute of 'lookup_l1'.
+
+  In the element <record link_id="lookup_l1.2005022510"><![CDATA[11a-1]]></record> the
   attribute value "lookup_l1.2005022510" refers to  value "2005022510" of attribute "LUID" in
   lookup table 'lookup_l1'
 
-  Note that the datatype of 'link_id' is defined as 'look_upl1.LUID', more generically it is 
-  '<referring tablename>.LUID' 
+  Note that the datatype of 'link_id' is defined as 'look_upl1.LUID', more generically it is
+  '<referring tablename>.LUID'
 
-- The primary key of lookup tables is assumed to be 'code'. If the primary key differs specify the 
-   primary key as an attribute 'key' in the 'lookup' element and the value of the attribute as the name 
-   of the primary key. For example if the primary key of a table is 'type_id' specify as follows 
+- The primary key of lookup tables is assumed to be 'code'. If the primary key differs specify the
+   primary key as an attribute 'key' in the 'lookup' element and the value of the attribute as the name
+   of the primary key. For example if the primary key of a table is 'type_id' specify as follows
     <lookup table="lookup_l1" key="type_id">
       <record><![CDATA[A]]></record>
       <record><![CDATA[B]]></record>
       <record><![CDATA[C]]></record>
     </lookup>
-     
+
 - To be specified and added to the insert query, lookup_lists_xx_XX.xml will reside in the system directory.
 
 - Most tables have a single description column, which is represented as a CDATA for each 'record' element, however
-  if more than one field exists that are similar to description, the following method can be used to specify the 
+  if more than one field exists that are similar to description, the following method can be used to specify the
   values of those columns
 
  <lookup table="lookup_l4">
@@ -69,21 +69,21 @@
   <record>
     <item1><![CDATA[4b-1-1]]></item1>
     <item2><![CDATA[4b-2-1]]></item2>
-  </record>             
+  </record>
   <record>
     <item1><![CDATA[4c-1-1]]></item1>
     <item2><![CDATA[4c-2-1]]></item2>
-  </record>             
+  </record>
  </lookup>
 
-  In this example it is assumed that the table lookup_l4 has two columns 'item1' and 'item2' which 
+  In this example it is assumed that the table lookup_l4 has two columns 'item1' and 'item2' which
   are equivalent to description (and hence required translation)
 
-- As and when other variations are required for a lookup table , they may be included, 
+- As and when other variations are required for a lookup table , they may be included,
   but a custom handler needs to be implemented for this lookup list
-  
+
 - Some lookup lists may be preceded by an explanation or comment. They should be read and
-  understood before their values are changed                               
+  understood before their values are changed
 -->
 <lookupLists>
     <lookup table="asset_category_draft" key="id">
@@ -99,8 +99,8 @@
       <record LUID="2005022720" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Linux]]></record>
       <record LUID="2005022721" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Unix]]></record>
       <record LUID="2005022722" cat_level="2" parent_cat_code="asset_category_draft.2005022714"><![CDATA[Windows 2003]]></record>
-    </lookup>            
-    <!-- 
+    </lookup>
+    <!--
       The CDATA for the operator element SHOULD NOT be changed
       The CDATA for the display_text may be changed for the chosen language
     -->
@@ -220,8 +220,8 @@
       <record weight="20"><![CDATA[Medium]]></record>
       <record weight="30"><![CDATA[High]]></record>
     </lookup>
-    <!-- 
-      The value for the attribute base_value of the record element 
+    <!--
+      The value for the attribute base_value of the record element
       denotes seconds equivalent of whatever is specified in the CDATA
       for the record element. For e.g., A 'Minute' has 60 seconds, hence the attribute
       value is "60"
@@ -666,7 +666,7 @@
     </lookup>
     <lookup table="lookup_project_status">
       <attribute name="group_id" type="integer"/>
-      <attribute name="type" type="integer"/>      
+      <attribute name="type" type="integer"/>
       <record group_id="1" graphic="box.gif" type="1"><![CDATA[Not Started]]></record>
       <record group_id="1" graphic="box.gif" type="2"><![CDATA[In Progress]]></record>
       <record group_id="1" graphic="box-checked.gif" type="3"><![CDATA[Complete]]></record>
@@ -739,67 +739,67 @@
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Customer of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Supplier to]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Partner of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Partner of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Competitor of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Competitor of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Employee of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Employer of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Department of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Organization made up of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Group of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Organization made up of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Member of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Organization made up of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Consultant to]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Consultant of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Influencer of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Influenced by]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Enemy of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Enemy of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Proponent of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Endorsed by]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Ally of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Ally of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Sponsor of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Sponsored by]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Relative of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Relative of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Affiliated with]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Affiliated with]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Teammate of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Teammate of]]></reciprocal_name_2>
-      </record>             
+      </record>
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Financier of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Financed by]]></reciprocal_name_2>
@@ -982,7 +982,7 @@
       <attribute name="constant_id" type="integer" />
       <record constant_id="110061030"><![CDATA[Require user to attach or create an opportunity]]></record>
       <record constant_id="110061031"><![CDATA[Require user to attach or upload a document]]></record>
-<!--      <record constant_id="110061032"><![CDATA[Require user to attach or create an activity]]></record> --> 
+<!--      <record constant_id="110061032"><![CDATA[Require user to attach or create an activity]]></record> -->
       <record constant_id="110061033"><![CDATA[Require user to update a specific action plan folder]]></record>
       <record constant_id="110061034"><![CDATA[Require user to update the rating]]></record>
       <record constant_id="110061035"><![CDATA[Require user to attach or create a single note]]></record>
@@ -1131,4 +1131,14 @@
       <record constant="2" enabled="true" default_item="false"><![CDATA[CSV]]></record>
       <record constant="4" enabled="true" default_item="false"><![CDATA[Excel]]></record>
     </lookup>
+    <lookup table="lookup_container_menu">
+    	<attribute name="link_module_id" type="integer" />
+    	<!-- Menu definitions for the accounts module -->
+    	<record link_module_id="1" cname="accounts">Accounts</record>
+    	<record link_module_id="1" cname="accountscontacts">Accounts Contacts</record>
+    	<record link_module_id="1" cname="accountcontactopportunities">Accounts Contacts Opportunities</record>
+    	<record link_module_id="2" cname="contacts">Contacts</record>
+    	<record link_module_id="8" cname="maintenance">Maintenance</record>
+    </lookup>
+
 </lookupLists>

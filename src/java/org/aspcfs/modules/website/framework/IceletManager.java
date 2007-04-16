@@ -107,16 +107,58 @@ public class IceletManager {
   }
 
 
+  public boolean prepare(ActionContext context, Page page, Connection db) throws Exception {
+		PortalEnvironment portalEnvironment = new PortalEnvironment(context.getRequest(), context.getResponse());
+		PortalURL portalURL = portalEnvironment.getRequestedPortalURL();
+		String actionWindowId = portalURL.getActionWindow();
+		
+		boolean result = false;
+		PageVersion pageVersion = page.getPageVersionToView();
+		Iterator pageRowIterator = pageVersion.getPageRowList().iterator();
+		while (pageRowIterator.hasNext()) {
+			PageRow pageRow = (PageRow) pageRowIterator.next();
+			Iterator rowColumnIterator = pageRow.getRowColumnList().iterator();
+			while (rowColumnIterator.hasNext()) {
+				RowColumn rowColumn = (RowColumn) rowColumnIterator.next();
+				HashMap subColumns = new HashMap();
+				rowColumn.buildSubColumns(subColumns);
+				if (rowColumn.getIcelet() != null) {
+					result = this.buildIceletDetails(context, db, rowColumn, portalURL, portalEnvironment, actionWindowId);
+					if (result) {
+						return true;
+					}
+				} else if (subColumns.size() > 0) {
+					Iterator iter = (Iterator) subColumns.keySet().iterator();
+					while (iter.hasNext()) {
+						RowColumn subRowColumn = (RowColumn) subColumns.get(iter.next());
+						if (subRowColumn.getIcelet() != null) {
+							result = this.buildIceletDetails(context, db, subRowColumn, portalURL, portalEnvironment, actionWindowId);
+							if (result) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
   /**
    * Description of the Method
-   *
-   * @param context Description of the Parameter
-   * @param site    Description of the Parameter
-   * @param tabId   Description of the Parameter
-   * @param pageId  Description of the Parameter
-   * @param db      Description of the Parameter
+   * 
+   * @param context
+   *          Description of the Parameter
+   * @param site
+   *          Description of the Parameter
+   * @param tabId
+   *          Description of the Parameter
+   * @param pageId
+   *          Description of the Parameter
+   * @param db
+   *          Description of the Parameter
    * @return Description of the Return Value
-   * @throws Exception Description of the Exception
+   * @throws Exception
+   *           Description of the Exception
    */
   public boolean prepare(ActionContext context, Site site, int tabId, int pageId, Connection db) throws Exception {
     if (System.getProperty("DEBUG") != null) {

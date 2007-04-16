@@ -12214,8 +12214,79 @@ any data still directly associated with this disabled user gets re-assigned as s
     <param name="projects.center_assignments.AddAnActivity">
       <value><![CDATA[Add an Activity]]></value>
     </param>
-  </config>
+<!-- Portlets -->  
+    <!-- Dashboards -->
+    <param name="portlet.dashboard.admin.menu.ModifyDetails">
+      <value><![CDATA[Modify Details]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.menu.GrantPermissions">
+      <value><![CDATA[Grant Permissions]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.menu.Configure">
+      <value><![CDATA[Configure]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.menu.Delete">
+      <value><![CDATA[Delete]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.Dashboards">
+      <value><![CDATA[Dashboards]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.DashboardName">
+      <value><![CDATA[Dashboard Name]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.DashboardNotes">
+      <value><![CDATA[Dashboard Notes]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.Enabled">
+      <value><![CDATA[Enabled]]></value>
+    </param>
+    <param name="portlet.dashboard.admin.AddDashboard">
+      <value><![CDATA[Add Dashboard]]></value>
+    </param>
+        <param name="portlet.dashboard.admin.IfVisible">
+      <value><![CDATA[indicates if the Dashboard is visible]]></value>
+    </param>
+    <param name="permission.dashboard">
+      <value><![CDATA[Configure Custom Dashboards]]></value>
+    </param>
+        
+  <!-- Custom Tabs  -->
+    <param name="portlet.customtab.admin.menu.ModifyDetails">
+      <value><![CDATA[Modify Details]]></value>
+    </param>
+    <param name="portlet.customtab.admin.menu.GrantPermissions">
+      <value><![CDATA[Grant Permissions]]></value>
+    </param>
+    <param name="portlet.customtab.admin.menu.Configure">
+      <value><![CDATA[Configure]]></value>
+    </param>
+    <param name="portlet.customtab.admin.menu.Delete">
+      <value><![CDATA[Delete]]></value>
+    </param>
+    <param name="portlet.customtab.admin.Customtabs">
+      <value><![CDATA[Dashboards]]></value>
+    </param>
+    <param name="portlet.customtab.admin.CustomtabName">
+      <value><![CDATA[Dashboard Name]]></value>
+    </param>
+    <param name="portlet.customtab.admin.CustomtabNotes">
+      <value><![CDATA[Dashboard Notes]]></value>
+    </param>
+    <param name="portlet.customtab.admin.Enabled">
+      <value><![CDATA[Enabled]]></value>
+    </param>
+    <param name="portlet.customtab.admin.ContainerMenu">
+      <value><![CDATA[Container Menu]]></value>
+    </param>
+    <param name="portlet.customtab.admin.IfVisible">
+      <value><![CDATA[indicates if the Custom Tab is visible]]></value>
+    </param>
+    <param name="permission.customtab">
+      <value><![CDATA[Configure Custom Tabs]]></value>
+    </param>
 
+    
+  </config>
 
   <!-- The following are the menu names that are renamed -->
 	<config name="system.modules.label" enabled="true">

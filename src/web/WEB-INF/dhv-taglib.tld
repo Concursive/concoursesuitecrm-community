@@ -264,6 +264,20 @@
   </tag>
 
   <tag>
+  	<name>containers</name>
+  	<tag-class>org.aspcfs.taglib.ContainersMenuHandler</tag-class>
+  	<body-content>JSP</body-content>
+  	<display-name>
+      Displays the set of container menus from the config
+    </display-name>
+    <attribute>
+      <name>containersstack</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
     <name>pagedListAlphabeticalLinks</name>
     <tag-class>org.aspcfs.taglib.PagedListAlphabeticalLinksHandler</tag-class>
     <body-content>empty</body-content>

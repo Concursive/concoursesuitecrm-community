@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -895,6 +896,11 @@ public class PageRow extends GenericBean {
     rowColumnList.setBuildIceletPropertyMap(this.getBuildIceletPropertyMap());
     rowColumnList.setBuildSubRows(this.getBuildSubRows());
     rowColumnList.buildList(db);
+    Iterator iter = this.getRowColumnList().iterator();
+    while (iter.hasNext()) {
+      RowColumn thisRowColumn = (RowColumn) iter.next();
+      thisRowColumn.setParentRow(this);
+    }
     this.setTotalColumnWidth(rowColumnList.getTotalColumnWidth());
   }
 

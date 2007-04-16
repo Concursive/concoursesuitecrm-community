@@ -1,0 +1,46 @@
+// Script (C) 2007 Dark Horse Ventures LLC, all rights reserved
+
+import java.sql.*;
+import org.aspcfs.modules.base.ContainerMenu;
+
+print("Inserting new lookup_container_menu data...");
+if (1 == 1) {
+  ContainerMenu listItem = new ContainerMenu();
+  listItem.setDescription("Accounts");
+  listItem.setLevel(10);
+  listItem.setCname("accounts");
+  listItem.setLinkModuleId(1);
+  listItem.insert(db);
+}
+if (1 == 1) {
+  ContainerMenu listItem = new ContainerMenu();
+  listItem.setDescription("Accounts Contacts");
+  listItem.setLevel(20);
+  listItem.setCname("accountscontacts");
+  listItem.setLinkModuleId(1);
+  listItem.insert(db);
+}
+if (1 == 1) {
+  ContainerMenu listItem = new ContainerMenu();
+  listItem.setDescription("Accounts Contacts Opportunities");
+  listItem.setLevel(30);
+  listItem.setCname("accountcontactopportunities");
+  listItem.setLinkModuleId(1);
+  listItem.insert(db);
+}
+if (1 == 1) {
+  ContainerMenu listItem = new ContainerMenu();
+  listItem.setDescription("Contacts");
+  listItem.setLevel(40);
+  listItem.setCname("contacts");
+  listItem.setLinkModuleId(2);
+  listItem.insert(db);
+}
+if (1 == 1) {
+  ContainerMenu listItem = new ContainerMenu();
+  listItem.setDescription("Maintenance");
+  listItem.setLevel(50);
+  listItem.setCname("maintenance");
+  listItem.setLinkModuleId(8);
+  listItem.insert(db);
+}

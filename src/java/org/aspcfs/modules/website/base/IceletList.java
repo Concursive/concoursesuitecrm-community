@@ -17,6 +17,8 @@ package org.aspcfs.modules.website.base;
 
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.ContainerMenu;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -50,6 +52,9 @@ public class IceletList extends ArrayList {
   // Html drop-down helper properties
   private String emptyHtmlSelectRecord = null;
   private String jsEvent = null;
+	private int moduleId = -1;
+	private int containerId = -1;
+	private boolean forWebsite = false;
 
 
   /**
@@ -146,6 +151,12 @@ public class IceletList extends ArrayList {
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
   }
+public void setModuleId(int tmp) { this.moduleId = tmp; }
+public void setModuleId(String tmp) { this.moduleId = Integer.parseInt(tmp); }
+public void setContainerId(int tmp) { this.containerId = tmp; }
+public void setContainerId(String tmp) { this.containerId = Integer.parseInt(tmp); }
+public void setForWebsite(boolean tmp) { this.forWebsite = tmp; }
+public void setForWebsite(String tmp) { this.forWebsite = DatabaseUtils.parseBoolean(tmp); }
 
   /**
    * Gets the pagedListInfo attribute of the IceletList object
@@ -209,6 +220,9 @@ public class IceletList extends ArrayList {
   public String getJsEvent() {
     return jsEvent;
   }
+public int getModuleId() { return moduleId; }
+public int getContainerId() { return containerId; }
+public boolean getForWebsite() { return forWebsite; }
 
   /**
    * Description of the Method
@@ -326,6 +340,15 @@ public class IceletList extends ArrayList {
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND enabled = ? ");
     }
+		if (moduleId != -1){
+      sqlFilter.append("AND icelet_id IN (select icelet_id from web_icelet_dashboard_map where link_module_id = ? )");
+		}
+		if (containerId != -1){
+      sqlFilter.append("AND icelet_id IN (select icelet_id from web_icelet_customtab_map where link_container_id = ? )");
+		}
+		if (forWebsite) {
+      sqlFilter.append("AND icelet_id IN (select icelet_id from web_icelet_publicwebsite) ");
+		}
   }
 
 
@@ -350,6 +373,12 @@ public class IceletList extends ArrayList {
     if (enabled != Constants.UNDEFINED) {
       pst.setBoolean(++i, (enabled == Constants.TRUE));
     }
+		if (moduleId != -1){
+      pst.setInt(++i, moduleId);
+		}
+		if (containerId != -1){
+      pst.setInt(++i, containerId);
+		}
     return i;
   }
 
@@ -489,48 +518,33 @@ public class IceletList extends ArrayList {
     XMLUtils xml = new XMLUtils(configFile);
     HashMap iceletMap = new HashMap();
     ArrayList iceletElements = new ArrayList();
-
     // fetching data by table name
-    XMLUtils.getAllChildren(xml.getDocumentElement(), "icelet",
-        iceletElements);
-
+    XMLUtils.getAllChildren(xml.getDocumentElement(), "icelet", iceletElements);
     Iterator iceletIterator = iceletElements.iterator();
     System.out.println("Reading values for icelets");
     while (iceletIterator.hasNext()) {
-
       Element iceletElement = (Element) iceletIterator.next();
-      Element descriptionElement = XMLUtils.getFirstChild(iceletElement,
-          "description");
+      Element descriptionElement = XMLUtils.getFirstChild(iceletElement, "description");
       Icelet icelet = new Icelet();
-      String value = "";
-
       if (iceletElement.hasAttribute("name")) {
         icelet.setName(iceletElement.getAttribute("name"));
       }
       if (iceletElement.hasAttribute("class")) {
-        icelet
-            .setConfiguratorClass(iceletElement
-                .getAttribute("class"));
+        icelet.setConfiguratorClass(iceletElement.getAttribute("class"));
       }
       if (iceletElement.hasAttribute("version")) {
         icelet.setVersion(iceletElement.getAttribute("version"));
       }
-
       icelet.setDescription(XMLUtils.getNodeText(descriptionElement));
-
       IceletPropertyMap iceletPropertyMap = new IceletPropertyMap();
       ArrayList propertyElementList = new ArrayList();
-      XMLUtils.getAllChildren(iceletElement, "property",
-          propertyElementList);
+      XMLUtils.getAllChildren(iceletElement, "property", propertyElementList);
       Iterator propertyElementIterator = propertyElementList.iterator();
       while (propertyElementIterator.hasNext()) {
         IceletProperty iceletProperty = new IceletProperty();
-        Element propertyElement = (Element) propertyElementIterator
-            .next();
-        iceletProperty.setTypeConstant(propertyElement
-            .getAttribute("constant"));
-        iceletProperty.setDescription(propertyElement
-            .getAttribute("description"));
+        Element propertyElement = (Element) propertyElementIterator.next();
+        iceletProperty.setTypeConstant(propertyElement.getAttribute("constant"));
+        iceletProperty.setDescription(propertyElement.getAttribute("description"));
         iceletProperty.setLabel(propertyElement.getAttribute("label"));
         iceletProperty.setType(propertyElement.getAttribute("type"));
         Element defaultValue = XMLUtils.getFirstChild(propertyElement, "defaultValue");
@@ -544,7 +558,52 @@ public class IceletList extends ArrayList {
         iceletPropertyMap.put(new Integer(iceletProperty.getTypeConstant()), iceletProperty);
       }
       icelet.setIceletPropertyMap(iceletPropertyMap);
-      iceletMap.put(icelet.getConfiguratorClass(), icelet);
+      
+      Element appearance = XMLUtils.getFirstChild(iceletElement, "appearance");
+      if (appearance != null) {
+        if (appearance.hasAttribute("website")) {
+          icelet.setWebsite(Boolean.parseBoolean(appearance.getAttribute("website")));
+        }
+        /** Infilling possible dashboards where icelet take part. */
+        Element dashboardsXML = XMLUtils.getFirstChild(appearance, "dashboards");
+        if (dashboardsXML != null) {
+					if (dashboardsXML.hasAttribute("applyConstraints")) {
+						icelet.setApplyConstraintsDashboards(Boolean.parseBoolean(dashboardsXML.getAttribute("applyConstraints")));
+					}
+					ArrayList dashboardsElementList = new ArrayList();
+					XMLUtils.getAllChildren(dashboardsXML, "module", dashboardsElementList);
+					Iterator dashboardsElementIterator = dashboardsElementList.iterator();
+					ArrayList dashboards = new ArrayList();
+					while (dashboardsElementIterator.hasNext()) {
+						Element dashboardElement = (Element) dashboardsElementIterator.next();
+						dashboards.add(new Integer(dashboardElement.getAttribute("moduleId")));
+					}
+					icelet.setDashboards(dashboards);
+					System.out.println("Count of dashboards is:" + dashboards.size());
+				}
+        
+        /** Infilling possible container menus where icelet take part. */
+        Element containersXML = XMLUtils.getFirstChild(appearance, "containerMenus");
+        if (containersXML != null) {
+					if (containersXML.hasAttribute("applyConstraints")) {
+						icelet.setApplyConstraintsDashboards(Boolean.parseBoolean(containersXML.getAttribute("applyConstraints")));
+					}
+					ArrayList containersElementList = new ArrayList();
+					XMLUtils.getAllChildren(containersXML, "container", containersElementList);
+					Iterator containersElementIterator = containersElementList.iterator();
+					ArrayList containers = new ArrayList();
+					while (containersElementIterator.hasNext()) {
+						ContainerMenu containerMenu = new ContainerMenu();
+						Element containerElement = (Element) containersElementIterator.next();
+						String cname = (String) containerElement.getAttribute("name");
+						containerMenu.setCname(cname);
+						containers.add(containerMenu);
+					}
+					icelet.setContainersMenu(containers);
+					System.out.println("Count of customtabs is:" + containers.size());
+				}
+        iceletMap.put(icelet.getConfiguratorClass(), icelet);
+      }
     }
     return iceletMap;
   }

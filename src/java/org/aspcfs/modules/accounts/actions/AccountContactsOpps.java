@@ -32,7 +32,6 @@ import org.aspcfs.modules.pipeline.base.OpportunityComponentLog;
 import org.aspcfs.modules.pipeline.base.OpportunityComponentLogList;
 import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
-import org.aspcfs.modules.pipeline.base.OpportunityList;
 import org.aspcfs.modules.pipeline.beans.OpportunityBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlDialog;
@@ -123,7 +122,6 @@ public final class AccountContactsOpps extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    String contactId = context.getRequest().getParameter("contactId");
     Connection db = null;
     String id = context.getRequest().getParameter("headerId");
     if (id == null || "".equals(id)) {
@@ -140,7 +138,6 @@ public final class AccountContactsOpps extends CFSModule {
     userList.setExcludeDisabledIfUnselected(true);
     userList.setExcludeExpiredIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
-    SystemStatus systemStatus = this.getSystemStatus(context);
     if (id != null && !"-1".equals(id)) {
       if (!hasPermission(
           context, "accounts-accounts-contacts-opportunities-add")) {
@@ -353,7 +350,6 @@ public final class AccountContactsOpps extends CFSModule {
     newComponent.setModifiedBy(getUserId(context));
 
     String action = (newComponent.getId() > 0 ? "modify" : "insert");
-    String contactId = context.getRequest().getParameter("contactId");
 
     if ("modify".equals(action)) {
       permission = "accounts-accounts-contacts-opportunities-edit";
@@ -383,7 +379,6 @@ public final class AccountContactsOpps extends CFSModule {
       newComponent.setContactId(header.getContactLink());
       newComponent.setOrgId(header.getAccountLink());
       bean.setHeader(header);
-      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
       Contact thisContact = addFormElements(context, db);
       if (newComponent.getId() > 0) {
         newComponent.setModifiedBy(getUserId(context));
@@ -509,7 +504,6 @@ public final class AccountContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = addFormElements(context, db);
-      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
 
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
@@ -550,7 +544,7 @@ public final class AccountContactsOpps extends CFSModule {
     }
     addRecentItem(context, thisHeader);
     if (!allowMultiple(context) && (componentList.size() > 0)) {
-      return this.getReturn(context, "DetailsComponent");
+      return getReturn(context, "DetailsComponent");
     }
     return getReturn(context, "DetailsOpp");
   }
@@ -612,7 +606,6 @@ public final class AccountContactsOpps extends CFSModule {
     addModuleBean(context, "View Accounts", "Opportunities");
     //Parameters
     String componentId = context.getRequest().getParameter("id");
-    String contactId = context.getRequest().getParameter("contactId");
     try {
       db = this.getConnection(context);
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -1092,7 +1085,7 @@ public final class AccountContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Opportunities", "Add Folder Record");
-    return this.getReturn(context, "AddFolderRecord");
+    return getReturn(context, "AddFolderRecord");
   }
 
 
@@ -1257,11 +1250,11 @@ public final class AccountContactsOpps extends CFSModule {
     }
     addModuleBean(context, "Opportunities", "Custom Fields Details");
     if (Integer.parseInt(selectedCatId) <= 0) {
-      return this.getReturn(context, "FieldsEmpty");
+      return getReturn(context, "FieldsEmpty");
     } else if (recordId == null && showRecords) {
-      return this.getReturn(context, "FieldRecordList");
+      return getReturn(context, "FieldRecordList");
     } else {
-      return this.getReturn(context, "Fields");
+      return getReturn(context, "Fields");
     }
   }
 
@@ -1322,9 +1315,9 @@ public final class AccountContactsOpps extends CFSModule {
     }
     addModuleBean(context, "Opportunities", "Modify Custom Fields");
     if (recordId.equals("-1")) {
-      return this.getReturn(context, "AddFolderRecord");
+      return getReturn(context, "AddFolderRecord");
     } else {
-      return this.getReturn(context, "ModifyFields");
+      return getReturn(context, "ModifyFields");
     }
   }
 
@@ -1408,9 +1401,9 @@ public final class AccountContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == -1) {
-      return this.getReturn(context, "ModifyFields");
+      return getReturn(context, "ModifyFields");
     } else if (resultCount == 1) {
-      return this.getReturn(context, "UpdateFields");
+      return getReturn(context, "UpdateFields");
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
@@ -1488,7 +1481,7 @@ public final class AccountContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCode == -1) {
-      return this.getReturn(context, "AddFolderRecord");
+      return getReturn(context, "AddFolderRecord");
     } else {
       return (this.executeCommandFields(context));
     }
@@ -1503,7 +1496,6 @@ public final class AccountContactsOpps extends CFSModule {
    */
   public String executeCommandDeleteFields(ActionContext context) {
     Connection db = null;
-    boolean recordDeleted = false;
     Organization thisOrganization = null;
     Contact thisContact = null;
     try {
@@ -1530,7 +1522,7 @@ public final class AccountContactsOpps extends CFSModule {
       thisRecord.setLinkItemId(Integer.parseInt(headerId));
       thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
       if (!thisCategory.getReadOnly()) {
-        recordDeleted = thisRecord.delete(db);
+        thisRecord.delete(db);
       }
       context.getRequest().setAttribute("recordDeleted", "true");
 
@@ -1557,8 +1549,6 @@ public final class AccountContactsOpps extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-contacts-opportunities-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
-    int headerId = -1;
     int componentId = -1;
     addModuleBean(context, "View Contacts", "View Opportunity History List");
     if (context.getRequest().getParameter("id") != null) {
@@ -1576,7 +1566,6 @@ public final class AccountContactsOpps extends CFSModule {
     OpportunityComponent thisComponent = null;
     OpportunityHeader thisHeader = null;
     OpportunityComponentLogList componentLogList = null;
-    SystemStatus systemStatus = this.getSystemStatus(context);
 
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("contactComponentHistoryListInfo");

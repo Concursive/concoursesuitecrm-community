@@ -16,20 +16,15 @@
 package org.aspcfs.taglib;
 
 import com.darkhorseventures.database.ConnectionElement;
-
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SubmenuItem;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.Template;
-import org.aspcfs.utils.XMLUtils;
-import org.w3c.dom.Element;
 
-import javax.servlet.ServletContext;
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -50,6 +45,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
   private String name = null;
   private String selected = null;
   private HashMap params = null;
+  private String stringParams = null;
   private String appendToUrl = "";
   private int style = SIDE_TABS;
   private boolean hideContainer = false;
@@ -65,6 +61,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
     name = null;
     selected = null;
     params = null;
+    stringParams = null;
     appendToUrl = "";
     style = SIDE_TABS;
     hideContainer = false;
@@ -126,6 +123,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
    * @param tmp The new param value
    */
   public void setParam(String tmp) {
+    stringParams = tmp;
     params = new HashMap();
     StringTokenizer tokens = new StringTokenizer(tmp, "|");
     while (tokens.hasMoreTokens()) {
@@ -184,38 +182,44 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
    */
   public final int doStartTag() {
     try {
+      String action = (String) pageContext.getRequest().getAttribute("lastAction");
+      ContainerMenuClass container = new ContainerMenuClass();
+      container.setObject(object);
+      container.setName(name);
+      container.setSelected(selected);
+      container.setStringParams(stringParams);
+      container.setItem(pageContext.getRequest().getAttribute(object));
+      container.setParent((ContainerMenuClass) pageContext.getRequest().getAttribute("parent"));
+      HashMap stack = null;
       // Determine the style for embedded containers
       if (style == SIDE_TABS) {
-        String currentStyle = (String) pageContext.getRequest().getAttribute(
-            "ContainerMenuHandlerStyle");
+        String currentStyle = (String) pageContext.getRequest().getAttribute("ContainerMenuHandlerStyle");
         if (currentStyle != null) {
           style = SUB_TABS;
         } else {
-          pageContext.getRequest().setAttribute(
-              "ContainerMenuHandlerStyle", "SIDETABS");
+          stack = new HashMap();
+          pageContext.getRequest().setAttribute("ContainerMenuHandlerStyle", "SIDETABS");
         }
         if (pageContext.getRequest().getParameter("container") != null) {
           hideContainer = "false".equals(
               pageContext.getRequest().getParameter("container"));
         }
       }
-      // Load the container data from XML
-      LinkedHashMap containerMenu = (LinkedHashMap) pageContext.getServletContext().getAttribute(
-          "ContainerMenu");
-      if (containerMenu == null || containerMenu.size() == 0) {
-        synchronized (this) {
-          containerMenu = (LinkedHashMap) pageContext.getServletContext().getAttribute(
-              "ContainerMenu");
-          if (containerMenu == null || containerMenu.size() == 0) {
-            loadXML(pageContext.getServletContext());
-          }
-        }
+      stack = stack == null ? (HashMap) pageContext.getSession().getAttribute("stack") : stack;
+      stack.remove(name);
+      stack.put(name, container);
+      pageContext.getSession().setAttribute("stack", stack);
+      pageContext.getRequest().setAttribute("parent", container);
+      LinkedHashMap containerMenu = null;
+      HashMap containerProperties = null;
+      SystemStatus systemStatus = null;
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      if (ce != null) {
+        systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
       }
-      containerMenu = (LinkedHashMap) pageContext.getServletContext().getAttribute(
-          "ContainerMenu");
+      containerMenu = systemStatus.getMenu();
       HashMap properties = null;
-      HashMap containerProperties = (HashMap) pageContext.getServletContext().getAttribute(
-          "ContainerProperties");
+      containerProperties = systemStatus.getProperties();
       if (containerProperties.containsKey(this.name)) {
         properties = (HashMap) containerProperties.get(this.name);
       } else {
@@ -285,13 +289,6 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
         // Draw any tabs
         UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
             "User");
-        ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
-            "ConnectionElement");
-        SystemStatus systemStatus = null;
-        if (ce != null) {
-          systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-              "SystemStatus")).get(ce.getUrl());
-        }
         if (containerMenu.containsKey(this.name)) {
           LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
           if (submenuItems.size() > 0) {
@@ -308,16 +305,17 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                     (thisItem.getPermission() != null && thisItem.getPermission().equals(
                         "")) ||
                     (thisUser != null && systemStatus != null &&
-                    systemStatus.hasPermission(
-                    thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
+                        systemStatus.hasPermission(
+                            thisUser.getUserId(), thisUser.getRoleId(), thisItem, isOfflineMode))) {
                   Template linkText = new Template(thisItem.getLink());
                   linkText.setParseElements(params);
+                  String actionParam = thisItem.isCustomTab() ? "&action=" + action : "";
                   if (thisItem.getName().equals(selected)) {
                     // Selected tab
                     this.pageContext.getOut().write(
                         "<td class=\"conSubOn\" nowrap>");
                     this.pageContext.getOut().write(
-                        "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                        "<a href=\"" + linkText.getParsedText() + appendToUrl + actionParam + "\">");
                     this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                     this.pageContext.getOut().write("</a>");
                     this.pageContext.getOut().write("</td>");
@@ -326,7 +324,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                     this.pageContext.getOut().write(
                         "<td class=\"conSubOff\" nowrap>");
                     this.pageContext.getOut().write(
-                        "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                        "<a href=\"" + linkText.getParsedText() + appendToUrl + actionParam + "\">");
                     this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                     this.pageContext.getOut().write("</a>");
                     this.pageContext.getOut().write("</td>");
@@ -344,8 +342,8 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                     (thisItem.getPermission() != null && thisItem.getPermission().equals(
                         "")) ||
                     (thisUser != null && systemStatus != null &&
-                    systemStatus.hasPermission(
-                    thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
+                        systemStatus.hasPermission(
+                            thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
                   Template linkText = new Template(thisItem.getLink());
                   linkText.setParseElements(params);
                   if (thisItem.getName().equals(selected)) {
@@ -378,13 +376,6 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
         // Draw any tabs
         UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
             "User");
-        ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
-            "ConnectionElement");
-        SystemStatus systemStatus = null;
-        if (ce != null) {
-          systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-              "SystemStatus")).get(ce.getUrl());
-        }
         if (containerMenu.containsKey(this.name)) {
           LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
           // Draw the menu tabs
@@ -396,15 +387,16 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 (thisItem.getPermission() != null && thisItem.getPermission().equals(
                     "")) ||
                 (thisUser != null && systemStatus != null &&
-                systemStatus.hasPermission(
-                thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
+                    systemStatus.hasPermission(
+                        thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
               Template linkText = new Template(thisItem.getLink());
               linkText.setParseElements(params);
+              String actionItem = thisItem.isCustomTab() ? "&action=" + action : "";
               if (thisItem.getName().equals(selected)) {
                 // Selected tab
                 this.pageContext.getOut().write("<th nowrap>");
                 this.pageContext.getOut().write(
-                    "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                    "<a href=\"" + linkText.getParsedText() + appendToUrl + actionItem + "\">");
                 this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                 this.pageContext.getOut().write("</a>");
                 this.pageContext.getOut().write("</th>");
@@ -412,7 +404,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 // Unselected Tabs
                 this.pageContext.getOut().write("<td nowrap>");
                 this.pageContext.getOut().write(
-                    "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                    "<a href=\"" + linkText.getParsedText() + appendToUrl + actionItem + "\">");
                 this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                 this.pageContext.getOut().write("</a>");
                 this.pageContext.getOut().write("</td>");
@@ -449,26 +441,20 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
     }
     if (style == SIDE_TABS && hideContainer) {
       try {
-        this.pageContext.getOut().write(
-            "</td>\n" +
-                "<td class=\"containerRight\" height=\"100%\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" />");
+        this.pageContext.getOut().write("</td>\n" + "<td class=\"containerRight\" height=\"100%\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\" />");
       } catch (Exception e) {
-
       }
       return SKIP_BODY;
     }
     try {
-      LinkedHashMap containerMenu = (LinkedHashMap) pageContext.getServletContext().getAttribute(
-          "ContainerMenu");
-      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute(
-          "User");
-      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
-          "ConnectionElement");
+      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+      String action = (String) pageContext.getRequest().getAttribute("lastAction");
       SystemStatus systemStatus = null;
       if (ce != null) {
-        systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-            "SystemStatus")).get(ce.getUrl());
+        systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
       }
+      LinkedHashMap containerMenu = systemStatus.getMenu();
       if (containerMenu.containsKey(this.name)) {
         LinkedList submenuItems = (LinkedList) containerMenu.get(this.name);
         boolean itemOutput = false;
@@ -490,14 +476,12 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
         while (i.hasNext()) {
           SubmenuItem thisItem = (SubmenuItem) i.next();
           if (thisItem.getPermission() == null ||
-              (thisItem.getPermission() != null && thisItem.getPermission().equals(
-                  "")) ||
-              (thisUser != null && systemStatus != null &&
-              systemStatus.hasPermission(
-              thisUser.getUserId(), thisItem.getPermission() + (isOfflineMode ? "-offline" : "")))) {
+              (thisItem.getPermission() != null && thisItem.getPermission().equals("")) ||
+              (thisUser != null && systemStatus != null && systemStatus.hasPermission(thisUser.getUserId(), thisUser.getRoleId(), thisItem, isOfflineMode))) {
             if (style == LINKS && itemOutput) {
               this.pageContext.getOut().write(" | ");
             }
+            String actionParam = thisItem.isCustomTab() ? "&action=" + action : "";
             if (thisItem.getName().equals(selected)) {
               // Selected tab
               Template linkText = new Template(thisItem.getLink());
@@ -506,16 +490,12 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 case SIDE_TABS:
                   if (!hideContainer) {
                     this.pageContext.getOut().write(
-                        "<tr><td class=\"sidetab-left-sel\">&nbsp;</td><td class=\"sidetab-mid-sel\">&nbsp;</td><td class=\"sidetab-right-sel\">" +
-                            "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
-                            getDisplayLabel(thisItem, systemStatus) +
-                            "</a>" +
-                            "</td></tr>");
+                        "<tr><td class=\"sidetab-left-sel\">&nbsp;</td><td class=\"sidetab-mid-sel\">&nbsp;</td><td class=\"sidetab-right-sel\">" + "<a href=\""
+                            + linkText.getParsedText() + appendToUrl + actionParam + "\">" + getDisplayLabel(thisItem, systemStatus) + "</a>" + "</td></tr>");
                   }
                   break;
                 case LINKS:
-                  this.pageContext.getOut().write(
-                      "<a class=\"containerOn\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                  this.pageContext.getOut().write("<a class=\"containerOn\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
                   this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                   this.pageContext.getOut().write("</a>");
                   break;
@@ -530,18 +510,12 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
                 case SIDE_TABS:
                   if (!hideContainer) {
                     this.pageContext.getOut().write(
-                        "<tr><td class=\"sidetab-left\">&nbsp;</td>" +
-                            "<td class=\"sidetab-mid\">&nbsp;</td>" +
-                            "<td class=\"sidetab-right\">" +
-                            "<a href=\"" + linkText.getParsedText() + appendToUrl + "\">" +
-                            getDisplayLabel(thisItem, systemStatus) +
-                            "</a>" +
-                            "</td></tr>");
+                        "<tr><td class=\"sidetab-left\">&nbsp;</td>" + "<td class=\"sidetab-mid\">&nbsp;</td>" + "<td class=\"sidetab-right\">" + "<a href=\""
+                            + linkText.getParsedText() + appendToUrl + actionParam + "\">" + getDisplayLabel(thisItem, systemStatus) + "</a>" + "</td></tr>");
                   }
                   break;
                 case LINKS:
-                  this.pageContext.getOut().write(
-                      "<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
+                  this.pageContext.getOut().write("<a class=\"containerOff\" href=\"" + linkText.getParsedText() + appendToUrl + "\">");
                   this.pageContext.getOut().write(getDisplayLabel(thisItem, systemStatus));
                   this.pageContext.getOut().write("</a>");
                   break;
@@ -551,16 +525,18 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
             }
             if (style == SIDE_TABS) {
               this.pageContext.getOut().write(
-                  "<tr><td class=\"sidetab-left-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>" +
-                      "<td class=\"sidetab-mid-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>" +
-                      "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td></tr>");
+                  "<tr><td class=\"sidetab-left-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>"
+                      + "<td class=\"sidetab-mid-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td>"
+                      + "<td class=\"sidetab-right-sp\"><img src=\"images/blank.gif\" border=\"0\" height=\"1\"/></td></tr>");
             }
             itemOutput = true;
           }
         }
         if (style == SIDE_TABS) {
-          this.pageContext.getOut().write(
-              "<tr><td class=\"sidetabBottom\" height=\"100%\" nowrap>&nbsp;</td><td class=\"sidetabBottom-mid\">&nbsp;</td><td><span height=\"100%\">&nbsp;</span></td></tr>");
+          this.pageContext
+              .getOut()
+              .write(
+                  "<tr><td class=\"sidetabBottom\" height=\"100%\" nowrap>&nbsp;</td><td class=\"sidetabBottom-mid\">&nbsp;</td><td><span height=\"100%\">&nbsp;</span></td></tr>");
           this.pageContext.getOut().write("</table>");
           this.pageContext.getOut().write("</td></tr></table>");
         }
@@ -599,129 +575,13 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
     return EVAL_PAGE;
   }
 
-
-  /**
-   * Reads the submenu XML config file specified in web.xml.
-   *
-   * @param servletContext
-   */
-  private void loadXML(ServletContext servletContext) {
-    LinkedHashMap menu = new LinkedHashMap();
-    HashMap properties = new HashMap();
-    try {
-      XMLUtils xml = new XMLUtils(
-          new File(
-              pageContext.getServletContext().getRealPath(
-                  "/WEB-INF/" + (String) pageContext.getServletContext().getAttribute(
-                      "ContainerMenuConfig"))));
-      LinkedList containerList = new LinkedList();
-      XMLUtils.getAllChildren(
-          xml.getDocumentElement(), "container", containerList);
-      Iterator list = containerList.iterator();
-      while (list.hasNext()) {
-        Element container = (Element) list.next();
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println(
-              "ContainerMenuHandler-> Container Added: " + container.getAttribute(
-                  "name"));
-        }
-        LinkedList menuItems = this.buildMenu(container);
-        menu.put(container.getAttribute("name"), menuItems);
-        HashMap propertyItems = this.buildProperties(container);
-        properties.put(container.getAttribute("name"), propertyItems);
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace(System.out);
+  private String getDisplayLabel(SubmenuItem thisItem, SystemStatus systemStatus) {
+    String label = thisItem.getLabel();
+    String labelValue = systemStatus.getContainerMenuProperty("system.container.menu.label", label);
+    if ("".equals(StringUtils.toString(labelValue))) {
+      labelValue = thisItem.getLongHtml();
     }
-    servletContext.setAttribute("ContainerMenu", menu);
-    servletContext.setAttribute("ContainerProperties", properties);
+
+    return labelValue;
   }
-
-
-  /**
-   * Parses the XML submenu element.
-   *
-   * @param container Description of Parameter
-   * @return Description of the Returned Value
-   */
-  private LinkedList buildMenu(Element container) {
-    LinkedList menuItems = new LinkedList();
-    LinkedList menuList = new LinkedList();
-    XMLUtils.getAllChildren(container, "submenu", menuList);
-
-    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute(
-        "ConnectionElement");
-    SystemStatus systemStatus = null;
-    if (ce != null) {
-      systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute(
-          "SystemStatus")).get(ce.getUrl());
-    }
-
-    Iterator list = menuList.iterator();
-    while (list.hasNext()) {
-      Element submenu = (Element) list.next();
-      SubmenuItem thisSubmenu = new SubmenuItem();
-      thisSubmenu.setName(submenu.getAttribute("name"));
-
-      //check if custom value is defined in preferences
-      String containerName = container.getAttribute("name");
-      String label =  containerName + "." + submenu.getAttribute("name") + ".long_html";
-
-      thisSubmenu.setLabel(label);
-      String labelValue = systemStatus.getContainerMenuProperty("system.container.menu.label", label);
-      thisSubmenu.setLongHtml(
-          !"".equals(StringUtils.toString(labelValue)) ? labelValue : (XMLUtils.getFirstChild(
-              submenu, "long_html").getAttribute("value")));
-      //thisSubmenu.setShortHtml();
-      //thisSubmenu.setAlternateName();
-      thisSubmenu.setLink(
-          XMLUtils.getFirstChild(submenu, "link").getAttribute("value"));
-      //thisSubmenu.setHtmlClass();
-      thisSubmenu.setPermission(
-          XMLUtils.getFirstChild(submenu, "permission").getAttribute("value"));
-      //thisSubmenu.setIsActive(true);
-      menuItems.add(thisSubmenu);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println(
-            "ContainerMenuHandler-> Submenu Added: " + thisSubmenu.getLongHtml());
-      }
-    }
-    return menuItems;
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param container Description of the Parameter
-   * @return Description of the Return Value
-   */
-  private HashMap buildProperties(Element container) {
-    HashMap propertyList = new HashMap();
-    Element properties = XMLUtils.getFirstElement(container, "properties");
-    if (properties != null) {
-      String icon = XMLUtils.getNodeText(
-          XMLUtils.getFirstElement(properties, "icon"));
-      if (icon != null) {
-        propertyList.put("icon", icon);
-      }
-      String label = XMLUtils.getNodeText(
-          XMLUtils.getFirstElement(properties, "label"));
-      if (label != null) {
-        propertyList.put("label", label);
-      }
-    }
-    return propertyList;
-  }
-	
-	private String getDisplayLabel(SubmenuItem thisItem, SystemStatus systemStatus) {
-			String label = thisItem.getLabel();
-			String labelValue = systemStatus.getContainerMenuProperty("system.container.menu.label", label);
-			if ("".equals(StringUtils.toString(labelValue))){
-				labelValue = thisItem.getLongHtml();
-			}
-			
-			return labelValue;
-	}
 }

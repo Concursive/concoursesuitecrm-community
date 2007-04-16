@@ -47,6 +47,8 @@ public class Page extends GenericBean {
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;
   private java.sql.Timestamp modified = null;
+  private int linkModuleId = -1;
+  private int linkContainerId = -1;
 
   private boolean buildPageVersionList = false;
   private PageVersionList pageVersionList = null;
@@ -825,18 +827,20 @@ public class Page extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO web_page " +
-            "(" + (id > -1 ? "page_id, " : "") +
-            "page_name , " +
-            "page_position , " +
-            "active_page_version_id , " +
-            "construction_page_version_id , " +
-            "page_group_id , " +
-            "tab_banner_id , " +
-            "notes , " +
-            "enabled , " +
-            "enteredby , " +
-            "modifiedby, page_alias ) " +
-            "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?)");
+        "(" + (id > -1 ? "page_id, " : "") +
+        "page_name , " +
+        "page_position , " +
+        "active_page_version_id , " +
+        "construction_page_version_id , " +
+        "page_group_id , " +
+        "tab_banner_id , " +
+        "notes , " +
+        "enabled , " +
+        "enteredby , " +
+        "modifiedby, page_alias, " +
+        "link_module_id,  " +
+        "link_container_id) " +
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?, ?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -852,6 +856,8 @@ public class Page extends GenericBean {
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     DatabaseUtils.setInt(pst, ++i, alias);
+    DatabaseUtils.setInt(pst, ++i, linkModuleId);
+    DatabaseUtils.setInt(pst, ++i, linkContainerId);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_page_page_id_seq", id);
     pst.close();
@@ -875,15 +881,17 @@ public class Page extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE web_page " +
-            "SET " +
-            "page_name = ? , " +
-            "page_position = ? , " +
-            "active_page_version_id = ? , " +
-            "construction_page_version_id = ? , " +
-            "page_group_id = ? , " +
-            "tab_banner_id = ? , " +
-            "notes = ? , " +
-            "enabled = ?, page_alias = ?  ");
+        "SET " +
+        "page_name = ? , " +
+        "page_position = ? , " +
+        "active_page_version_id = ? , " +
+        "construction_page_version_id = ? , " +
+        "page_group_id = ? , " +
+        "tab_banner_id = ? , " +
+        "notes = ? , " +
+        "enabled = ?, page_alias = ?, " +
+        "link_module_id = ?, " +
+        "link_container_id = ?  ");
 
     if (!override) {
       sql.append(
@@ -905,6 +913,8 @@ public class Page extends GenericBean {
     pst.setString(++i, notes);
     pst.setBoolean(++i, enabled);
     DatabaseUtils.setInt(pst, ++i, alias);
+    DatabaseUtils.setInt(pst, ++i, linkModuleId);
+    DatabaseUtils.setInt(pst, ++i, linkContainerId);
     if (!override) {
       pst.setInt(++i, modifiedBy);
     }
@@ -1021,6 +1031,8 @@ public class Page extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     alias = DatabaseUtils.getInt(rs, "page_alias");
+    linkModuleId = DatabaseUtils.getInt(rs, "link_module_id");
+    linkContainerId = DatabaseUtils.getInt(rs, "link_container_id");
   }
 
 
@@ -1178,5 +1190,47 @@ public class Page extends GenericBean {
       switchPage.update(db);
     }
   }
+
+
+  /**
+   * @return the linkContainerId
+   */
+  public int getLinkContainerId() {
+    return linkContainerId;
+  }
+
+
+  /**
+   * @param linkContainerId the linkContainerId to set
+   */
+  public void setLinkContainerId(int linkContainerId) {
+    this.linkContainerId = linkContainerId;
+  }
+
+
+  /**
+   * @param linkContainerId the linkContainerId to set
+   */
+  public void setLinkContainerId(String linkContainerId) {
+    this.linkContainerId = Integer.parseInt(linkContainerId);
+  }
+
+  /**
+   * @return the linkModuleId
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   * @param linkModuleId the linkModuleId to set
+   */
+  public void setLinkModuleId(int linkModuleId) {
+    this.linkModuleId = linkModuleId;
+  }
+
+
+
 }
 

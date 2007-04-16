@@ -1516,7 +1516,6 @@ public final class MyCFS extends CFSModule {
     return ("UpdateSettingsOK");
   }
 
-
   /**
    * Description of the Method
    *
@@ -1553,5 +1552,7 @@ public final class MyCFS extends CFSModule {
     CountrySelect countrySelect = new CountrySelect(systemStatus);
     context.getRequest().setAttribute("CountrySelect", countrySelect);
   }
+  
+  
 }
 

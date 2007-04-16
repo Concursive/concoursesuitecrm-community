@@ -2047,7 +2047,6 @@ public final class Leads extends CFSModule {
     return getReturn(context, "AccessTypeJSList");
   }
 
-
   /**
    * Description of the Method
    *

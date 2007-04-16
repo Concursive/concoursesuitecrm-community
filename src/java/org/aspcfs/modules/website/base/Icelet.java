@@ -16,12 +16,16 @@
 package org.aspcfs.modules.website.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.ContainerMenu;
+import org.aspcfs.modules.base.ContainerMenuList;
 import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -38,6 +42,11 @@ public class Icelet extends GenericBean {
   private String configuratorClass = null;
   private int version = -1;
   private boolean enabled = false;
+  private ArrayList dashboards = new ArrayList();
+  private ArrayList containersMenu = new ArrayList();
+  private boolean website = false;
+  private boolean applyConstraintsDashboards = true;
+  private boolean applyConstraintsContainers = true;
 
   //helper attribute to store properties for the icelet
   private IceletPropertyMap iceletPropertyMap = null;
@@ -301,10 +310,50 @@ public class Icelet extends GenericBean {
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_icelet_icelet_id_seq", id);
     pst.close();
-
     return true;
   }
 
+  public void insertPublicWebSiteIcelets(Connection db) throws SQLException {
+  	if (this.isWebsite()) {
+  		IceletPublicWebsite iceletPublicWebsite = new IceletPublicWebsite();
+  		iceletPublicWebsite.setIceletId(this.getId());
+  		iceletPublicWebsite.setEnteredBy(0);
+  		iceletPublicWebsite.setModifiedBy(0);
+  		iceletPublicWebsite.insert(db);
+  	}
+  }
+  
+  public void insertIceletDashboardMapList(Connection db) throws SQLException {
+    Iterator i = this.getDashboards().iterator();
+    while (i.hasNext()) {
+      int linkModuleId = ((Integer)i.next()).intValue();
+      IceletDashboardMap iceletDashboardMap = new IceletDashboardMap();
+      iceletDashboardMap.setIceletId(this.id);
+      iceletDashboardMap.setLinkModuleId(linkModuleId);
+      iceletDashboardMap.setEnteredBy(0);
+      iceletDashboardMap.setModifiedBy(0);
+      iceletDashboardMap.insert(db);
+    }
+  }
+
+  public void insertIceletCustomTabMapList(Connection db) throws SQLException {
+    Iterator i = this.getContainersMenu().iterator();
+    while (i.hasNext()) {
+    	ContainerMenuList containerMenuList = new ContainerMenuList();
+      ContainerMenu containerMenu = (ContainerMenu) i.next(); 
+      containerMenuList.setCname(containerMenu.getCname());
+      containerMenuList.buildList(db);
+      if (containerMenuList.size() > 0) {
+	      int linkContainerId = ((ContainerMenu)containerMenuList.get(0)).getCode(); 
+	      IceletCustomTabMap iceletCustomTabMap = new IceletCustomTabMap();
+	      iceletCustomTabMap.setIceletId(this.id);
+	      iceletCustomTabMap.setLinkContainerId(linkContainerId);
+	      iceletCustomTabMap.setEnteredBy(0);
+	      iceletCustomTabMap.setModifiedBy(0);
+	      iceletCustomTabMap.insert(db);
+      }
+    }
+  }
 
   /**
    *  Description of the Method
@@ -400,6 +449,86 @@ public class Icelet extends GenericBean {
     version = DatabaseUtils.getInt(rs,"icelet_version");
     enabled = rs.getBoolean("enabled");
   }
+
+
+/**
+ * @return the containersMenu
+ */
+public ArrayList getContainersMenu() {
+    return containersMenu;
+}
+
+
+/**
+ * @param containersMenu the containersMenu to set
+ */
+public void setContainersMenu(ArrayList containersMenu) {
+    this.containersMenu = containersMenu;
+}
+
+
+/**
+ * @return the dashboards
+ */
+public ArrayList getDashboards() {
+    return dashboards;
+}
+
+
+/**
+ * @param dashboards the dashboards to set
+ */
+public void setDashboards(ArrayList dashboards) {
+    this.dashboards = dashboards;
+}
+
+
+/**
+ * @return the website
+ */
+public boolean isWebsite() {
+    return website;
+}
+
+
+/**
+ * @param website the website to set
+ */
+public void setWebsite(boolean website) {
+    this.website = website;
+}
+
+
+/**
+ * @return the applyConstraintsContainers
+ */
+public boolean isApplyConstraintsContainers() {
+  return applyConstraintsContainers;
+}
+
+
+/**
+ * @param applyConstraintsContainers the applyConstraintsContainers to set
+ */
+public void setApplyConstraintsContainers(boolean applyConstraintsContainers) {
+  this.applyConstraintsContainers = applyConstraintsContainers;
+}
+
+
+/**
+ * @return the applyConstraintsDashboards
+ */
+public boolean isApplyConstraintsDashboards() {
+  return applyConstraintsDashboards;
+}
+
+
+/**
+ * @param applyConstraintsDashboards the applyConstraintsDashboards to set
+ */
+public void setApplyConstraintsDashboards(boolean applyConstraintsDashboards) {
+  this.applyConstraintsDashboards = applyConstraintsDashboards;
+}
 
 }
 

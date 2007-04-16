@@ -130,6 +130,9 @@ public class ImportIcelets {
         //insert icelet into database
         newIcelet.setEnabled(true);
         newIcelet.insert(db);
+        newIcelet.insertIceletDashboardMapList(db);
+        newIcelet.insertIceletCustomTabMapList(db);
+        newIcelet.insertPublicWebSiteIcelets(db);
       }
       if (foundPreviousVersion) {
         //update icelet in the database

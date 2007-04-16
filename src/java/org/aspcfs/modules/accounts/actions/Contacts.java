@@ -361,6 +361,7 @@ public final class Contacts extends CFSModule {
     }
     context.getRequest().setAttribute("ContactDetails", newContact);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    // context.getRequest().setAttribute("lastAction", context.getRequest().getAttribute("moduleAction"));
     return getReturn(context, "Details");
   }
 
@@ -1686,7 +1687,6 @@ public final class Contacts extends CFSModule {
     }
     return ("DeleteFieldsOK");
   }
-
 
   /**
    *  Adds a feature to the FormElements attribute of the Contacts object

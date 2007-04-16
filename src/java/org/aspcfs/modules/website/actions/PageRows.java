@@ -260,7 +260,14 @@ public final class PageRows extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + (pageVersion != null ?pageVersion.getPageId(): -1) + "&popup=true");
+    String refreshUrl = (String) context.getSession().getAttribute("refreshUrl");
+    if (refreshUrl != null) {
+    	context.getRequest().setAttribute("refreshUrl", refreshUrl);
+    	context.getSession().setAttribute("refreshUrl", null);
+    }
+    else {
+    	context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + (pageVersion != null ?pageVersion.getPageId(): -1) + "&popup=true");
+    }
     return this.getReturn(context, "Delete");
   }
 

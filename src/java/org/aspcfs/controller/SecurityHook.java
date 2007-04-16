@@ -370,9 +370,18 @@ public class SecurityHook implements ControllerHook {
       //Store the fileLibrary path for processes like Workflow
       ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute(
           "applicationPrefs");
+      // Give the systemStatus a handle to applicationPrefs for language support
+      newSystemStatus.setApplicationPrefs(prefs);
       newSystemStatus.setFileLibraryPath(
           prefs.get("FILELIBRARY") + ce.getDbName() + fs);
-      newSystemStatus.queryRecord(db);
+      // Use application language setting
+      if (language != null) {
+        newSystemStatus.setLanguage(language);
+      } else {
+        // Default to the application's language
+        newSystemStatus.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
+      }
+      newSystemStatus.queryRecord(db, context);
       ConnectionPool cp = (ConnectionPool) context.getAttribute(
           "ConnectionPool");
       // Determine the URL for accessing this site
@@ -417,15 +426,6 @@ public class SecurityHook implements ControllerHook {
       HashMap projectNameCache = ProjectList.buildNameList(db);
       newSystemStatus.getObjects().put(
           Constants.SYSTEM_PROJECT_NAME_LIST, projectNameCache);
-      //Give the systemStatus a handle to applicationPrefs for language support
-      newSystemStatus.setApplicationPrefs(prefs);
-      // Use application language setting
-      if (language != null) {
-        newSystemStatus.setLanguage(language);
-      } else {
-        // Default to the application's language
-        newSystemStatus.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
-      }
       prefs.addDictionary(context, language);
       prefs.addIcelets(context, language);
       newSystemStatus.startServers(context);

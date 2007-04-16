@@ -214,7 +214,14 @@ public final class RowColumns extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + (pageVersion != null? pageVersion.getPageId(): -1) + "&popup=true");
+    String refreshUrl = (String) context.getSession().getAttribute("refreshUrl");
+    if (refreshUrl != null) {
+    	context.getRequest().setAttribute("refreshUrl", refreshUrl);
+    	context.getSession().setAttribute("refreshUrl", null);
+    }
+    else {
+    	context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + (pageVersion != null? pageVersion.getPageId(): -1) + "&popup=true");
+    }
     return this.getReturn(context, "Delete");
   }
 
@@ -244,7 +251,6 @@ public final class RowColumns extends CFSModule {
     }
     String buildLastColumn = context.getRequest().getParameter("buildLastColumn");
     PageRow pageRow = null;
-    IceletList iceletList = new IceletList();
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
@@ -272,8 +278,20 @@ public final class RowColumns extends CFSModule {
           context.getRequest().setAttribute("previousRowColumnId", String.valueOf(previousRowColumnId));
         }
       }
-      //Build the iceletList
-      iceletList.buildList(db);
+			//Get the page and the icelets that are applicable to this page
+			PageVersion pageVersion = new PageVersion(db, pageRow.getPageVersionId());
+			Page page =  new Page(db, pageVersion.getPageId());
+			IceletList iceletList = new IceletList();
+			iceletList.setEnabled(Constants.TRUE);
+			if (page.getLinkModuleId() > -1){
+				iceletList.setModuleId(page.getLinkModuleId());
+			} else if (page.getLinkContainerId() > -1){
+				iceletList.setContainerId(page.getLinkContainerId());
+			} else {
+				iceletList.setForWebsite(true);
+			}
+			iceletList.buildList(db);
+
       iceletList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("icelets", iceletList);
       rowColumn.setEnabled(true);
@@ -312,7 +330,6 @@ public final class RowColumns extends CFSModule {
     String iceletId = context.getRequest().getParameter("iceletId");
     String width = context.getRequest().getParameter("width");
     PageRow pageRow = null;
-    IceletList iceletList = new IceletList();
     Icelet icelet = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
@@ -343,8 +360,19 @@ public final class RowColumns extends CFSModule {
           rowColumn.setIceletPropertyMap(null);
         }
       }
-      iceletList.buildList(db);
-      iceletList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+			//Get the page and the icelets that are applicable to this page
+			PageVersion pageVersion = new PageVersion(db, pageRow.getPageVersionId());
+			Page page =  new Page(db, pageVersion.getPageId());
+			IceletList iceletList = new IceletList();
+			iceletList.setEnabled(Constants.TRUE);
+			if (page.getLinkModuleId() > -1){
+				iceletList.setModuleId(page.getLinkModuleId());
+			} else if (page.getLinkContainerId() > -1){
+				iceletList.setContainerId(page.getLinkContainerId());
+			} else {
+				iceletList.setForWebsite(true);
+			}
+			iceletList.buildList(db);
       if (rowColumn.getIceletId() > -1) {
         icelet = (Icelet) iceletList.getIceletById(rowColumn.getIceletId());
         context.getRequest().setAttribute("icelet", icelet);

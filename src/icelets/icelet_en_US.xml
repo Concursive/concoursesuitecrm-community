@@ -4,20 +4,44 @@
 -->
 <icelets>
   <icelet name="Html Content" class="HtmlContentPortlet" version="4">
-    <description>Create content for your website.
-      Content includes text, images, tables, and more.</description>
-    <property constant="6022301"
-              label="Content"
-              description=""
-              type="htmleditor">
-              <defaultValue><![CDATA[Enter and format your content here.]]></defaultValue>
-    </property>
+  	<description>
+  		Create content for your website. Content includes text,
+  		images, tables, and more.
+  	</description>
+  	<appearance website="true">
+  		<dashboards applyConstraints="true">
+  			<!-- In accounts -->
+  			<module moduleId="1" />
+  			<!-- In tickets -->
+  			<module moduleId="8" />
+  		</dashboards>
+  		<containerMenus applyConstraints="true">
+  			<!--
+  				In accounts, corresponds to a container menu name in
+  				cfs-container_menus.xml
+  			-->
+  			<container name="accounts" moduleId = "1"/>
+  			<!--
+  				In accounts – contacts, corresponds to a container menu name in
+  				cfs-container_menus.xml
+  			-->
+  			<container name="contacts" moduleId = "1"/>
+  		</containerMenus>
+  	</appearance>
+  	<property constant="6022301" label="Content" description=""
+  		type="htmleditor">
+  		<defaultValue>
+  			<![CDATA[Enter and format your content here.]]>
+  		</defaultValue>
+  	</property>
   </icelet>
   <icelet name="Contact Us Form" class="ContactFormPortlet" version="1">
     <description>Include a contact form in your web page.
       This form allows web site visitors to fill out contact
       information which will be saved directly to the Leads module so that you
       can review and respond.</description>
+      <appearance website="true">
+      </appearance>
     <property constant="6022302"
               label="Introduction message"
               description="A brief message which explains that providing contact information can help the user:"
@@ -41,6 +65,8 @@
   </icelet>
   <icelet name="Portfolio" class="PortfolioPortlet" version="1">
     <description>Displays the selected portfolio</description>
+    <appearance website="true">
+    </appearance>
     <property constant="6040316"
               label="Category"
               description="Select the category to display in your portal"
@@ -50,6 +76,8 @@
   </icelet>
   <icelet name="Cart" class="CartPortlet" version="2">
     <description>Displays the products added to a quote</description>
+    <appearance website="true">
+    </appearance>
     <property constant="6062311"
               label="Email To"
               description="Email address of the quote reviewer"
@@ -126,6 +154,8 @@
    </icelet>
   <icelet name="Product Catalog" class="ProductCatalogPortlet" version="2">
     <description>Displays the products for the selected category</description>
+    <appearance website="true">
+    </appearance>
     <property constant="6050816"
               label="Category"
               description="Select the category to display in your portal"

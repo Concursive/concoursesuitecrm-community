@@ -21,13 +21,17 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.controller.Tracker;
 import com.zeroio.webdav.WebdavManager;
 import net.sf.asterisk.manager.ManagerConnection;
+import org.apache.log4j.Logger;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
+import org.aspcfs.modules.admin.actions.AdminDashboards;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.ContainerMenu;
 import org.aspcfs.modules.service.base.SyncTableList;
-import org.aspcfs.utils.AsteriskListener;
-import org.aspcfs.utils.AsteriskManager;
+import org.aspcfs.modules.website.base.Page;
+import org.aspcfs.modules.website.base.PageList;
+import org.aspcfs.modules.website.base.PageRoleMapList;
+import org.aspcfs.utils.*;
 import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.utils.XMPPManager;
 import org.aspcfs.utils.web.LookupList;
 import org.jivesoftware.smack.XMPPConnection;
 import org.w3c.dom.Element;
@@ -41,19 +45,19 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- *  System status maintains global values for a shared group of users. This is
- *  based on the database that the user is connecting to.<p>
+ * System status maintains global values for a shared group of users. This is
+ * based on the database that the user is connecting to.<p>
+ * <p/>
+ * <p/>
+ * <p/>
+ * When a user logs in, permissions and hierarchies are read in. If someone
+ * changes user or role data then the user's permissions and hierarchies will
+ * be read in during the Security Check.
  *
- *  <p/>
- *
- *  When a user logs in, permissions and hierarchies are read in. If someone
- *  changes user or role data then the user's permissions and hierarchies will
- *  be read in during the Security Check.
- *
- * @author     mrajkowski
- * @created    October 10, 2001
- * @version    $Id: SystemStatus.java,v 1.40.10.1 2004/08/27 18:33:59 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: SystemStatus.java,v 1.40.10.1 2004/08/27 18:33:59 mrajkowski
+ *          Exp $
+ * @created October 10, 2001
  */
 public class SystemStatus {
   //Unique to this system
@@ -114,50 +118,60 @@ public class SystemStatus {
   //System Language
   private String language = null;
 
+  // System specific container menus
+  private LinkedHashMap menu = null;
+  private HashMap properties = null;
+
+  // Logger.
+  private static final Logger LOGGER = Logger.getLogger(AdminDashboards.class.getName());
+
   //XML Object Map (readOnly)
   SyncTableList systemObjectMap = null;
 
 
   /**
-   *  Constructor for the SystemStatus object
+   * Constructor for the SystemStatus object
    *
-   * @since    1.1
+   * @since 1.1
    */
-  public SystemStatus() { }
-
-
-  /**
-   *  Constructor for the SystemStatus object
-   *
-   * @param  db                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of Exception
-   * @since                    1.3
-   */
-  public SystemStatus(Connection db) throws SQLException {
-    queryRecord(db);
+  public SystemStatus() {
   }
 
 
   /**
-   *  Description of the Method
+   * Constructor for the SystemStatus object
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db      Description of Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
+   * @since 1.3
    */
-  public void queryRecord(Connection db) throws SQLException {
+  public SystemStatus(Connection db, ServletContext context) throws SQLException {
+    queryRecord(db, context);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void queryRecord(Connection db, ServletContext context) throws SQLException {
     buildHierarchyList(db);
     buildPreferences(db);
     buildRolePermissions(db);
     buildWebdavResources(db);
+    loadTabs(context, db);
   }
 
 
   /**
-   *  Sets the PermissionCheck attribute of the SystemStatus object
+   * Sets the PermissionCheck attribute of the SystemStatus object
    *
-   * @param  tmp  The new PermissionCheck value
-   * @since       1.1
+   * @param tmp The new PermissionCheck value
+   * @since 1.1
    */
   public void setPermissionCheck(Date tmp) {
     this.permissionCheck = tmp;
@@ -165,10 +179,10 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the HierarchyCheck attribute of the SystemStatus object
+   * Sets the HierarchyCheck attribute of the SystemStatus object
    *
-   * @param  tmp  The new HierarchyCheck value
-   * @since       1.1
+   * @param tmp The new HierarchyCheck value
+   * @since 1.1
    */
   public void setHierarchyCheck(Date tmp) {
     this.hierarchyCheck = tmp;
@@ -176,9 +190,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the connectionElement attribute of the SystemStatus object
+   * Sets the connectionElement attribute of the SystemStatus object
    *
-   * @param  tmp  The new connectionElement value
+   * @param tmp The new connectionElement value
    */
   public void setConnectionElement(ConnectionElement tmp) {
     this.connectionElement = tmp;
@@ -186,9 +200,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the SystemStatus object
+   * Sets the fileLibraryPath attribute of the SystemStatus object
    *
-   * @param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -196,9 +210,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the url attribute of the SystemStatus object
+   * Gets the url attribute of the SystemStatus object
    *
-   * @return    The url value
+   * @return The url value
    */
   public String getUrl() {
     return url;
@@ -206,9 +220,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the url attribute of the SystemStatus object
+   * Sets the url attribute of the SystemStatus object
    *
-   * @param  url  The new url value
+   * @param url The new url value
    */
   public void setUrl(String url) {
     this.url = url;
@@ -216,9 +230,9 @@ public class SystemStatus {
 
 
   /**
-   *  SessionManager manages the sessions active in the system
+   * SessionManager manages the sessions active in the system
    *
-   * @param  sessionManager  The new sessionManager value
+   * @param sessionManager The new sessionManager value
    */
   public void setSessionManager(SessionManager sessionManager) {
     this.sessionManager = sessionManager;
@@ -226,9 +240,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the webdavManager attribute of the SystemStatus object
+   * Sets the webdavManager attribute of the SystemStatus object
    *
-   * @param  webdavManager  The new webdavManager value
+   * @param webdavManager The new webdavManager value
    */
   public void setWebdavManager(WebdavManager webdavManager) {
     this.webdavManager = webdavManager;
@@ -236,9 +250,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the sessionTimeout attribute of the SystemStatus object
+   * Sets the sessionTimeout attribute of the SystemStatus object
    *
-   * @param  sessionTimeout  The new sessionTimeout value
+   * @param sessionTimeout The new sessionTimeout value
    */
   public void setSessionTimeout(int sessionTimeout) {
     this.sessionTimeout = sessionTimeout;
@@ -246,9 +260,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the categoryEditorList attribute of the SystemStatus object
+   * Gets the categoryEditorList attribute of the SystemStatus object
    *
-   * @return    The categoryEditorList value
+   * @return The categoryEditorList value
    */
   public Map getCategoryEditorList() {
     return categoryEditorList;
@@ -256,9 +270,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the customListViewEditors attribute of the SystemStatus object
+   * Gets the customListViewEditors attribute of the SystemStatus object
    *
-   * @return    The customListViewEditors value
+   * @return The customListViewEditors value
    */
   public Map getCustomListViewEditors() {
     return customListViewEditors;
@@ -266,11 +280,11 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the Import Manager for this Application Instance <br>
-   *  NOTE: There is one Import Manager per application instance
+   * Gets the Import Manager for this Application Instance <br>
+   * NOTE: There is one Import Manager per application instance
    *
-   * @param  context  Description of the Parameter
-   * @return          The importManager value
+   * @param context Description of the Parameter
+   * @return The importManager value
    */
   public ImportManager getImportManager(ActionContext context) {
     return (ImportManager) context.getServletContext().getAttribute(
@@ -279,9 +293,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the preferences attribute of the SystemStatus object
+   * Sets the preferences attribute of the SystemStatus object
    *
-   * @param  preferences  The new preferences value
+   * @param preferences The new preferences value
    */
   public void setPreferences(Map preferences) {
     this.preferences = preferences;
@@ -289,9 +303,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the preferences attribute of the SystemStatus object
+   * Gets the preferences attribute of the SystemStatus object
    *
-   * @return    The preferences value
+   * @return The preferences value
    */
   public Map getPreferences() {
     return preferences;
@@ -299,12 +313,12 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the categoryEditor attribute of the SystemStatus object
+   * Gets the categoryEditor attribute of the SystemStatus object
    *
-   * @param  db             Description of the Parameter
-   * @param  constantId     Description of the Parameter
-   * @return                The categoryEditor value
-   * @throws  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param constantId Description of the Parameter
+   * @return The categoryEditor value
+   * @throws SQLException Description of the Exception
    */
   public CategoryEditor getCategoryEditor(Connection db, int constantId) throws SQLException {
     synchronized (this) {
@@ -321,13 +335,13 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the customListViewEditor attribute of the SystemStatus object
+   * Gets the customListViewEditor attribute of the SystemStatus object
    *
-   * @param  db                Description of the Parameter
-   * @param  constantId        Description of the Parameter
-   * @param  context           Description of the Parameter
-   * @return                   The customListViewEditor value
-   * @exception  SQLException  Description of the Exception
+   * @param db         Description of the Parameter
+   * @param constantId Description of the Parameter
+   * @param context    Description of the Parameter
+   * @return The customListViewEditor value
+   * @throws SQLException Description of the Exception
    */
   public CustomListViewEditor getCustomListViewEditor(ActionContext context, Connection db, int constantId) throws SQLException {
     String webinfPath = context.getServletContext().getRealPath("/WEB-INF/");
@@ -345,9 +359,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the sessionTimeout attribute of the SystemStatus object
+   * Gets the sessionTimeout attribute of the SystemStatus object
    *
-   * @return    The sessionTimeout value
+   * @return The sessionTimeout value
    */
   public int getSessionTimeout() {
     return sessionTimeout;
@@ -355,9 +369,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the sessionManager attribute of the SystemStatus object
+   * Gets the sessionManager attribute of the SystemStatus object
    *
-   * @return    The sessionManager value
+   * @return The sessionManager value
    */
   public SessionManager getSessionManager() {
     return sessionManager;
@@ -365,9 +379,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the webdavManager attribute of the SystemStatus object
+   * Gets the webdavManager attribute of the SystemStatus object
    *
-   * @return    The webdavManager value
+   * @return The webdavManager value
    */
   public WebdavManager getWebdavManager() {
     return webdavManager;
@@ -375,10 +389,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the PermissionCheck attribute of the SystemStatus object
+   * Gets the PermissionCheck attribute of the SystemStatus object
    *
-   * @return    The PermissionCheck value
-   * @since     1.1
+   * @return The PermissionCheck value
+   * @since 1.1
    */
   public Date getPermissionCheck() {
     while (permissionUpdating) {
@@ -388,10 +402,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the HierarchyCheck attribute of the SystemStatus object
+   * Gets the HierarchyCheck attribute of the SystemStatus object
    *
-   * @return    The HierarchyCheck value
-   * @since     1.1
+   * @return The HierarchyCheck value
+   * @since 1.1
    */
   public Date getHierarchyCheck() {
     while (hierarchyUpdating) {
@@ -401,9 +415,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the hierarchyList attribute of the SystemStatus object
+   * Gets the hierarchyList attribute of the SystemStatus object
    *
-   * @return    The hierarchyList value
+   * @return The hierarchyList value
    */
   public UserList getHierarchyList() {
     while (hierarchyUpdating) {
@@ -413,9 +427,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the userList attribute of the SystemStatus object
+   * Gets the userList attribute of the SystemStatus object
    *
-   * @return    The userList value
+   * @return The userList value
    */
   public Hashtable getUserList() {
     while (hierarchyUpdating) {
@@ -425,9 +439,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the siteUserList attribute of the SystemStatus object
+   * Gets the siteUserList attribute of the SystemStatus object
    *
-   * @return    The siteUserList value
+   * @return The siteUserList value
    */
   public Hashtable getSiteUserList() {
     while (hierarchyUpdating) {
@@ -437,10 +451,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the label attribute of the SystemStatus object
+   * Gets the label attribute of the SystemStatus object
    *
-   * @param  thisLabel  Description of Parameter
-   * @return            The label value
+   * @param thisLabel Description of Parameter
+   * @return The label value
    */
   public String getLabel(String thisLabel) {
     String text = this.getValue("system.fields.label", thisLabel);
@@ -452,12 +466,12 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the label for this key, if it's not found then use the default text
-   *  that was specified
+   * Gets the label for this key, if it's not found then use the default text
+   * that was specified
    *
-   * @param  thisLabel    The key corresponding to the item to be replaced
-   * @param  defaultText
-   * @return              The label value
+   * @param thisLabel   The key corresponding to the item to be replaced
+   * @param defaultText
+   * @return The label value
    */
   public String getLabel(String thisLabel, String defaultText) {
     String result = getLabel(thisLabel);
@@ -470,10 +484,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the lettersArray attribute of the SystemStatus object
+   * Gets the lettersArray attribute of the SystemStatus object
    *
-   * @param  thisLabel  Description of the Parameter
-   * @return            The lettersArray value
+   * @param thisLabel Description of the Parameter
+   * @return The lettersArray value
    */
   public String[] getLettersArray(String thisLabel) {
     String letters = this.getLabel(thisLabel);
@@ -482,11 +496,11 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the title attribute of the SystemStatus object
+   * Gets the title attribute of the SystemStatus object
    *
-   * @param  item          Description of the Parameter
-   * @param  thisProperty  Description of the Parameter
-   * @return               The title value
+   * @param item         Description of the Parameter
+   * @param thisProperty Description of the Parameter
+   * @return The title value
    */
   public String getMenuProperty(String item, String thisProperty) {
     String text = this.getValue("system.modules.label", item, thisProperty);
@@ -499,10 +513,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the subMenuProperty attribute of the SystemStatus object
+   * Gets the subMenuProperty attribute of the SystemStatus object
    *
-   * @param  thisLabel  Description of the Parameter
-   * @return            The subMenuProperty value
+   * @param thisLabel Description of the Parameter
+   * @return The subMenuProperty value
    */
   public String getSubMenuProperty(String thisLabel) {
     String text = this.getValue("system.submenu.label", thisLabel);
@@ -514,11 +528,11 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the containerMenuProperty attribute of the SystemStatus object
+   * Gets the containerMenuProperty attribute of the SystemStatus object
    *
-   * @param  collection    Description of the Parameter
-   * @param  thisProperty  Description of the Parameter
-   * @return               The containerMenuProperty value
+   * @param collection   Description of the Parameter
+   * @param thisProperty Description of the Parameter
+   * @return The containerMenuProperty value
    */
   public String getContainerMenuProperty(String collection, String thisProperty) {
     String text = this.getValue(collection, thisProperty, "value");
@@ -530,9 +544,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the connectionElement attribute of the SystemStatus object
+   * Gets the connectionElement attribute of the SystemStatus object
    *
-   * @return    The connectionElement value
+   * @return The connectionElement value
    */
   public ConnectionElement getConnectionElement() {
     return connectionElement;
@@ -540,9 +554,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the fileLibraryPath attribute of the SystemStatus object
+   * Gets the fileLibraryPath attribute of the SystemStatus object
    *
-   * @return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -550,9 +564,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the hookManager attribute of the SystemStatus object
+   * Gets the hookManager attribute of the SystemStatus object
    *
-   * @return    The hookManager value
+   * @return The hookManager value
    */
   public ObjectHookManager getHookManager() {
     return hookManager;
@@ -560,9 +574,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the applicationPrefs attribute of the SystemStatus object
+   * Gets the applicationPrefs attribute of the SystemStatus object
    *
-   * @return    The applicationPrefs value
+   * @return The applicationPrefs value
    */
   public ApplicationPrefs getApplicationPrefs() {
     return applicationPrefs;
@@ -570,9 +584,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the localizationPrefs attribute of the SystemStatus object
+   * Gets the localizationPrefs attribute of the SystemStatus object
    *
-   * @return    The localizationPrefs value
+   * @return The localizationPrefs value
    */
   public Map getLocalizationPrefs() {
     return applicationPrefs.getLocalizationPrefs(language);
@@ -580,9 +594,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the applicationPrefs attribute of the SystemStatus object
+   * Sets the applicationPrefs attribute of the SystemStatus object
    *
-   * @param  tmp  The new applicationPrefs value
+   * @param tmp The new applicationPrefs value
    */
   public void setApplicationPrefs(ApplicationPrefs tmp) {
     this.applicationPrefs = tmp;
@@ -590,9 +604,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the language attribute of the SystemStatus object
+   * Gets the language attribute of the SystemStatus object
    *
-   * @return    The language value
+   * @return The language value
    */
   public String getLanguage() {
     return language;
@@ -600,9 +614,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the language attribute of the SystemStatus object
+   * Sets the language attribute of the SystemStatus object
    *
-   * @param  language  The new language value
+   * @param language The new language value
    */
   public void setLanguage(String language) {
     this.language = language;
@@ -610,12 +624,12 @@ public class SystemStatus {
 
 
   /**
-   *  Generates a list of all users in the system for the given database
-   *  connection
+   * Generates a list of all users in the system for the given database
+   * connection
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
-   * @since                 1.3
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
+   * @since 1.3
    */
   public void buildHierarchyList(Connection db) throws SQLException {
     //NOTE: The UserList does a joined query that gets the user and contact
@@ -673,11 +687,11 @@ public class SystemStatus {
 
 
   /**
-   *  A method to reload the user hierarchy, typically used when a user is added
-   *  or changed in the hierarchy.
+   * A method to reload the user hierarchy, typically used when a user is added
+   * or changed in the hierarchy.
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void updateHierarchy(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
@@ -700,11 +714,11 @@ public class SystemStatus {
 
 
   /**
-   *  Reloads role permissions that have been cached. Typically used when roles
-   *  are modified or created.
+   * Reloads role permissions that have been cached. Typically used when roles
+   * are modified or created.
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateRolePermissions(Connection db) throws SQLException {
     java.util.Date checkDate = new java.util.Date();
@@ -727,10 +741,10 @@ public class SystemStatus {
 
 
   /**
-   *  Loads the preferences for this specific system. Preference files are
-   *  stored as XML in the system's fileLibrary.
+   * Loads the preferences for this specific system. Preference files are
+   * stored as XML in the system's fileLibrary.
    *
-   * @param  db  Description of the Parameter
+   * @param db Description of the Parameter
    */
   public void buildPreferences(Connection db) {
     if (System.getProperty("DEBUG") != null) {
@@ -756,8 +770,8 @@ public class SystemStatus {
                 configNode.getNodeType() == Node.ELEMENT_NODE &&
                 "config".equals(((Element) configNode).getTagName()) &&
                 (((Element) configNode).getAttribute("enabled") == null ||
-                "".equals(((Element) configNode).getAttribute("enabled")) ||
-                "true".equals(((Element) configNode).getAttribute("enabled")))) {
+                    "".equals(((Element) configNode).getAttribute("enabled")) ||
+                    "true".equals(((Element) configNode).getAttribute("enabled")))) {
               //For each config name, create a map for each of the params
               String configName = ((Element) configNode).getAttribute("name");
               Map preferenceGroup = null;
@@ -842,8 +856,8 @@ public class SystemStatus {
 
 
   /**
-   *  Adds a feature to the ApplicationWorkflow attribute of the SystemStatus
-   *  object
+   * Adds a feature to the ApplicationWorkflow attribute of the SystemStatus
+   * object
    */
   public void addApplicationWorkflow() {
     if (System.getProperty("DEBUG") != null) {
@@ -875,9 +889,9 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db  Description of the Parameter
+   * @param db Description of the Parameter
    */
   public void loadWorkflows(Connection db) {
     try {
@@ -899,10 +913,10 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildWebdavResources(Connection db) throws SQLException {
     webdavManager.buildModules(db, fileLibraryPath);
@@ -910,10 +924,10 @@ public class SystemStatus {
 
 
   /**
-   *  Initializes the permissions cache.
+   * Initializes the permissions cache.
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRolePermissions(Connection db) throws SQLException {
     rolePermissions.clear();
@@ -959,12 +973,12 @@ public class SystemStatus {
 
 
   /**
-   *  Builds the lookupList on demand and caches it in the lookups HashTable.
+   * Builds the lookupList on demand and caches it in the lookups HashTable.
    *
-   * @param  db             Description of the Parameter
-   * @param  tableName      Description of the Parameter
-   * @return                The lookupList value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param tableName Description of the Parameter
+   * @return The lookupList value
+   * @throws SQLException Description of the Exception
    */
   public LookupList getLookupList(Connection db, String tableName) throws SQLException {
     if (!lookups.containsKey(tableName) && db != null) {
@@ -983,10 +997,10 @@ public class SystemStatus {
 
 
   /**
-   *  Removes a lookup list from the cache
+   * Removes a lookup list from the cache
    *
-   * @param  tableName  Description of the Parameter
-   * @return            Description of the Return Value
+   * @param tableName Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean removeLookup(String tableName) {
     if (lookups.containsKey(tableName)) {
@@ -1005,12 +1019,12 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the xMLObjectMap attribute of the SystemStatus object
+   * Gets the xMLObjectMap attribute of the SystemStatus object
    *
-   * @param  db                Description of the Parameter
-   * @param  systemId          Description of the Parameter
-   * @return                   The xMLObjectMap value
-   * @exception  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param systemId Description of the Parameter
+   * @return The xMLObjectMap value
+   * @throws SQLException Description of the Exception
    */
   public HashMap getXMLObjectMap(Connection db, int systemId) throws SQLException {
     if (systemObjectMap == null) {
@@ -1031,12 +1045,12 @@ public class SystemStatus {
 
 
   /**
-   *  Retrieves the access type list from the cache
+   * Retrieves the access type list from the cache
    *
-   * @param  db             Description of the Parameter
-   * @param  accessId       Description of the Parameter
-   * @return                The lookupList value
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param accessId Description of the Parameter
+   * @return The lookupList value
+   * @throws SQLException Description of the Exception
    */
   public AccessTypeList getAccessTypeList(Connection db, int accessId) throws SQLException {
     if (!(accessTypes.containsKey(new Integer(accessId)))) {
@@ -1056,9 +1070,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the tracker attribute of the SystemStatus object
+   * Gets the tracker attribute of the SystemStatus object
    *
-   * @return    The tracker value
+   * @return The tracker value
    */
   public Tracker getTracker() {
     return tracker;
@@ -1066,11 +1080,11 @@ public class SystemStatus {
 
 
   /**
-   *  A presentation object (.jsp) can see if a field should be ignored in the
-   *  output
+   * A presentation object (.jsp) can see if a field should be ignored in the
+   * output
    *
-   * @param  thisField  Description of Parameter
-   * @return            Description of the Returned Value
+   * @param thisField Description of Parameter
+   * @return Description of the Returned Value
    */
   public boolean hasField(String thisField) {
     Map ignoredFieldsGroup = (Map) preferences.get("system.fields.ignore");
@@ -1082,10 +1096,10 @@ public class SystemStatus {
 
 
   /**
-   *  Adds a feature to the ChildUsers attribute of the SystemStatus object Gets
-   *  the customValidators attribute of the SystemStatus object
+   * Adds a feature to the ChildUsers attribute of the SystemStatus object Gets
+   * the customValidators attribute of the SystemStatus object
    *
-   * @return    The customValidators value
+   * @return The customValidators value
    */
   public Map getCustomValidators() {
     Map customValidators = (Map) preferences.get("system.fields.customValidator");
@@ -1094,10 +1108,10 @@ public class SystemStatus {
 
 
   /**
-   *  Adds a feature to the ChildUsers attribute of the SystemStatus object
+   * Adds a feature to the ChildUsers attribute of the SystemStatus object
    *
-   * @param  thisUser  The feature to be added to the ChildUsers attribute
-   * @param  addFrom   The feature to be added to the ChildUsers attribute
+   * @param thisUser The feature to be added to the ChildUsers attribute
+   * @param addFrom  The feature to be added to the ChildUsers attribute
    */
   private void addChildUsers(User thisUser, UserList addFrom) {
     if (thisUser.getShortChildList() == null) {
@@ -1118,9 +1132,9 @@ public class SystemStatus {
 
 
   /**
-   *  Adds a feature to the UserToSite attribute of the SystemStatus object
+   * Adds a feature to the UserToSite attribute of the SystemStatus object
    *
-   * @param  thisUser  The feature to be added to the UserToSite attribute
+   * @param thisUser The feature to be added to the UserToSite attribute
    */
   private void addUserToSite(User thisUser) {
     if (thisUser.getSiteId() > -1) {
@@ -1141,15 +1155,15 @@ public class SystemStatus {
 
 
   /**
-   *  Activates the object hook manager with the specified objects to see if a
-   *  business process can execute
+   * Activates the object hook manager with the specified objects to see if a
+   * business process can execute
    *
-   * @param  context         Description of the Parameter
-   * @param  action          Description of the Parameter
-   * @param  previousObject  Description of the Parameter
-   * @param  object          Description of the Parameter
-   * @param  sqlDriver       Description of the Parameter
-   * @param  ce              Description of the Parameter
+   * @param context        Description of the Parameter
+   * @param action         Description of the Parameter
+   * @param previousObject Description of the Parameter
+   * @param object         Description of the Parameter
+   * @param sqlDriver      Description of the Parameter
+   * @param ce             Description of the Parameter
    */
   public void processHook(ActionContext context, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     hookManager.process(
@@ -1158,12 +1172,12 @@ public class SystemStatus {
 
 
   /**
-   *  Activates the specified business process through the object hook manager
+   * Activates the specified business process through the object hook manager
    *
-   * @param  context      Description of the Parameter
-   * @param  processName  Description of the Parameter
-   * @param  sqlDriver    Description of the Parameter
-   * @param  ce           Description of the Parameter
+   * @param context     Description of the Parameter
+   * @param processName Description of the Parameter
+   * @param sqlDriver   Description of the Parameter
+   * @param ce          Description of the Parameter
    */
   public void processEvent(ServletContext context, String processName, ConnectionPool sqlDriver, ConnectionElement ce) {
     if (System.getProperty("DEBUG") != null) {
@@ -1175,10 +1189,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the user attribute of the SystemStatus object
+   * Gets the user attribute of the SystemStatus object
    *
-   * @param  id  Description of the Parameter
-   * @return     The user value
+   * @param id Description of the Parameter
+   * @return The user value
    */
   public User getUser(int id) {
     while (hierarchyUpdating) {
@@ -1188,12 +1202,12 @@ public class SystemStatus {
 
 
   /**
-   *  Method checks the cached role permissions to see if the user has the
-   *  specified permission.
+   * Method checks the cached role permissions to see if the user has the
+   * specified permission.
    *
-   * @param  userId          Description of the Parameter
-   * @param  thisPermission  Description of the Parameter
-   * @return                 Description of the Return Value
+   * @param userId         Description of the Parameter
+   * @param thisPermission Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasPermission(int userId, String thisPermission) {
     while (permissionUpdating) {
@@ -1201,17 +1215,24 @@ public class SystemStatus {
     int roleId = this.getUser(userId).getRoleId();
     ArrayList permissions = (ArrayList) rolePermissions.get(
         new Integer(roleId));
-    if (permissions == null) {
-      return false;
+    return (permissions != null && permissions.contains(thisPermission));
+  }
+
+
+  public boolean hasPermission(int userId, int roleId, SubmenuItem item, boolean isOfflineMode) {
+    if (!hasPermission(userId, item.getPermission() + (isOfflineMode ? "-offline" : ""))) {
+      RoleList roleList = item.getRoleList();
+      return (roleList != null && roleList.getRoleNameFromId(roleId) != null);
+    } else {
+      return true;
     }
-    return permissions.contains(thisPermission);
   }
 
 
   /**
-   *  Returns whether this system has any permissions loaded
+   * Returns whether this system has any permissions loaded
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasPermissions() {
     return rolePermissions.size() > 0;
@@ -1219,11 +1240,11 @@ public class SystemStatus {
 
 
   /**
-   *  Forces the cached contact information to reload from the database
+   * Forces the cached contact information to reload from the database
    *
-   * @param  db             Description of the Parameter
-   * @param  id             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateUserContact(Connection db, int id) throws SQLException {
     synchronized (this) {
@@ -1236,12 +1257,12 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the preferences value for this SystemStatus object. If the value is
-   *  not found, then null is returned.
+   * Gets the preferences value for this SystemStatus object. If the value is
+   * not found, then null is returned.
    *
-   * @param  section    Description of the Parameter
-   * @param  parameter  Description of the Parameter
-   * @return            The value value
+   * @param section   Description of the Parameter
+   * @param parameter Description of the Parameter
+   * @return The value value
    */
   public String getValue(String section, String parameter) {
     return getValue(section, parameter, "value");
@@ -1249,12 +1270,12 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the value attribute of the SystemStatus object
+   * Gets the value attribute of the SystemStatus object
    *
-   * @param  section    Description of the Parameter
-   * @param  parameter  Description of the Parameter
-   * @param  tagName    Description of the Parameter
-   * @return            The value value
+   * @param section   Description of the Parameter
+   * @param parameter Description of the Parameter
+   * @param tagName   Description of the Parameter
+   * @return The value value
    */
   public String getValue(String section, String parameter, String tagName) {
     Map prefGroup = (Map) preferences.get(section);
@@ -1270,12 +1291,12 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the preferences value for this SystemStatus object. If the value is
-   *  not found, then -1 is returned.
+   * Gets the preferences value for this SystemStatus object. If the value is
+   * not found, then -1 is returned.
    *
-   * @param  section    Description of the Parameter
-   * @param  parameter  Description of the Parameter
-   * @return            The valueAsInt value
+   * @param section   Description of the Parameter
+   * @param parameter Description of the Parameter
+   * @return The valueAsInt value
    */
   public int getValueAsInt(String section, String parameter) {
     String intValue = this.getValue(section, parameter);
@@ -1288,9 +1309,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the objects attribute of the SystemStatus object
+   * Gets the objects attribute of the SystemStatus object
    *
-   * @return    The objects value
+   * @return The objects value
    */
   public HashMap getObjects() {
     return objects;
@@ -1298,9 +1319,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the objects attribute of the SystemStatus object
+   * Sets the objects attribute of the SystemStatus object
    *
-   * @param  tmp  The new objects value
+   * @param tmp The new objects value
    */
   public void setObjects(HashMap tmp) {
     this.objects = tmp;
@@ -1308,10 +1329,10 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the object attribute of the SystemStatus object
+   * Gets the object attribute of the SystemStatus object
    *
-   * @param  label  Description of the Parameter
-   * @return        The object value
+   * @param label Description of the Parameter
+   * @return The object value
    */
   public Object getObject(String label) {
     return objects.get(label);
@@ -1319,9 +1340,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the asteriskConnection attribute of the SystemStatus object
+   * Gets the asteriskConnection attribute of the SystemStatus object
    *
-   * @return    The asteriskConnection value
+   * @return The asteriskConnection value
    */
   public ManagerConnection getAsteriskConnection() {
     return asteriskConnection;
@@ -1329,9 +1350,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the asteriskListener attribute of the SystemStatus object
+   * Gets the asteriskListener attribute of the SystemStatus object
    *
-   * @return    The asteriskListener value
+   * @return The asteriskListener value
    */
   public AsteriskListener getAsteriskListener() {
     return asteriskListener;
@@ -1339,9 +1360,9 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the asteriskListener attribute of the SystemStatus object
+   * Sets the asteriskListener attribute of the SystemStatus object
    *
-   * @param  asteriskListener  The new asteriskListener value
+   * @param asteriskListener The new asteriskListener value
    */
   public void setAsteriskListener(AsteriskListener asteriskListener) {
     this.asteriskListener = asteriskListener;
@@ -1349,9 +1370,9 @@ public class SystemStatus {
 
 
   /**
-   *  Gets the xmppConnection attribute of the SystemStatus object
+   * Gets the xmppConnection attribute of the SystemStatus object
    *
-   * @return    The xmppConnection value
+   * @return The xmppConnection value
    */
   public XMPPConnection getXmppConnection() {
     return xmppConnection;
@@ -1359,10 +1380,10 @@ public class SystemStatus {
 
 
   /**
-   *  Returns a comma-delimited list of all users within the specified siteId
+   * Returns a comma-delimited list of all users within the specified siteId
    *
-   * @param  siteId  Description of the Parameter
-   * @return         The siteIdRange value
+   * @param siteId Description of the Parameter
+   * @return The siteIdRange value
    */
   public String getSiteIdRange(int siteId) {
     return (String) getSiteUserList().get(new Integer(siteId));
@@ -1370,9 +1391,9 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
+   * @param context Description of the Parameter
    */
   public void startServers(ServletContext context) {
     // Monitor Jabber
@@ -1392,7 +1413,7 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void stopServers() {
     //Unload Asterisk if loaded
@@ -1401,4 +1422,257 @@ public class SystemStatus {
     XMPPManager.removeConnection(this);
   }
 
+  /**
+   * Reads the submenu XML config file specified in web.xml.
+   *
+   * @param context
+   */
+  private void loadXML(ServletContext context) {
+    menu = menu == null ? new LinkedHashMap() : menu;
+    properties = properties == null ? new HashMap() : properties;
+    try {
+      XMLUtils xml = new XMLUtils(new File(context.getRealPath("/WEB-INF/" + (String) context.getAttribute("ContainerMenuConfig"))));
+      LinkedList containerList = new LinkedList();
+      XMLUtils.getAllChildren(xml.getDocumentElement(), "container", containerList);
+      Iterator list = containerList.iterator();
+      while (list.hasNext()) {
+        Element container = (Element) list.next();
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ContainerMenuHandler-> Container Added: " + container.getAttribute("name"));
+        }
+        menu.put(container.getAttribute("name"), this.buildMenu(container));
+        properties.put(container.getAttribute("name"), this.buildProperties(container));
+      }
+    } catch (Exception e) {
+      LOGGER.error(e, e);
+    }
+  }
+
+  /**
+   * Parses the XML submenu element.
+   *
+   * @param container Description of Parameter
+   * @return Description of the Returned Value
+   */
+  private LinkedList buildMenu(Element container) {
+    LinkedList menuItems = new LinkedList();
+    LinkedList menuList = new LinkedList();
+    XMLUtils.getAllChildren(container, "submenu", menuList);
+    Iterator list = menuList.iterator();
+    while (list.hasNext()) {
+      Element submenu = (Element) list.next();
+      SubmenuItem thisSubmenu = new SubmenuItem();
+      thisSubmenu.setName(submenu.getAttribute("name"));
+      //check if custom value is defined in preferences
+      String containerName = container.getAttribute("name");
+      String labelValue = this.getContainerMenuProperty(
+          "system.container.menu.label", containerName + "." + submenu.getAttribute(
+          "name") + ".long_html");
+      thisSubmenu.setLongHtml(
+          !"".equals(StringUtils.toString(labelValue)) ? labelValue : (XMLUtils.getFirstChild(
+              submenu, "long_html").getAttribute("value")));
+      //thisSubmenu.setShortHtml();
+      //thisSubmenu.setAlternateName();
+      thisSubmenu.setLink(
+          XMLUtils.getFirstChild(submenu, "link").getAttribute("value"));
+      //thisSubmenu.setHtmlClass();
+      thisSubmenu.setPermission(
+          XMLUtils.getFirstChild(submenu, "permission").getAttribute("value"));
+      //thisSubmenu.setIsActive(true);
+      menuItems.add(thisSubmenu);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "ContainerMenuHandler-> Submenu Added: " + thisSubmenu.getLongHtml());
+      }
+    }
+    return menuItems;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param container Description of the Parameter
+   * @return Description of the Return Value
+   */
+  private HashMap buildProperties(Element container) {
+    HashMap propertyList = new HashMap();
+    Element properties = XMLUtils.getFirstElement(container, "properties");
+    if (properties != null) {
+      String icon = XMLUtils.getNodeText(
+          XMLUtils.getFirstElement(properties, "icon"));
+      if (icon != null) {
+        propertyList.put("icon", icon);
+      }
+      String label = XMLUtils.getNodeText(
+          XMLUtils.getFirstElement(properties, "label"));
+      if (label != null) {
+        propertyList.put("label", label);
+      }
+    }
+    return propertyList;
+  }
+
+
+  /**
+   * Loading dashboards and custom tabs from tables.
+   *
+   * @param context
+   * @param db
+   * @throws SQLException
+   */
+  private void loadDashboards(ServletContext context, Connection db) throws SQLException {
+    PageList dashboards = new PageList();
+    dashboards.setDashboard(true);
+    dashboards.setEnabled(1);
+    dashboards.buildList(db);
+    Iterator i = dashboards.iterator();
+    while (i.hasNext()) {
+      Page dashboard = (Page) i.next();
+      String containerName = "dashboards" + dashboard.getLinkModuleId();
+      LinkedList menuItems = new LinkedList();
+      if (menu.get(containerName) == null) {
+        menu.put(containerName, menuItems);
+        HashMap propertyList = new HashMap();
+        propertyList.put("label", "Dashboards");
+        properties.put(containerName, propertyList);
+      }
+      menuItems = (LinkedList) menu.get(containerName);
+      PageRoleMapList pageRoleMapList = new PageRoleMapList();
+      pageRoleMapList.setWebPageId(dashboard.getId());
+      pageRoleMapList.buildList(db);
+      SubmenuItem item = new SubmenuItem();
+      item.setName(dashboard.getName());
+      item.setLongHtml(dashboard.getName());
+      item.setLink("Dashboards.do?command=ViewDashboard&dashboardId=" + dashboard.getId() + "&moduleId=" + dashboard.getLinkModuleId());
+      item.setRoleList(pageRoleMapList.buildRoleList(db));
+      item.setDashboard(true);
+      item.setPermission("dashboard");
+      menuItems.add(item);
+      menu.put(containerName, menuItems);
+    }
+  }
+
+  /**
+   * @param context
+   * @param db
+   * @throws SQLException
+   */
+  private void loadCustomTabs(ServletContext context, Connection db) throws SQLException {
+    PageList customtabs = new PageList();
+    customtabs.setCustomTab(true);
+    customtabs.setEnabled(1);
+    customtabs.buildList(db);
+    Iterator i = customtabs.iterator();
+    while (i.hasNext()) {
+      Page customtab = (Page) i.next();
+      ContainerMenu container = new ContainerMenu(db, customtab.getLinkContainerId());
+      LinkedList menuItems = (LinkedList) menu.get(container.getCname());
+      PageRoleMapList pageRoleMapList = new PageRoleMapList();
+      pageRoleMapList.setWebPageId(customtab.getId());
+      pageRoleMapList.buildList(db);
+      SubmenuItem item = new SubmenuItem();
+      item.setName(customtab.getName());
+      item.setLongHtml(customtab.getName());
+      item.setLink("CustomTabs.do?command=ViewCustomTab&customtabId=" + customtab.getId() + "&moduleId=" + container.getLinkModuleId());
+      item.setRoleList(pageRoleMapList.buildRoleList(db));
+      item.setCustomTab(true);
+      item.setPermission("customtab");
+      menuItems.add(item);
+      menu.put(container.getCname(), menuItems);
+    }
+  }
+
+  public void updateDashboards(ServletContext context, Connection db) {
+    PageList dashboards = new PageList();
+    dashboards.setDashboard(true);
+    try {
+      dashboards.buildList(db);
+      Iterator i = dashboards.iterator();
+      while (i.hasNext()) {
+        Page dashboard = (Page) i.next();
+        String containerName = "dashboards" + dashboard.getLinkModuleId();
+        menu.remove(containerName);
+      }
+      loadDashboards(context, db);
+    } catch (SQLException e) {
+      LOGGER.error(e, e);
+    }
+  }
+
+  private void updateCustomTabs(ServletContext context, Connection db) throws SQLException {
+    PageList customtabs = new PageList();
+    customtabs.setCustomTab(true);
+    customtabs.buildList(db);
+    Iterator i = customtabs.iterator();
+    while (i.hasNext()) {
+      Page customtab = (Page) i.next();
+      ContainerMenu container = new ContainerMenu(db, customtab.getLinkContainerId());
+      LinkedList menuItems = (LinkedList) menu.get(container.getCname());
+      LinkedList tmp = new LinkedList();
+      Iterator j = menuItems.iterator();
+      while (j.hasNext()) {
+        SubmenuItem menuItem = (SubmenuItem) j.next();
+        if (menuItem.isCustomTab()) {
+          tmp.add(menuItem);
+        }
+      }
+      menuItems.removeAll(tmp);
+    }
+    loadCustomTabs(context, db);
+  }
+
+  /**
+   * Refresh the information about dashboards and custom tabs if they are
+   * changed (added, deleted or change in permissions).
+   */
+  public void updateTabs(ServletContext context, Connection db) {
+    try {
+      updateDashboards(context, db);
+      updateCustomTabs(context, db);
+    } catch (SQLException e) {
+      LOGGER.error(e, e);
+    }
+  }
+
+  /**
+   * @param context
+   * @param db
+   * @throws SQLException
+   */
+  public void loadTabs(ServletContext context, Connection db) throws SQLException {
+    loadXML(context);
+    loadDashboards(context, db);
+    loadCustomTabs(context, db);
+  }
+
+  /**
+   * @return the menu
+   */
+  public LinkedHashMap getMenu() {
+    return menu;
+  }
+
+
+  /**
+   * @param menu the menu to set
+   */
+  public void setMenu(LinkedHashMap menu) {
+    this.menu = menu;
+  }
+
+
+  /**
+   * @return the properties
+   */
+  public HashMap getProperties() {
+    return properties;
+  }
+
+
+  /**
+   * @param properties the properties to set
+   */
+  public void setProperties(HashMap properties) {
+    this.properties = properties;
+  }
 }

@@ -24,7 +24,6 @@ import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.actionplans.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.User;
@@ -72,7 +71,7 @@ public final class ExternalContacts extends CFSModule {
     if (!hasPermission(context, "contacts-external_contacts-view")) {
       return ("DefaultError");
     }
-    return (this.executeCommandSearchContactsForm(context));
+    return executeCommandDashboards(context);
   }
 
 
@@ -438,7 +437,6 @@ public final class ExternalContacts extends CFSModule {
     if (!hasPermission(context, "contacts-external_contacts-view")) {
       return ("PermissionError");
     }
-    User user = this.getUser(context, this.getUserId(context));
     PagedListInfo searchContactsInfo = this.getPagedListInfo(
         context, "SearchContactsInfo");
     searchContactsInfo.setLink("ExternalContacts.do?command=SearchContacts");
@@ -943,8 +941,6 @@ public final class ExternalContacts extends CFSModule {
     SystemStatus systemStatus = this.getSystemStatus(context);
     ContactTypeList contactTypeList = new ContactTypeList();
     try {
-      PagedListInfo searchContactsInfo = this.getPagedListInfo(
-          context, "SearchContactsInfo");
       db = this.getConnection(context);
 
       contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
@@ -985,7 +981,6 @@ public final class ExternalContacts extends CFSModule {
    */
   public String executeCommandContactDetails(ActionContext context) {
     String contactId = context.getRequest().getParameter("id");
-    String action = context.getRequest().getParameter("cmd");
     Connection db = null;
     Contact thisContact = null;
     try {
@@ -1034,6 +1029,7 @@ public final class ExternalContacts extends CFSModule {
     if ("true".equals(context.getRequest().getParameter("popup"))) {
       return ("ContactDetailsPopupOK");
     }
+    //context.getRequest().setAttribute("ContactDetails", thisContact);
     return ("ContactDetailsOK");
   }
 
@@ -1817,7 +1813,6 @@ public final class ExternalContacts extends CFSModule {
    */
   public String executeCommandDeleteFields(ActionContext context) {
     Connection db = null;
-    boolean recordDeleted = false;
     try {
       db = this.getConnection(context);
       String selectedCatId = context.getRequest().getParameter("catId");
@@ -1843,7 +1838,7 @@ public final class ExternalContacts extends CFSModule {
       thisRecord.setLinkItemId(Integer.parseInt(contactId));
       thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
       if (!thisCategory.getReadOnly()) {
-        recordDeleted = thisRecord.delete(db);
+        thisRecord.delete(db);
       }
       context.getRequest().setAttribute("recordDeleted", "true");
     } catch (Exception errorMessage) {
@@ -2145,18 +2140,6 @@ public final class ExternalContacts extends CFSModule {
    * Description of the Method
    *
    * @param context Description of the Parameter
-   */
-  private void resetPagedListInfo(ActionContext context) {
-    this.deletePagedListInfo(context, "ExternalOppsPagedListInfo");
-    this.deletePagedListInfo(context, "CallListInfo");
-    this.deletePagedListInfo(context, "ContactMessageListInfo");
-  }
-
-
-  /**
-   * Description of the Method
-   *
-   * @param context Description of the Parameter
    * @return Description of the Return Value
    */
   public String executeCommandMoveToAccount(ActionContext context) {
@@ -2228,7 +2211,6 @@ public final class ExternalContacts extends CFSModule {
   public String executeCommandMoveContact(ActionContext context) {
     Connection db = null;
     Contact thisContact = null;
-    Organization organization = null;
     int contactId = Integer.parseInt(context.getRequest().getParameter("id"));
     int moveOpportunities = Integer.parseInt(
         context.getRequest().getParameter("moveOpportunities"));
@@ -2467,7 +2449,6 @@ public final class ExternalContacts extends CFSModule {
 
       //insert an account if company name exists
       boolean status = false;
-      int resultCount = -1;
       Contact contact = new Contact(db, contactId);
       Contact oldContact = new Contact(db, contactId);
 
@@ -2630,7 +2611,7 @@ public final class ExternalContacts extends CFSModule {
       contact.setOrgName(thisOrg.getName());
 
       if (status) {
-        resultCount = contact.update(db, context);
+        contact.update(db, context);
         if ((contact.getNameLast() == null) || "".equals(contact.getNameLast().trim()))
         {
           contact.disable(db);
@@ -2681,4 +2662,17 @@ public final class ExternalContacts extends CFSModule {
     }
     return "StatesOK";
   }
+  
+  public String executeCommandDashboards(ActionContext context) {
+    if (!hasPermission(context, "contacts-external_contacts-dashboards-view")) {
+    	return executeCommandSearchContactsForm(context);
+    }
+  	String moduleId = Integer.toString(Constants.CONTACTS);
+  	String dashboardsContainerName = "dashboards" + moduleId;
+  	context.getRequest().setAttribute("moduleId", moduleId);
+  	context.getRequest().setAttribute("dashboardsContainerName", dashboardsContainerName);
+  	context.getRequest().setAttribute("action", context.getRequest().getAttribute("moduleAction"));
+  	return ("DashboardsViewOK");
+  }
+
 }

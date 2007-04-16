@@ -15,6 +15,7 @@
  */
 package org.aspcfs.controller;
 
+import org.aspcfs.modules.admin.base.RoleList;
 import org.aspcfs.utils.StringUtils;
 
 /**
@@ -42,6 +43,10 @@ public class SubmenuItem {
   String graphicRollover = "";
 
   boolean isActive = false;
+  
+  private RoleList roleList = null;
+  private boolean isDashboard = false;
+  private boolean isCustomTab = false;
 
 
   /**
@@ -438,6 +443,54 @@ public void setLabel(String tmp) { this.label = tmp; }
     return (permission.equals(thisPermission));
   }
 public String getLabel() { return label; }
+
+
+	/**
+	 * @return the roleList
+	 */
+	public RoleList getRoleList() {
+		return roleList;
+	}
+
+
+	/**
+	 * @param roleList the roleList to set
+	 */
+	public void setRoleList(RoleList roleList) {
+		this.roleList = roleList;
+	}
+
+
+	/**
+	 * @return the isCustomTab
+	 */
+	public boolean isCustomTab() {
+		return isCustomTab;
+	}
+
+
+	/**
+	 * @param isCustomTab the isCustomTab to set
+	 */
+	public void setCustomTab(boolean isCustomTab) {
+		this.isCustomTab = isCustomTab;
+	}
+
+
+	/**
+	 * @return the isDashboard
+	 */
+	public boolean isDashboard() {
+		return isDashboard;
+	}
+
+
+	/**
+	 * @param isDashboard the isDashboard to set
+	 */
+	public void setDashboard(boolean isDashboard) {
+		this.isDashboard = isDashboard;
+	}
 
 }
 

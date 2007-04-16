@@ -190,6 +190,8 @@ public class InitPermissionsAndRoles implements DataReader {
             "webdav", (String) category.getAttribute("webdav"));
         thisRecord.addField("logos", (String) category.getAttribute("logos"));
         thisRecord.addField("actionPlans", (String) category.getAttribute("actionPlans"));
+        thisRecord.addField("dashboards", (String) category.getAttribute("dashboards"));
+        thisRecord.addField("customtabs", (String) category.getAttribute("customtabs"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
 

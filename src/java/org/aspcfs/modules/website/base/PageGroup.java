@@ -571,21 +571,21 @@ public class PageGroup extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO web_page_group " +
         "(" + (id > -1 ? "page_group_id, " : "") +
+        "tab_id, " +        
         "group_name , " +
         "internal_description , " +
         "group_position , " +
-        "tab_id , " +
         "enteredby , " +
         "modifiedby ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?)");
+        "VALUES (" + (id > -1 ? "?," : "") +  "?,?,?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
     }
+    DatabaseUtils.setInt(pst, ++i, tabId);
     pst.setString(++i, name);
     pst.setString(++i, internalDescription);
     pst.setInt(++i, position);
-    pst.setInt(++i, tabId);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
     pst.execute();
@@ -664,6 +664,7 @@ public class PageGroup extends GenericBean {
 
       PageList tmpPageList = new PageList();
       tmpPageList.setPageGroupId(this.getId());
+      tmpPageList.setWebsite(true);
       tmpPageList.buildList(db);
       tmpPageList.delete(db);
       tmpPageList = null;
@@ -727,6 +728,7 @@ public class PageGroup extends GenericBean {
     pageList.setPageGroupId(this.getId());
     pageList.setMode(mode);
     pageList.setPageToBuild(pageToBuild);
+    pageList.setWebsite(true);
     pageList.buildList(db);
     if (pageToBuild != -1 && pageList.getThisPageToBuild() != null) {
       this.setThisPageToBuild(pageList.getThisPageToBuild());

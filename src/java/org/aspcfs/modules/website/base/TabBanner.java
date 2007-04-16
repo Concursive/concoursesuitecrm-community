@@ -423,6 +423,7 @@ public class TabBanner extends GenericBean {
       }
       PageList tmpPageList = new PageList();
       tmpPageList.setTabBannerId(this.getId());
+      tmpPageList.setWebsite(true);
       tmpPageList.buildList(db);
       tmpPageList.delete(db);
       tmpPageList = null;

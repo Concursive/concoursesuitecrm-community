@@ -264,6 +264,8 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisCategory.setWebdav(record.getValue("webdav"));
         thisCategory.setLogos(record.getValue("logos"));
         thisCategory.setActionPlans(record.getValue("actionPlans"));
+        thisCategory.setDashboards(record.getValue("dashboards"));
+        thisCategory.setCustomtabs(record.getValue("customtabs"));
         thisCategory.insert(db);
         id = thisCategory.getId();
         return true;

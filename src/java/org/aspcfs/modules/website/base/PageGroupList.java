@@ -38,6 +38,7 @@ public class PageGroupList extends ArrayList {
 
   private int id = -1;
   private int tabId = -1;
+  private String groupName = null;
 
   private boolean buildPages = false;
   private int pageToBuild = -1;
@@ -430,6 +431,9 @@ public class PageGroupList extends ArrayList {
     if (tabId != -1) {
       sqlFilter.append("AND tab_id = ? ");
     }
+    if (groupName != null) {
+      sqlFilter.append("AND group_name = ? ");
+    }
     if (position > -1) {
       sqlFilter.append("AND group_position = ? ");
     }
@@ -456,6 +460,9 @@ public class PageGroupList extends ArrayList {
     }
     if (tabId != -1) {
       pst.setInt(++i, tabId);
+    }
+    if (groupName != null) {
+    	pst.setString(++i, groupName);
     }
     if (position > 0) {
       pst.setInt(++i, position);
@@ -597,5 +604,21 @@ public class PageGroupList extends ArrayList {
     }
     return result;
   }
+
+
+	/**
+	 * @return the groupName
+	 */
+	public String getGroupName() {
+		return groupName;
+	}
+
+
+	/**
+	 * @param groupName the groupName to set
+	 */
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 }
 

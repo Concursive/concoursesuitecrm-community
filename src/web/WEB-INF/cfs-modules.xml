@@ -178,9 +178,16 @@
     <permission value="contacts-view"/>
     <long_html value="Contacts"/>
     <short_html value="Contacts"/>
-    <link value="ExternalContacts.do"/>
+    <link value="ExternalContacts.do?command=Dashboards&amp;action=ExternalContacts.do&amp;menu=Contacts"/>
     <graphic width="83" height="36" on="menu-general-contacts-on.gif" off="menu-general-contacts-off.gif" rollover=""/>
 
+    <submenu name="Dashboards">
+			<permission value="contacts-external_contacts-dashboards-view"/>
+			<long_html value="Dashboards"/>
+			<short_html value="Dashboards"/>
+			<link value="ExternalContacts.do?command=Dashboards&amp;action=ExternalContacts.do&amp;menu=Contacts"/>
+		</submenu>
+    
     <submenu name="Add Contact">
       <permission value="contacts-external_contacts-add"/>
       <long_html value="Add"/>
@@ -303,9 +310,16 @@
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
     <short_html value="Accounts"/>
-    <link value="Accounts.do?command=Dashboard"/>
+    <link value="Accounts.do?command=Dashboards&amp;action=Accounts.do&amp;menu=Accounts"/>
     <graphic width="83" height="36" on="menu-accounts-on.gif" off="menu-accounts-off.gif" rollover=""/>
 
+		<submenu name="Dashboards">
+			<permission value="accounts-dashboards-view"/>
+			<long_html value="Dashboards"/>
+			<short_html value="Dashboards"/>
+			<link value="Accounts.do?command=Dashboards&amp;action=Accounts.do&amp;menu=Accounts"/>
+		</submenu>
+		
     <submenu name="Dashboard">
       <permission value="accounts-dashboard-view"/>
       <long_html value="Dashboard"/>

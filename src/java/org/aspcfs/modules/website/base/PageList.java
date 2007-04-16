@@ -43,6 +43,11 @@ public class PageList extends ArrayList {
   private int pageGroupId = -1;
   private int tabBannerId = -1;
   private int enabled = Constants.UNDEFINED;
+  private int linkModuleId = -1;
+  private int linkContainerId = -1;
+  private boolean dashboard = false;
+  private boolean customTab = false;
+  private boolean website = false;
 
   private int pageToBuild = -1;
   private int mode = -1;
@@ -50,6 +55,7 @@ public class PageList extends ArrayList {
 
   private int afterPosition = -1;
   private int beforePosition = -1;
+  private int roleId = -1;
 
 
   /**
@@ -569,6 +575,23 @@ public class PageList extends ArrayList {
     if (beforePosition > -1) {
       sqlFilter.append("AND page_position < ? ");
     }
+    if (linkModuleId > -1){
+      sqlFilter.append("AND link_module_id = ? ");
+      
+    }
+    if (linkContainerId > -1){
+      sqlFilter.append("AND link_container_id = ? ");      
+    }
+    if(dashboard){
+      sqlFilter.append("AND link_module_id is not null ");
+    }else if(customTab){
+      sqlFilter.append("AND link_container_id is not null ");
+    }else if (website){
+      sqlFilter.append("AND link_container_id is null AND link_module_id is null ");
+    }
+    if (roleId > -1) {
+    	sqlFilter.append("AND page_id IN (SELECT web_page_id FROM web_page_role_map WHERE role_id = ?) ");
+    }
   }
 
 
@@ -609,7 +632,19 @@ public class PageList extends ArrayList {
     if (beforePosition > -1) {
       pst.setInt(++i, beforePosition);
     }
+    if (linkModuleId > -1){
+      pst.setInt(++i, linkModuleId);
+      
+    }
+    if (linkContainerId > -1){
+      pst.setInt(++i,linkContainerId);      
+    }
 
+    if (roleId > -1){
+      pst.setInt(++i,roleId);      
+    }
+
+    
     return i;
   }
 
@@ -764,6 +799,104 @@ public class PageList extends ArrayList {
     }
     return result;
   }
+
+
+  /**
+   * @return the linkContainerId
+   */
+  public int getLinkContainerId() {
+    return linkContainerId;
+  }
+
+
+  /**
+   * @param linkContainerId the linkContainerId to set
+   */
+  public void setLinkContainerId(int linkContainerId) {
+    this.linkContainerId = linkContainerId;
+  }
+
+
+  /**
+   * @return the linkModuleId
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   * @param linkModuleId the linkModuleId to set
+   */
+  public void setLinkModuleId(int linkModuleId) {
+    this.linkModuleId = linkModuleId;
+  }
+
+
+  /**
+   * @return the customeTab
+   */
+  public boolean isCustomTab() {
+    return customTab;
+  }
+
+
+  /**
+   * @param customTab the customeTab to set
+   */
+  public void setCustomTab(boolean customTab) {
+    this.customTab = customTab;
+  }
+
+
+  /**
+   * @return the dasboard
+   */
+  public boolean isDashboard() {
+    return dashboard;
+  }
+
+
+  /**
+   * @param dashboard the dasboard to set
+   */
+  public void setDashboard(boolean dashboard) {
+    this.dashboard = dashboard;
+  }
+
+
+	/**
+	 * @return the website
+	 */
+	public boolean isWebsite() {
+		return website;
+	}
+
+
+	/**
+	 * @param website the website to set
+	 */
+	public void setWebsite(boolean website) {
+		this.website = website;
+	}
+
+
+	/**
+	 * @return the roleId
+	 */
+	public int getRoleId() {
+		return roleId;
+	}
+
+
+	/**
+	 * @param roleId the roleId to set
+	 */
+	public void setRoleId(int roleId) {
+		this.roleId = roleId;
+	}
+
+
 }
 
 

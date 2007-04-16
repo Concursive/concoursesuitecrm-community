@@ -54,7 +54,7 @@ public class RoleList extends ArrayList implements SyncableList {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
-  
+
   /**
    * Constructor for the RoleList object
    */
@@ -79,7 +79,7 @@ public class RoleList extends ArrayList implements SyncableList {
   public String getUniqueField() {
     return uniqueField;
   }
-  
+
   /**
    * Sets the lastAnchor attribute of the UserList object
    *
@@ -468,7 +468,7 @@ public class RoleList extends ArrayList implements SyncableList {
 
     return rs;
   }
-  
+
   /**
    * Gets the roleNameFromId attribute of the RoleList object
    *

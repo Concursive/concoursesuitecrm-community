@@ -37,7 +37,7 @@
       <permission name="website-portfolio"                               attributes="vaed" offline="vaed" description="Portfolio Editor" enabled="true"/>
       <permission name="site-editor"                                     attributes="vaed" offline="va-d" description="Site Editor" enabled="true"/>
     </category>
-    <category id="228051100" name="Leads" folders="false" lookups="true" reports="true">
+    <category id="228051100" name="Leads" folders="false" lookups="true" reports="true" dashboards="true" customtabs="true">
       <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Contact Rating"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Contact Source"/>
       <permission name="sales"                                           attributes="v---" offline="v---" description="Access to the Leads Module"/>
@@ -50,7 +50,7 @@
       <report file="leads_to_accounts.xml" type="user" permission="sales-leads" title="Leads To Accounts Summary" description="How many leads have been converted into accounts?"/>
       -->
     </category>
-    <category id="2" name="Contacts" folders="true" lookups="true" reports="true">
+    <category id="2" name="Contacts" folders="true" lookups="true" reports="true" dashboards="true" customtabs="true">
       <folder constantId="2" description="Contacts"/>
       <lookup constantId="1" class="contactType" table="lookup_contact_types" description="Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_contactemail_types" description="Email Types"/>
@@ -72,6 +72,7 @@
       <permission name="contacts-external_contacts-imports"              attributes="vaed" offline="vaed" description="Imports"/>
       <permission name="contacts-external-contact-updater"               attributes="v---" offline="----" description="Request contact information update"/>
       <permission name="contacts-external_contacts-history"              attributes="vaed" offline="vaed" description="Contact History"/>
+			<permission name="contacts-external_contacts-dashboards"           attributes="v---" offline="----" description="Dashboards"/>
       <report file="contacts_user.xml" type="user" permission="contacts" title="Contacts" description="Who are my contacts?"/>
     </category>
     <category id="4" name="Pipeline" folders="true" lookups="true" viewpoints="true" reports="true">
@@ -96,7 +97,7 @@
       <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Owner" description="What are all the opportunities based on ownership?"/>
       <report file="opportunity_contact.xml" type="user" permission="pipeline-opportunities" title="Opportunity Contacts" description="Who are the contacts of my opportunities?"/>
     </category>
-    <category id="1" name="Accounts" folders="true" lookups="true" reports="true" webdav="true" actionPlans="true">
+    <category id="1" name="Accounts" folders="true" lookups="true" reports="true" webdav="true" actionPlans="true" dashboards="true" customtabs="true">
       <folder constantId="1" description="Accounts"/>
       <lookup constantId="1" class="lookupList" table="lookup_account_types" description="Account Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="Revenue Types"/>
@@ -109,7 +110,7 @@
       <lookup constantId="128051431" class="lookupList" table="lookup_sub_segment" description="Sub Segment"/>
       <lookup constantId="128051432" class="lookupList" table="lookup_site_id" description="Site"/>
       <lookup constantId="158051538" class="lookupList" table="lookup_account_size" description="Account Size"/>
-	    <lookup constantId="181206161" class="lookupList" table="lookup_account_stage" description="Account Stage"/>
+      <lookup constantId="181206161" class="lookupList" table="lookup_account_stage" description="Account Stage"/>
       <webdav class="org.aspcfs.modules.accounts.webdav.AccountsWebdavContext"/>
       <permission name="accounts"                                        attributes="v---" offline="v---" description="Access to Accounts module"/>
       <permission name="accounts-accounts"                               attributes="vaed" offline="vaed" description="Account Records"/>
@@ -119,7 +120,7 @@
       <permission name="accounts-accounts-contacts-calls"                attributes="vaed" offline="vaed" description="Contact Activities"/>
       <permission name="accounts-accounts-contacts-completed-calls"      attributes="--e-" offline="--e-" description="Completed Activities"/>
       <permission name="accounts-accounts-contacts-messages"             attributes="vaed" offline="v--d" description="Contact Messages"/>
-      <permission name="accounts-accounts-contacts-documents"            attributes="vaed" offline="v---" description="Contact Documents"/>      
+      <permission name="accounts-accounts-contacts-documents"            attributes="vaed" offline="v---" description="Contact Documents"/>
       <permission name="accounts-accounts-contacts-move"                 attributes="v---" offline="----" description="Move contacts to other accounts"/>
       <permission name="accounts-accounts-contacts-history"              attributes="vaed" offline="vaed" description="Contact History"/>
       <permission name="accounts-accounts-opportunities"                 attributes="vaed" offline="vaed" description="Opportunities"/>
@@ -151,7 +152,8 @@
       <permission name="accounts-accounts-contacts-folders"              attributes="vaed" offline="vaed" description="Contact Folders"/>
       <permission name="accounts-accounts-contacts-opps-folders"         attributes="vaed" offline="vaed" description="Contact Opportunity Folders"/>
       <permission name="accounts-accounts-shareddocuments"               attributes="vaed" offline="----" description="Share Accounts Documents"/>
-      <permission name="accounts-accounts-documentstore"                 attributes="vaed" offline="----" description="Account Document Store"/>      
+      <permission name="accounts-accounts-documentstore"                 attributes="vaed" offline="----" description="Account Document Store"/>
+      <permission name="accounts-dashboards"                             attributes="v---" offline="----" description="Dashboards"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -306,6 +308,8 @@
       <permission name="admin-sysconfig"                                 attributes="v-e-" offline="v---" description="System Configuration"/>
       <permission name="admin-sysconfig-lists"                           attributes="v-e-" offline="v---" description="Configure Lookup Lists"/>
       <permission name="admin-sysconfig-folders"                         attributes="vaed" offline="v---" description="Configure Custom Folders &amp; Fields"/>
+      <permission name="admin-sysconfig-dashboard"                       attributes="vaed" offline="----" description="Configure Custom Dashboards"/>
+      <permission name="admin-sysconfig-customtab"                       attributes="vaed" offline="----" description="Configure Custom Tabs"/>
       <permission name="admin-object-workflow"                           attributes="vaed" offline="v---" description="Configure Object Workflow"/>
       <permission name="admin-sysconfig-categories"                      attributes="vaed" offline="v---" description="Configure Module Categories"/>
       <permission name="admin-sysconfig-logos"                           attributes="vaed" offline="v---" description="Configure Module Logos"/>
@@ -434,6 +438,8 @@
       <permission name="admin-usage"                                     attributes="v---" offline="----"/>
       <permission name="admin-sysconfig-lists"                           attributes="v-e-" offline="----"/>
       <permission name="admin-sysconfig-folders"                         attributes="vaed" offline="----"/>
+      <permission name="admin-sysconfig-dashboard"                       attributes="vaed" offline="----"/>
+      <permission name="admin-sysconfig-customtab"                       attributes="vaed" offline="----"/>
       <permission name="admin-object-workflow"                           attributes="vaed" offline="----"/>
       <permission name="admin-sysconfig-categories"                      attributes="vaed" offline="----"/>
       <permission name="admin-sysconfig-logos"                           attributes="vaed" offline="----" />
@@ -508,7 +514,7 @@
        <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>       
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -606,7 +612,7 @@
        <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>       
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -706,7 +712,7 @@
        <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>       
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -781,7 +787,7 @@
        <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>       
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -848,7 +854,7 @@
        <permission name="portal-user"                                    attributes="vaed" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>       
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -876,7 +882,7 @@
        <permission name="projects"                                       attributes="v---" offline="----" />
        <permission name="projects-personal"                              attributes="v---" offline="----" />
        <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />          
+       <permission name="projects-projects"                              attributes="vaed" offline="----" />
        <permission name="documents"                                      attributes="v---" offline="----" />
        <permission name="documents_documentstore"                        attributes="v---" offline="----" />
     </role>
@@ -935,7 +941,7 @@
        <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>              
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -1018,7 +1024,7 @@
        <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>              
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
@@ -1066,7 +1072,7 @@
        <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
        <permission name="product-catalog"                                attributes="v---" offline="----"/>
        <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>       
+       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
        <permission name="campaign"                                       attributes="v---" offline="----"/>
        <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
        <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>

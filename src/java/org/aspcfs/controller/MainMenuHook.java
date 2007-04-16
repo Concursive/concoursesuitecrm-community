@@ -163,10 +163,11 @@ public class MainMenuHook implements ControllerMainMenuHook {
           longHtml = systemStatus.getMenuProperty(
               thisMenu.getPageTitle(), "page_title");
         }
-        if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(
-            thisModule.getMenuKey())) ||
-            (thisModule.getMenuKey() == null && thisMenu.hasActionName(
-                actionPath))) {
+        if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(thisModule.getMenuKey())) ||
+            (thisModule.getMenuKey() == null && thisMenu.hasActionName(actionPath))) {
+        	String actionName = thisModule.getMenuKey() == null ? actionPath : thisModule.getMenuKey();        	
+        	String lastAction = (!actionPath.equalsIgnoreCase("CustomTabs")) ? actionPath: actionName;
+        	request.setAttribute("lastAction", lastAction);
           //The user is on this link/module
           if (pageTitle != null) {
             thisModule.setName(pageTitle);
