@@ -17,6 +17,7 @@ package org.aspcfs.modules.media.autoguide.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -432,11 +433,8 @@ public class InventoryList extends ArrayList implements SyncableList {
    * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       Inventory thisItem = this.getObject(rs);
       this.add(thisItem);
@@ -470,11 +468,10 @@ public class InventoryList extends ArrayList implements SyncableList {
    * to be streamed with lower overhead
    *
    * @param db  Description of Parameter
-   * @param pst Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -494,7 +491,7 @@ public class InventoryList extends ArrayList implements SyncableList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       if (pagedListInfo != null) {
         pagedListInfo.doManualOffset(db, pst);
@@ -565,17 +562,10 @@ public class InventoryList extends ArrayList implements SyncableList {
         " LEFT JOIN project_files files ON " +
         "   (i.inventory_id = files.link_item_id AND files.link_module_id = " + Constants.AUTOGUIDE + ") " +
         "WHERE i.inventory_id > -1 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

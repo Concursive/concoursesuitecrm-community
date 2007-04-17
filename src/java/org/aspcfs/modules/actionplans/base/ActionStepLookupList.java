@@ -173,7 +173,6 @@ public class ActionStepLookupList extends ArrayList  implements SyncableList {
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-    int items = -1;
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
@@ -181,8 +180,9 @@ public class ActionStepLookupList extends ArrayList  implements SyncableList {
             "WHERE asl.code > 0 ");
     createFilter(db, sqlFilter);
     sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", asl.description ");
-    items = prepareFilter(pst);
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString());
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       ActionStepLookup thisItem = new ActionStepLookup(rs);
       this.add(thisItem);
@@ -296,7 +296,7 @@ public class ActionStepLookupList extends ArrayList  implements SyncableList {
     return obj;
   }
   
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
     //Need to build a base SQL statement for returning records
      sqlSelect.append(" SELECT ");
@@ -309,22 +309,21 @@ public class ActionStepLookupList extends ArrayList  implements SyncableList {
      	createFilter(db, buff);
      	sqlFilter = buff.toString();
      }
-     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+     PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
      prepareFilter(pst);
 
-     return  DatabaseUtils.executeQuery(db, pst, pagedListInfo);
-  }
-  
-  
-  
-  /**
-   * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
-   * @exception  SQLException  Description of the Exception
-   */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-  	return queryList(db, pst, "", "");
+     return  pst;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+    return prepareList(db, "", "");
+  }
 }
 

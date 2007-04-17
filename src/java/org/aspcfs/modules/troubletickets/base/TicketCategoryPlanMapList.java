@@ -168,7 +168,8 @@ public class TicketCategoryPlanMapList extends ArrayList  implements SyncableLis
     } else {
       sqlOrder.append("ORDER BY tpm.map_id ");
     }
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString());
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       TicketCategoryPlanMap thisMap = new TicketCategoryPlanMap(rs);
       this.add(thisMap);
@@ -507,7 +508,7 @@ public class TicketCategoryPlanMapList extends ArrayList  implements SyncableLis
     return obj;
   }
   
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
   	StringBuffer sqlSelect = new StringBuffer();
   	 //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -524,18 +525,17 @@ public class TicketCategoryPlanMapList extends ArrayList  implements SyncableLis
     	createFilter(db, buff);
     	sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
     prepareFilter(pst);
-  	return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+  	return pst;
   }
   
   /**
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-  	return queryList(db, pst, "", "");
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+  	return prepareList(db, "", "");
   }
 
 }

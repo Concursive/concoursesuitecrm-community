@@ -147,38 +147,31 @@ public class ReportTypeList extends HtmlSelect {
    *           Description of the Exception
    */
 
-  public ResultSet queryList(Connection db, PreparedStatement pst)
+  public PreparedStatement prepareList(Connection db)
       throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("LookupList-> lookup_report_type");
     }
-    Statement st = null;
-    ResultSet rs = null;
-
+    PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT * " +
         "FROM lookup_report_type " +
         "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-    //TODO: see if this gets closed
-    return rs;
+    pst = db.prepareStatement(sql.toString());
+    return pst;
   }
 
   /**
    * Description of the Method
-   * 
+   *
    * @param db
    *          Description of Parameter
    * @throws SQLException
    *           Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       ReportType thisElement = this.getObject(rs);
       this.add(thisElement);

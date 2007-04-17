@@ -15,7 +15,6 @@
  */
 package org.aspcfs.modules.service.sync;
 
-import org.aspcfs.modules.service.base.PacketContext;
 import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.modules.service.sync.base.SyncPackage;
 import org.aspcfs.controller.SystemStatus;
@@ -39,7 +38,6 @@ public interface SyncModule {
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  packetContext     Description of the Parameter
    * @param  syncClient        Description of the Parameter
    * @param  syncPackage       Description of the Parameter
    * @param  input             Description of the Parameter
@@ -56,6 +54,6 @@ public interface SyncModule {
    *
    * @return    The syncTables value
    */
-  public ArrayList getSyncTables();
+  public ArrayList<String> getSyncTables();
 }
 

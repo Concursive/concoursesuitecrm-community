@@ -171,24 +171,25 @@ public class PermissionList extends Vector implements SyncableList{
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    ResultSet rs = this.queryList(db, null);
+    PreparedStatement pst = this.prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       this.addElement(PermissionList.getObject(rs));
     }
     rs.close();
+    if(pst != null){
+      pst.close();
+    }
   }
 
   /**
    * Description of the Method
    *
    * @param db
-   * @param pst
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    ResultSet rs = null;
-
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -201,11 +202,10 @@ public class PermissionList extends Vector implements SyncableList{
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY c." + DatabaseUtils.addQuotes(db, "level") + ", c.category, p." + DatabaseUtils.addQuotes(db, "level") + " ");
 
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
-    rs = pst.executeQuery();
-    return rs;
+    return pst;
   }
 
   /**

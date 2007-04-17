@@ -89,6 +89,18 @@ public class PropertyMapList extends HashMap {
       mapProperties.setSequence((String) map.getAttribute("sequence"));
       mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
 
+      if (map.getAttribute("extends") != null) {
+        //referred mapping's properties need to be included for this map
+        PropertyMap extendsMap = getMap((String) map.getAttribute("extends"));
+        if (extendsMap != null) {
+          Iterator j = extendsMap.iterator();
+          while (j.hasNext()) {
+            Property thisProperty = (Property) j.next();
+            mapProperties.add(thisProperty);
+          }
+        }
+      }
+      
       //Get any property nodes
       NodeList nl = map.getChildNodes();
       for (int i = 0; i < nl.getLength(); i++) {

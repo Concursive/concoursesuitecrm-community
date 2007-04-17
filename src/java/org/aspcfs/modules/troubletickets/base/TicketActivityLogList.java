@@ -16,6 +16,7 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -205,8 +206,8 @@ public class TicketActivityLogList extends ArrayList {
    * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       TicketActivityLog thisActivity = this.getObject(rs);
       this.add(thisActivity);
@@ -222,11 +223,10 @@ public class TicketActivityLogList extends ArrayList {
    * Description of the Method
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -247,7 +247,7 @@ public class TicketActivityLogList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
 
@@ -296,17 +296,10 @@ public class TicketActivityLogList extends ArrayList {
 
     sqlGroup.append(
         "GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc, alert_date_timezone ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlGroup.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

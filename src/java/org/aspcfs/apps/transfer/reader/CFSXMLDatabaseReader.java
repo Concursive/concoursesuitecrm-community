@@ -23,7 +23,6 @@ import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.apps.transfer.reader.cfsdatabasereader.Property;
 import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMap;
 import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
-import org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportLookupTables;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.service.base.PacketContext;
 import org.aspcfs.modules.service.base.Record;
@@ -62,7 +61,7 @@ public class CFSXMLDatabaseReader implements DataReader {
 
   private PacketContext packetContext = new PacketContext();
 
-  private final static Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.CFSXMLDatabaseReader.class);
+  private final static Logger log = Logger.getLogger(org.aspcfs.apps.transfer.reader.CFSXMLDatabaseReader.class);
 
 
   /**
@@ -309,7 +308,7 @@ public class CFSXMLDatabaseReader implements DataReader {
     try {
       mappings = new PropertyMapList(processConfigFile, modules);
     } catch (Exception e) {
-      logger.info(e.toString());
+      log.error(e.toString());
       return false;
     }
     return true;
@@ -376,9 +375,9 @@ public class CFSXMLDatabaseReader implements DataReader {
    */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
-
+    long milies = System.currentTimeMillis();
+    log.info("[Begin] XMLDatabase reader.");
     try {
-
       Iterator i = dataRecords.iterator();
       while (i.hasNext()) {
         DataRecord dataRecord = (DataRecord) i.next();
@@ -393,19 +392,19 @@ public class CFSXMLDatabaseReader implements DataReader {
             "org.aspcfs.modules.service.base.TransactionMeta");
         transaction.addMapping("meta", metaMapping);
 
-        ArrayList items = new ArrayList();
+        ArrayList<DataRecord> items = new ArrayList<DataRecord>();
         DataRecord meta = getMetaInfo(dataRecord);
         if (meta != null) {
           //continue only if meta information is available
           items.add(meta);
-          logger.info("ADDING: " + dataRecord.getName());
+          log.debug("ADDING: " + dataRecord.getName());
           items.add(dataRecord);
           transaction.build(items);
 
           transaction.execute(connection, connectionLookup);
 
           if (transaction.hasError()) {
-            logger.info("ERROR: " + transaction.getErrorMessage());
+            log.error("ERROR: " + transaction.getErrorMessage());
             break;
           }
 
@@ -431,9 +430,12 @@ public class CFSXMLDatabaseReader implements DataReader {
         }
       }
     } catch (Exception e) {
-      logger.info(e.toString());
+      log.error(e.toString());
       e.printStackTrace(System.out);
       return false;
+    } finally {
+      log.info("[End] XMLDatabase reader.");
+      log.info("Time: "+ (System.currentTimeMillis() - milies) + " ms.");
     }
     return processOK;
   }

@@ -168,7 +168,8 @@ public class TicketCategoryDraftPlanMapList extends ArrayList  implements Syncab
     } else {
       sqlOrder.append("ORDER BY tdpm.map_id ");
     }
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString());
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       TicketCategoryDraftPlanMap thisMap = new TicketCategoryDraftPlanMap(rs);
       this.add(thisMap);
@@ -521,7 +522,7 @@ public class TicketCategoryDraftPlanMapList extends ArrayList  implements Syncab
     return obj;
   }
   
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
   	StringBuffer sqlSelect = new StringBuffer();
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -538,20 +539,19 @@ public class TicketCategoryDraftPlanMapList extends ArrayList  implements Syncab
     	createFilter(db, buff);
     	sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter + sqlOrder);
     prepareFilter(pst);
-    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return pst;
   }
 
   
   /**
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-  	return queryList(db, pst, "", "");
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+  	return prepareList(db, "", "");
   }
 
   

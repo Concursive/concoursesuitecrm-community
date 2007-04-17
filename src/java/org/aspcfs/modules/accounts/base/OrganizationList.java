@@ -1551,8 +1551,8 @@ public class OrganizationList extends Vector implements SyncableList {
    * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       Organization thisOrganization = this.getObject(rs);
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
@@ -1595,7 +1595,8 @@ public class OrganizationList extends Vector implements SyncableList {
    * @return                Description of the Return Value
    * @throws  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+    PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
 
@@ -1698,14 +1699,7 @@ public class OrganizationList extends Vector implements SyncableList {
     items = prepareFilter(pst);
     pst.setBoolean(++items, true);
     pst.setBoolean(++items, true);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = DatabaseUtils.executeQuery(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

@@ -17,6 +17,7 @@ package org.aspcfs.modules.communications.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -296,12 +297,8 @@ public class SurveyAnswerList extends Vector {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       SurveyAnswer thisAnswer = new SurveyAnswer(rs);
       this.add(thisAnswer);
@@ -330,11 +327,10 @@ public class SurveyAnswerList extends Vector {
    * Returns SQL ResultSet after executing the query
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
 
     ResultSet rs = null;
     int items = -1;
@@ -358,7 +354,7 @@ public class SurveyAnswerList extends Vector {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       if (pagedListInfo != null) {
         pagedListInfo.doManualOffset(db, pst);
@@ -410,14 +406,10 @@ public class SurveyAnswerList extends Vector {
             "FROM active_survey_answers sa, active_survey_responses sr " +
             "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
             "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    return rs;
+    return pst;
   }
 
 

@@ -211,8 +211,8 @@ public class InventoryOptionList extends ArrayList {
    * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       InventoryOption thisOption = this.getObject(rs);
       this.add(thisOption);
@@ -229,13 +229,10 @@ public class InventoryOptionList extends ArrayList {
    * to be streamed with lower overhead
    *
    * @param db  Description of Parameter
-   * @param pst Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    int items = -1;
-
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT io.inventory_id, io.option_id " +
@@ -244,10 +241,9 @@ public class InventoryOptionList extends ArrayList {
         "WHERE io.option_id > -1 ");
     createFilter(sql);
     sql.append("ORDER BY o." + DatabaseUtils.addQuotes(db, "level") + ", o.option_name ");
-    pst = db.prepareStatement(sql.toString());
-    items = prepareFilter(pst);
-    ResultSet rs = pst.executeQuery();
-    return rs;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    prepareFilter(pst);
+    return pst;
   }
 
 

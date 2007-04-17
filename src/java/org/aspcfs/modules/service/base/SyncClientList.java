@@ -16,6 +16,7 @@
 package org.aspcfs.modules.service.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -162,8 +163,8 @@ public class SyncClientList extends ArrayList {
    * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       SyncClient syncClient = new SyncClient(rs);
       this.add(syncClient);
@@ -184,7 +185,7 @@ public class SyncClientList extends ArrayList {
    * @return                Description of the Return Value
    * @throws  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -203,7 +204,7 @@ public class SyncClientList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
@@ -235,17 +236,10 @@ public class SyncClientList extends ArrayList {
         "o.* " +
         "FROM sync_client o " +
         "WHERE o.client_id >= 0 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

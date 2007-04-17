@@ -119,7 +119,7 @@ public class OrganizationPhoneNumberList extends PhoneNumberList implements Sync
    * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -144,7 +144,7 @@ public class OrganizationPhoneNumberList extends PhoneNumberList implements Sync
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
@@ -194,11 +194,10 @@ public class OrganizationPhoneNumberList extends PhoneNumberList implements Sync
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
 
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
-    return rs;
+    return pst;
   }
 
 
@@ -212,12 +211,16 @@ public class OrganizationPhoneNumberList extends PhoneNumberList implements Sync
    * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
-    ResultSet rs = queryList(db, null);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       OrganizationPhoneNumber thisPhoneNumber = this.getObject(rs);
       this.addElement(thisPhoneNumber);
     }
     rs.close();
+    if(pst != null){
+      pst.close();
+    }
   }
 
 

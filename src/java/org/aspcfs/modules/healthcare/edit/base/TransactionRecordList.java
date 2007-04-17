@@ -15,6 +15,7 @@
  */
 package org.aspcfs.modules.healthcare.edit.base;
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -107,8 +108,8 @@ public class TransactionRecordList extends Vector {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       TransactionRecord thisTransaction = this.getObject(rs);
       this.add(thisTransaction);
@@ -137,12 +138,10 @@ public class TransactionRecordList extends Vector {
    * Query this list directly from the database, and build it
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    ResultSet rs = null;
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     int items = -1;
 
     StringBuffer sqlSelect = new StringBuffer();
@@ -170,17 +169,10 @@ public class TransactionRecordList extends Vector {
         "bt.* " +
         "FROM billing_transaction bt " +
         "WHERE bt.id > 0 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

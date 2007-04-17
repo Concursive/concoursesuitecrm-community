@@ -17,6 +17,7 @@ package org.aspcfs.modules.media.autoguide.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -223,8 +224,8 @@ public class ModelList extends ArrayList implements SyncableList {
    * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       Model thisModel = new Model(rs);
       this.add(thisModel);
@@ -241,12 +242,10 @@ public class ModelList extends ArrayList implements SyncableList {
    * to be streamed with lower overhead
    *
    * @param db  Description of Parameter
-   * @param pst Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    ResultSet rs = null;
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     int items = -1;
 
     StringBuffer sql = new StringBuffer();
@@ -261,10 +260,9 @@ public class ModelList extends ArrayList implements SyncableList {
     sql.append("WHERE model.model_id > -1 ");
     createFilter(sql);
     sql.append("ORDER BY model_name ");
-    pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
-    return rs;
+    return pst;
   }
 
 

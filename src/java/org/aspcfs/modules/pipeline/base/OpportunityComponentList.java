@@ -855,21 +855,20 @@ public class OpportunityComponentList extends ArrayList implements SyncableList 
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    return queryList(db, pst, "", "");
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+    return prepareList(db, "", "");
   }
   
   /**
    * Description of the Method
    *
    * @param db
-   * @param pst
    * @param sqlFilter
    * @param sqlOrder
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
 
     //Need to build a base SQL statement for returning records
@@ -889,10 +888,9 @@ public class OpportunityComponentList extends ArrayList implements SyncableList 
       createFilter(db, buff);
       sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
     prepareFilter(pst);
-
-    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return pst;
   }
 
   /**
@@ -970,7 +968,8 @@ public class OpportunityComponentList extends ArrayList implements SyncableList 
       sqlOrder.append("ORDER BY oc.closed");
     }
 
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString());
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       OpportunityComponent thisOppComponent = new OpportunityComponent(rs);
       this.add(thisOppComponent);

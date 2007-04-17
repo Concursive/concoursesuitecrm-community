@@ -493,7 +493,8 @@ public class ActionPhaseWorkList extends ArrayList  implements SyncableList {
       sqlOrder.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", ap.phase_name ");
     }
     
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString());
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     
     while (rs.next()) {
       ActionPhaseWork actionPhaseWork = new ActionPhaseWork(rs);
@@ -709,7 +710,7 @@ public class ActionPhaseWorkList extends ArrayList  implements SyncableList {
     return obj;
   }
   
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
   	StringBuffer sqlSelect = new StringBuffer();
 //  Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -728,9 +729,9 @@ public class ActionPhaseWorkList extends ArrayList  implements SyncableList {
     	createFilter(db, buff);
     	sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
     prepareFilter(pst);
-    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return pst;
   }
 
   
@@ -739,8 +740,8 @@ public class ActionPhaseWorkList extends ArrayList  implements SyncableList {
    * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-  	return queryList(db, pst, "", "");
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+  	return prepareList(db, "", "");
   }
 
   

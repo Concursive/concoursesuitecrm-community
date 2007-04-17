@@ -56,7 +56,9 @@ CREATE TABLE campaign_run (
   total_contacts INTEGER DEFAULT 0,
   total_sent INTEGER DEFAULT 0,
   total_replied INTEGER DEFAULT 0,
-  total_bounced INTEGER DEFAULT 0
+  total_bounced INTEGER DEFAULT 0,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE excluded_recipient (
@@ -89,7 +91,9 @@ CREATE TABLE scheduled_recipient (
   scheduled_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   sent_date TIMESTAMP(3) DEFAULT NULL,
   reply_date TIMESTAMP(3) DEFAULT NULL,
-  bounce_date TIMESTAMP(3) DEFAULT NULL
+  bounce_date TIMESTAMP(3) DEFAULT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE lookup_survey_types (

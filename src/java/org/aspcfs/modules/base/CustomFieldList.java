@@ -229,12 +229,11 @@ public class CustomFieldList extends ArrayList implements SyncableList {
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    return queryList(db, pst, "", "");
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+    return prepareList(db, "", "");
   }
 
 
@@ -242,13 +241,12 @@ public class CustomFieldList extends ArrayList implements SyncableList {
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @param  sqlFilter         Description of the Parameter
    * @param  sqlOrder          Description of the Parameter
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
 
     //Need to build a base SQL statement for returning records
@@ -262,10 +260,9 @@ public class CustomFieldList extends ArrayList implements SyncableList {
       createFilter(buff);
       sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter + sqlOrder);
     prepareFilter(pst);
-
-    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return pst;
   }
 
 
@@ -291,8 +288,8 @@ public class CustomFieldList extends ArrayList implements SyncableList {
     sqlSelect.append("FROM custom_field_info cfi ");
     sqlSelect.append("WHERE cfi.field_id > -1 ");
 
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString());
-
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString());
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       CustomField thisField = new CustomField(rs);
       this.add(thisField);

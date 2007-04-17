@@ -150,7 +150,8 @@ public class PlanEditorList extends ArrayList implements SyncableList {
     ResultSet rs = null;
     StringBuffer sqlFilter = new StringBuffer();
     createFilter(db, sqlFilter);
-    rs = queryList(db, pst, sqlFilter.toString(), "");
+    pst = prepareList(db, sqlFilter.toString(), "");
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       PlanEditor thisEditor = new PlanEditor(rs);
       this.add(thisEditor);
@@ -203,7 +204,7 @@ public class PlanEditorList extends ArrayList implements SyncableList {
     return obj;
   }
   
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
     sqlSelect.append( "SELECT apel.* " +
         "FROM action_plan_editor_lookup apel " +
@@ -214,19 +215,21 @@ public class PlanEditorList extends ArrayList implements SyncableList {
     	createFilter(db, buff);
     	sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(sqlSelect + sqlFilter +
+    PreparedStatement pst = db.prepareStatement(sqlSelect + sqlFilter +
             "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + " ");
     prepareFilter(pst);
-    return  DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return  pst;
   }
   
   /**
-   * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * Description of the Method
+   *
+   * @param db
+   * @return
+   * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-  	return queryList(db, pst, "", "");
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+    return prepareList(db, "", "");
   }
 
   /**

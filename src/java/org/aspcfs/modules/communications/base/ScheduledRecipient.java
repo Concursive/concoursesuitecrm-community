@@ -18,10 +18,13 @@ package org.aspcfs.modules.communications.base;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
+import com.darkhorseventures.framework.beans.GenericBean;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *  Description of the Class
@@ -31,26 +34,26 @@ import java.sql.SQLException;
  * @version    $Id: ScheduledRecipient.java,v 1.5 2002/09/19 19:24:02 mrajkowski
  *      Exp $
  */
-public class ScheduledRecipient {
+public class ScheduledRecipient extends GenericBean{
 
-  int id = -1;
-  int campaignId = -1;
-  int contactId = -1;
-  int runId = -1;
-  int statusId = 0;
-  String status = null;
-  java.sql.Timestamp statusDate = null;
-  java.sql.Timestamp scheduledDate = null;
-  java.sql.Timestamp sentDate = null;
-  java.sql.Timestamp replyDate = null;
-  java.sql.Timestamp bounceDate = null;
-
+  private int id = -1;
+  private int campaignId = -1;
+  private int contactId = -1;
+  private int runId = -1;
+  private int statusId = 0;
+  private String status = null;
+  private java.sql.Timestamp statusDate = null;
+  private java.sql.Timestamp scheduledDate = null;
+  private java.sql.Timestamp sentDate = null;
+  private java.sql.Timestamp replyDate = null;
+  private java.sql.Timestamp bounceDate = null;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
   /**
    *  Constructor for the ScheduledRecipient object
    */
   public ScheduledRecipient() { }
-
 
   /**
    *  Constructor for the ScheduledRecipient object
@@ -64,7 +67,6 @@ public class ScheduledRecipient {
     queryRecord(db, Integer.parseInt(id));
   }
 
-
   /**
    *  Constructor for the ScheduledRecipient object
    *
@@ -76,7 +78,6 @@ public class ScheduledRecipient {
   public ScheduledRecipient(Connection db, int campaignId, int contactId) throws SQLException {
     queryRecord(db, campaignId, contactId);
   }
-
 
   /**
    *  Constructor for the ScheduledRecipient object
@@ -90,6 +91,15 @@ public class ScheduledRecipient {
     queryRecord(db, id);
   }
 
+  /**
+   * Constructor for the ScheduledRecipient object
+   *
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public ScheduledRecipient(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
 
   /**
    *  Sets the id attribute of the ScheduledRecipient object
@@ -100,7 +110,6 @@ public class ScheduledRecipient {
     this.id = tmp;
   }
 
-
   /**
    *  Sets the id attribute of the ScheduledRecipient object
    *
@@ -109,7 +118,6 @@ public class ScheduledRecipient {
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
-
 
   /**
    *  Sets the campaignId attribute of the ScheduledRecipient object
@@ -410,6 +418,47 @@ public class ScheduledRecipient {
     return bounceDate;
   }
 
+  /**
+   * @return the entered
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
+  }
+
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(java.sql.Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    *  Description of the Method
@@ -485,17 +534,33 @@ public class ScheduledRecipient {
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
 
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       id = DatabaseUtils.getNextSeq(db, "scheduled_recipient_id_seq");
       sql.append(
           "INSERT INTO scheduled_recipient " +
           "(" + (id > -1 ? "id, " : "") + "campaign_id, contact_id, run_id, status_id, status, status_date, scheduled_date, " +
-          "sent_date, reply_date, bounce_date) ");
+          "sent_date, reply_date, bounce_date, modified, entered) ");
       sql.append(
-          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
-      int i = 0;
+          "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+      if (modified != null) {
+        sql.append(", ?");
+      }else{
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+      }
+      if (entered != null) {
+        sql.append(", ?");
+      }else{
+        sql.append(", " +DatabaseUtils.getCurrentTimestamp(db));
+      }
+      sql.append(") ");
+
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      int i = 0;
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -529,15 +594,29 @@ public class ScheduledRecipient {
       } else {
         pst.setNull(++i, java.sql.Types.TIMESTAMP);
       }
+      if (modified != null) {
+        pst.setTimestamp(++i, this.getModified());
+      }
+      if (entered != null) {
+        pst.setTimestamp(++i, this.getEntered());
+      }
       pst.execute();
-      pst.close();
+      if(pst != null){
+        pst.close();
+      }
       id = DatabaseUtils.getCurrVal(db, "scheduled_recipient_id_seq", id);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -555,7 +634,7 @@ public class ScheduledRecipient {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE scheduled_recipient " +
         "SET run_id = ?, status_id = ?, status = ?, status_date = ?, scheduled_date = ?, " +
-        "sent_date = ?, reply_date = ?, bounce_date = ? " +
+        "sent_date = ?, reply_date = ?, bounce_date = ?, modified =  " + DatabaseUtils.getCurrentTimestamp(db) +
         "WHERE id = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, runId);
@@ -592,6 +671,46 @@ public class ScheduledRecipient {
     return records;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID was not specified");
+    }
+
+    int recordCount = 0;
+    boolean commit = true;
+    Statement st = db.createStatement();
+
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      recordCount = st.executeUpdate("DELETE FROM scheduled_recipient WHERE id = " + this.getId());
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.toString());
+    } finally {
+      if(st != null){
+        st.close();
+      }
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return (recordCount != 0);
+  }
 
   /**
    *  Description of the Method
@@ -617,6 +736,8 @@ public class ScheduledRecipient {
     sentDate = rs.getTimestamp("sent_date");
     replyDate = rs.getTimestamp("reply_date");
     bounceDate = rs.getTimestamp("bounce_date");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 
 }

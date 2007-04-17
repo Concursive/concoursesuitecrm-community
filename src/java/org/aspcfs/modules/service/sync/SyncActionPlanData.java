@@ -58,7 +58,7 @@ public class SyncActionPlanData extends SyncData implements SyncModule {
    *              Description of the Exception
    */
   public boolean process(Connection db, SystemStatus systemStatus, HashMap objectMap, SyncPackage syncPackage,
-      SyncClient syncClient, HashMap input, Timestamp lastAnchor, Timestamp nextAnchor) 
+      SyncClient syncClient, HashMap input, Timestamp lastAnchor, Timestamp nextAnchor)
           throws SQLException {
 
     log.info("Adding Sync Package Data Records");
@@ -111,6 +111,10 @@ public class SyncActionPlanData extends SyncData implements SyncModule {
           db, (SyncTable)objectMap.get("ticketCategoryDraftPlanMapList"), TransactionItem.SYNC, input);
       this.insertSyncPackageData(
           db, (SyncTable)objectMap.get("campaignList"), TransactionItem.SYNC, input);
+      this.insertSyncPackageData(
+          db, (SyncTable)objectMap.get("campaignRunList"), TransactionItem.SYNC, input);
+      this.insertSyncPackageData(
+          db, (SyncTable)objectMap.get("scheduledRecipientList"), TransactionItem.SYNC, input);
     }
 
     return true;
@@ -118,11 +122,12 @@ public class SyncActionPlanData extends SyncData implements SyncModule {
 
   /**
    * Gets the syncTables attribute of the SyncActionPlanData object
-   * 
+   *
    * @return The syncTables value
    */
-  public ArrayList getSyncTables() {
-    ArrayList syncTables = new ArrayList();
+  public ArrayList<String> getSyncTables() {
+    ArrayList<String> syncTables = new ArrayList<String>();
+
     syncTables.add("lookupStepActionsList");
     syncTables.add("actionPlanCategoryList");
     syncTables.add("actionPlanConstantsList");
@@ -144,6 +149,9 @@ public class SyncActionPlanData extends SyncData implements SyncModule {
     syncTables.add("ticketCategoryPlanMapList");
     syncTables.add("ticketCategoryDraftPlanMapList");
     syncTables.add("campaignList");
+    syncTables.add("campaignRunList");
+    syncTables.add("scheduledRecipientList");
+
     return syncTables;
   }
 }

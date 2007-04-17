@@ -110,8 +110,8 @@ while (mapItems.hasNext()) {
         listMap.setMappedClassName("com.zeroio.iteam.base.RequirementMapList");
       } else if (id.equals("activeSurveyAnswerItem")) {
         listMap.setMappedClassName("org.aspcfs.modules.communications.base.ActiveSurveyAnswerItemList");
-      } else if (id.equals("projectFilesThumbnail")) {
-        //Missing list class
+      } else if (id.equals("projectFilesThumbnail") || id.equals("instantCampaign")) {
+        //No list class
         continue;
       } else if (id.equals("compileSyncData") || id.equals("processSyncPackageDownload")) {
         //CustomActionHandlers

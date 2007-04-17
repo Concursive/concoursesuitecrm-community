@@ -20,6 +20,7 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -457,7 +458,8 @@ public class CampaignReport {
       PreparedStatement pst = null;
       SurveyAnswerList answerList = new SurveyAnswerList();
       answerList.setQuestionId(thisQuestion.getId());
-      ResultSet rs = answerList.queryList(db, pst);
+      pst = answerList.prepareList(db);
+      ResultSet rs = DatabaseUtils.executeQuery(db, pst);
       while (rs.next()) {
         SurveyAnswer thisAnswer = buildResponseRecord(rs);
         answerList.add(thisAnswer);
@@ -644,7 +646,8 @@ public class CampaignReport {
       PreparedStatement pst = null;
       SurveyAnswerList answerList = new SurveyAnswerList();
       answerList.setQuestionId(question.getId());
-      ResultSet rs = answerList.queryList(db, pst);
+      pst = answerList.prepareList(db);
+      ResultSet rs = DatabaseUtils.executeQuery(db, pst);
       while (rs.next()) {
         SurveyAnswer thisAnswer = buildResponseRecord(rs);
         answerList.add(thisAnswer);
@@ -846,7 +849,8 @@ public class CampaignReport {
       answers = new ActiveSurveyAnswerItemList();
       answers.setContactId(thisAnswer.getContactId());
       answers.setAnswerId(thisAnswer.getId());
-      ResultSet rs = answers.queryList(db, pst);
+      pst = answers.prepareList(db);
+      ResultSet rs = DatabaseUtils.executeQuery(db, pst);
       while (rs.next()) {
         SurveyAnswerItem thisItem = buildItemRecord(rs);
         answers.add(thisItem);

@@ -3026,7 +3026,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    * @throws SQLException Description of Exception
    * @since 1.1
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
   
     ResultSet rs = null;
     int items = -1;
@@ -3053,7 +3053,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
 
     if (pagedListInfo != null) {
       // Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString()
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString()
           + sqlFilter.toString());
       items = prepareFilter(pst);
       if (System.getProperty("DEBUG") != null) {
@@ -3184,11 +3184,10 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
             + "WHERE c.contact_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
-    return rs;
+    return pst;
   }
   
   
@@ -3203,7 +3202,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    * @since 1.1
    */
   public boolean buildList(Connection db) throws SQLException {
-    ResultSet rs = queryList(db, null);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     boolean foundDefaultContact = false;
     while (rs.next()) {
       Contact thisContact = ContactList.getObject(rs);
@@ -3213,6 +3213,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       this.addElement(thisContact);
     }
     rs.close();
+    if(pst != null){
+      pst.close();
+    }
     if (defaultContactId != -1 && !foundDefaultContact) {
       Contact thisContact = new Contact(db, defaultContactId);
       this.addElement(thisContact);

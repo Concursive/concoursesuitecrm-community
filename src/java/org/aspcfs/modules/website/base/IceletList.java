@@ -231,17 +231,14 @@ public boolean getForWebsite() { return forWebsite; }
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       Icelet thisIcelet = this.getObject(rs);
       this.add(thisIcelet);
     }
     rs.close();
-    // TODO: pst is always null here
-    if (pst != null) {
-      pst.close();
-    }
+    pst.close();
   }
 
   public void buildList(HashMap map) {
@@ -256,11 +253,10 @@ public boolean getForWebsite() { return forWebsite; }
    * Description of the Method
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst)
+  public PreparedStatement prepareList(Connection db)
       throws SQLException {
 
     ResultSet rs = null;
@@ -279,7 +275,7 @@ public boolean getForWebsite() { return forWebsite; }
 
     if (pagedListInfo != null) {
       // Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString()
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString()
           + sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
@@ -305,18 +301,10 @@ public boolean getForWebsite() { return forWebsite; }
     }
     sqlSelect.append("wi.* " + "FROM web_icelet wi "
         + "WHERE icelet_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-
-    return rs;
+    return pst;
   }
 
   /**
@@ -558,7 +546,7 @@ public boolean getForWebsite() { return forWebsite; }
         iceletPropertyMap.put(new Integer(iceletProperty.getTypeConstant()), iceletProperty);
       }
       icelet.setIceletPropertyMap(iceletPropertyMap);
-      
+
       Element appearance = XMLUtils.getFirstChild(iceletElement, "appearance");
       if (appearance != null) {
         if (appearance.hasAttribute("website")) {
@@ -581,7 +569,7 @@ public boolean getForWebsite() { return forWebsite; }
 					icelet.setDashboards(dashboards);
 					System.out.println("Count of dashboards is:" + dashboards.size());
 				}
-        
+
         /** Infilling possible container menus where icelet take part. */
         Element containersXML = XMLUtils.getFirstChild(appearance, "containerMenus");
         if (containersXML != null) {

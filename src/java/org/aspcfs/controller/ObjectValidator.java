@@ -643,9 +643,9 @@ public class ObjectValidator {
     if (object.getClass().getName().equals(
         "org.aspcfs.modules.communications.base.Campaign")) {
       Campaign campaign = (Campaign) object;
-      if (campaign.getType() == Campaign.GENERAL && campaign.getActiveDate() != null
-              && campaign.getActiveDate().before(new java.util.Date())) {
-        addError(systemStatus, object, "activeDate", PAST_DATE);
+      if (campaign.getActiveDate() != null && 
+            campaign.getActiveDate().before(new java.util.Date())) {
+          addError(systemStatus, object, "activeDate", PAST_DATE);
       }
       checkError(systemStatus, object, "name", REQUIRED_FIELD);
     }

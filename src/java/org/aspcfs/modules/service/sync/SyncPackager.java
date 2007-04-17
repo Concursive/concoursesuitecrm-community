@@ -17,6 +17,7 @@ package org.aspcfs.modules.service.sync;
 
 import com.zeroio.iteam.base.FileItem;
 
+import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.reader.CFSXMLDatabaseReader;
 import org.aspcfs.apps.transfer.writer.CFSXMLWriter;
@@ -47,8 +48,10 @@ import java.util.Iterator;
  * @version
  */
 public class SyncPackager {
+  private final static Logger log = Logger.getLogger(org.aspcfs.modules.service.sync.SyncPackager.class);
+
   private SyncPackage syncPackage = null;
-  private ArrayList syncModules = new ArrayList();
+  private ArrayList<String> syncModules = new ArrayList<String>();
   private HashMap input = null;
   private int recipient = SyncPackage.SYNC_CLIENT;
 
@@ -286,7 +289,7 @@ public class SyncPackager {
    * @return    The syncTables value
    */
   public ArrayList getSyncTables() {
-    ArrayList syncTables = new ArrayList();
+    ArrayList<String> syncTables = new ArrayList<String>();
 
     try {
       Iterator modules = syncModules.iterator();
@@ -296,8 +299,7 @@ public class SyncPackager {
         if (object instanceof SyncModule) {
           SyncModule syncModule = (SyncModule) object;
           if (syncModule.getSyncTables() != null) {
-            syncTables.addAll(
-              syncModule.getSyncTables());
+            syncTables.addAll(syncModule.getSyncTables());
           }
         }
       }
@@ -358,7 +360,7 @@ public class SyncPackager {
       syncItemList.setPackageId(syncPackage.getId());
       syncItemList.buildList(db);
 
-      ArrayList dataRecords = new ArrayList();
+      ArrayList<DataRecord> dataRecords = new ArrayList<DataRecord>();
 
       Iterator syncItems = syncItemList.iterator();
       while (syncItems.hasNext()) {
@@ -408,7 +410,7 @@ public class SyncPackager {
       //Instantiate a DataWriter that writes sync data to an xml file
       CFSXMLWriter writer = new CFSXMLWriter();
       writer.setFilename(syncFileDest + syncFile);
-      writer.setRecipient(syncPackage.getRecipient());
+      //writer.setRecipient(syncPackage.getRecipient());
 
       if (reader.isConfigured() && writer.isConfigured()) {
         reader.initialize();

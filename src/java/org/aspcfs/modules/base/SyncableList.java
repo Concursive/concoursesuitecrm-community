@@ -15,7 +15,7 @@
  */
 package org.aspcfs.modules.base;
 
-
+import java.sql.SQLException;
 
 /**
  * A class that implements SyncableList has the necessary methods in order for
@@ -97,5 +97,14 @@ public interface SyncableList {
    */
   public String getUniqueField();
 
+  /**
+   * Returns all data for class from DB
+   *
+   * @param db
+   * @param pst
+   * @return Description of the Returned Value
+   */
+  //TODO: Add this method to interface
+  //public java.sql.ResultSet queryList(java.sql.Connection db, java.sql.PreparedStatement pst) throws Exception;
 }
 

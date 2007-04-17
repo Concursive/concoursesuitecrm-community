@@ -303,22 +303,25 @@ public class PermissionCategoryList extends Vector implements SyncableList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    ResultSet rs = this.queryList(db, null);
+    PreparedStatement pst = this.prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       this.add(PermissionCategoryList.getObject(rs));
     }
     rs.close();
+    if(pst != null){
+      pst.close();
+    }
   }
 
   /**
    * Description of the Method
    *
    * @param db
-   * @param pst
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -335,7 +338,7 @@ public class PermissionCategoryList extends Vector implements SyncableList {
     createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
@@ -381,17 +384,10 @@ public class PermissionCategoryList extends Vector implements SyncableList {
         "pc.* " +
         "FROM permission_category pc " +
         "WHERE pc.category_id > 0 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
   
   /**

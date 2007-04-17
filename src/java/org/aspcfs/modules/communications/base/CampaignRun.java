@@ -17,10 +17,13 @@ package org.aspcfs.modules.communications.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 
+import com.darkhorseventures.framework.beans.GenericBean;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Description of the Class
@@ -29,7 +32,7 @@ import java.sql.SQLException;
  * @version $Id$
  * @created September 16, 2004
  */
-public class CampaignRun {
+public class CampaignRun extends GenericBean {
 
   private int id = -1;
   private int campaignId = -1;
@@ -39,7 +42,51 @@ public class CampaignRun {
   private int totalSent = 0;
   private int totalReplied = 0;
   private int totalBounced = 0;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
+
+  /**
+   * Constructor for the CampaignRun object
+   */
+  public CampaignRun() {
+  }
+
+  /**
+   * Constructor for the CampaignRun object
+   *
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public CampaignRun(Connection db, int id) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM campaign_run " +
+        "WHERE id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    if(pst != null){
+      pst.close();
+    }
+    if (id == -1) {
+      throw new SQLException("Campaign Run ID not found");
+    }
+  }
+
+  /**
+   * Constructor for the CampaignRun object
+   *
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public CampaignRun(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
 
   /**
    * Sets the id attribute of the CampaignRun object
@@ -280,38 +327,47 @@ public class CampaignRun {
     return totalBounced;
   }
 
-
   /**
-   * Constructor for the CampaignRun object
+   * @return the entered
    */
-  public CampaignRun() {
+  public java.sql.Timestamp getEntered() {
+    return entered;
   }
 
-
   /**
-   * Constructor for the CampaignRun object
-   *
-   * @param db Description of the Parameter
-   * @param id Description of the Parameter
-   * @throws SQLException Description of the Exception
+   * @param entered the entered to set
    */
-  public CampaignRun(Connection db, int id) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT * " +
-        "FROM campaign_run " +
-        "WHERE id = ? ");
-    pst.setInt(1, id);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      buildRecord(rs);
-    }
-    rs.close();
-    pst.close();
-    if (id == -1) {
-      throw new SQLException("Campaign Run ID not found");
-    }
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
   }
 
+  /**
+   * @param entered the entered to set
+   */
+  public void setEntered(String entered) {
+    this.entered = DatabaseUtils.parseTimestamp(entered);
+  }
+
+  /**
+   * @return the modified
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(java.sql.Timestamp modified) {
+    this.modified = modified;
+  }
+
+  /**
+   * @param modified the modified to set
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
 
   /**
    * Description of the Method
@@ -324,48 +380,131 @@ public class CampaignRun {
     if (campaignId == -1) {
       throw new SQLException("Campaign ID not specified");
     }
-    StringBuffer sql = new StringBuffer();
-    id = DatabaseUtils.getNextSeq(db, "campaign_run_id_seq");
-    sql.append(
-        "INSERT INTO campaign_run " +
-        "(campaign_id, status, " +
-        "total_contacts, total_sent, total_replied, ");
-    if (runDate != null) {
-      sql.append("run_date, ");
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+
+        StringBuffer sql = new StringBuffer();
+      id = DatabaseUtils.getNextSeq(db, "campaign_run_id_seq");
+      sql.append(
+          "INSERT INTO campaign_run " +
+          "(campaign_id, status, " +
+          "total_contacts, total_sent, total_replied, ");
+      if (runDate != null) {
+        sql.append("run_date, ");
+      }
+      if (id > -1) {
+        sql.append("id, ");
+      }
+      sql.append("total_bounced, modified, entered) ");
+      sql.append("VALUES ");
+      sql.append("(?, ?, ?, ?, ?, ");
+      if (runDate != null) {
+        sql.append("?, ");
+      }
+      if (id > -1) {
+        sql.append("?, ");
+      }
+      sql.append("?");
+      if (modified != null) {
+        sql.append(", ?");
+      }else{
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
+      }
+      if (entered != null) {
+        sql.append(", ? ");
+      }else{
+        sql.append(", " +DatabaseUtils.getCurrentTimestamp(db));
+      }
+      sql.append(") ");
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      int i = 0;
+      pst.setInt(++i, campaignId);
+      pst.setInt(++i, status);
+      pst.setInt(++i, totalContacts);
+      pst.setInt(++i, totalSent);
+      pst.setInt(++i, totalReplied);
+      if (runDate != null) {
+        pst.setTimestamp(++i, runDate);
+      }
+      if (id > -1) {
+        pst.setInt(++i, id);
+      }
+      pst.setInt(++i, totalBounced);
+      if (modified != null) {
+        pst.setTimestamp(++i, this.getModified());
+      }
+      if (entered != null) {
+        pst.setTimestamp(++i, this.getEntered());
+      }
+      pst.execute();
+      if(pst != null){
+        pst.close();
+      }
+      id = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq", id);
+
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
-    if (id > -1) {
-      sql.append("id, ");
-    }
-    sql.append("total_bounced) ");
-    sql.append("VALUES ");
-    sql.append("(?, ?, ?, ?, ?, ");
-    if (runDate != null) {
-      sql.append("?, ");
-    }
-    if (id > -1) {
-      sql.append("?, ");
-    }
-    sql.append("?) ");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    int i = 0;
-    pst.setInt(++i, campaignId);
-    pst.setInt(++i, status);
-    pst.setInt(++i, totalContacts);
-    pst.setInt(++i, totalSent);
-    pst.setInt(++i, totalReplied);
-    if (runDate != null) {
-      pst.setTimestamp(++i, runDate);
-    }
-    if (id > -1) {
-      pst.setInt(++i, id);
-    }
-    pst.setInt(++i, totalBounced);
-    pst.execute();
-    pst.close();
-    id = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq", id);
+
     return true;
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID was not specified");
+    }
+
+    int recordCount = 0;
+    boolean commit = true;
+    Statement st = db.createStatement();
+
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+
+      recordCount = st.executeUpdate("DELETE FROM campaign_run WHERE id = " + this.getId());
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.toString());
+    } finally {
+      if(st != null){
+        st.close();
+      }
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+
+    return (recordCount != 0);
+  }
 
   /**
    * Description of the Method
@@ -382,6 +521,8 @@ public class CampaignRun {
     totalSent = rs.getInt("total_sent");
     totalReplied = rs.getInt("total_replied");
     totalBounced = rs.getInt("total_bounced");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 }
 

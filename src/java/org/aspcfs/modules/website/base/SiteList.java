@@ -17,6 +17,7 @@ package org.aspcfs.modules.website.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -134,8 +135,8 @@ public class SiteList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       Site thisSite = this.getObject(rs);
       this.add(thisSite);
@@ -151,11 +152,10 @@ public class SiteList extends ArrayList {
    * Description of the Method
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
 
     ResultSet rs = null;
     int items = -1;
@@ -175,7 +175,7 @@ public class SiteList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       rs = pst.executeQuery();
       if (rs.next()) {
@@ -202,18 +202,10 @@ public class SiteList extends ArrayList {
         "w.* " +
             "FROM web_site w " +
             "WHERE site_id > -1 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-
-    return rs;
+    return pst;
   }
 
 

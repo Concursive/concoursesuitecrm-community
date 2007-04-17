@@ -3,18 +3,13 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.Iterator;
-
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.util.Iterator;
 
 /**
  * @author Olga.Kaptyug
@@ -134,38 +129,38 @@ public class PaymentGatewayList extends HtmlSelect implements SyncableList {
     return thisElement;
   }
 
-  public ResultSet queryList(Connection db, PreparedStatement pst)
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
+  public PreparedStatement prepareList(Connection db)
       throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("LookupList-> lookup_payment_gateway");
     }
-    Statement st = null;
-    ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT * " +
         "FROM lookup_payment_gateway " +
         "ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", description ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-    //TODO: check if this gets closed
-    return rs;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    prepareFilter(pst);
+    return pst;
   }
 
   /**
    * Description of the Method
-   * 
+   *
    * @param db
    *          Description of Parameter
    * @throws SQLException
    *           Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       PaymentGateway thisElement = this.getObject(rs);
       this.add(thisElement);

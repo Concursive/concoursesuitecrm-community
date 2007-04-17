@@ -74,8 +74,11 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     }
 
     logger.info("ImportCommunications-> Inserting Campaign Run");
-    processOK = ImportLookupTables.saveCustomLookupList(
-        writer, db, mappings, "campaignRun");
+    writer.setAutoCommit(false);
+    CampaignRunList campaignRun = new CampaignRunList();
+    campaignRun.buildList(db);
+    mappings.saveList(writer, campaignRun, "insert");
+    processOK = writer.commit();
     if (!processOK) {
       return false;
     }
@@ -101,10 +104,12 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
 
-    logger.info(
-        "ImportCommunications-> Inserting Scheduled Recipient Records");
-    processOK = ImportLookupTables.saveCustomLookupList(
-        writer, db, mappings, "scheduledRecipient");
+    logger.info("ImportCommunications-> Inserting Scheduled Recipient Records");
+    writer.setAutoCommit(false);
+    ScheduledRecipientList scheduledRecipient = new ScheduledRecipientList();
+    scheduledRecipient.buildList(db);
+    mappings.saveList(writer, scheduledRecipient, "insert");
+    processOK = writer.commit();
     if (!processOK) {
       return false;
     }

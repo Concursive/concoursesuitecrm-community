@@ -15,13 +15,15 @@
  */
 package org.aspcfs.taglib;
 
+import java.io.Serializable;
+
 /**
  * Description of the ContainerMenuClass
  *
  * @author Artem.Zakolodkin
  * @created Feb 27, 2007
  */
-public class ContainerMenuClass {
+public class ContainerMenuClass implements Serializable {
   private String name = null;
   private String selected = null;
   private String stringParams = null;

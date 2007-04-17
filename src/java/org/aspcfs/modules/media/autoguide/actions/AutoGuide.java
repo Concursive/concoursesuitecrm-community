@@ -26,6 +26,7 @@ import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.media.autoguide.base.*;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.ImageUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.HtmlSelect;
@@ -954,8 +955,8 @@ public final class AutoGuide extends CFSModule {
     if (thisVehicle != null) {
       makeList.setYear(thisVehicle.getYear());
     }
-    PreparedStatement pst = null;
-    ResultSet rs = makeList.queryList(db, pst);
+    PreparedStatement pst = makeList.prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       Make thisMake = makeList.getObject(rs);
       makeSelect.addItem(thisMake.getId(), thisMake.getName());
@@ -985,7 +986,8 @@ public final class AutoGuide extends CFSModule {
       PreparedStatement pst = null;
       modelList.setYear(thisVehicle.getYear());
       modelList.setMakeId(thisVehicle.getMakeId());
-      ResultSet rs = modelList.queryList(db, pst);
+      pst = modelList.prepareList(db);
+      ResultSet rs = DatabaseUtils.executeQuery(db, pst);
       while (rs.next()) {
         Model thisModel = modelList.getObject(rs);
         modelSelect.addItem(thisModel.getId(), thisModel.getName());

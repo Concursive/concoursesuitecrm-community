@@ -815,11 +815,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
    * @throws  SQLException  Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       LookupElement thisElement = (LookupElement) this.getObject(rs);
       if (thisElement.getEnabled() == true || !showDisabledFlag || hasItem(
@@ -839,11 +836,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
    *  to be streamed with lower overhead
    *
    * @param  db             Description of the Parameter
-   * @param  pst            Description of the Parameter
    * @return                Description of the Return Value
    * @throws  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlCount = new StringBuffer();
@@ -857,7 +853,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       pagedListInfo.doManualOffset(db, pst);
       rs = pst.executeQuery();
@@ -904,17 +900,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
         "lt.* " +
         "FROM " + DatabaseUtils.getTableName(db, tableName) + " lt " +
         "WHERE code > -1 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

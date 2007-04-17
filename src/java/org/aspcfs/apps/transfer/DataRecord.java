@@ -13,7 +13,7 @@ import java.util.Iterator;
  * @version    $Id: DataRecord.java 16807 2006-10-30 14:42:47Z
  *      andrei.holub@corratech.com $
  */
-public class DataRecord extends ArrayList {
+public class DataRecord extends ArrayList<DataField> {
 
   //Requested object actions
   public final static String INSERT = "insert";

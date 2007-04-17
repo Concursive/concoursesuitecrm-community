@@ -16,6 +16,7 @@
 package org.aspcfs.modules.communications.base;
 
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
@@ -210,11 +211,8 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       SurveyAnswerItem thisItem = new SurveyAnswerItem();
       thisItem.buildDetailedRecord(rs);
@@ -240,11 +238,10 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
    * Builds and Returns a SQL ResultSet
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlSelect = new StringBuffer();
@@ -261,7 +258,7 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       if (pagedListInfo != null) {
         pagedListInfo.doManualOffset(db, pst);
@@ -308,14 +305,11 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
         "asi.item_id, asi.answer_id, asi.comments, asr.contact_id, asr.entered  " +
             "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
             "WHERE asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    return rs;
+
+    return pst;
   }
 
 

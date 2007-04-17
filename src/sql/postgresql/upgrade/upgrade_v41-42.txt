@@ -42,6 +42,11 @@
 ## TODO: the following script needs description translations
 2007-04-12-script03-mr.bsh
 
+# instant campaign syncing
+2007-03-28-script01-ananth.sql
+2007-03-28-script01-holub.sql
+
+
 ##############################################################################
 # Run each time after upgrading a system (NOTE: this is a temporary measure)
 2005-07-20-script01-mr.bsh

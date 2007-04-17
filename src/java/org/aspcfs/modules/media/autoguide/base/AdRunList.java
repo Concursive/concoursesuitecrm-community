@@ -17,6 +17,7 @@ package org.aspcfs.modules.media.autoguide.base;
 
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -334,11 +335,8 @@ public class AdRunList extends ArrayList implements SyncableList {
    * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       AdRun thisAdRun = this.getObject(rs);
       this.add(thisAdRun);
@@ -355,11 +353,10 @@ public class AdRunList extends ArrayList implements SyncableList {
    * to be streamed with lower overhead
    *
    * @param db  Description of Parameter
-   * @param pst Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlSelect = new StringBuffer();
@@ -375,7 +372,7 @@ public class AdRunList extends ArrayList implements SyncableList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      PreparedStatement pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
       if (pagedListInfo != null) {
         pagedListInfo.doManualOffset(db, pst);
@@ -408,17 +405,10 @@ public class AdRunList extends ArrayList implements SyncableList {
         "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype " +
         "WHERE ad.ad_run_id > -1 " +
         "AND ad.ad_type = adtype.code ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

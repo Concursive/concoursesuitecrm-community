@@ -1,5 +1,5 @@
 /*
- *  Copyright(c) 2006 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  Copyright(c) 2007 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
  *  rights reserved. This material cannot be distributed without written
  *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
  *  this material for internal use is hereby granted, provided that the above
@@ -15,25 +15,27 @@
  */
 package org.aspcfs.apps.transfer.reader;
 
+import java.io.File;
+import java.io.FileInputStream;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
+
 import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataReader;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.XMLUtils;
-import org.w3c.dom.Element;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 
 /**
  * Description of the Class
  *
- * @author Ananth
- * @created February 3, 2006
+ * @author holub
+ * @version $Id$
+ * @created Apr 3, 2007
+ *
  */
 public class CFSXMLReader implements DataReader {
   private static final Logger log = Logger.getLogger(org.aspcfs.apps.transfer.reader.CFSXMLReader.class);
@@ -90,7 +92,7 @@ public class CFSXMLReader implements DataReader {
    * @return The description value
    */
   public String getDescription() {
-    return "Coded test data";
+    return "Coded test data (StAX)";
   }
 
 
@@ -103,19 +105,10 @@ public class CFSXMLReader implements DataReader {
     boolean configOK = true;
     File importFile = new File(xmlDataFile);
     if (!importFile.exists()) {
-      log.error("CFSXMLReader-> Config: file not found: " + xmlDataFile);
+      log.error("file not found: " + xmlDataFile);
       configOK = false;
     }
 
-    //TODO: mappings needed??
-    /*
-     *  try {
-     *  mappings = new PropertyMapList(propertyFile, new ArrayList());
-     *  } catch (Exception e) {
-     *  logger.info("CFSXMLReader-> Config: mappings could not be loaded");
-     *  configOK = false;
-     *  }
-     */
     return configOK;
   }
 
@@ -128,57 +121,86 @@ public class CFSXMLReader implements DataReader {
    */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
+    long milies = System.currentTimeMillis();
+    log.info("[Begin] XML StAX reader.");
     try {
       log.info("xmlDataFile: " + xmlDataFile);
-      System.out.println("xmlDataFile: " + xmlDataFile);
-      File configFile = new File(xmlDataFile);
-      XMLUtils xml = new XMLUtils(configFile);
-
-      ArrayList recordList = new ArrayList();
-      XMLUtils.getAllChildren(
-          xml.getFirstChild("cfsdata"), "dataRecord", recordList);
-      log.info("Records: " + recordList.size());
-      System.out.println("Records: " + recordList.size());
-
-      Iterator records = recordList.iterator();
-      while (records.hasNext()) {
-        Element record = (Element) records.next();
-        DataRecord thisRecord = new DataRecord();
-
-        thisRecord.setName((String) record.getAttribute("name"));
-        thisRecord.setAction((String) record.getAttribute("action"));
-        log.info(thisRecord.getName() + " -> " + thisRecord.getAction());
-        System.out.println(thisRecord.getName() + " -> " + thisRecord.getAction());
-        thisRecord.setShareKey(
-            StringUtils.isTrue(
-                (String) record.getAttribute("shareKey")));
-
-        //Insert data fields under this record
-        ArrayList fieldList = new ArrayList();
-        XMLUtils.getAllChildren(record, "dataField", fieldList);
-        Iterator fields = fieldList.iterator();
-        while (fields.hasNext()) {
-          Element field = (Element) fields.next();
-          DataField thisField = new DataField();
-          thisField.setName((String) field.getAttribute("name"));
-          thisField.setAlias((String) field.getAttribute("alias"));
-          thisField.setValueLookup((String) field.getAttribute("valueLookup"));
-          thisField.setValue(
-              XMLUtils.getNodeText(field));
-
-          thisRecord.add(thisField);
-        }
-        processOK = writer.save(thisRecord);
-        if (!processOK) {
-          break;
-        }
+      
+      XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(xmlDataFile));
+      DataRecord dataRecord = null;
+      DataField dataField = null;
+      boolean dataFieldClosed = true;
+      while(reader.hasNext()) {
+       reader.next();
+       //"dataField" is most frequently element. Check its first for speedup!
+       if(reader.isStartElement() && "dataField".equals(reader.getName().toString())){
+         dataFieldClosed = false;
+         dataField = new DataField();
+         int count = reader.getAttributeCount();
+         if(count > 0){
+           for(int i = 0; i < count; i++){
+             if("name".equals(reader.getAttributeName(i).toString())){
+               dataField.setName(reader.getAttributeValue(i));
+             }else if("alias".equals(reader.getAttributeName(i).toString())){
+               dataField.setAlias(reader.getAttributeValue(i));
+             }else if("valueLookup".equals(reader.getAttributeName(i).toString())){
+               dataField.setValueLookup(reader.getAttributeValue(i));
+             }else{
+               log.warn("DataField attribute \"" + reader.getAttributeName(i) + "\"] not supported");
+             }
+           }
+         }
+       }else if(reader.isEndElement() && "dataField".equals(reader.getName().toString())){
+         dataFieldClosed = true;
+         dataRecord.add(dataField);
+         dataField = null;
+       }else if(!dataFieldClosed && reader.hasText()){
+         dataField.setValue(reader.getText());
+       }else if(reader.isStartElement() && "dataRecord".equals(reader.getName().toString())){
+         dataRecord = new DataRecord();
+         int count = reader.getAttributeCount();
+         if(count > 0){
+           for(int i = 0; i < count; i++){
+             if("name".equals(reader.getAttributeName(i).toString())){
+               dataRecord.setName(reader.getAttributeValue(i));
+             }else if("action".equals(reader.getAttributeName(i).toString())){
+               dataRecord.setAction(reader.getAttributeValue(i));
+             }else if("shareKey".equals(reader.getAttributeName(i).toString())){
+               dataRecord.setShareKey(StringUtils.isTrue(reader.getAttributeValue(i)));
+             }else{
+               log.warn("DataRecord attribute \"" + reader.getAttributeName(i) + "\"] not supported");
+             }
+           }
+           log.debug(dataRecord.getName() + " -> " + dataRecord.getAction());
+         }
+       }else if(reader.isEndElement() && "dataRecord".equals(reader.getName().toString())){
+         processOK = writer.save(dataRecord);
+         dataRecord = null;
+         if (!processOK) {
+           break;
+         }
+       }else{
+         if(reader.isStartElement() || reader.isEndElement()){
+           //Suppress warnings for <aspcfs> and <cfsdata> elements
+           if(!"aspcfs".equals(reader.getName().toString()) && !"cfsdata".equals(reader.getName().toString())){
+             log.warn("Element Name: " + reader.getName().toString() + " not supported!");
+           }
+         }else{
+           //Suppress warning for document end
+           if(reader.getEventType() != XMLEvent.END_DOCUMENT){
+             log.warn("Not supported event. Event type: " + reader.getEventType());
+           }
+         }
+       }
       }
     } catch (Exception e) {
       log.error(e.toString());
       e.printStackTrace(System.out);
       return false;
+    } finally {
+      log.info("[End] XML StAX reader.");
+      log.info("Time: "+ (System.currentTimeMillis() - milies) + " ms.");
     }
     return processOK;
   }
 }
-

@@ -89,10 +89,9 @@ public class ContactAddressList extends AddressList implements SyncableList {
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlSelect = new StringBuffer();
@@ -116,7 +115,7 @@ public class ContactAddressList extends AddressList implements SyncableList {
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
@@ -161,12 +160,10 @@ public class ContactAddressList extends AddressList implements SyncableList {
       }
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
     }
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    rs = pst.executeQuery();
-
-    return rs;
+    return pst;
   }
 
 
@@ -180,8 +177,8 @@ public class ContactAddressList extends AddressList implements SyncableList {
    * @since                 1.1
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       ContactAddress thisAddress = this.getObject(rs);
       this.addElement(thisAddress);

@@ -1383,8 +1383,8 @@ public class UserList extends Vector implements SyncableList {
    */
   public void buildList(Connection db) throws SQLException {
     //A super query -- builds the user and contact data at same time
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       User thisUser = new User(rs);
       if (thisUser.getContactId() > -1) {
@@ -1440,11 +1440,10 @@ public class UserList extends Vector implements SyncableList {
    * to be streamed with lower overhead
    *
    * @param db  Description of Parameter
-   * @param pst Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     StringBuffer sqlSelect = new StringBuffer();
@@ -1468,7 +1467,7 @@ public class UserList extends Vector implements SyncableList {
     createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           sqlCount.toString() +
               sqlFilter.toString());
       items = prepareFilter(pst);
@@ -1547,17 +1546,10 @@ public class UserList extends Vector implements SyncableList {
             "LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (a.role_id = r.role_id) " +
             "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
             "WHERE a.user_id > -1 ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-    return rs;
+    return pst;
   }
 
 

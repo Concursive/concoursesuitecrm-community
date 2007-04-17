@@ -640,7 +640,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -660,7 +660,7 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           sqlCount.toString() +
           sqlFilter.toString());
       items = prepareFilter(pst);
@@ -704,18 +704,10 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
         "FROM history ch " +
         "WHERE history_id > 0 " +
         "AND org_id IS NULL ");
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, pst);
-    }
-    rs = pst.executeQuery();
-    if (pagedListInfo != null) {
-      pagedListInfo.doManualOffset(db, rs);
-    }
-
-    return rs;
+    return pst;
   }
 
 
@@ -726,9 +718,8 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
    * @throws  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
-
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       ContactHistory thisHistoryElement = this.getObject(rs);
       this.add(thisHistoryElement);

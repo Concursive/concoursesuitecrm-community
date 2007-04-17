@@ -218,13 +218,10 @@ public class RolePermissionList extends Hashtable implements SyncableList {
    * Description of the Method
    *
    * @param db
-   * @param pst
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    ResultSet rs = null;
-
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
@@ -237,12 +234,10 @@ public class RolePermissionList extends Hashtable implements SyncableList {
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY c." + DatabaseUtils.addQuotes(db, "level") + ", c.category, p." + DatabaseUtils.addQuotes(db, "level") + " ");
 
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
-    rs = pst.executeQuery();
-
-    return rs;
+    return pst;
   }
   /**
    * Description of the Method

@@ -260,8 +260,8 @@ public class OptionList extends ArrayList implements SyncableList {
    * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       Option thisOption = this.getObject(rs);
       this.add(thisOption);
@@ -278,13 +278,11 @@ public class OptionList extends ArrayList implements SyncableList {
    * to be streamed with lower overhead
    *
    * @param db  Description of Parameter
-   * @param pst Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     int items = -1;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT o.option_id, o.option_name, o.entered, o.modified " +
@@ -295,10 +293,9 @@ public class OptionList extends ArrayList implements SyncableList {
     sql.append("WHERE o.option_id > -1 ");
     createFilter(sql);
     sql.append("ORDER BY " + DatabaseUtils.addQuotes(db, "level") + ", o.option_name ");
-    pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
-    ResultSet rs = pst.executeQuery();
-    return rs;
+    return pst;
   }
 
 

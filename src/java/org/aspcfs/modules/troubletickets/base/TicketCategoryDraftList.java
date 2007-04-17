@@ -467,8 +467,8 @@ public class TicketCategoryDraftList extends ArrayList implements SyncableList{
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    return queryList(db, pst, "", "", tableName);
+  public PreparedStatement prepareList(Connection db) throws SQLException {
+    return prepareList(db, "", "", tableName);
   }
 
   /**
@@ -481,7 +481,7 @@ public class TicketCategoryDraftList extends ArrayList implements SyncableList{
    * @return
    * @throws SQLException Description of the Returned Value
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst, String sqlFilter, String sqlOrder, String tableName) throws SQLException {
+  public PreparedStatement prepareList(Connection db, String sqlFilter, String sqlOrder, String tableName) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
 
     //Need to build a base SQL statement for returning records
@@ -499,11 +499,10 @@ public class TicketCategoryDraftList extends ArrayList implements SyncableList{
       createFilter(buff);
       sqlFilter = buff.toString();
     }
-    pst = db.prepareStatement(
+    PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter + sqlOrder);
     prepareFilter(pst);
-
-    return DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    return pst;
   }
 
   /**
@@ -566,7 +565,8 @@ public class TicketCategoryDraftList extends ArrayList implements SyncableList{
       sqlOrder.append("ORDER BY tc.description");
     }
 
-    rs = queryList(db, pst, sqlFilter.toString(), sqlOrder.toString(), tableName);
+    pst = prepareList(db, sqlFilter.toString(), sqlOrder.toString(), tableName);
+    rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
     while (rs.next()) {
       TicketCategoryDraft thisCat = new TicketCategoryDraft(rs);
       thisCat.setBaseTableName(tableName);

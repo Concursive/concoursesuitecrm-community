@@ -363,8 +363,8 @@ public class SurveyQuestionList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       SurveyQuestion thisItem = this.getObject(rs);
       this.add(thisItem);
@@ -391,22 +391,21 @@ public class SurveyQuestionList extends ArrayList {
    * Description of the Method
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     String sql =
         "SELECT sq.* " +
             "FROM survey_questions sq " +
             (surveyId > -1 ? "WHERE sq.survey_id = ? " : "") +
             "ORDER BY sq." + DatabaseUtils.addQuotes(db, "position") + " ";
-    pst = db.prepareStatement(sql);
+    PreparedStatement pst = db.prepareStatement(sql);
     int i = 0;
     if (surveyId > -1) {
       pst.setInt(++i, surveyId);
     }
-    return pst.executeQuery();
+    return pst;
   }
 }
 

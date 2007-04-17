@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 /**
  * Description of the Class
  *
@@ -42,8 +44,8 @@ public class ActiveSurveyList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    PreparedStatement pst = prepareList(db);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       ActiveSurvey thisItem = new ActiveSurvey(rs);
       this.add(thisItem);
@@ -59,16 +61,15 @@ public class ActiveSurveyList extends ArrayList {
    * Description of the Method
    *
    * @param db  Description of the Parameter
-   * @param pst Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
+  public PreparedStatement prepareList(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT s.* " +
         "FROM active_survey s ");
-    pst = db.prepareStatement(sql.toString());
-    return pst.executeQuery();
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    return pst;
   }
 }
 

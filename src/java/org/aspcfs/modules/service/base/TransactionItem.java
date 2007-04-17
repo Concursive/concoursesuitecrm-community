@@ -1156,18 +1156,17 @@ public class TransactionItem {
    * @throws  Exception  Description of Exception
    */
   private void buildRecords(Object object, Connection db, Connection dbLookup, int syncType) throws Exception {
-    PreparedStatement pst = null;
-    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection"), Class.forName(
-        "java.sql.PreparedStatement")};
-    Object[] dbObject = new Object[]{db, pst};
-    String executeMethod = "queryList";
+    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
+    Object[] dbObject = new Object[]{db};
+    String executeMethod = "prepareList";
     ObjectUtils.setParam(object, "syncType", String.valueOf(syncType));
     Method method = object.getClass().getMethod(executeMethod, dbClass);
-    Object result = method.invoke(object, dbObject);
-    while (((ResultSet) result).next()) {
+    PreparedStatement pst = (PreparedStatement) method.invoke(object, dbObject);
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
+    while (rs.next()) {
       String objectMethod = "getObject";
       Class[] rsClass = new Class[]{Class.forName("java.sql.ResultSet")};
-      Object[] rsObject = new Object[]{result};
+      Object[] rsObject = new Object[]{rs};
       Method getObject = object.getClass().getMethod(objectMethod, rsClass);
       Object thisObject = getObject.invoke(object, rsObject);
       String recordAction = null;
@@ -1199,7 +1198,7 @@ public class TransactionItem {
         }
       }
     }
-    ((ResultSet) result).close();
+    rs.close();
     if (pst != null) {
       pst.close();
     }
@@ -1237,7 +1236,7 @@ public class TransactionItem {
           count++;
         }
       }
-      if (count == 0) {
+      if (count == 0 && !"select".equals(recordAction)) {
         Record thisRecord = new Record(recordAction);
         this.addFields(thisRecord, meta, object, recordList.getName());
         recordList.add(thisRecord);
