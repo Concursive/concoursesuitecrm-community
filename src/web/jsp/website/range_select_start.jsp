@@ -13,7 +13,8 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  -
+  - Version: $Id: range_select_start.jsp dharmas$
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -26,7 +27,7 @@
 
 <html>
   <head><title>Folder Range Start Select Page</title></head>
-  
+
 <script language="JavaScript">
 
 function setParentLabel(textToDisplay,textToStore) {
@@ -40,7 +41,7 @@ function setSelectedRecordId(id) {
 
 function popFolderGraphRecordRangeSelect(folderId, majorAxisField) {
   startValue = document.dataStartDisplay.rangeStartValue.value;
-  if(parseInt(startValue) > 0) {       
+  if(parseInt(startValue) > 0) {
 	  title  = 'RecordRangeEndSelect';
 	  width  =  '450';
 	  height =  '400';
@@ -49,9 +50,9 @@ function popFolderGraphRecordRangeSelect(folderId, majorAxisField) {
 	  var posx = (screen.width - width)/2;
 	  var posy = (screen.height - height)/2;
 	  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-	   
+
 	  var newwin=window.open('FolderAndFieldSelector.do?command=RangeSelect&listType=single&flushtemplist=true&folderId='+folderId+'&majorAxisField='+majorAxisField+'&isNextPopup=true&rangeStartValue='+startValue, title, windowParams);
-	    
+
 	  newwin.focus();
 	  if (newwin != null) {
 	    if (newwin.opener == null)
@@ -65,27 +66,27 @@ function popFolderGraphRecordRangeSelect(folderId, majorAxisField) {
   }
 }
 
-</script>  
+</script>
 <link type="text/css" rel="stylesheet" >
 <body onLoad="document.dataStartDisplay.rangeStartValue.focus();">
 
- <form name="dataStartDisplay" action="">  
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<dhv:label name="folder.range.start"> </dhv:label>&nbsp;
+ <form name="dataStartDisplay" action="">
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<dhv:label name="folder.range.start">Range Start </dhv:label>&nbsp;
  	<input type="text" align="center" name="rangeStartValue" value="12" size="8" maxlength="10">
-	&nbsp;<dhv:label name="folder.range.enter"></dhv:label><br>
-	
+	&nbsp;<dhv:label name="folder.range.enter">Enter 0 for Current</dhv:label><br>
+
 	<dhv:pagedListStatus object="rangeSelectInfo" />
     <br>
 
- 	<table width="100%" cellspacing="0" cellpadding="4" border="1" class="details"> 
+ 	<table width="100%" cellspacing="0" cellpadding="4" border="1" class="details">
              <dhv:evaluate if='<%= dataList!=null && dataList.size() > 0 %>'>
-             
+
              <tr>
              <th align="center" width="8">
 					&nbsp;
-		     </th>             
+		     </th>
              <th>
-             	<strong><dhv:label name="folder.range.dateEntered">Date Entered</dhv:label></strong>
+             	<strong><dhv:label name="calendar.dateEntered">Date Entered</dhv:label></strong>
              </th>
              <th>
              	<strong><dhv:label name="folder.range.majorAxisField">Major Axis Field</dhv:label></strong>

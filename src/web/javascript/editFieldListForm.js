@@ -2,34 +2,34 @@
 
 function moveToList(){
 
-  	var f = document.fieldList;
-	var SelectedIndex = f.customerFieldDisplayList.options.selectedIndex;
+  	var formFieldList = document.fieldList;
+	var SelectedIndex = formFieldList.customerFieldDisplayList.options.selectedIndex;
 	if (SelectedIndex == -1) {
 		alert("Please select atleast one Field to Move.");
 		return;
 	}
-	var numItems = f.customerFieldList.length;
-	for (i=0; i<f.customerFieldDisplayList.options.length; i++) {
-		if(f.customerFieldDisplayList.options[i].selected) {
-			             for(var j=0;j<f.customerFieldList.options.length;j++){
-                               if(f.customerFieldDisplayList.options[i].text == f.customerFieldList.options[j].text)
+	var numItems = formFieldList.customerFieldList.length;
+	for (i=0; i<formFieldList.customerFieldDisplayList.options.length; i++) {
+		if(formFieldList.customerFieldDisplayList.options[i].selected) {
+			             for(var j=0;j<formFieldList.customerFieldList.options.length;j++){
+                               if(formFieldList.customerFieldDisplayList.options[i].text == formFieldList.customerFieldList.options[j].text)
                            {
-                               f.customerFieldDisplayList.options[i]=null;
+                               formFieldList.customerFieldDisplayList.options[i]=null;
                                 --i;
                                return false;
                            }  
                         }
-				var text = f.customerFieldDisplayList.options[i].text;
-				f.customerFieldList.options[numItems]=new Option (text,text);
-				f.customerFieldList.options[numItems].value = f.customerFieldDisplayList.options[i].value;
-				f.customerFieldDisplayList.options[i].text ="Empty" ;
+				var text = formFieldList.customerFieldDisplayList.options[i].text;
+				formFieldList.customerFieldList.options[numItems]=new Option (text,text);
+				formFieldList.customerFieldList.options[numItems].value = formFieldList.customerFieldDisplayList.options[i].value;
+				formFieldList.customerFieldDisplayList.options[i].text ="Empty" ;
 			}
-		numItems=f.customerFieldList.length;
+		numItems=formFieldList.customerFieldList.length;
 	}
 
-	for (i=0; i<f.customerFieldDisplayList.options.length; i++) {
-		if(f.customerFieldDisplayList.options[i].text=="Empty") {
-			f.customerFieldDisplayList.options[i]=null;
+	for (i=0; i<formFieldList.customerFieldDisplayList.options.length; i++) {
+		if(formFieldList.customerFieldDisplayList.options[i].text=="Empty") {
+			formFieldList.customerFieldDisplayList.options[i]=null;
 			--i;
 		}
 	}
@@ -38,19 +38,19 @@ function moveToList(){
 
 function moveToDisplayList() {
 
-         var f = document.fieldList;
+         var formFieldList = document.fieldList;
              SelectedIndex = 0;
-                 var mLenDispList = f.customerFieldDisplayList.length;
-                 SelectedIndex	 = f.customerFieldList.options.selectedIndex;
+                 var mLenDispList = formFieldList.customerFieldDisplayList.length;
+                 SelectedIndex	 = formFieldList.customerFieldList.options.selectedIndex;
                  if (SelectedIndex == -1) {
                      alert("Please select atleast one Field to Move.");
                      return;
                  }
-                 var numItems = f.customerFieldList.length;
+                 var numItems = formFieldList.customerFieldList.length;
                      for (i=0; i<numItems; i++) {
-                     if(f.customerFieldList.options[i].selected) {
-                            for(var j=0;j<f.customerFieldDisplayList.options.length;j++){
-                               if(f.customerFieldDisplayList.options[j].text == f.customerFieldList.options[i].text)
+                     if(formFieldList.customerFieldList.options[i].selected) {
+                            for(var j=0;j<formFieldList.customerFieldDisplayList.options.length;j++){
+                               if(formFieldList.customerFieldDisplayList.options[j].text == formFieldList.customerFieldList.options[i].text)
                            {
                                alert("Field is already exists");
                                return false;
@@ -58,16 +58,16 @@ function moveToDisplayList() {
 
                          }
 
-                            var text = f.customerFieldList.options[i].text;
-                            f.customerFieldDisplayList.options[mLenDispList]=new Option (text,text);
-                            f.customerFieldDisplayList.options[mLenDispList].value = f.customerFieldList.options[i].value;
-                            f.customerFieldList.options[i].text ="Empty";
-                            mLenDispList = f.customerFieldDisplayList.length;
+                            var text = formFieldList.customerFieldList.options[i].text;
+                            formFieldList.customerFieldDisplayList.options[mLenDispList]=new Option (text,text);
+                            formFieldList.customerFieldDisplayList.options[mLenDispList].value = formFieldList.customerFieldList.options[i].value;
+                            formFieldList.customerFieldList.options[i].text ="Empty";
+                            mLenDispList = formFieldList.customerFieldDisplayList.length;
              }
          }
-         for (i=0; i<f.customerFieldList.options.length; i++) {
-             if(f.customerFieldList.options[i].text=="Empty") {
-                 f.customerFieldList.options[i]=null;
+         for (i=0; i<formFieldList.customerFieldList.options.length; i++) {
+             if(formFieldList.customerFieldList.options[i].text=="Empty") {
+                 formFieldList.customerFieldList.options[i]=null;
                  --i;
              }
 

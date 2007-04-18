@@ -250,37 +250,47 @@ function popFolderGraphMajorAxisSelect(folderId, hiddenFieldId, displayFieldId, 
   height =  '425';
   resize =  'yes';
   bars   =  'yes';
-  var posx = (screen.width - width)/2;
-  var posy = (screen.height - height)/2;
-  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  if(params != null && params != ""){
-    params = '&' + params;
-  }
-  var newwin=window.open('FolderAndFieldSelector.do?command=FieldSelect&listType=single&flushtemplist=true&folderId='+folderId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
-  newwin.focus();
-  if (newwin != null) {
-    if (newwin.opener == null)
-      newwin.opener = self;
-  }
+  if(folderId=="-1"){
+      alert("A folder needs to be selected before this property can be configured");
+      return;
+  } else{
+      var posx = (screen.width - width)/2;
+      var posy = (screen.height - height)/2;
+      var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+      if(params != null && params != ""){
+        params = '&' + params;
+      }
+      var newwin=window.open('FolderAndFieldSelector.do?command=FieldSelect&listType=single&flushtemplist=true&folderId='+folderId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+      newwin.focus();
+      if (newwin != null) {
+        if (newwin.opener == null)
+          newwin.opener = self;
+      }
    }
+}
 function popFolderGraphMinorAxisSelect(folderId, hiddenFieldId, displayFieldId, params) {
   title  = 'MinoraxisParameter';
   width  =  '700';
   height =  '425';
   resize =  'yes';
   bars   =  'yes';
-  var posx = (screen.width - width)/2;
-  var posy = (screen.height - height)/2;
-  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  if(params != null && params != ""){
-    params = '&' + params;
-  }
-  var newwin=window.open('FolderAndFieldSelector.do?command=FieldListAndType&listType=single&flushtemplist=true&folderId='+folderId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
-  newwin.focus();
-  if (newwin != null) {
-    if (newwin.opener == null)
-      newwin.opener = self;
-  } 
+  if(folderId=="-1"){
+      alert("A folder needs to be selected before this property can be configured");
+      return;
+  } else{
+      var posx = (screen.width - width)/2;
+      var posy = (screen.height - height)/2;
+      var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+      if(params != null && params != ""){
+        params = '&' + params;
+      }
+      var newwin=window.open('FolderAndFieldSelector.do?command=FieldListAndType&listType=single&flushtemplist=true&folderId='+folderId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+      newwin.focus();
+      if (newwin != null) {
+        if (newwin.opener == null)
+          newwin.opener = self;
+      }
+   }
 }
 
 function popFolderGraphRecordRangeSelect(folderId, majorAxisField, hiddenFieldId, displayFieldId, params) {

@@ -1,4 +1,21 @@
-<%@ page import="org.aspcfs.utils.StringUtils"%>
+<%--
+  - Copyright(c) 2007 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - rights reserved. This material cannot be distributed without written
+  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - this material for internal use is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies. DARK HORSE
+  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+  - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+  - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+  - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+  - DAMAGES RELATING TO THE SOFTWARE.
+  -
+   - Version: $Id: fields_list.jsp nagarajay$
+  - Description:
+  --%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="org.aspcfs.modules.base.CustomFieldGroup"%>
 <%@ page import="org.aspcfs.modules.base.CustomField"%>
@@ -10,7 +27,6 @@
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 
 <%@ page import="java.util.Iterator" %>
-<%@ page import="org.aspcfs.modules.base.CustomFieldRecord"%>
 <jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <jsp:useBean id="finalGroup" class="java.util.ArrayList" scope="request"/>
@@ -45,7 +61,7 @@
  <br><br>
  <table class="details" border="1" cellpadding="4" cellspacing="0" width="100%" >
    <tr>
-      <th colspan="6"><strong><dhv:label name="">Folder Fields</dhv:label></strong></th>
+      <th colspan="6"><strong><dhv:label name="portlets.folder.folderFields">Folder Fields</dhv:label></strong></th>
    </tr>
    <tr>
       <td>&nbsp;</td>

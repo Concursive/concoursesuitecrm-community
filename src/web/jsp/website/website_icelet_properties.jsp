@@ -34,8 +34,7 @@
   if (clientType.getType() == -1) {
     clientType.setParameters(request);
   }
-  String noOfRecords = "";
-%>
+ %>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
   <jsp:include page="../tinymce_include.jsp" flush="true"/>
 </dhv:evaluate>
@@ -78,7 +77,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel1">
-      <dhv:label name="">Column Width</dhv:label>
+      <dhv:label name="portlets.folder.columnWidth">Column Width</dhv:label>
     </td>
 		<td><input type="text" name="width" value="<%= (rowColumn.getWidth() > -1? rowColumn.getWidth(): 50) %>"/></td>
   </tr>
@@ -212,7 +211,7 @@
           </td>
           <td valign="top">
            [<a href='javascript:popFieldsList(document.forms[0].<%=selectedFolderName%>.options[document.forms[0].<%=selectedFolderName%>.selectedIndex].value,document.forms[0].<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>.name);'><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
-           [<a href="javascript:document.getElementById('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='';javascript:changeDivContent('<%= "changeproduct_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', label('none.selected','None Selected'));"><dhv:label name="button.clear">Clear</dhv:label></a>]
+           [<a href="javascript:clearDisplayList()"><dhv:label name="button.clear">Clear</dhv:label></a>]
          </td>
           </tr>
           </table>
@@ -230,8 +229,8 @@
                         <dhv:evaluate if='<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>'>
                   <%= toHtml(iceletProperty.getValueString()) %>
                         </dhv:evaluate>
-                         <input type="radio" name="majoraxisselect" id="majoraxisselect" value="X" checked onClick="setMajorAxis('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>')"><dhv:label name="">X-Axis</dhv:label>
-                         <input type="radio" name="majoraxisselect" id="majoraxisselect" value="Y" onClick="setMajorAxis('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>')"><dhv:label name="">Y-Axis</dhv:label>
+                         <input type="radio" name="majorAxisSelect" id="majorAxisSelect" value="X" checked onClick="setMajorAxis('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>')"><dhv:label name="portlets.graphType.axisX">X-Axis</dhv:label>
+                         <input type="radio" name="majorAxisSelect" id="majorAxisSelect" value="Y" onClick="setMajorAxis('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>')"><dhv:label name="portlets.graphType.axisY">Y-Axis</dhv:label>
                           <input type="hidden" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" id="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="X"/> &nbsp;
                       </div>
                     </td>
@@ -283,15 +282,15 @@
                         <dhv:evaluate if='<%= iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString()) %>'>
                   <%= toHtml(iceletProperty.getValueString()) %>
                         </dhv:evaluate>
-                         <select name="minoraxisparam" id="minoraxisparam" size="10"  style="width: 250px">
+                         <select name="minorAxisParam" id="minorAxisParam" size="10"  style="width: 250px">
                          </select>
                       </div>
                     </td>
                     <td>
         <input type="hidden" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" id="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="<%= (iceletProperty != null && iceletProperty.getValueString() != null && !"".equals(iceletProperty.getValueString())?iceletProperty.getValue():"-1") %>"/> &nbsp;
         <input type="hidden" name="hiddenMinorAxis" id="hiddenMinorAxis" value="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>"/> &nbsp;
-        [<a href="javascript:clearValues();javascript:popFolderGraphMinorAxisSelect(document.forms[0].<%=selectedFolderName%>.options[document.forms[0].<%=selectedFolderName%>.selectedIndex].value,'<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>','<%= "changeminoraxis_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', '');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
-        [<a href="javascript:clearValues();"><dhv:label name="button.clear">Clear</dhv:label></a>]
+        [<a href="javascript:document.getElementById('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='-1';javascript:clearValues();javascript:popFolderGraphMinorAxisSelect(document.forms[0].<%=selectedFolderName%>.options[document.forms[0].<%=selectedFolderName%>.selectedIndex].value,'<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>','<%= "changeminoraxis_"+rowColumn.getId()+"_"+property.getTypeConstant() %>', '');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>] &nbsp;
+        [<a href="javascript:document.getElementById('<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>').value='-1';javascript:clearValues();"><dhv:label name="button.clear">Clear</dhv:label></a>]
             <%}%>
                       &nbsp;
                     </td>
@@ -328,8 +327,8 @@
 
       <dhv:evaluate if="<%= property.getType().equals(IceletProperty.TEXT) %>">
         <br />
-        <input type="text" size="20" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="<%= toHtmlValue(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>"/>
-        <% noOfRecords = "property_"+rowColumn.getId()+"_"+property.getTypeConstant(); %>
+        <input type="text" size="20" name="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" id="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>" value="<%= toHtmlValue(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue()) %>"/>
+        <input type="hidden" name="hiddenText" id="hiddenText" value="<%= "property_"+rowColumn.getId()+"_"+property.getTypeConstant() %>"/>
       </dhv:evaluate>
 
       <dhv:evaluate if="<%= property.getType().equals(IceletProperty.INTEGER) %>">
@@ -364,39 +363,47 @@
 </form>
 <script language="JavaScript">
      function checkForm(form) {
-          try { tinyMCE.triggerSave(false); } catch(e) { }
+           try { tinyMCE.triggerSave(false); } catch(e) { }
                             var flag = true;
                             message = "";
              if (flag == false) {
                 alert(label("check.form","Form could not be saved, please check the following:\r\n\r\n") + message);
                   return false;
              } else {
-                    var messageText = "";
-                    var formTest = true;
-                    if(document.getElementById("hiddenMajorAxis")!=null && document.getElementById("hiddenMinorAxis")!=null ){
-                        var majorAxis = document.getElementById("hiddenMajorAxis").value;
-                        var minorAxis = document.getElementById("hiddenMinorAxis").value;
-                        if(document.getElementById(majorAxis).value == -1){
-                            messageText += label("majoraxis.field.required","- Major Axis Field is required\r\n");
-                            formTest = false;
+                        var messageText = "";
+                        var formTest = true;
+                        if(document.getElementById("hiddenMajorAxis")!=null && document.getElementById("hiddenMinorAxis")!=null ){
+                            var majorAxis = document.getElementById("hiddenMajorAxis").value;
+                            var minorAxis = document.getElementById("hiddenMinorAxis").value;
+                            if(document.getElementById(majorAxis).value == -1){
+                                messageText += label("majoraxis.field.required","- Major Axis Field is required\r\n");
+                                formTest = false;
+                            }
+                            if(document.getElementById(minorAxis).value == -1){
+                                messageText += label("minoraxis.parameter.required","- Minor Axis Parameter is required\r\n");
+                                formTest = false;
+                            }
                         }
-                        if(document.getElementById(minorAxis).value == -1){
-                            messageText += label("minoraxis.parameter.required","- Minor Axis Parameter is required\r\n");
-                            formTest = false;
-                        }
-
-                    }
-                 if(document.icelet.<%=noOfRecords%>.value ==0){
-                            messageText += label("noofrecords.parameter.notzero","- Number of Records to Display in List should not be zero\r\n");
-                            formTest = false;
-                   }
-                 if (formTest == false) {
-                          messageText = label("check.form","The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
-                          alert(messageText);
-                          return false;
-                        } else {
+                       if(document.getElementById("hiddenText")!=null ){
+                            var hiddenTextValue = document.getElementById("hiddenText").value;
+                            if(document.getElementById(hiddenTextValue).value ==0 || document.getElementById(hiddenTextValue).value ==""){
+                                messageText += label("noofrecords.parameter.notzero","- Number of Records to Display in List should not be zero\r\n");
+                                formTest = false;
+                           }
+                       }
+                      if(document.getElementById("displayArea")!=null ){
+                          if(document.getElementById("displayArea").value ==""){
+                                 messageText += label("displaylist.parameter.selected","- Fields to display in list should contain atleast one field\r\n");
+                                 formTest = false;
+                            }
+                       }
+                     if (formTest == false) {
+                              messageText = label("check.form","The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
+                              alert(messageText);
+                              return false;
+                       } else {
                            return true;
-                        }
+                      }
             }
       }
 </script>

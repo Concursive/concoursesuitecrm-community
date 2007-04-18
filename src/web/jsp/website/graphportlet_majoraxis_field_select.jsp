@@ -13,7 +13,7 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  - User: dharmas
+  - Author: dharmas
   - Date: Mar 29, 2007
   - Time: 12:37:57 PM
   --%>
@@ -72,12 +72,13 @@
 			&nbsp;
 		</th>
 		<th>
-			<strong><dhv:label name="folder.minoraxis.Field">Field</dhv:label></strong>
+			<strong><dhv:label name="portlets.folder.field">Field</dhv:label></strong>
 		</th>
 	</tr>
 	<%
 		Iterator j = fieldNameList.iterator();
 		if (j.hasNext()) {
+			int c = 0;
 			int rowid = 0;
 			int count = 0;
 			while (j.hasNext()) {
@@ -87,28 +88,40 @@
                 CustomField thisField = (CustomField)j.next();
                 String fieldId = String.valueOf(thisField.getId());
 	%>
-				<tr class="row<%= rowid+(SelectedCategories.indexOf(fieldId) != -1 ? "hl" : "") %>">
+		  <tr class="row<%= rowid+(SelectedCategories.indexOf(fieldId) != -1 ? "hl" : "") %>">
           <td align="center" nowrap width="8">
-<%
-  if ("list".equals(request.getParameter("listType"))) {
-%>
+ <%
+//checking for only date type fields to display for Major Axis Field Select --- field_type of date is 8
+ if (thisField.getType() == 8) {
+    c++;
+    if ("list".equals(request.getParameter("listType"))) {
+  %>
          <input type="checkbox" name="field<%= count %>" value="<%= thisField.getId() %>" <%= (SelectedCategories.indexOf(fieldId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
-<%} else {%>
+    <% } else { %>
+
          <a href="javascript:document.folderListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','folderListView');">Select</a>
-<%} %>
+     <%} %>
             <input type="hidden" name="hiddenFolderFieldId<%= count %>" value="<%= thisField.getId() %>">
-					</td>
+			</td>
 					<td nowrap>
 						 <%= toHtml(thisField.getName()) %>
 					</td>
-				</tr>
+			</tr>
 	<%
 			}
+		  }
+		   if(c == 0) { %>
+			<tr>
+		      <td class="containerBody" colspan="4">
+		        <dhv:label name="folder.minoraxis.nomatch">No folder fields matched query</dhv:label>
+		      </td>
+		    </tr>
+    <% }
 		} else {
   %>
 			<tr>
       <td class="containerBody" colspan="4">
-        <dhv:label name="folder.minoraxis.nomatch">No folder fields matched query</dhv:label>
+        <dhv:label name="portlets.folder.nomatch">No folder fields matched query</dhv:label>
       </td>
     </tr>
 	<%

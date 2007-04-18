@@ -13,14 +13,12 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  - Version: $Id: field_select.jsp
+  - Version: $Id: field_select.jsp rajendrad$
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.*,java.text.DateFormat,org.aspcfs.utils.*" %>
-<%@ page import="org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
-<%@ page import="org.aspcfs.modules.base.CustomFieldCategory"%>
+<%@ page import="java.util.*" %>
 <%@ page import="org.aspcfs.modules.base.CustomField"%>
 <%@ page import="org.aspcfs.modules.base.CustomFieldGroup"%>
 <jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -151,10 +149,10 @@
       <td width="25">
       <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
           <tr>
-           <td><input type=button value="<dhv:label name="portlets.folder.Up">Up</dhv:label>" name="Up" onclick="javascript:moveUp()"></td>
+           <td><input type=button value="<dhv:label name="global.button.Up">Up</dhv:label>" name="Up" onclick="javascript:moveUp()"></td>
           </tr>
           <tr>
-           <td><input type=button value="<dhv:label name="portlets.folder.Down">Down</dhv:label>" name="Down" onclick="javascript:moveDown()"></td>
+           <td><input type=button value="<dhv:label name="global.button.Down">Down</dhv:label>" name="Down" onclick="javascript:moveDown()"></td>
           </tr>
         </table>
       </td>
@@ -164,8 +162,8 @@
       <td  colspan="4">
       <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
            <td width="30%">&nbsp;</td>
-           <td width="20%"><input type=button value="<dhv:label name="portlets.folder.update">Update</dhv:label>" name="Update" onclick="javascript:processList()"></td>
-           <td width="20%"><input type=button value="<dhv:label name="portlets.folder.cancel">Cancel</dhv:label>" name="Cancel" onclick="javascript:window.close()"></td>
+           <td width="20%"><input type=button value="<dhv:label name="global.button.update">Update</dhv:label>" name="Update" onclick="javascript:processList()"></td>
+           <td width="20%"><input type=button value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" name="Cancel" onclick="javascript:window.close()"></td>
            <td width="30%">&nbsp;</td>
       </table>
       </td>

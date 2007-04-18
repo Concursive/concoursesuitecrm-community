@@ -20,7 +20,6 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 import org.aspcfs.utils.DatabaseUtils;
 

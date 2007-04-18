@@ -13,11 +13,9 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  --%>
-<%--
-  User: dharmas
-  Date: Apr 6, 2007
-  Time: 3:04:27 PM
+  - Author: dharmas
+  - Version: $Id: fields_graph.jsp dharmas$
+  - Description:
   --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%

@@ -13,6 +13,8 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
+  - Version: $Id: range_select_end.jsp dharmas$
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -78,9 +80,9 @@
 <body onLoad="document.dataEndDisplay.rangeEndValue.focus();">
  <form name="dataEndDisplay" action=""> 
  
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<dhv:label name="folder.range.end"></dhv:label>&nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<dhv:label name="folder.range.end">Range End</dhv:label>&nbsp;
  	<input type="text" name="rangeEndValue" id="rangeEnd" value="0" size="8" maxlength="10">
-	&nbsp;<dhv:label name="folder.range.enter"></dhv:label>
+	&nbsp;<dhv:label name="folder.range.enter">Enter 0 for Current</dhv:label>
 	
 	<dhv:pagedListStatus object="rangeSelectInfo"/>
 	 				
@@ -94,7 +96,7 @@
 					&nbsp;
 		     </th> 
              <th>
-             	<strong><dhv:label name="folder.range.dateEntered">Date Entered</dhv:label></strong>
+             	<strong><dhv:label name="calendar.dateEntered">Date Entered</dhv:label></strong>
              </th>
              <th>
              	<strong><dhv:label name="folder.range.majorAxisField">Major Axis Field</dhv:label></strong>

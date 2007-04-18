@@ -3,7 +3,7 @@ function collectValues()
          var searchList = document.getElementById("selectedList");
          var listLength = searchList.length;
          var graphListLength = document.fieldDisplay.graphType.length;
-         var listvalue ="";
+         var listValue ="";
          var listText = "";
          var chartType = "";
          var graphId="";
@@ -21,19 +21,19 @@ function collectValues()
          }
          for(i=1; i<size; i++){
             if(document.getElementById('checkelement'+i).checked){
-                listvalue =  document.getElementById('checkelement'+i).value;
+                listValue =  document.getElementById('checkelement'+i).value;
                 listText =   document.getElementById('hiddenelement'+i).value;
                 if(totalText.length>0){
                    	listText = totalText+", "+listText;
-                    listvalue = listvalue+", "+totalValue;
+                    listValue = listValue+", "+totalValue;
                 }
                 totalText = listText;
-                totalValue = listvalue;
+                totalValue = listValue;
               }
          }
          if(totalText.length > 0 && totalValue.length > 0 &&  chartType.length > 0) {
              listText = totalText+" ("+	chartType + ")";
-             listvalue = "{"+totalValue+"}:"+graphId;
+             listValue = "{"+totalValue+"}:"+graphId;
                  for(j=0; j<searchList.length; j++){
                       if(searchList.options[j].text == listText){
                           duplicate = true;
@@ -41,7 +41,7 @@ function collectValues()
                       }
                  }
              if(duplicate==false){
-                searchList.options[searchList.options.length] = new Option(listText, listvalue);
+                searchList.options[searchList.options.length] = new Option(listText, listValue);
                  }
              resetCheckBox();
          }else{
@@ -88,7 +88,7 @@ function collectValues()
 }
 
 function childToParent(popUptext, popUpvalue){
-    var minorAxisList =  document.getElementById("minoraxisparam");
+    var minorAxisList =  document.getElementById("minorAxisParam");
     minorAxisList.options[minorAxisList.options.length] = new Option(popUptext, popUpvalue);
 }
 
@@ -98,36 +98,42 @@ function setMinorAxisValues(minorAxisValues, hiddenFieldId){
 }
 function setMajorAxis(hiddenFieldId){
      var selectedValue="";
-    for(i=0; i < document.forms[0].majoraxisselect.length; i++){
-        if(document.forms[0].majoraxisselect[i].checked){
-            selectedValue=document.forms[0].majoraxisselect[i].value;
+    for(i=0; i < document.forms[0].majorAxisSelect.length; i++){
+        if(document.forms[0].majorAxisSelect[i].checked){
+            selectedValue=document.forms[0].majorAxisSelect[i].value;
         }
     }
    document.getElementById(hiddenFieldId).value= selectedValue;
 }
 function clearValues() {
-    if (document.getElementById("minoraxisparam") != null) {
-        var minorAxisList = document.getElementById("minoraxisparam");
+    if (document.getElementById("minorAxisParam") != null) {
+        var minorAxisList = document.getElementById("minorAxisParam");
         while (minorAxisList.length > 0) {
             minorAxisList.options[minorAxisList.options.length - 1] = null;
         }
     }
 }
 
+function clearDisplayList() {
+   var displayLists =  document.getElementById("displayArea");
+   if(displayLists!=null){
+       document.getElementById("displayArea").value ="";
+  }
+ }
 function resetFormValues(){
-    var majorAxis = document.getElementById("hiddenMajorAxis");
-    var majorAxisDiv = document.getElementById("hiddenMajorAxisDiv");
-    if(majorAxis!=null && majorAxisDiv!=null){
+    if(document.getElementById("hiddenMajorAxis")!=null && document.getElementById("hiddenMajorAxisDiv")!=null){
         var majorAxisField = document.getElementById("hiddenMajorAxis").value;
         var divToChange = document.getElementById("hiddenMajorAxisDiv").value;
         document.getElementById(majorAxisField).value = -1;
         document.getElementById(divToChange).innerHTML = 'None Selected';
     }
-    var minorAxisList =  document.getElementById("minoraxisparam");
-    if(minorAxisList!=null){
+    var minorAxisList =  document.getElementById("minorAxisParam");
+    if(minorAxisList!=null && document.getElementById("hiddenMinorAxis")!=null){
         while(minorAxisList.length > 0){
            minorAxisList.options[minorAxisList.options.length-1] =null;
         }
+         var minorAxis = document.getElementById("hiddenMinorAxis").value;
+         document.getElementById(minorAxis).value = -1
      }
 
   var displayLists =  document.getElementById("displayArea");
