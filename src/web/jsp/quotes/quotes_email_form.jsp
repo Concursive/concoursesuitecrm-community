@@ -14,7 +14,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script type="text/javascript">
 function checkForm(form) {
   formTest = true;

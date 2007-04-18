@@ -193,6 +193,9 @@ public class PermissionCategory extends GenericBean {
   //Projects
   public final static int PERMISSION_CAT_PROJECTS = 714200712;
 
+ //Global Folders
+  public final static int PERMISSION_CAT_GLOBAL_FOLDERS = 327071502;
+
   /**
    * Constructor for the PermissionCategory object
    */

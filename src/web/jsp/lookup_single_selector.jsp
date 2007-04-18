@@ -25,7 +25,7 @@
 <jsp:useBean id="lookupId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="LookupSingleSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <%@ include file="initPage.jsp" %>
 <form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <br />

@@ -35,7 +35,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProductCatalogs.js"></script> 
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript">

@@ -31,7 +31,7 @@
 <jsp:useBean id="linkRelation" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="Javascript">
   function submitForm(form) {
     form.action = 'ActionPlans.do?command=AttachRelation';

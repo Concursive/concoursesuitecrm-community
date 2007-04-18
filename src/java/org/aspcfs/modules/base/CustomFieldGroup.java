@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -365,6 +366,19 @@ public class CustomFieldGroup extends ArrayList {
     while (i.hasNext()) {
       CustomField thisField = (CustomField) i.next();
       thisField.setParameters(context);
+    }
+  }
+
+/**
+   *  Sets the Parameters attribute of the CustomFieldGroup object
+   *
+   * @param  request  The new Parameters value
+   */
+  public void setParameters(HttpServletRequest request) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CustomField thisField = (CustomField) i.next();
+      thisField.setParameters(request);
     }
   }
 

@@ -1511,6 +1511,7 @@
 			<transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_netapp.sql" />
 			<!-- web site -->
 			<transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_website.sql" />
+			<transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_graph.sql" />
 		</sql>
 		<delete dir="${build.sql.dir}" failonerror="false" />
 	</target>

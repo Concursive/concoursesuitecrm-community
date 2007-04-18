@@ -25,6 +25,7 @@ import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.StateSelect;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -909,6 +910,59 @@ public class CustomField extends GenericBean implements Cloneable {
     }
   }
 
+  /**
+   * Sets the Parameters attribute of the CustomField object
+   *
+   * @param request The new Parameters value
+   */
+
+  public void setParameters(HttpServletRequest request) {
+    String newValue = null;
+
+    if (request.getParameter("cf" + id) != null) {
+      newValue = request.getParameter("cf" + id);
+    } else if (request.getAttribute("cf" + id) != null) {
+      newValue = (String) request.getAttribute("cf" + id);
+    }
+
+    if (newValue != null) {
+      newValue = newValue.trim();
+      switch (type) {
+        case SELECT:
+          selectedItemId = Integer.parseInt(newValue);
+          enteredValue = ((LookupList) elementData).getSelectedValue(
+              selectedItemId);
+          break;
+        case CHECKBOX:
+          if ("ON".equalsIgnoreCase(newValue)) {
+            selectedItemId = 1;
+            enteredValue = "Yes";
+          } else {
+            selectedItemId = 0;
+            enteredValue = "No";
+          }
+          break;
+        case STATE_SELECT:
+          if ("-1".equals(newValue)) {
+            enteredValue = "--"; //displays -1 otherwise
+          } else {
+            enteredValue = newValue;
+          }
+          break;
+        default:
+          enteredValue = newValue;
+          break;
+      }
+    } else {
+      // If the field is now found in the request, the item is either no
+      // longer enabled (so leave the existing value) or it is a CHECKBOX
+      if (enabled && type == CHECKBOX) {
+        selectedItemId = 0;
+        enteredValue = "No";
+      }
+    }
+  }
+
 
   /**
    * Sets the parameters attribute of the CustomField object
@@ -1468,7 +1522,7 @@ public class CustomField extends GenericBean implements Cloneable {
         return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
       case DATE:
         return ("<input type=\"text\" name=\"" + elementName + "\" size=\"10\" value=\"" + StringUtils.toHtmlValue(
-            enteredValue) + "\"> " +
+            enteredValue) + "\" readonly=\"readonly\" > " +
             "<a href=\"javascript:popCalendar('details', '" + elementName + "','" + language + "','" + country + "');\">" +
             "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
             "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a>");

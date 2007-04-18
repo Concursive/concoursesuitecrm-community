@@ -1,0 +1,25 @@
+// Script (C) 2007 Dark Horse Ventures LLC, all rights reserved
+
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+
+print("Inserting new lookup table data...");
+
+int level = 0;
+void insertElement(String tableName, String description) {
+  level += 10;
+  LookupElement element = new LookupElement();
+  element.setTableName(tableName);
+  element.setDescription(description);
+  element.setLevel(level);
+  element.insert(db);
+}
+
+if (1==1) {
+  level = LookupElement.retrieveMaxLevel(db, "lookup_graph_type");
+  if (level == 0) {
+    insertElement("lookup_graph_type", "Line");
+  	insertElement("lookup_graph_type", "Bar");
+    print("lookup_graph_type elements added");
+  }
+}

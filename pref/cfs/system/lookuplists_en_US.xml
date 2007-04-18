@@ -1140,5 +1140,8 @@
     	<record link_module_id="2" cname="contacts">Contacts</record>
     	<record link_module_id="8" cname="maintenance">Maintenance</record>
     </lookup>
-
+    <lookup table="lookup_graph_type">
+      <record><![CDATA[Line]]></record>
+      <record><![CDATA[Bar]]></record>
+    </lookup>
 </lookupLists>

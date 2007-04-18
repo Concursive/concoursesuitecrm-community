@@ -18,7 +18,7 @@
   --%>
 <%-- reusable contract form --%>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContractHours.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>

@@ -25,7 +25,7 @@
 <jsp:useBean id="selectedElements" class="java.util.HashMap" scope="request"/>
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="javascript">
   function submitForm(categoryId) {
     document.elementListView.action = 'ProductsCatalog.do?command=PopupSelector&categoryId=' + categoryId;

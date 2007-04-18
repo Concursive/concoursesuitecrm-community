@@ -12214,7 +12214,7 @@ any data still directly associated with this disabled user gets re-assigned as s
     <param name="projects.center_assignments.AddAnActivity">
       <value><![CDATA[Add an Activity]]></value>
     </param>
-<!-- Portlets -->  
+
     <!-- Dashboards -->
     <param name="portlet.dashboard.admin.menu.ModifyDetails">
       <value><![CDATA[Modify Details]]></value>
@@ -12249,7 +12249,7 @@ any data still directly associated with this disabled user gets re-assigned as s
     <param name="permission.dashboard">
       <value><![CDATA[Configure Custom Dashboards]]></value>
     </param>
-        
+
   <!-- Custom Tabs  -->
     <param name="portlet.customtab.admin.menu.ModifyDetails">
       <value><![CDATA[Modify Details]]></value>
@@ -12285,7 +12285,51 @@ any data still directly associated with this disabled user gets re-assigned as s
       <value><![CDATA[Configure Custom Tabs]]></value>
     </param>
 
-    
+
+    <param name="admin.globalFolders">
+     <value><![CDATA[Access to Global Folders Module]]></value>
+    </param>
+
+      <!-- Labels for Folder Minor Axis Params Select popup -->
+    <param name="folder.minoraxis.Field">
+     <value><![CDATA[Field]]></value>
+    </param>
+    <param name="folder.minoraxis.parametersforMinorAxis">
+     <value><![CDATA[Parameters for Minor Axis]]></value>
+    </param>
+    <param name="folder.minoraxis.type">
+     <value><![CDATA[Graph Type: ]]></value>
+    </param>
+    <param name="folder.minoraxis.nomatch">
+     <value><![CDATA[No folder fields matched query]]></value>
+    </param>
+
+    <!-- Labels for Folder Range Select popups -->
+    <param name="folder.range.start">
+     <value><![CDATA[Range Start]]></value>
+    </param>
+    <param name="folder.range.end">
+     <value><![CDATA[Range End]]></value>
+    </param>
+    <param name="folder.range.enter">
+     <value><![CDATA[Enter 0 for Current]]></value>
+    </param>
+    <param name="folder.range.chooseto">
+     <value><![CDATA[Choose To]]></value>
+    </param>
+    <param name="folder.range.choosefrom">
+     <value><![CDATA[Choose From]]></value>
+    </param>
+     <param name="folder.range.recordId">
+     <value><![CDATA[Record Id]]></value>
+    </param>
+       <param name="folder.range.dateEntered">
+     <value><![CDATA[Date Entered]]></value>
+    </param>
+       <param name="folder.range.majorAxisField">
+     <value><![CDATA[Major Axis Field]]></value>
+    </param>
+
   </config>
 
   <!-- The following are the menu names that are renamed -->
@@ -12703,6 +12747,41 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="sync.upload">
       <value><![CDATA[Upload Data]]></value>
+    </param>
+
+    <param name="portlets.folder.fieldsInFolders">
+      <value><![CDATA[Fields in the Folder]]></value>
+    </param>
+
+    <param name="portlets.folder.fieldstoDisplyInList">
+      <value><![CDATA[Fields to Display in List]]></value>
+    </param>
+    <param name="portlets.folder.greaterthan">
+      <value><![CDATA[>>]]></value>
+    </param>
+    <param name="portlets.folder.lessthan">
+      <value><![CDATA[<<]]></value>
+    </param>
+    <param name="portlets.folder.Up">
+      <value><![CDATA[Up]]></value>
+    </param>
+    <param name="portlets.folder.Down">
+      <value><![CDATA[Down]]></value>
+    </param>
+    <param name="portlets.folder.update">
+      <value><![CDATA[Update]]></value>
+    </param>
+    <param name="portlets.folder.cancel">
+      <value><![CDATA[Cancel]]></value>
+    </param>
+    <param name="portlets.folder.Avg">
+      <value><![CDATA[Avg:]]></value>
+    </param>
+    <param name="portlets.folder.Total">
+      <value><![CDATA[Total]]></value>
+    </param>
+    <param name="portlets.folder.group">
+      <value><![CDATA[Group:]]></value>
     </param>
   </config>
 </aspcfs>

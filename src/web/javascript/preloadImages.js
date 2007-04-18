@@ -14,12 +14,12 @@ function loadImages(newLib) {
   }
 }
 function over(i, c) {
-  if (document.images) {
-    document.images[lib[i] + c].src = p2[i].src;
+  if (window.images) {
+    window.images[lib[i] + c].src = p2[i].src;
   }
 }
 function out(i, c) {
-  if (document.images) {
-    document.images[lib[i] + c].src = p1[i].src;
+  if (window.images) {
+    window.images[lib[i] + c].src = p1[i].src;
   }
 }

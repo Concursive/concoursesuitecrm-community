@@ -44,7 +44,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script type="text/javascript">
   function reopen(addition) {
     var url = 'AdminCategories.do?command=PopupSelector&constantId=<%= request.getParameter("constantId") %>&categoryId=<%= request.getAttribute("categoryId") %>';

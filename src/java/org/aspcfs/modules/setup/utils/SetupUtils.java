@@ -110,6 +110,7 @@ public class SetupUtils {
     DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_knowledgebase.sql");
     DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_netapp.sql");
     DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_website.sql");
+    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_graph.sql");
   }
 
   public static boolean insertDefaultData(Connection db, String dbFileLibraryPath, String setupPath, String locale, boolean syncOnly) throws Exception, EvalError, IOException {

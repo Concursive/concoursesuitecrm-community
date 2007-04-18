@@ -3,7 +3,7 @@
             property: label, description, additionalText, defaultValue
 -->
 <icelets>
-  <icelet name="Html Content" class="HtmlContentPortlet" version="4">
+  <icelet name="Html Content" class="HtmlContentPortlet" version="5">
   	<description>
   		Create content for your website. Content includes text,
   		images, tables, and more.
@@ -261,4 +261,106 @@
               defaultValue="Forwarded from our web site"
               additionalText=""/>
 	</icelet>
+  <icelet name="Folder Portlet" class="FolderPortlet" version="1">
+    <appearance website="false">
+  		<dashboards applyConstraints="true">
+  			<!-- In accounts -->
+  			<module moduleId="1" />
+  		</dashboards>
+  		<containerMenus applyConstraints="true">
+  			<container name="accounts" moduleId = "1"/>
+  		</containerMenus>
+  	</appearance>
+    <description>Allows a folder's records to be managed</description>
+	<!-- The value of the category_id column of the table custom_field_category for the chosen folder is stored for this property  -->
+    <property constant="7031914"
+              label="Select Folder"
+              description="Select the folder to display/manage"
+              type="folderDropList"
+              additionalText=""><defaultValue><![CDATA[-1]]></defaultValue></property>
+    <property constant="7031915"
+              label="Number of Records to Display in List"
+              description="Determines the number of records per page, and the number of records over which aggregate functions are performed"
+              type="text"
+              additionalText=""><defaultValue><![CDATA[12]]></defaultValue></property>
+    <property constant="7031916"
+              label="Folder Access Options"
+              description="Determines if a user can view the folder's records"
+              type="checkbox"
+              additionalText="View"><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7031917"
+              label="Folder Access Options"
+              description="Determines if a user can add records to a folder"
+              type="checkbox"
+              additionalText="Add"><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7031918"
+              label="Folder Access Options"
+              description="Determines if a user can edit folder records"
+              type="checkbox"
+              additionalText="Edit"><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7031919"
+              label="Folder Access Options"
+              description="Determines if a user can delete folder records"
+              type="checkbox"
+              additionalText="Delete"><defaultValue><![CDATA[false]]></defaultValue></property>
+<!-- This property is stored as a comma separated list of field_id values from custom_field_info  -->
+    <property constant="7031920"
+              label="Fields to display in list"
+              description="Determines the fields of the folder that need be displayed as separate columns in the list view"
+              type="customFieldList"
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
+    <property constant="7031921"
+              label="Aggregate Functions on numeric fields"
+              description="Computes and displays the sum of all numeric fields in the list view"
+              type="checkbox"
+              additionalText="Total"><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7031922"
+              label="Aggregate Functions on numeric fields"
+              description="Computes and displays the average of all numeric fields in the list view"
+              type="checkbox"
+              additionalText="Average"><defaultValue><![CDATA[false]]></defaultValue></property>
+	</icelet>
+  <icelet name="Folder Graph" class="FolderGraphPortlet" version="1">
+    <appearance website="false">
+  		<dashboards applyConstraints="true">
+  			<!-- In accounts -->
+  			<module moduleId="1" />
+  		</dashboards>
+  		<containerMenus applyConstraints="true">
+  			<container name="accounts" moduleId = "1"/>
+  		</containerMenus>
+  	</appearance>
+    <description>Renders a graph from a folder's records</description>
+	  <!-- The value of the category_id column of the table custom_field_category for the chosen folder is stored for this property  -->
+    <property constant="7031914"
+              label="Select Folder"
+              description="Select the folder to display/manage"
+              type="folderDropList"
+              additionalText=""><defaultValue><![CDATA[-1]]></defaultValue></property>
+    <property constant="7032110"
+              label="Choose Major Axis"
+              description="Allows a user to choose whether the graph is x - major or y - major"
+              type="majorAxisSelect"
+              additionalText=""><defaultValue><![CDATA[0]]></defaultValue></property>
+    <property constant="7032111"
+              label="Major axis field"
+              description="Allows a user to determine the major axis field from the fields of a folder"
+              type="majorAxisField"
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7032112"
+              label="Minor Axis Parameter"
+              description="Allows a user to determine the minor axis parameter from the fields of a folder"
+              type="minorAxisParameter"
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7032113"
+              label="Show Legend"
+              description="Determines if the legend needs to be displayed for the graph"
+              type="checkbox"
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+    <property constant="7032114"
+              label="folderRecordRange"
+              description="Determines the range of records for which the graph needs to be drawn"
+              type="recordRangeSelect"
+              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+	</icelet>		
 </icelets>

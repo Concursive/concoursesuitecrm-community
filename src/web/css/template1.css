@@ -550,6 +550,11 @@
   background-color: #EDEDED !important;
   border-right: 1px solid #9C9A9C;
 }
+.formLabel1 { 
+  text-align: left !important;
+  background-color: #EDEDED !important;
+  border-right: 1px solid #9C9A9C;
+ }
 .empty th {
   color: #FFF;
   border: none !important;

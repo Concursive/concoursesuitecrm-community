@@ -42,7 +42,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/executeFunction.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/moveContact.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <dhv:evaluate if="<%= isPopup(request) %>">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/scrollReload.js"></script>
 </dhv:evaluate>

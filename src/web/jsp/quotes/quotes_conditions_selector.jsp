@@ -28,7 +28,7 @@
 <jsp:useBean id="quote" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
 <jsp:useBean id="QuoteConditionSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="type" class="java.lang.String" scope="request"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <%@ include file="../initPage.jsp" %>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <form name="elementListView" method="post" action="QuotesConditions.do?command=PopupSelector">

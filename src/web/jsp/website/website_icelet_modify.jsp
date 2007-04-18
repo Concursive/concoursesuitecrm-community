@@ -38,7 +38,7 @@
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
   <jsp:include page="../tinymce_include.jsp" flush="true"/>
 </dhv:evaluate>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProductCategories.js"></script>
 <script language="JavaScript">
 	function checkForm(form) {

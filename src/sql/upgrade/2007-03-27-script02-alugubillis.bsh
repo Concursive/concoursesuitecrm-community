@@ -1,0 +1,49 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  - Enables Folders for the Global Folders module
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+
+//Get the Global Folders category id for which this permission will be added
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = 'Global Folders'");
+if (rs.next()) {
+  categoryId = rs.getInt("category_id");
+}
+rs.close();
+print("Global Folders Category Id: " + categoryId);
+
+//Check to see if folders is already enabled, else insert folders
+boolean hasFolders = false;
+rs = st.executeQuery(
+  "SELECT id " +
+  "FROM module_field_categorylink " +
+  "WHERE module_id = " + categoryId);
+if (rs.next()) {
+  hasFolders = true;
+}
+rs.close();
+st.close();
+//Insert the folder setting
+if (!hasFolders) {
+  PreparedStatement pst = db.prepareStatement(
+    "INSERT INTO module_field_categorylink " +
+    "(module_id, category_id, level, description) VALUES " +
+    "(?, ?, ?, ?)");
+  pst.setInt(1, categoryId);
+  pst.setInt(2, 327071502);
+  pst.setInt(3, 10);
+  pst.setString(4, "Global Folders");
+  pst.execute();
+  pst.close();
+  print ("Global Folders added");
+} else {
+  print ("Folders already exists");
+}
+

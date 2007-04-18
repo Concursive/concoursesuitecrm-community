@@ -296,6 +296,7 @@
     <forward name="ModifyIceletPropertiesPopupOK" resource="/website/website_icelet_properties.jsp" layout="style"/>
     <forward name="ReplaceIceletPopupOK" resource="/website/website_icelet_add.jsp" layout="style"/>
     <forward name="SaveIceletPopupOK" resource="/reopen_parent_or_opener.jsp"/>
+    <forward name="ShowFolderFields" resource="/website/field_select.jsp" layout="style"/>
   </action>
 
   <!-- End of the Website Module -->
@@ -1308,6 +1309,24 @@
           class="org.aspcfs.modules.actions.ProductCatalogSelector">
     <forward name="ListProductsOK"
              resource="/mycfs/mycfs_product_catalog_selector.jsp"
+             layout="style"/>
+  </action>
+
+  <action name="FolderAndFieldSelector"
+          class="org.aspcfs.modules.actions.FolderAndFieldSelector">
+    <forward name="FieldSelectPopupOK"
+             resource="/website/graphportlet_majoraxis_field_select.jsp"
+             layout="style"/>
+    <forward name="FieldAndTypeListPopupOK"
+             resource="/website/field_displaytype_list.jsp"
+             layout="style"/>
+             
+    <forward name="FieldRangeStartPopupOK"
+             resource="/website/range_select_start.jsp"
+             layout="style"/>
+             
+    <forward name="FieldRangeEndPopupOK"
+             resource="/website/range_select_end.jsp"
              layout="style"/>
   </action>
 

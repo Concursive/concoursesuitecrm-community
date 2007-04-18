@@ -18,19 +18,14 @@ package org.aspcfs.modules.base;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @version
- * @created    April 3, 2006
+ * @author Ananth
+ * @created April 3, 2006
  */
 public class CustomFieldDataList extends ArrayList implements SyncableList {
 
@@ -49,9 +44,10 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
   private int categoryId = -1;
 
   /**
-   *  Constructor for the CustomFieldDataList object
+   * Constructor for the CustomFieldDataList object
    */
-  public CustomFieldDataList() { }
+  public CustomFieldDataList() {
+  }
 
   /**
    * Description of the Method
@@ -66,65 +62,65 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#getTableName()
-   */
+  * @see org.aspcfs.modules.base.SyncableList#getTableName()
+  */
   public String getTableName() {
     return tableName;
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
-   */
+  * @see org.aspcfs.modules.base.SyncableList#getUniqueField()
+  */
   public String getUniqueField() {
     return uniqueField;
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
-   */
+  * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.sql.Timestamp)
+  */
   public void setLastAnchor(Timestamp lastAnchor) {
     this.lastAnchor = lastAnchor;
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
-   */
+  * @see org.aspcfs.modules.base.SyncableList#setLastAnchor(java.lang.String)
+  */
   public void setLastAnchor(String lastAnchor) {
     this.lastAnchor = java.sql.Timestamp.valueOf(lastAnchor);
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
-   */
+  * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.sql.Timestamp)
+  */
   public void setNextAnchor(Timestamp nextAnchor) {
     this.nextAnchor = nextAnchor;
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
-   */
+  * @see org.aspcfs.modules.base.SyncableList#setNextAnchor(java.lang.String)
+  */
   public void setNextAnchor(String nextAnchor) {
     this.nextAnchor = java.sql.Timestamp.valueOf(nextAnchor);
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
-   */
+  * @see org.aspcfs.modules.base.SyncableList#setSyncType(int)
+  */
   public void setSyncType(int syncType) {
     this.syncType = syncType;
   }
 
   /* (non-Javadoc)
-   * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
-   */
+  * @see org.aspcfs.modules.base.SyncableList#setSyncType(String)
+  */
   public void setSyncType(String syncType) {
     this.syncType = Integer.parseInt(syncType);
   }
-  
+
   /**
-   *  Gets the fieldId attribute of the CustomFieldDataList object
+   * Gets the fieldId attribute of the CustomFieldDataList object
    *
-   * @return    The fieldId value
+   * @return The fieldId value
    */
   public int getFieldId() {
     return fieldId;
@@ -132,9 +128,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the fieldId attribute of the CustomFieldDataList object
+   * Sets the fieldId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new fieldId value
+   * @param tmp The new fieldId value
    */
   public void setFieldId(int tmp) {
     this.fieldId = tmp;
@@ -142,9 +138,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the fieldId attribute of the CustomFieldDataList object
+   * Sets the fieldId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new fieldId value
+   * @param tmp The new fieldId value
    */
   public void setFieldId(String tmp) {
     this.fieldId = Integer.parseInt(tmp);
@@ -152,9 +148,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the linkModuleId attribute of the CustomFieldDataList object
+   * Gets the linkModuleId attribute of the CustomFieldDataList object
    *
-   * @return    The linkModuleId value
+   * @return The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -162,9 +158,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the CustomFieldDataList object
+   * Sets the linkModuleId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -172,9 +168,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the linkModuleId attribute of the CustomFieldDataList object
+   * Sets the linkModuleId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new linkModuleId value
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     this.linkModuleId = Integer.parseInt(tmp);
@@ -182,9 +178,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the linkItemId attribute of the CustomFieldDataList object
+   * Gets the linkItemId attribute of the CustomFieldDataList object
    *
-   * @return    The linkItemId value
+   * @return The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -192,9 +188,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the linkItemId attribute of the CustomFieldDataList object
+   * Sets the linkItemId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -202,9 +198,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the linkItemId attribute of the CustomFieldDataList object
+   * Sets the linkItemId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new linkItemId value
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     this.linkItemId = Integer.parseInt(tmp);
@@ -212,9 +208,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the categoryId attribute of the CustomFieldDataList object
+   * Gets the categoryId attribute of the CustomFieldDataList object
    *
-   * @return    The categoryId value
+   * @return The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -222,9 +218,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the categoryId attribute of the CustomFieldDataList object
+   * Sets the categoryId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -232,18 +228,18 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the categoryId attribute of the CustomFieldDataList object
+   * Sets the categoryId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new categoryId value
+   * @param tmp The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
   }
 
   /**
-   *  Sets the PagedListInfo attribute of the CustomFieldCategoryList object
+   * Sets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
-   * @param  tmp  The new PagedListInfo value
+   * @param tmp The new PagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -251,9 +247,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the recordId attribute of the CustomFieldDataList object
+   * Sets the recordId attribute of the CustomFieldDataList object
    *
-   * @param  tmp  The new recordId value
+   * @param tmp The new recordId value
    */
   public void setRecordId(int tmp) {
     this.recordId = tmp;
@@ -261,9 +257,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the PagedListInfo attribute of the CustomFieldCategoryList object
+   * Gets the PagedListInfo attribute of the CustomFieldCategoryList object
    *
-   * @return    The PagedListInfo value
+   * @return The PagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -271,9 +267,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the recordId attribute of the CustomFieldDataList object
+   * Gets the recordId attribute of the CustomFieldDataList object
    *
-   * @return    The recordId value
+   * @return The recordId value
    */
   public int getRecordId() {
     return recordId;
@@ -289,7 +285,7 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
   public PreparedStatement prepareList(Connection db) throws SQLException {
     return prepareList(db, "", "");
   }
-  
+
   /**
    * Description of the Method
    *
@@ -310,9 +306,9 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         "cfd.* " +
-        "FROM " + tableName + " cfd " +
-        "WHERE cfd.record_id > -1 ");
-    if(sqlFilter == null || sqlFilter.length() == 0){
+            "FROM " + tableName + " cfd " +
+            "WHERE cfd.record_id > -1 ");
+    if (sqlFilter == null || sqlFilter.length() == 0) {
       StringBuffer buff = new StringBuffer();
       createFilter(buff);
       sqlFilter = buff.toString();
@@ -323,10 +319,10 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
   }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -342,8 +338,8 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
-        "FROM custom_field_data cfd " +
-        "WHERE cfd.record_id > -1 ");
+            "FROM custom_field_data cfd " +
+            "WHERE cfd.record_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -360,12 +356,36 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
       pst.close();
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("record_id", "field_id");
+      pagedListInfo.setDefaultSort("cfd.record_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY record_id, field_id ");
+      sqlOrder.append("ORDER BY cfd.entered_value ");
     }
 
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "cfd.* " +
+            "FROM " + DatabaseUtils.getTableName(db, tableName) + " cfd " +
+            "WHERE cfd.record_id > -1 ");
+    if (sqlFilter == null || sqlFilter.length() == 0) {
+      StringBuffer buff = new StringBuffer();
+      createFilter(buff);
+      sqlFilter = buff;
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    items = prepareFilter(pst);
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, pst);
+    }
+    rs = pst.executeQuery();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
     while (rs.next()) {
       CustomFieldData thisField = new CustomFieldData(rs);
       this.add(thisField);
@@ -376,11 +396,10 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
     }
   }
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  sqlFilter  Description of the Parameter
+   * @param sqlFilter Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -412,11 +431,11 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  pst               Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param pst Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -448,10 +467,10 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);

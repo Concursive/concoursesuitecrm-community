@@ -59,6 +59,7 @@ public final class Constants {
   public final static int FOLDERS_PRODUCT_OPTION = 200403193;
   public final static int FOLDERS_EMPLOYEES = 120200513;
   public final static int FOLDERS_PIPELINE = 120200514;
+  public final static int FOLDERS_GLOBALFOLDERS = 327071502;  
 
   //Documents (Migrate the unsorted to this format)
   public final static int DOCUMENTS_ACCOUNTS = 1;

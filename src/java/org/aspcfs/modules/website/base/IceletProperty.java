@@ -18,6 +18,7 @@ package org.aspcfs.modules.website.base;
 import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.products.base.ProductCategory;
+import org.aspcfs.modules.base.CustomField;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,6 +43,12 @@ public class IceletProperty extends GenericBean {
   public final static String PRODUCT_CATEGORY = "productCategory";
   public final static String LEAD_SOURCE = "leadsource";
   public final static String PORTAL_ROLELIST = "portal-rolelist";
+  public final static String FOLDER_DROPLIST = "folderDropList";
+  public final static String CUSTOM_FIELDLIST = "customFieldList";
+  public final static String MAJORAXIS_FIELD = "majorAxisField";
+  public final static String MINORAXIS_PARAMETER = "minorAxisParameter";
+  public final static String MAJORAXIS_SELECT = "majorAxisSelect";
+  public final static String RECORDRANGE_SELECT = "recordRangeSelect";
 
   private int id = -1;
   private int typeConstant = -1;
@@ -525,6 +532,14 @@ public class IceletProperty extends GenericBean {
         ProductCategory productCategory = new ProductCategory(db, Integer.parseInt(this.getValue()));
         if (productCategory != null && productCategory.getName() != null) {
           this.setValueString(productCategory.getName());
+        }
+      }
+    }
+    if (this.getType() != null && this.getType().equals(MAJORAXIS_FIELD)) {
+      if (this.getValue() != null && !"".equals(this.getValue()) && !"-1".equals(this.getValue())) {
+        CustomField customField = new CustomField(db, Integer.parseInt(this.getValue()));
+        if (customField != null && customField.getName() != null) {
+          this.setValueString(customField.getName());
         }
       }
     }

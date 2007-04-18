@@ -31,7 +31,7 @@
 <%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="campaign_user_group_maps_view_active_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');

@@ -29,7 +29,7 @@
 <jsp:useBean id="UserGroupSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="type" class="java.lang.String" scope="request"/>
 <jsp:useBean id="campaignId" class="java.lang.String" scope="request"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <%@ include file="../initPage.jsp" %>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <form name="elementListView" method="post" action="UserGroups.do?command=PopupSelector">

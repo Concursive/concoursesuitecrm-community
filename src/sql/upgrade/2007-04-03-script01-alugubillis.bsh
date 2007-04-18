@@ -1,0 +1,59 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Apr 03, 2007
+  
+  - Adds the permission "global_folders" to the "Admin" category 
+*/ 
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.Dictionary;
+
+
+int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_GLOBAL_FOLDERS);
+
+if (categoryId != -1) {
+
+  // Load the dictionary for localization
+  String fs = System.getProperty("file.separator") ;
+  Dictionary dictionary = new Dictionary(languagePath, "en_US");
+  if (systemLanguage != null) {
+    if (!"en_US".equals(locale)) {
+      //Override the text with a selected language
+      dictionary.load(languagePath, locale);
+    }
+  }
+
+ // Load permission category for later use
+ PermissionCategory permissionCategory = new PermissionCategory(db, categoryId);
+ 
+ // See if permission already exists
+ int existingId = Permission.lookupId(db, "global_folders");
+
+  if (existingId == -1) {     
+     Permission permission = new Permission();
+     permission.setCategoryId(permissionCategory.getId());
+     permission.setName("global_folders");
+     permission.setDescription(dictionary.getTerm("system.fields.label", "admin.globalFolders", "value"));
+     permission.setView(true);
+     permission.setAdd(true);
+     permission.setEdit(true);
+     permission.setDelete(true);
+     permission.setPermissionLevel(10);
+     permission.setEnabled(true);
+     permission.setActive(true);
+     permission.setViewpoints(false);
+     permission.insert(db);
+     print("Global Folders Permissions added.");    
+ 
+   } else {
+     print("Global Folders Permissions already exist");
+   }
+} else {
+   print("Category id could not be found");
+}
+
+

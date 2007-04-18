@@ -36,6 +36,7 @@
       new ypSlideOutMenu("menuPageGroup", "down", 0, 0, 170, getHeight("menuPageGroupTable"));
       new ypSlideOutMenu("menuPage", "down", 0, 0, 170, getHeight("menuPageTable"));
       new ypSlideOutMenu("menuRow", "down", 0, 0, 170, getHeight("menuRowTable"));
+      new ypSlideOutMenu("menuField", "down", 0, 0, 170, getHeight("menuFieldTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }

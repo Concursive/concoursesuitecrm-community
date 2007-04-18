@@ -58,6 +58,7 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
   private int linkItemId = -1;
   private boolean buildTotalNumOfRecords = false;
 
+  private String htmlJsEvent = "";
 
   /**
    * Constructor for the CustomFieldCategoryList object
@@ -68,7 +69,7 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
   /**
    * Description of the Method
    *
-   * @param rs
+   * @param rs resultset
    * @return
    * @throws SQLException Description of the Returned Value
    */
@@ -132,7 +133,7 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
   public void setSyncType(String syncType) {
     this.syncType = Integer.parseInt(syncType);
   }
-  
+
   /**
    * Sets the linkItemId attribute of the CustomFieldCategoryList object
    *
@@ -343,7 +344,23 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
   public String getJsEvent() {
     return jsEvent;
   }
+   /**
+   *  Sets the htmlJsEvent attribute of the CustomFieldCategoryList object
+   *
+   * @param  htmlJsEvent  The new htmlJsEvent value
+   */
+  public void setHtmlJsEvent(String htmlJsEvent) {
+	  this.htmlJsEvent = htmlJsEvent;
+  }
 
+   /**
+   *  Gets the HtmlJsEvent attribute of the CustomFieldCategoryList object
+   *
+   * @return    The HtmlJsEvent value
+   */
+  public String getHtmlJsEvent() {
+  	return htmlJsEvent;
+  }
 
   /**
    * Gets the defaultCategoryId attribute of the CustomFieldCategoryList object
@@ -424,12 +441,20 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
    * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
+    return getHtmlSelect(selectName,defaultKey,false);
+  }
+
+ public String getHtmlSelect(String selectName, int defaultKey,boolean noneSelect) {
+
     HtmlSelect thisSelect = new HtmlSelect();
 
     if (allSelectOption) {
       thisSelect.addItem(0, "All Folders");
     }
 
+    if (noneSelect){
+      thisSelect.addItem(-1, "--None--");
+    }
     Iterator i = this.iterator();
     while (i.hasNext()) {
       CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
@@ -440,6 +465,9 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
       thisSelect.setJsEvent(this.jsEvent);
     }
 
+      if (!(this.getHtmlJsEvent().equals(""))) {
+    	thisSelect.setJsEvent(this.getHtmlJsEvent());
+    }
     return thisSelect.getHtml(selectName, defaultKey);
   }
 
@@ -453,7 +481,7 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
   public PreparedStatement prepareList(Connection db) throws SQLException {
     return prepareList(db, "", "");
   }
-  
+
   /**
    * Description of the Method
    *
@@ -544,7 +572,7 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
     if (pst != null) {
       pst.close();
     }
-    
+
     if (buildResources) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
@@ -580,7 +608,7 @@ public class CustomFieldCategoryList extends ArrayList implements SyncableList {
     if (linkModuleId > -1) {
      sqlFilter.append("AND cfc.module_id = ? ");
     }
-    
+
     if (includeScheduled == Constants.TRUE) {
       sqlFilter.append(
           "AND CURRENT_TIMESTAMP > cfc.start_date AND (CURRENT_TIMESTAMP < cfc.end_date OR cfc.end_date IS NULL) ");

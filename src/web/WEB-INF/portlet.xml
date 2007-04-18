@@ -78,7 +78,31 @@
       <title>Cart</title>
     </portlet-info>
   </portlet>
-  <custom-portlet-mode>
+  <portlet>
+     <portlet-name>FolderPortlet</portlet-name>
+     <portlet-class>org.aspcfs.modules.website.icelet.FolderPortlet</portlet-class>
+     <supports>
+         <mime-type>text/html</mime-type>
+         <portlet-mode>view</portlet-mode>
+         <portlet-mode>config</portlet-mode>
+     </supports>
+       <portlet-info>
+       <title>Folders</title>
+       </portlet-info>
+   </portlet>
+  <portlet>
+    <portlet-name>FolderGraphPortlet</portlet-name>
+    <portlet-class>org.aspcfs.modules.website.icelet.FolderGraphPortlet</portlet-class>
+    <supports>
+       <mime-type>text/html</mime-type>
+       <portlet-mode>view</portlet-mode>
+       <portlet-mode>config</portlet-mode>
+    </supports>
+    <portlet-info>
+       <title>Folder Graphs</title>
+       </portlet-info>
+   </portlet>
+   <custom-portlet-mode>
       <description>Provides administration functions</description>
       <name>config</name>
     </custom-portlet-mode>

@@ -108,6 +108,24 @@
 
   <!-- Portlets -->
   <servlet>
+    <servlet-name>FolderPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>FolderPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>FolderGraphPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>FolderGraphPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
     <servlet-name>AboutPortlet</servlet-name>
     <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
     <init-param>
@@ -168,6 +186,14 @@
   </servlet>
 
   <!-- Portlet Mappings -->
+  <servlet-mapping>
+    <servlet-name>FolderPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/FolderPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FolderGraphPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/FolderGraphPortlet</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AboutPortlet</servlet-name>
     <url-pattern>/PlutoInvoker/AboutPortlet</url-pattern>

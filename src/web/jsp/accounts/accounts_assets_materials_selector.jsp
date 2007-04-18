@@ -28,7 +28,7 @@
 <jsp:useBean id="Table" class="java.lang.String" scope="request"/>
 <jsp:useBean id="asset" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
 <jsp:useBean id="AssetMaterialsSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script type="text/javascript">

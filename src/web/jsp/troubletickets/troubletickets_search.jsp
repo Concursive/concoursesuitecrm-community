@@ -35,7 +35,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script type="text/javascript">
   function checkForm(form) {
     formTest = true;

@@ -49,7 +49,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProducts.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript">
   function updateSubList1() {
     var sel = document.forms['addticket'].elements['catCode'];

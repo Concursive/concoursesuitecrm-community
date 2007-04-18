@@ -29,7 +29,7 @@
 <jsp:useBean id="status" class="java.lang.String" scope="request"/>
 <jsp:useBean id="linkSelection" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
     var i = 0;

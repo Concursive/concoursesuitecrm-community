@@ -2,12 +2,13 @@
 Centric CRM 4.2 Alpha
 Copyright (C) 2007 Dark Horse Ventures, LLC
 Change Log
-April 16, 2007
+April 18, 2007
 ----------------------------------------------------------------------------
 
 New:
-- Portlet driven module dashboards
-- Portlet druven account, contact and leads module custom tabs
+- ALPHA: Global folders in Admin, managed by FolderPortlet and FolderGraph
+- ALPHA: Portlet driven module dashboards
+- ALPHA: Portlet driven account, contact and leads module custom tabs
 - Website public file attachments from a document store
 - Quickly complete an action plan feature
 - Website preview feature

@@ -220,6 +220,95 @@ function popPortfolioCategoryListSingle(hiddenFieldId, displayFieldId, params) {
   }
 }
 
+ function popFieldsList(folderId,fieldListPropertyName) {
+    title  = 'FieldsInFolders';
+    width  =  '500';
+    height =  '300';
+    resize =  'yes';
+    bars   =  'yes';
+
+   if(folderId=="-1"){
+        alert("A folder needs to be selected before this property can be configured");
+        return;
+    }else{
+    var posx = (screen.width - width)/2;
+    var posy = (screen.height - height)/2;
+    var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+    var newwin=window.open('RowColumns.do?command=FieldsLists&folderId='+folderId+'&fieldListPropertyName='+fieldListPropertyName+'', title, windowParams);
+    newwin.focus();
+    if (newwin != null) {
+        if (newwin.opener == null)
+        newwin.opener = self;
+    }
+  }
+}
+
+
+function popFolderGraphMajorAxisSelect(folderId, hiddenFieldId, displayFieldId, params) {
+  title  = 'MajorAxisField';
+  width  =  '700';
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  var newwin=window.open('FolderAndFieldSelector.do?command=FieldSelect&listType=single&flushtemplist=true&folderId='+folderId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+   }
+function popFolderGraphMinorAxisSelect(folderId, hiddenFieldId, displayFieldId, params) {
+  title  = 'MinoraxisParameter';
+  width  =  '700';
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  var newwin=window.open('FolderAndFieldSelector.do?command=FieldListAndType&listType=single&flushtemplist=true&folderId='+folderId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  } 
+}
+
+function popFolderGraphRecordRangeSelect(folderId, majorAxisField, hiddenFieldId, displayFieldId, params) {
+  title  = 'RecordRangeStartSelect';
+  width  =  '450';
+  height =  '400';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  if(majorAxisField >-1) {
+      var newwin=window.open('FolderAndFieldSelector.do?command=RangeSelect&listType=single&flushtemplist=true&folderId='+folderId+'&majorAxisField='+majorAxisField+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+
+      newwin.focus();
+      if (newwin != null) {
+        if (newwin.opener == null)
+          newwin.opener = self;
+      }
+   }
+   else{
+      alert("Please Select MajorAxis Field");
+  }
+}
+
 function popActionPlansSelectMultiple(displayFieldId,highLightedId,categoryId,constantId,siteId,currentIds, type) {
   var selectedIds = currentIds;
   window.location.href= 'AdminCategories.do?command=PopupSelector&categoryId='+categoryId+'&siteId='+siteId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&categoryId=' + categoryId +'&constantId='+ constantId + '&type='+ type+ '';

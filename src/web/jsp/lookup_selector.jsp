@@ -9,7 +9,7 @@
 <jsp:useBean id="hiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Table" class="java.lang.String" scope="request"/>
 <jsp:useBean id="LookupSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <%@ include file="initPage.jsp" %>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">

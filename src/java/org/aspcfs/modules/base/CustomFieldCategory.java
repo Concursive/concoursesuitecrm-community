@@ -20,6 +20,7 @@ import org.aspcfs.modules.actionplans.base.ActionStepList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -69,6 +70,19 @@ public class CustomFieldCategory extends ArrayList {
   private boolean buildResources = false;
   private boolean canNotContinue = false;
 
+  //properties for caculating aggregate functions
+  private HashMap fieldTotals;
+  private HashMap fieldAverages;
+  private boolean doTotal = false;
+  private boolean doAverage = false;
+
+  //properties for Portlet preferences
+  private boolean canView = false;
+  private boolean canAdd = false;
+  private boolean canEdit = false;
+  private boolean canDelete = false;
+  private ArrayList displayInList = null;
+
   //Resources
   private int numberOfRecords = -1;
 
@@ -81,6 +95,79 @@ public class CustomFieldCategory extends ArrayList {
    */
   public boolean getOnlyWarnings() {
     return onlyWarnings;
+  }
+
+  /**
+   * gets the doTotal attribute of the CustomFieldCategory object
+   *
+   * @return The doTotal value
+   */
+  public boolean isDoTotal() {
+    return doTotal;
+  }
+
+
+  /**
+   * gets the doTotal attribute of the CustomFieldCategory object
+   *
+   * @return The doTotal value
+   */
+  public boolean isDoAvegrage() {
+    return doAverage;
+  }
+
+  /**
+   * sets the doTotal attribute of the CustomFieldCategory object
+   *
+   * @param doTotal The new doTotal value
+   */
+  public void setDoTotal(boolean doTotal) {
+    this.doTotal = doTotal;
+  }
+
+  /**
+   * sets the doTotal attribute of the CustomFieldCategory object
+   *
+   * @param doAverage The new doAverage value
+   */
+  public void setDoAverage(boolean doAverage) {
+    this.doAverage = doAverage;
+  }
+
+  /**
+   * sets the doTotal attribute of the CustomFieldCategory object
+   *
+   * @param tmp The new setCanView value
+   */
+  public void setCanView(boolean tmp) {
+    this.canView = tmp;
+  }
+
+  /**
+   * Sets the setCanAdd attribute of the CustomFieldCategory object
+   *
+   * @param tmp The new setCanAdd value
+   */
+  public void setCanAdd(boolean tmp) {
+    this.canAdd = tmp;
+  }
+
+  /**
+   * Sets the setCanEdit attribute of the CustomFieldCategory object
+   *
+   * @param tmp The new setCanEdit value
+   */
+  public void setCanEdit(boolean tmp) {
+    this.canEdit = tmp;
+  }
+
+  /**
+   * Sets the setCanEdit attribute of the CustomFieldCategory object
+   *
+   * @param tmp The new setCanEdit value
+   */
+  public void setCanDelete(boolean tmp) {
+    this.canDelete = tmp;
   }
 
 
@@ -133,6 +220,42 @@ public class CustomFieldCategory extends ArrayList {
     return numberOfRecords;
   }
 
+  /**
+   * Gets the getcanView attribute of the CustomFieldCategory object
+   *
+   * @return The getcanView value
+   */
+  public boolean getCanView() {
+    return canView;
+  }
+
+  /**
+   * Gets the getCanAdd attribute of the CustomFieldCategory object
+   *
+   * @return The getCanAdd value
+   */
+  public boolean getCanAdd() {
+    return canAdd;
+  }
+
+  /**
+   * Gets the getCanEdit attribute of the CustomFieldCategory object
+   *
+   * @return The getCanEdit value
+   */
+  public boolean getCanEdit() {
+    return canEdit;
+  }
+
+  /**
+   * Gets the getCanDelete attribute of the CustomFieldCategory object
+   *
+   * @return The getCanDelete value
+   */
+  public boolean getCanDelete() {
+    return canDelete;
+  }
+
 
   /**
    * Constructor for the CustomFieldCategory object
@@ -179,6 +302,112 @@ public class CustomFieldCategory extends ArrayList {
     pst.close();
   }
 
+  /**
+   * Calculates the aggregate functions sum and avg at CustomFieldCategory object
+   *
+   * @param noOfRecords
+   */
+  public void doAggregateFunctions(Connection db, int noOfRecords) {
+
+    int displayRecords = 0;
+    fieldTotals = new HashMap();
+    fieldAverages = new HashMap();
+    CustomFieldRecordList recordList = new CustomFieldRecordList();
+    recordList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
+    //recordList.setLinkItemId(1);
+    recordList.setCategoryId(this.getId());
+    try {
+      recordList.buildList(db);
+      recordList.buildRecordColumns(db, this);
+      if (recordList.size() > noOfRecords)
+        displayRecords = noOfRecords;
+      else
+        displayRecords = recordList.size();
+      Iterator records = recordList.iterator();
+      int recordCount = 1;
+      while (records.hasNext() && recordCount <= displayRecords) {
+        CustomFieldRecord thisRecord = (CustomFieldRecord) records.next();
+        this.setRecordId(thisRecord.getId());
+        this.setBuildResources(true);
+        this.buildResources(db);
+        Iterator groupList = this.iterator();
+        while (groupList.hasNext()) {
+          CustomFieldGroup thisGroup = (CustomFieldGroup) groupList.next();
+          thisGroup.setRecordId(thisRecord.getId());
+          thisGroup.buildResources(db);
+          Iterator fieldList = thisGroup.iterator();
+          while (fieldList.hasNext()) {
+            CustomField thisField = (CustomField) fieldList.next();
+            thisField.setRecordId(thisRecord.getId());
+            thisField.buildResources(db);
+            if (thisField.getTypeString().equals("Number") || thisField.getTypeString().equals("Decimal Number") || thisField.getTypeString().equals("Percent") || thisField.getTypeString().equals("Currency")) {
+              float value;
+              if (thisField.getTypeString().equals("Percent"))
+                value = Float.parseFloat(thisField.getValueHtml().substring(0, thisField.getValueHtml().length() - 1));
+              else
+                value = Float.parseFloat(thisField.getValueHtml());
+              if (!fieldTotals.containsKey(thisField.getId())) {
+                fieldTotals.put(thisField.getId(), value);
+                fieldAverages.put(thisField.getId(), value);
+              } else {
+                float tmpTotal = (Float) fieldTotals.get(thisField.getId());
+                // float tmpAverage=(Float)fieldAverages.get(thisField.getId());
+                fieldTotals.put(thisField.getId(), tmpTotal + value);
+                fieldAverages.put(thisField.getId(), (tmpTotal + value) / displayRecords);
+              }
+            }
+          }
+        }
+        recordCount++;
+      }
+    } catch (Exception e) {
+    }
+  }
+
+  /**
+   * Gets the aggregate function Total of corresponding field id
+   *
+   * @return total value
+   */
+  public float getFieldTotal(int fieldId) {
+    float value;
+    if (fieldTotals.containsKey(fieldId)) {
+      value = (Float) fieldTotals.get(fieldId);
+      return value;
+    } else return -1;
+  }
+
+  /**
+   * Gets the aggregate function average of corresponding field id
+   *
+   * @return average value
+   */
+  public float getFieldAverage(int fieldId) {
+    float value;
+    if (fieldAverages.containsKey(fieldId)) {
+      value = (Float) fieldAverages.get(fieldId);
+      return value;
+    } else return -1;
+  }
+
+  /**
+   * Gets the displayInList of portlet prference
+   *
+   * @return displayInList value
+   */
+  public ArrayList getDisplayInList() {
+    return displayInList;
+  }
+
+  /**
+   * Gets the displayInList of portlet prference
+   *
+   * @param displayInList sets new displayInList value
+   */
+
+  public void setDisplayInList(ArrayList displayInList) {
+    this.displayInList = displayInList;
+  }
 
   /**
    * Sets the Id attribute of the CustomFieldCategory object
@@ -514,6 +743,18 @@ public class CustomFieldCategory extends ArrayList {
     }
   }
 
+  /**
+   * Sets the Parameters attribute of the CustomFieldCategory object
+   *
+   * @param request The new Parameters value
+   */
+  public void setParameters(HttpServletRequest request) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
+      thisGroup.setParameters(request);
+    }
+  }
 
   /**
    * Sets the warnings attribute of the CustomFieldCategory object
@@ -1364,7 +1605,8 @@ public class CustomFieldCategory extends ArrayList {
     endDate = rs.getTimestamp("end_date");
     defaultItem = rs.getBoolean("default_item");
     entered = rs.getTimestamp("entered");
-    modified = rs.getTimestamp("modified");;
+    modified = rs.getTimestamp("modified");
+    ;
     enabled = rs.getBoolean("enabled");
     allowMultipleRecords = rs.getBoolean("multiple_records");
     readOnly = rs.getBoolean("read_only");

@@ -327,6 +327,10 @@
     <category id="5" name="Demo" folders="false" lookups="false" enabled="false">
       <permission name="demo"                                            attributes="vaed" offline="----" description="Access to Demo/Non-working features"/>
     </category>
+    <category id="327071502" name="Global Folders" folders="true" lookups="false" reports="false" categories="false" products="false" enabled="true">
+       <folder constantId="327071502" description="Global Folders"/>
+       <permission name="global_folders"                                  attributes="vaed" offline="vaed" description="Access to Global Folders Module" enabled="true"/>
+    </category>
   </permissions>
   <roles>
     <role name="Administrator" description="Performs system configuration and maintenance">

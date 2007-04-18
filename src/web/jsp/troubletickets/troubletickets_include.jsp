@@ -49,7 +49,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProducts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></SCRIPT>
 <script language="JavaScript">
   function updateCategoryList() {
     var orgId = document.forms['addticket'].orgId.value;

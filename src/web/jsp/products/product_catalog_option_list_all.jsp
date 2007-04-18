@@ -27,7 +27,7 @@
 <jsp:useBean id="finalElements" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="ProductCatalogOptionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="optionListView" method="post" action="ProductCatalogOptions.do?command=OptionList&moduleId=<%= PermissionCategory.getId() %>&catalogId=<%= ProductCatalog.getId() %>">
 <%-- Trails --%>

@@ -25,7 +25,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ContactTypeSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <%@ include file="../initPage.jsp" %>
 <% if (!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))) { %>
 <%-- Show the list of types to choose from --%>

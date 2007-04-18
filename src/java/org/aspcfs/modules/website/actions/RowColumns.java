@@ -16,49 +16,44 @@
 package org.aspcfs.modules.website.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.website.base.*;
-import org.aspcfs.modules.website.framework.IceletManager;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    April 28, 2006
- * @version    $Id: Exp$
+ * @author partha
+ * @version $Id: Exp$
+ * @created April 28, 2006
  */
 public final class RowColumns extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    return this.getReturn(context, "Default");
+    return getReturn(context, "Default");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -87,10 +82,10 @@ public final class RowColumns extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddSubRow(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -117,10 +112,10 @@ public final class RowColumns extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -172,10 +167,10 @@ public final class RowColumns extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -216,21 +211,20 @@ public final class RowColumns extends CFSModule {
     }
     String refreshUrl = (String) context.getSession().getAttribute("refreshUrl");
     if (refreshUrl != null) {
-    	context.getRequest().setAttribute("refreshUrl", refreshUrl);
-    	context.getSession().setAttribute("refreshUrl", null);
-    }
-    else {
-    	context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + (pageVersion != null? pageVersion.getPageId(): -1) + "&popup=true");
+      context.getRequest().setAttribute("refreshUrl", refreshUrl);
+      context.getSession().setAttribute("refreshUrl", null);
+    } else {
+      context.getRequest().setAttribute("refreshUrl", "Sites.do?command=Details&siteId=" + siteId + "&tabId=" + tabId + "&pageId=" + (pageVersion != null ? pageVersion.getPageId() : -1) + "&popup=true");
     }
     return this.getReturn(context, "Delete");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAddIcelet(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -278,24 +272,27 @@ public final class RowColumns extends CFSModule {
           context.getRequest().setAttribute("previousRowColumnId", String.valueOf(previousRowColumnId));
         }
       }
-			//Get the page and the icelets that are applicable to this page
-			PageVersion pageVersion = new PageVersion(db, pageRow.getPageVersionId());
-			Page page =  new Page(db, pageVersion.getPageId());
-			IceletList iceletList = new IceletList();
-			iceletList.setEnabled(Constants.TRUE);
-			if (page.getLinkModuleId() > -1){
-				iceletList.setModuleId(page.getLinkModuleId());
-			} else if (page.getLinkContainerId() > -1){
-				iceletList.setContainerId(page.getLinkContainerId());
-			} else {
-				iceletList.setForWebsite(true);
-			}
-			iceletList.buildList(db);
+      //Get the page and the icelets that are applicable to this page
+      PageVersion pageVersion = new PageVersion(db, pageRow.getPageVersionId());
+      Page page = new Page(db, pageVersion.getPageId());
+      IceletList iceletList = new IceletList();
+      iceletList.setEnabled(Constants.TRUE);
+      if (page.getLinkModuleId() > -1) {
+        iceletList.setModuleId(page.getLinkModuleId());
+      } else if (page.getLinkContainerId() > -1) {
+        iceletList.setContainerId(page.getLinkContainerId());
+      } else {
+        iceletList.setForWebsite(true);
+      }
+      iceletList.buildList(db);
 
       iceletList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("icelets", iceletList);
       rowColumn.setEnabled(true);
       rowColumn.setWidth(50);
+      rowColumn.setEnteredBy(this.getUserId(context));
+      rowColumn.setModifiedBy(this.getUserId(context));
+      rowColumn.insert(db);
       context.getRequest().setAttribute("rowColumn", rowColumn);
     } catch (Exception e) {
       e.printStackTrace();
@@ -309,10 +306,10 @@ public final class RowColumns extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReplaceIcelet(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -360,19 +357,19 @@ public final class RowColumns extends CFSModule {
           rowColumn.setIceletPropertyMap(null);
         }
       }
-			//Get the page and the icelets that are applicable to this page
-			PageVersion pageVersion = new PageVersion(db, pageRow.getPageVersionId());
-			Page page =  new Page(db, pageVersion.getPageId());
-			IceletList iceletList = new IceletList();
-			iceletList.setEnabled(Constants.TRUE);
-			if (page.getLinkModuleId() > -1){
-				iceletList.setModuleId(page.getLinkModuleId());
-			} else if (page.getLinkContainerId() > -1){
-				iceletList.setContainerId(page.getLinkContainerId());
-			} else {
-				iceletList.setForWebsite(true);
-			}
-			iceletList.buildList(db);
+      //Get the page and the icelets that are applicable to this page
+      PageVersion pageVersion = new PageVersion(db, pageRow.getPageVersionId());
+      Page page = new Page(db, pageVersion.getPageId());
+      IceletList iceletList = new IceletList();
+      iceletList.setEnabled(Constants.TRUE);
+      if (page.getLinkModuleId() > -1) {
+        iceletList.setModuleId(page.getLinkModuleId());
+      } else if (page.getLinkContainerId() > -1) {
+        iceletList.setContainerId(page.getLinkContainerId());
+      } else {
+        iceletList.setForWebsite(true);
+      }
+      iceletList.buildList(db);
       if (rowColumn.getIceletId() > -1) {
         icelet = (Icelet) iceletList.getIceletById(rowColumn.getIceletId());
         context.getRequest().setAttribute("icelet", icelet);
@@ -391,10 +388,10 @@ public final class RowColumns extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyIceletProperties(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
@@ -430,10 +427,17 @@ public final class RowColumns extends CFSModule {
         rowColumn.setWidth(width);
       }
       context.getRequest().setAttribute("rowColumn", rowColumn);
-      if (rowColumn.getIceletId() > -1) { 
+      if (rowColumn.getIceletId() > -1) {
         Icelet icelet = new Icelet(db, Integer.parseInt(iceletId));
         propertyMap = (HashMap) this.getIcletPrefs(context, icelet.getConfiguratorClass());
         context.getRequest().setAttribute("icelet", icelet);
+        //Folder Drop List Addition
+        CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+        thisList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
+        thisList.setBuildTotalNumOfRecords(true);
+        thisList.setHtmlJsEvent("onChange=\"javascript:resetFormValues()\"");
+        thisList.buildList(db);
+        context.getRequest().setAttribute("folderList", thisList);
         context.getRequest().setAttribute("propertyMap", propertyMap);
         LookupList leadSourceSelect = systemStatus.getLookupList(db, "lookup_contact_source");
         leadSourceSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
@@ -458,12 +462,55 @@ public final class RowColumns extends CFSModule {
     return this.getReturn(context, "ModifyIceletProperties");
   }
 
+  public String executeCommandFieldsLists(ActionContext context) {
+    if (!(hasPermission(context, "contacts-internal_contacts-folders-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    String catId = null;
+    String recordId = null;
+    boolean showRecords = true;
+    try {
+
+      db = this.getConnection(context);
+      CustomFieldGroup group = null;
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
+      thisList.setBuildTotalNumOfRecords(true);
+      thisList.buildList(db);
+
+      context.getRequest().setAttribute("folderList", thisList);
+
+
+      String folderId = context.getRequest().getParameter("folderId");
+      String fieldListPropertyName = context.getRequest().getParameter("fieldListPropertyName");
+      context.getRequest().setAttribute("fieldListPropertyName", fieldListPropertyName);
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(folderId));
+
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setEnteredBy(this.getUserId(context));
+      thisCategory.setModifiedBy(this.getUserId(context));
+      thisCategory.setCanNotContinue(true);
+      Iterator groups = thisCategory.iterator();
+      context.getRequest().setAttribute("categoryList", thisCategory);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    }
+    return ("ShowFolderFields");
+  }
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSaveIcelet(ActionContext context) {
     if (!(hasPermission(context, "site-editor-edit"))) {
