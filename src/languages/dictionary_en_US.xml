@@ -12291,28 +12291,16 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
 
       <!-- Labels for Folder Minor Axis Params Select popup -->
-    <param name="portlets.folder.field">
+    <param name="folder.minoraxis.Field">
      <value><![CDATA[Field]]></value>
     </param>
-    <param name="portlets.folder.columnWidth">
-     <value><![CDATA[Column Width]]></value>
-    </param>
-    <param name="portlets.folder.folderFields">
-     <value><![CDATA[Folder Fields]]></value>
-    </param>
-    <param name="portlets.graphType.axisX">
-     <value><![CDATA[X-Axis]]></value>
-    </param>
-    <param name="portlets.graphType.axisY">
-     <value><![CDATA[Y-Axis]]></value>
-    </param>
-    <param name="portlets.folder.parametersforMinorAxis">
+    <param name="folder.minoraxis.parametersforMinorAxis">
      <value><![CDATA[Parameters for Minor Axis]]></value>
     </param>
-    <param name="portlets.folder.graphType">
-     <value><![CDATA[Graph Type: ]]></value>
+    <param name="folder.minoraxis.type">
+     <value><![CDATA[Graph Type :]]></value>
     </param>
-    <param name="portlets.folder.nomatch">
+    <param name="folder.minoraxis.nomatch">
      <value><![CDATA[No folder fields matched query]]></value>
     </param>
 
@@ -12337,6 +12325,9 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="folder.range.majorAxisField">
      <value><![CDATA[Major Axis Field]]></value>
+    </param>
+    <param name="folder.range.select">
+     <value><![CDATA[12 Records Ago to Current]]></value>
     </param>
     <param name="portlets.folder.fieldsInFolders">
       <value><![CDATA[Fields in the Folder]]></value>

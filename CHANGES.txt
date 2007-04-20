@@ -5,6 +5,9 @@ Change Log
 April 18, 2007
 ----------------------------------------------------------------------------
 
+Notes:
+- Existing JSP layouts need the viewType added
+
 New:
 - ALPHA: Global folders in Admin, managed by FolderPortlet and FolderGraph
 - ALPHA: Portlet driven module dashboards

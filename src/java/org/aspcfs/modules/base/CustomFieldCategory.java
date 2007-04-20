@@ -307,7 +307,7 @@ public class CustomFieldCategory extends ArrayList {
    *
    * @param noOfRecords
    */
-  public void doAggregateFunctions(Connection db, int noOfRecords) {
+public void doAggregateFunctions(Connection db, int noOfRecords) {
 
     int displayRecords = 0;
     fieldTotals = new HashMap();
@@ -317,97 +317,99 @@ public class CustomFieldCategory extends ArrayList {
     //recordList.setLinkItemId(1);
     recordList.setCategoryId(this.getId());
     try {
-      recordList.buildList(db);
-      recordList.buildRecordColumns(db, this);
-      if (recordList.size() > noOfRecords)
-        displayRecords = noOfRecords;
-      else
-        displayRecords = recordList.size();
-      Iterator records = recordList.iterator();
-      int recordCount = 1;
-      while (records.hasNext() && recordCount <= displayRecords) {
-        CustomFieldRecord thisRecord = (CustomFieldRecord) records.next();
-        this.setRecordId(thisRecord.getId());
-        this.setBuildResources(true);
-        this.buildResources(db);
-        Iterator groupList = this.iterator();
-        while (groupList.hasNext()) {
-          CustomFieldGroup thisGroup = (CustomFieldGroup) groupList.next();
-          thisGroup.setRecordId(thisRecord.getId());
-          thisGroup.buildResources(db);
-          Iterator fieldList = thisGroup.iterator();
-          while (fieldList.hasNext()) {
-            CustomField thisField = (CustomField) fieldList.next();
-            thisField.setRecordId(thisRecord.getId());
-            thisField.buildResources(db);
-            if (thisField.getTypeString().equals("Number") || thisField.getTypeString().equals("Decimal Number") || thisField.getTypeString().equals("Percent") || thisField.getTypeString().equals("Currency")) {
-              float value;
-              if (thisField.getTypeString().equals("Percent"))
-                value = Float.parseFloat(thisField.getValueHtml().substring(0, thisField.getValueHtml().length() - 1));
-              else
-                value = Float.parseFloat(thisField.getValueHtml());
-              if (!fieldTotals.containsKey(thisField.getId())) {
-                fieldTotals.put(thisField.getId(), value);
-                fieldAverages.put(thisField.getId(), value);
-              } else {
-                float tmpTotal = (Float) fieldTotals.get(thisField.getId());
-                // float tmpAverage=(Float)fieldAverages.get(thisField.getId());
-                fieldTotals.put(thisField.getId(), tmpTotal + value);
-                fieldAverages.put(thisField.getId(), (tmpTotal + value) / displayRecords);
-              }
+        recordList.buildList(db);
+        recordList.buildRecordColumns(db, this);
+        if (recordList.size() > noOfRecords)
+            displayRecords = noOfRecords;
+        else
+            displayRecords = recordList.size();
+        Iterator records = recordList.iterator();
+        int recordCount = 1;
+        while (records.hasNext() && recordCount <= displayRecords) {
+            CustomFieldRecord thisRecord = (CustomFieldRecord) records.next();
+            this.setRecordId(thisRecord.getId());
+            this.setBuildResources(true);
+            this.buildResources(db);
+            Iterator groupList = this.iterator();
+            while (groupList.hasNext()) {
+                CustomFieldGroup thisGroup = (CustomFieldGroup) groupList.next();
+                thisGroup.setRecordId(thisRecord.getId());
+                thisGroup.buildResources(db);
+                Iterator fieldList = thisGroup.iterator();
+                while (fieldList.hasNext()) {
+                    CustomField thisField = (CustomField) fieldList.next();
+                    thisField.setRecordId(thisRecord.getId());
+                    thisField.buildResources(db);
+                    if (thisField.getTypeString().equals("Number") || thisField.getTypeString().equals("Decimal Number") || thisField.getTypeString().equals("Percent") || thisField.getTypeString().equals("Currency"))
+                    {
+                        float value;
+                        if (thisField.getTypeString().equals("Percent")) {
+                            value = Float.parseFloat(thisField.getValueHtml().substring(0, thisField.getValueHtml().length() - 1));
+                        } else if ("Currency".equals(thisField.getTypeString())) {
+                            value = Float.parseFloat(thisField.getValueHtml().replaceAll(",", ""));
+                        } else
+                            value = Float.parseFloat(thisField.getValueHtml());
+                        if (!fieldTotals.containsKey(thisField.getId())) {
+                            fieldTotals.put(thisField.getId(), value);
+                            fieldAverages.put(thisField.getId(), value);
+                        } else {
+                            float tmpTotal = (Float) fieldTotals.get(thisField.getId());
+                            // float tmpAverage=(Float)fieldAverages.get(thisField.getId());
+                            fieldTotals.put(thisField.getId(), tmpTotal + value);
+                            fieldAverages.put(thisField.getId(), (tmpTotal + value) / displayRecords);
+                        }
+                    }
+                }
             }
-          }
+            recordCount++;
         }
-        recordCount++;
-      }
     } catch (Exception e) {
     }
-  }
+}
 
-  /**
-   * Gets the aggregate function Total of corresponding field id
-   *
-   * @return total value
-   */
-  public float getFieldTotal(int fieldId) {
-    float value;
-    if (fieldTotals.containsKey(fieldId)) {
-      value = (Float) fieldTotals.get(fieldId);
-      return value;
-    } else return -1;
-  }
+    /**
+     * Gets the aggregate function Total of corresponding field id
+     *
+     * @return total value
+     */
+    public float getFieldTotal(int fieldId) {
+        float value;
+        if (fieldTotals.containsKey(fieldId)) {
+            value = (Float) fieldTotals.get(fieldId);
+            return value;
+        } else return -1;
+    }
 
-  /**
-   * Gets the aggregate function average of corresponding field id
-   *
-   * @return average value
-   */
-  public float getFieldAverage(int fieldId) {
-    float value;
-    if (fieldAverages.containsKey(fieldId)) {
-      value = (Float) fieldAverages.get(fieldId);
-      return value;
-    } else return -1;
-  }
+    /**
+     * Gets the aggregate function average of corresponding field id
+     *
+     * @return average value
+     */
+    public float getFieldAverage(int fieldId) {
+        float value;
+        if (fieldAverages.containsKey(fieldId)) {
+            value = (Float) fieldAverages.get(fieldId);
+            return value;
+        } else return -1;
+    }
 
-  /**
-   * Gets the displayInList of portlet prference
-   *
-   * @return displayInList value
-   */
-  public ArrayList getDisplayInList() {
-    return displayInList;
-  }
+    /**
+     * Gets the displayInList of portlet prference
+     *
+     * @return displayInList value
+     */
+    public ArrayList getDisplayInList() {
+        return displayInList;
+    }
 
-  /**
-   * Gets the displayInList of portlet prference
-   *
-   * @param displayInList sets new displayInList value
-   */
+    /**
+     * Gets the displayInList of portlet prference
+     * @param displayInList sets new displayInList value
+     */
 
-  public void setDisplayInList(ArrayList displayInList) {
-    this.displayInList = displayInList;
-  }
+    public void setDisplayInList(ArrayList displayInList) {
+        this.displayInList = displayInList;
+}
 
   /**
    * Sets the Id attribute of the CustomFieldCategory object

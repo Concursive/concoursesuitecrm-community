@@ -13,25 +13,24 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  - Author: dharmas
   - Version: $Id: fields_graph.jsp dharmas$
   - Description:
   --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-  String includePage = "../../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";
+    String includePage = "../../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";
 %>
 
 <jsp:include page="<%= includePage %>" flush="true"/>
 <html>
-  <head><title>Folder Graph Page</title></head>
-  <body>
-  <table width="275" cellpadding="3" cellspacing="0" border="0" class="pagedList">  
-  	<tr>
-     <td>
-          <img src="graphs/<%= request.getAttribute("GraphFileName") %>.jpg" width="600" height="400" border="0" usemap="#<%= request.getAttribute("GraphFileName") %>">
-     </td>
-  	</tr>
-  </table>
-  </body>
+<head><title>Folder Graph Page</title></head>
+<body>
+<table width="275" cellpadding="3" cellspacing="0" border="0" class="pagedList">
+    <tr>
+        <td>
+            <img src="graphs/<%= request.getAttribute("GraphFileName") %>.jpg" width="600" height="400" border="0" usemap="#<%= request.getAttribute("GraphFileName") %>">
+        </td>
+    </tr>
+</table>
+</body>
 </html>

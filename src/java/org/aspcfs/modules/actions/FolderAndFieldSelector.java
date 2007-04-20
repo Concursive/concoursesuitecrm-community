@@ -69,7 +69,6 @@ public final class FolderAndFieldSelector extends CFSModule {
             db = this.getConnection(context);
 
             int rowCount = 1;
-            String params = (String) context.getRequest().getParameter("params");
 
             if ("list".equals(listType)) {
                 while (context.getRequest().getParameter(

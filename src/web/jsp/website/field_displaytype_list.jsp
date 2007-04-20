@@ -13,7 +13,7 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  - Version: $Id: field_displaytype_list.jsp dharmas$
+   - Version: $Id: field_displaytype_list.jsp dharmas$
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -27,116 +27,116 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/folderListCheck.js"></script>
 
 <html>
-  <head><title>FolderGraph MinorAxis Select Page</title></head>
-   <body>
-    <form name="fieldDisplay" action="">
-        <table  width="100%" cellspacing="0" cellpadding="3" border="0" class="pagedList" >
+<head><title>FolderGraph MinorAxis Select Page</title></head>
+<body>
+<form name="fieldDisplay" action="">
+<table  width="100%" cellspacing="0" cellpadding="3" border="0" class="pagedList" >
 
-          <tr>
-             <th width="50%">
-               <strong><dhv:label name="portlets.folder.fieldsInFolders">Field in the Folder</dhv:label></strong>
-            </th>
-            <th width="10%">&nbsp;
-            </th>
-            <th width="40%">
-             <strong><dhv:label name="portlets.folder.parametersforMinorAxis">Parameters for Minor Axis</dhv:label></strong>
-            </th>
-          </tr>
-          <tr>
-             <td width="50%">
-                <table width="100%" cellspacing="0" cellpadding="4" border="0" class="pagedList">
-                  <tr><th>&nbsp;</th>
-                    <th><dhv:label name="portlets.folder.field">Field</dhv:label></th>
-                  </tr>
+<tr>
+    <th width="50%">
+        <strong><dhv:label name="portlets.folder.fieldsInFolders">Field in the Folder</dhv:label></strong>
+    </th>
+    <th width="10%">&nbsp;
+    </th>
+    <th width="40%">
+        <strong><dhv:label name="portlets.folder.parametersforMinorAxis">Parameters for Minor Axis</dhv:label></strong>
+    </th>
+</tr>
+<tr>
+    <td width="50%">
+        <table width="100%" cellspacing="0" cellpadding="4" border="0" class="pagedList">
+            <tr><th>&nbsp;</th>
+                <th><dhv:label name="portlets.folder.field">Field</dhv:label></th>
+            </tr>
 
-                        <%
-                            Iterator iter = fieldNameList.iterator();
-                            if (iter.hasNext()) {
-                            int rowid = 0;
-                            int count = 1;
-                            while(iter.hasNext()){
-                              CustomField field = (CustomField)iter.next();
-                               rowid = (rowid != 1?1:2);
-                               // checking for only numeric, decimal and currency type fields to display for Minor Axis Parameters
-                               // field_type of numeric is 9, decimal is 10 and currency is 12
-                               if (field.getType() == 9 || field.getType() == 10 || field.getType() == 12) { 
-                        %>
-		                  <tr class="row<%= rowid %>">
-		                     <td width="8"><input type="checkbox" name='<%="checkelement"+count%>' id='<%="checkelement"+count%>' value='<%=field.getId()%>'/></td>
-		                     <td><%= toHtml(field.getName())%></td>
-		                     <input type="hidden" name='<%="hiddenelement"+count%>' id='<%="hiddenelement"+count%>' value='<%=field.getName()%>'/>
-		                  </tr>
-		             <%  count++;
-		                 } } %>
-		               <script>size=<%=count%></script>
+            <%
+                Iterator iter = fieldNameList.iterator();
+                if (iter.hasNext()) {
+                    int rowid = 0;
+                    int count = 1;
+                    while(iter.hasNext()){
+                        CustomField field = (CustomField)iter.next();
+                        // checking for only numeric, decimal and currency type fields to display for Minor Axis Parameters
+                        // field_type of numeric is 9, decimal is 10, percent is 11 and currency is 12
+                        if (field.getType() == CustomField.INTEGER || field.getType() == CustomField.FLOAT || field.getType() == CustomField.CURRENCY || field.getType() == CustomField.PERCENT) {
+                            rowid = (rowid != 1?1:2);
+            %>
+            <tr class="row<%= rowid %>">
+                <td width="8"><input type="checkbox" name='<%="checkelement"+count%>' id='<%="checkelement"+count%>' value='<%=field.getId()%>'/></td>
+                <td><%= toHtml(field.getName())%></td>
+                <input type="hidden" name='<%="hiddenelement"+count%>' id='<%="hiddenelement"+count%>' value='<%=field.getName()%>'/>
+            </tr>
+            <%  count++;
+            } } %>
+            <script>size=<%=count%></script>
         </table>
-        </td>
-
-        <td >
-        <table width="100%" aligen="center" cellspacing="0" cellpadding="2" border="0" class="empty">
-        <tr>
-          <td >
-            <input type="button" name="addButton" id="addButton" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:collectValues()">
-          </td>
-        </tr>
-        <tr>
-          <td >
-            <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="javascript:removeValues()">
-          </td>
-        </tr>
-       </table>
     </td>
 
-     <td>
-          <table width="100%" cellspacing="0" cellpadding="2" border="0" class="details">
-        <tr>
-          <td>
-           <select name="selectedList" multiple id="selectedList" size="10" style="width: 250px" onChange="javascript:resetOptions();">
-           </select>
-          </td> </tr></table>    
-      </td>
-
-        </tr>
-         <tr>
-
-         <tr >
-              <td colspan="3">
-                 <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
-                    <tr>
-                        <td  >
-                        <dhv:label name="portlets.folder.graphType">Graph Type:</dhv:label> &nbsp;&nbsp;&nbsp;
-                            <%= graphTypeList.getHtmlSelect("graphType", GraphType.getId()) %>
-                        </td>
-                    </tr>
-                </table>
-               </td>
-          </tr>
-                <td colspan="3">
-                    <table width="100%" cellspacing="0" cellpadding="4" border="0" class="empty">
-                        <tr>
-                            <input type="hidden" name="displayFieldId" id="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
-                            <input type="hidden" name="hiddenFieldId" id="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
-                            <td align="right"><input type="button" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="javascript:returnToParent();"/></td>
-                            <td align="left"><input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"></td>
-                        </tr>
-                   </table>
+    <td >
+        <table width="100%" aligen="center" cellspacing="0" cellpadding="2" border="0" class="empty">
+            <tr>
+                <td >
+                    <input type="button" name="addButton" id="addButton" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:collectValues()">
                 </td>
-          </tr>
-        <%
-          } else {
-        %>
-			<tr>
-              <td class="containerBody" colspan="4">
-                <dhv:label name="portlets.folder.nomatch">No folder fields matched query</dhv:label>
-              </td>
             </tr>
             <tr>
-                <td align="left" colspan="4"><input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"></td>
+                <td >
+                    <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="javascript:removeValues()">
+                </td>
             </tr>
-        <%
-            }
-        %>
         </table>
-      </form>
-  </body>
+    </td>
+
+    <td>
+        <table width="100%" cellspacing="0" cellpadding="2" border="0" class="details">
+            <tr>
+                <td>
+                    <select name="selectedList" multiple id="selectedList" size="10" style="width: 250px" onChange="javascript:resetOptions();">
+                    </select>
+                </td> </tr></table>
+    </td>
+
+</tr>
+<tr>
+
+    <tr >
+        <td colspan="3">
+            <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
+                <tr>
+                    <td  >
+                        <dhv:label name="portlets.folder.graphType">Graph Type:</dhv:label> &nbsp;&nbsp;&nbsp;
+                        <%= graphTypeList.getHtmlSelect("graphType", GraphType.getId()) %>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <td colspan="3">
+        <table width="100%" cellspacing="0" cellpadding="4" border="0" class="empty">
+            <tr>
+                <input type="hidden" name="displayFieldId" id="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
+                <input type="hidden" name="hiddenFieldId" id="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
+                <td align="right"><input type="button" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="javascript:returnToParent();"/></td>
+                <td align="left"><input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<%
+} else {
+%>
+<tr>
+    <td class="containerBody" colspan="4">
+        <dhv:label name="portlets.folder.nomatch">No folder fields matched query</dhv:label>
+    </td>
+</tr>
+<tr>
+    <td align="left" colspan="4"><input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:self.close();"></td>
+</tr>
+<%
+    }
+%>
+</table>
+</form>
+</body>
 </html>

@@ -24,42 +24,45 @@
   var thisCatId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, recId) {
+  function displayMenu<%=randomNum%>(loc, id, recId) {
     thisRecId = recId;
 
     if (!menu_init) {
-      menu_init = true;
+//      menu_init = true;
       new ypSlideOutMenu("menuRow", "down", 0, 0, 170, getHeight("menuRowTable"));
       new ypSlideOutMenu("menuTab", "down", 0, 0, 170, getHeight("menuTabTable"));
       new ypSlideOutMenu("menuPageGroup", "down", 0, 0, 170, getHeight("menuPageGroupTable"));
       new ypSlideOutMenu("menuPage", "down", 0, 0, 170, getHeight("menuPageTable"));
       new ypSlideOutMenu("menuColumn", "down", 0, 0, 170, getHeight("menuColumnTable"));
-      new ypSlideOutMenu("menuField", "down", 0, 0, 170, getHeight("menuFieldTable"));
+      new ypSlideOutMenu("menuField<%=randomNum%>", "down", 0, 0, 170, getHeight("menuField<%=randomNum%>Table"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
 
   //Menu link functions
-  function folderDetails() {
-    var i=10;
+  function folderDetails<%=randomNum%>() {
     window.location.href = '<portlet:renderURL><portlet:param name="viewType" value="details"/><portlet:param name="recordId" value="'+thisRecId+'"/></portlet:renderURL>';
   }
 
-  function modify() {
+  function modify<%=randomNum%>() {
     window.location.href = '<portlet:renderURL><portlet:param name="viewType" value="edit"/><portlet:param name="recordId" value="'+thisRecId+'"/></portlet:renderURL>';
   }
 
-  function deleteField() {
-    window.location.href ='<portlet:renderURL><portlet:param name="viewType" value="delete"/><portlet:param name="recordId" value="'+thisRecId+'"/></portlet:renderURL>';
+  function deleteField<%=randomNum%>() {
+     	 if( confirm(" Are you sure? ")) {
+   			 window.location.href ='<portlet:renderURL><portlet:param name="viewType" value="delete"/><portlet:param name="recordId" value="'+thisRecId+'"/></portlet:renderURL>';
+          } else {
+         return false;
+        }
   }
 
 </script>
-<div id="menuFieldContainer" class="menu">
-  <div id="menuFieldContent">
-    <table id="menuFieldTable" class="pulldown" width="170" cellspacing="0">
+<div id="menuField<%=randomNum%>Container" class="menu">
+  <div id="menuField<%=randomNum%>Content">
+    <table id="menuField<%=randomNum%>Table" class="pulldown" width="170" cellspacing="0">
 
    <dhv:evaluate if="<%=Category.getCanView()%>">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="folderDetails()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="folderDetails<%=randomNum%>()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -69,7 +72,7 @@
       </tr>
    </dhv:evaluate>
       <dhv:evaluate if="<%=Category.getCanEdit()%>">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify<%=randomNum%>()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -79,7 +82,7 @@
       </tr>
    </dhv:evaluate>
    <dhv:evaluate if="<%=Category.getCanDelete()%>">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteField()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteField<%=randomNum%>()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

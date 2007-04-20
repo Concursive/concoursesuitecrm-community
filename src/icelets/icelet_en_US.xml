@@ -343,7 +343,7 @@
               type="majorAxisSelect"
               additionalText=""><defaultValue><![CDATA[0]]></defaultValue></property>
     <property constant="7032111"
-              label="Major axis field"
+              label="Major Axis Field"
               description="Allows a user to determine the major axis field from the fields of a folder"
               type="majorAxisField"
               additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
@@ -358,7 +358,7 @@
               type="checkbox"
               additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
     <property constant="7032114"
-              label="folderRecordRange"
+              label="Record Range"
               description="Determines the range of records for which the graph needs to be drawn"
               type="recordRangeSelect"
               additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
