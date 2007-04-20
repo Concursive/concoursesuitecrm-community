@@ -7,6 +7,7 @@
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
 <jsp:useBean id="site" class="org.aspcfs.modules.website.base.Site" scope="request"/>
 <jsp:useBean id="rowsColumns" class="java.util.ArrayList" scope="request"/>
+<jsp:useBean id="viewType" class="java.lang.String" scope="request"/>
 <dhv:evaluate if="<%= !"true".equals(portal) && site.getTabToDisplay().getThisPageToBuild().getAlias() > -1 %>">
   <dhv:label name="">NOTE: THE CONTENT ON THIS PAGE IS AN ALIAS TO CONTENT ON ANOTHER PAGE ]]</dhv:label><br />
   <br />
@@ -41,7 +42,7 @@
           colSpan = " colspan=\"" + colSpanCount + "\"";
         }
 %>
-        <dhv:evaluate if="<%= !"true".equals(portal) %>">
+        <dhv:evaluate if="<%= !"true".equals(portal) && Site.CONFIGURE.equals(viewType) %>">
         <tr>
           <td class="portalRow" valign="top" <%= colSpan %>>
             <div class="portalEditorRow">
@@ -64,7 +65,7 @@
         pb_i++;
 %>
                 <td class="portalColumn" width="<%= (rowColumn.getParentRow().getTotalColumnWidth() != 0? String.valueOf((double)(rowColumn.getWidth() * 100)/(double)rowColumn.getParentRow().getTotalColumnWidth())+"%": String.valueOf(rowColumn.getWidth())) %>" valign="top">
-                  <dhv:evaluate if="<%= !"true".equals(portal) %>">
+                  <dhv:evaluate if="<%= !"true".equals(portal) && Site.CONFIGURE.equals(viewType) %>">
                     <div class="portalEditorColumn">
                     Column: <a href="javascript:displayMenuColumn('select<%= pb_i %>','menuColumn','<%= rowColumn.getId() %>','<%= rowColumn.getParentRow().getId() %>','<%= rowColumn.getParentRow().getPageVersionId() %>','<%= site.getId() %>','<%= site.getTabToDisplay().getId() %>','<%= thisPage.getId() %>','<%= rowColumn.getIceletId() %>','<%= (rowColumn.getSubRows() != null && rowColumn.getSubRows().size() > 0) %>');"
                     onMouseOver="over(0, <%= pb_i %>)" onmouseout="out(0, <%= pb_i %>); hideMenu('menuColumn');">

@@ -8,6 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="portal" class="java.lang.String" scope="request"/>
+<jsp:useBean id="viewType" class="java.lang.String" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <%-- Login Link --%>
 <dhv:evaluate if="<%= "true".equals(portal) %>">
@@ -58,7 +59,7 @@
   <tr>
     <c:set var="pageGroupList" value="${site.tabToDisplay.pageGroupList}"/>
     <jsp:useBean id="pageGroupList" type="org.aspcfs.modules.website.base.PageGroupList" />
-    <dhv:evaluate if="<%= pageGroupList.canDisplay() || !"true".equals(portal) %>">
+    <dhv:evaluate if="<%= pageGroupList.canDisplay() || (!"true".equals(portal) && org.aspcfs.modules.website.base.Site.CONFIGURE.equals(viewType))%>">
       <%-- PageGroup along the left --%>
       <td width="200" valign="top" style="padding-right:6px;" class="portalPageGroupsColumn">
         <table cellpadding="0" cellspacing="0" width="100%" class="portalPageGroups">
