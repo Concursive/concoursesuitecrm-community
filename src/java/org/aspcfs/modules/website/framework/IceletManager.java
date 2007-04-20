@@ -108,7 +108,18 @@ public class IceletManager {
 
 
   public boolean prepare(ActionContext context, Page page, Connection db) throws Exception {
-		PortalEnvironment portalEnvironment = new PortalEnvironment(context.getRequest(), context.getResponse());
+    ArrayList moduleParamNames = new ArrayList();
+    moduleParamNames.add("command");
+    moduleParamNames.add("dashboardId");
+    moduleParamNames.add("moduleId");
+    moduleParamNames.add("action");
+    moduleParamNames.add("menu");
+    moduleParamNames.add("customtabId");
+    moduleParamNames.add("containerId");
+    moduleParamNames.add("popup");
+    context.getRequest().setAttribute(PortalURL.ALLOWED_PORTAL_PARAMETERS, moduleParamNames);
+    
+    PortalEnvironment portalEnvironment = new PortalEnvironment(context.getRequest(), context.getResponse());
 		PortalURL portalURL = portalEnvironment.getRequestedPortalURL();
 		String actionWindowId = portalURL.getActionWindow();
 		
@@ -164,6 +175,13 @@ public class IceletManager {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("IceletManager-> Preparing portlets...");
     }
+    ArrayList moduleParamNames = new ArrayList();
+    moduleParamNames.add("command");
+    moduleParamNames.add("siteId");
+    moduleParamNames.add("tabId");
+    moduleParamNames.add("pageId");
+    moduleParamNames.add("viewType");
+    context.getRequest().setAttribute(PortalURL.ALLOWED_PORTAL_PARAMETERS, moduleParamNames);
 
     // Setup the portlets on this page
     PortalEnvironment portalEnvironment = new PortalEnvironment(
