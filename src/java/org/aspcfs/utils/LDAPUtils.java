@@ -181,7 +181,7 @@ public class LDAPUtils {
       if (c == '(' || c == ')' || c == '&' || c == '\'') {
         return false;
       }
-      if (c == '@' || c == '-' || c == '+' || c == '.') {
+      if (c == '@' || c == '-' || c == '+' || c == '.' || c == '_') {
         continue;
       }
       if ('0' <= c && c <= '9') {
