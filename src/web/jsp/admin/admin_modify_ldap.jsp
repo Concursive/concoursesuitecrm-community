@@ -144,7 +144,7 @@
                     <dhv:label name="admin.ldap.compositePrefix">Composite DN Prefix:</dhv:label>
                   </td>
                   <td>
-                    <input type="text" size="30" name="ldapSearchPrefix" value='<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.PREFIX")) %>' />
+                    <input type="text" size="30" name="ldapSearchPrefix" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.PREFIX")) %>' />
                   </td>
                 </tr>
                 <tr>
@@ -152,7 +152,7 @@
                     <dhv:label name="admin.ldap.compositePostfix">Composite DN Postfix:</dhv:label>
                   </td>
                   <td>
-                    <input type="text" size="30" name="ldapSearchPostfix" value='<%= "true".equals(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.POSTFIX")) %>' />
+                    <input type="text" size="30" name="ldapSearchPostfix" value='<%= toHtmlValue(getPref(getServletConfig().getServletContext(), "LDAP.SEARCH.POSTFIX")) %>' />
                   </td>
                 </tr>
               </table>
