@@ -23,12 +23,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     matt rajkowski
- * @created    January 15, 2003
- * @version    $Id: StateSelect.java 13207 2005-11-03 14:51:59 -0500 (Thu, 03
- *      Nov 2005) mrajkowski $
+ * @author matt rajkowski
+ * @version $Id: StateSelect.java 13207 2005-11-03 14:51:59 -0500 (Thu, 03
+ *          Nov 2005) mrajkowski $
+ * @created January 15, 2003
  */
 public class StateSelect extends LinkedHashMap {
   SystemStatus systemStatus = null;
@@ -39,15 +39,16 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    */
-  public StateSelect() { }
+  public StateSelect() {
+  }
 
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    *
-   * @param  buildAll  Description of the Parameter
+   * @param buildAll Description of the Parameter
    */
   public StateSelect(boolean buildAll) {
     this.setBuildAll(buildAll);
@@ -56,9 +57,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    *
-   * @param  countries  Description of the Parameter
+   * @param countries Description of the Parameter
    */
   public StateSelect(String countries) {
     if (countries != null) {
@@ -71,9 +72,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    *
-   * @param  systemStatus  Description of the Parameter
+   * @param systemStatus Description of the Parameter
    */
   public StateSelect(SystemStatus systemStatus) {
     this.setSystemStatus(systemStatus);
@@ -81,10 +82,10 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    *
-   * @param  systemStatus  Description of the Parameter
-   * @param  buildAll      Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @param buildAll     Description of the Parameter
    */
   public StateSelect(SystemStatus systemStatus, boolean buildAll) {
     this.setSystemStatus(systemStatus);
@@ -94,10 +95,10 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Constructor for the StateSelect object
+   * Constructor for the StateSelect object
    *
-   * @param  systemStatus  Description of the Parameter
-   * @param  countries     Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @param countries    Description of the Parameter
    */
   public StateSelect(SystemStatus systemStatus, String countries) {
     this.setSystemStatus(systemStatus);
@@ -111,9 +112,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the systemStatus attribute of the StateSelect object
+   * Gets the systemStatus attribute of the StateSelect object
    *
-   * @return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -121,9 +122,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Sets the systemStatus attribute of the StateSelect object
+   * Sets the systemStatus attribute of the StateSelect object
    *
-   * @param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -131,9 +132,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the buildAll attribute of the StateSelect object
+   * Gets the buildAll attribute of the StateSelect object
    *
-   * @return    The buildAll value
+   * @return The buildAll value
    */
   public boolean getBuildAll() {
     return buildAll;
@@ -141,9 +142,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Sets the buildAll attribute of the StateSelect object
+   * Sets the buildAll attribute of the StateSelect object
    *
-   * @param  tmp  The new buildAll value
+   * @param tmp The new buildAll value
    */
   public void setBuildAll(boolean tmp) {
     this.buildAll = tmp;
@@ -151,9 +152,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Sets the buildAll attribute of the StateSelect object
+   * Sets the buildAll attribute of the StateSelect object
    *
-   * @param  tmp  The new buildAll value
+   * @param tmp The new buildAll value
    */
   public void setBuildAll(String tmp) {
     this.buildAll = DatabaseUtils.parseBoolean(tmp);
@@ -161,9 +162,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the countries attribute of the StateSelect object
+   * Gets the countries attribute of the StateSelect object
    *
-   * @return    The countries value
+   * @return The countries value
    */
   public String getCountries() {
     return countries;
@@ -171,9 +172,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Sets the countries attribute of the StateSelect object
+   * Sets the countries attribute of the StateSelect object
    *
-   * @param  tmp  The new countries value
+   * @param tmp The new countries value
    */
   public void setCountries(String tmp) {
     this.countries = tmp;
@@ -181,9 +182,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the Country attribute of the StateSelect object
+   * Adds a feature to the Country attribute of the StateSelect object
    *
-   * @param  tmp  The feature to be added to the Country attribute
+   * @param tmp The feature to be added to the Country attribute
    */
   public void addCountry(String tmp) {
     countries = (new StringBuffer(countries + "," + tmp)).toString();
@@ -191,9 +192,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the jsEvent attribute of the StateSelect object
+   * Gets the jsEvent attribute of the StateSelect object
    *
-   * @return    The jsEvent value
+   * @return The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -201,9 +202,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Sets the jsEvent attribute of the StateSelect object
+   * Sets the jsEvent attribute of the StateSelect object
    *
-   * @param  tmp  The new jsEvent value
+   * @param tmp The new jsEvent value
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
@@ -211,9 +212,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the previousStates attribute of the StateSelect object
+   * Gets the previousStates attribute of the StateSelect object
    *
-   * @return    The previousStates value
+   * @return The previousStates value
    */
   public HashMap getPreviousStates() {
     return previousStates;
@@ -221,9 +222,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Sets the previousStates attribute of the StateSelect object
+   * Sets the previousStates attribute of the StateSelect object
    *
-   * @param  tmp  The new previousStates value
+   * @param tmp The new previousStates value
    */
   public void setPreviousStates(HashMap tmp) {
     this.previousStates = tmp;
@@ -231,59 +232,65 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the States attribute of the StateSelect object
+   * Adds a feature to the States attribute of the StateSelect object
    */
   private void addStates() {
-//United States
+    //United States
     LinkedHashMap states = new LinkedHashMap();
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("UNITED STATES") != -1 || buildAll) {
       addUnitedStates(states);
       this.put("UNITED STATES", states);
     }
-//Canadian States
+    //Canadian States
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("CANADA") != -1 || buildAll) {
       states = new LinkedHashMap();
       addCanadianStates(states);
       this.put("CANADA", states);
     }
-//Indian States
+    //Indian States
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("INDIA") != -1 || buildAll) {
       states = new LinkedHashMap();
       addIndianStates(states);
       this.put("INDIA", states);
     }
-//Venezuelan States
+    //Venezuelan States
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("VENEZUELA") != -1 || buildAll) {
       states = new LinkedHashMap();
       addVenezuelanStates(states);
       this.put("VENEZUELA", states);
     }
-//Netherland States
+    //Netherland States
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("NETHERLANDS") != -1 || buildAll) {
       states = new LinkedHashMap();
       addNetherlandStates(states);
       this.put("NETHERLANDS", states);
     }
-//Australian States
+    //Australian States
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("AUSTRALIA") != -1 || buildAll) {
       states = new LinkedHashMap();
       addAustralianStates(states);
       this.put("AUSTRALIA", states);
     }
-//Brazilian States
+    //Brazilian States
     if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("BRAZIL") != -1 || buildAll) {
       states = new LinkedHashMap();
       addBrazilianStates(states);
       this.put("BRAZIL", states);
     }
+    //Italian States
+    if (CountrySelect.getCountryByAbbreviation(countries.trim().toUpperCase()).indexOf("ITALY") != -1 || buildAll) {
+      states = new LinkedHashMap();
+      addItalianStates(states);
+      this.put("ITALY", states);
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  country  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param country Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasCountry(String country) {
     if (country != null &&
@@ -295,11 +302,11 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the htmlSelect attribute of the StateSelect object
+   * Gets the htmlSelect attribute of the StateSelect object
    *
-   * @param  selectName  Description of the Parameter
-   * @param  country     Description of the Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param country    Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, String country) {
     return getHtmlSelect(selectName, country, "");
@@ -307,12 +314,12 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the htmlSelect attribute of the StateSelect object
+   * Gets the htmlSelect attribute of the StateSelect object
    *
-   * @param  selectName  Description of the Parameter
-   * @param  country     Description of the Parameter
-   * @param  defaultKey  Description of the Parameter
-   * @return             The htmlSelect value
+   * @param selectName Description of the Parameter
+   * @param country    Description of the Parameter
+   * @param defaultKey Description of the Parameter
+   * @return The htmlSelect value
    */
   public String getHtmlSelect(String selectName, String country, String defaultKey) {
     HtmlSelect stateSelect = new HtmlSelect();
@@ -330,13 +337,13 @@ public class StateSelect extends LinkedHashMap {
         String stateCode = (String) i.next();
         String stateName = (String) states.get(stateCode);
         stateSelect.addItem(stateCode, stateName);
-        if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String)previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
+        if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
           hasPreviousStates = stateCode.equals((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())));
         }
       }
     }
-    if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String)previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
-      stateSelect.addItem((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())), (String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) +" *");
+    if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
+      stateSelect.addItem((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())), (String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) + " *");
     }
     stateSelect.setIdName(selectName);
     return stateSelect.getHtml(selectName, defaultKey);
@@ -344,10 +351,10 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Gets the htmlSelectObj attribute of the StateSelect object
+   * Gets the htmlSelectObj attribute of the StateSelect object
    *
-   * @param  country  Description of the Parameter
-   * @return          The htmlSelectObj value
+   * @param country Description of the Parameter
+   * @return The htmlSelectObj value
    */
   public HtmlSelect getHtmlSelectObj(String country) {
     boolean hasPreviousStates = false;
@@ -360,12 +367,12 @@ public class StateSelect extends LinkedHashMap {
         String stateCode = (String) i.next();
         String stateName = (String) states.get(stateCode);
         stateSelect.addItem(stateCode, stateName);
-        if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String)previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
+        if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
           hasPreviousStates = stateCode.equals((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())));
         }
       }
     }
-    if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String)previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
+    if (!hasPreviousStates && previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())) != null && !"".equals((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())))) {
       stateSelect.addItem((String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())), (String) previousStates.get(CountrySelect.getCountryByAbbreviation(country.trim().toUpperCase())));
     }
     return stateSelect;
@@ -373,9 +380,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the UnitedStates attribute of the StateSelect object
+   * Adds a feature to the UnitedStates attribute of the StateSelect object
    *
-   * @param  states  The feature to be added to the UnitedStates attribute
+   * @param states The feature to be added to the UnitedStates attribute
    */
   public void addUnitedStates(LinkedHashMap states) {
     states.put("AL", "Alabama");
@@ -440,9 +447,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the CanadianStates attribute of the StateSelect object
+   * Adds a feature to the CanadianStates attribute of the StateSelect object
    *
-   * @param  states  The feature to be added to the CanadianStates attribute
+   * @param states The feature to be added to the CanadianStates attribute
    */
   public void addCanadianStates(LinkedHashMap states) {
     states.put("AB", "Alberta");
@@ -463,9 +470,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the IndianStates attribute of the StateSelect object
+   * Adds a feature to the IndianStates attribute of the StateSelect object
    *
-   * @param  states  The feature to be added to the IndianStates attribute
+   * @param states The feature to be added to the IndianStates attribute
    */
   public void addIndianStates(LinkedHashMap states) {
     states.put("AN", "Andaman and Nicobar Islands");
@@ -507,9 +514,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the VenezuelanStates attribute of the StateSelect object
+   * Adds a feature to the VenezuelanStates attribute of the StateSelect object
    *
-   * @param  states  The feature to be added to the VenezuelanStates attribute
+   * @param states The feature to be added to the VenezuelanStates attribute
    */
   public void addVenezuelanStates(LinkedHashMap states) {
     states.put("ANZ", "Anzoategui");
@@ -540,9 +547,9 @@ public class StateSelect extends LinkedHashMap {
 
 
   /**
-   *  Adds a feature to the NetherlandStates attribute of the StateSelect object
+   * Adds a feature to the NetherlandStates attribute of the StateSelect object
    *
-   * @param  states  The feature to be added to the NetherlandStates attribute
+   * @param states The feature to be added to the NetherlandStates attribute
    */
   public void addNetherlandStates(LinkedHashMap states) {
     states.put("DR", "Drenthe");
@@ -558,7 +565,7 @@ public class StateSelect extends LinkedHashMap {
     states.put("ZE", "Zeeland");
     states.put("ZH", "Zuid-Holland");
   }
-  
+
   public void addAustralianStates(LinkedHashMap states) {
     states.put("CT", "Australian Capital Territory");
     states.put("NS", "New South Wales");
@@ -571,39 +578,147 @@ public class StateSelect extends LinkedHashMap {
     states.put("AS", "Ashmore and Cartier Islands");
     states.put("CR", "Coral Sea Islands Territory");
   }
+
   /**
-   *  Adds a feature to the BrazilianStates attribute of the StateSelect object
+   * Adds a feature to the BrazilianStates attribute of the StateSelect object
    *
-   * @param  states  The feature to be added to the BrazilianStates attribute
+   * @param states The feature to be added to the BrazilianStates attribute
    */
   public void addBrazilianStates(LinkedHashMap states) {
-    states.put("AC","Acre");
-    states.put("AL","Alagoas");
-    states.put("AM","Amazonas");
-    states.put("AP","Amap\u00e1");
-    states.put("BA","Bahia");
-    states.put("CE","Cear\u00e1");
-    states.put("DF","Distrito Federal");
-    states.put("ES","Esp\u00edrito Santo");
-    states.put("GO","Goi\u00e1s");
-    states.put("MA","Maranh\u00e3o");
-    states.put("MG","Minas Gerais");
-    states.put("MS","Mato Grosso do Sul");
-    states.put("MT","Mato Grosso");
-    states.put("PA","Par\u00e1");
-    states.put("PB","Para\u00edba");
-    states.put("PE","Pernambuco");
-    states.put("PI","Piau\u00ed");
-    states.put("PR","Paran\u00e1");
-    states.put("RJ","Rio de Janeiro");
-    states.put("RN","Rio Grande do Norte");
-    states.put("RS","Rio Grande do Sul");
-    states.put("RO","Rond\u00f4nia");
-    states.put("RR","Roraima");
-    states.put("SC","Santa Catarina");
-    states.put("SP","S\u00e3o Paulo");
-    states.put("SE","Sergipe");
-    states.put("TO","Tocantins");
+    states.put("AC", "Acre");
+    states.put("AL", "Alagoas");
+    states.put("AM", "Amazonas");
+    states.put("AP", "Amap\u00e1");
+    states.put("BA", "Bahia");
+    states.put("CE", "Cear\u00e1");
+    states.put("DF", "Distrito Federal");
+    states.put("ES", "Esp\u00edrito Santo");
+    states.put("GO", "Goi\u00e1s");
+    states.put("MA", "Maranh\u00e3o");
+    states.put("MG", "Minas Gerais");
+    states.put("MS", "Mato Grosso do Sul");
+    states.put("MT", "Mato Grosso");
+    states.put("PA", "Par\u00e1");
+    states.put("PB", "Para\u00edba");
+    states.put("PE", "Pernambuco");
+    states.put("PI", "Piau\u00ed");
+    states.put("PR", "Paran\u00e1");
+    states.put("RJ", "Rio de Janeiro");
+    states.put("RN", "Rio Grande do Norte");
+    states.put("RS", "Rio Grande do Sul");
+    states.put("RO", "Rond\u00f4nia");
+    states.put("RR", "Roraima");
+    states.put("SC", "Santa Catarina");
+    states.put("SP", "S\u00e3o Paulo");
+    states.put("SE", "Sergipe");
+    states.put("TO", "Tocantins");
+  }
+
+  public void addItalianStates(LinkedHashMap states) {
+    states.put("AG", "Agrigento");
+    states.put("AL", "Alessandria");
+    states.put("AN", "Ancona");
+    states.put("AO", "Aosta");
+    states.put("AR", "Arezzo");
+    states.put("AP", "Ascoli Piceno");
+    states.put("AT", "Asti");
+    states.put("AV", "Avellino");
+    states.put("BA", "Bari");
+    states.put("BL", "Belluno");
+    states.put("BN", "Benevento");
+    states.put("BG", "Bergamo");
+    states.put("BI", "Biella");
+    states.put("BO", "Bologna");
+    states.put("BZ", "Bolzano");
+    states.put("BS", "Brescia");
+    states.put("BR", "Brindisi");
+    states.put("CA", "Cagliari");
+    states.put("CL", "Caltanissetta");
+    states.put("CB", "Campobasso");
+    states.put("CI", "Carbonia-Iglesias");
+    states.put("CE", "Caserta");
+    states.put("CT", "Catania");
+    states.put("CZ", "Catanzaro");
+    states.put("CH", "Chieti");
+    states.put("CO", "Como");
+    states.put("CS", "Cosenza");
+    states.put("CR", "Cremona");
+    states.put("KR", "Crotone");
+    states.put("CU", "Cuneo");
+    states.put("EN", "Enna");
+    states.put("FE", "Ferrara");
+    states.put("FI", "Firenze");
+    states.put("FG", "Foggia");
+    states.put("FC", "Forl\u00ec-Cesena");
+    states.put("FR", "Frosinone");
+    states.put("GE", "Genova");
+    states.put("GO", "Gorizia");
+    states.put("GR", "Grosseto");
+    states.put("IM", "Imperia");
+    states.put("IS", "Isernia");
+    states.put("AQ", "L'Aquila");
+    states.put("SP", "La Spezia");
+    states.put("LT", "Latina");
+    states.put("LE", "Lecce");
+    states.put("LC", "Lecco");
+    states.put("LI", "Livorno");
+    states.put("LO", "Lodi");
+    states.put("LU", "Lucca");
+    states.put("MC", "Macerata");
+    states.put("MN", "Mantova");
+    states.put("MS", "Massa-Carrara");
+    states.put("MT", "Matera");
+    states.put("VS", "Medio Campidano");
+    states.put("ME", "Messina");
+    states.put("MI", "Milano");
+    states.put("MO", "Modena");
+    states.put("NA", "Napoli");
+    states.put("NO", "Novara");
+    states.put("NU", "Nuoro");
+    states.put("OG", "Ogliastra");
+    states.put("OT", "Olbia-Tempio");
+    states.put("OR", "Oristano");
+    states.put("PD", "Padova");
+    states.put("PA", "Palermo");
+    states.put("PR", "Parma");
+    states.put("PV", "Pavia");
+    states.put("PU", "Pesaro-Urbino");
+    states.put("PE", "Pescara");
+    states.put("PC", "Piacenza");
+    states.put("PI", "Pisa");
+    states.put("PT", "Pistoia");
+    states.put("PN", "Pordenone");
+    states.put("PZ", "Potenza");
+    states.put("PO", "Prato");
+    states.put("RG", "Ragusa");
+    states.put("RA", "Ravenna");
+    states.put("RC", "Reggio Calabria");
+    states.put("RE", "Reggio Emilia");
+    states.put("RI", "Rieti");
+    states.put("RN", "Rimini");
+    states.put("RM", "Roma");
+    states.put("RO", "Rovigo");
+    states.put("SA", "Salerno");
+    states.put("SS", "Sassari");
+    states.put("SV", "Savona");
+    states.put("SI", "Siena");
+    states.put("SR", "Siracusa");
+    states.put("SO", "Sondrio");
+    states.put("TA", "Taranto");
+    states.put("TE", "Teramo");
+    states.put("TR", "Terni");
+    states.put("TO", "Torino");
+    states.put("TP", "Trapani");
+    states.put("TN", "Trento");
+    states.put("TV", "Treviso");
+    states.put("UD", "Udine");
+    states.put("VA", "Varese");
+    states.put("VE", "Venezia");
+    states.put("VB", "Verbano-Cusio-Ossola");
+    states.put("VC", "Vercelli");
+    states.put("VR", "Verona");
+    states.put("VV", "Vibo Valentia");
+    states.put("VI", "Vicenza");
+    states.put("VT", "Viterbo");
   }
 }
-
