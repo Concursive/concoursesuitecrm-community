@@ -974,6 +974,7 @@ public class Page extends GenericBean {
       pst.close();
 
       // Remove the alias to this page
+      i = 0;
       pst = db.prepareStatement(
           "UPDATE web_page " +
               "SET page_alias = ? " +
