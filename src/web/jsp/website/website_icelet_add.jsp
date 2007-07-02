@@ -50,7 +50,7 @@
     <td nowrap class="formLabel">
       <dhv:label name="">Width</dhv:label>
     </td>
-		<td><input type="text" name="width" value="<%= (rowColumn.getWidth() > -1? rowColumn.getWidth(): 100) %>" /></td>
+    <td><input type="text" name="width" value="<%= (rowColumn.getWidth() > -1? rowColumn.getWidth(): 100) %>" /></td>
   </tr>
 </table>
 &nbsp;<br />
@@ -73,7 +73,7 @@
       <dhv:evaluate if="<%= icelet == null || icelet.getId() != thisIcelet.getId() %>">
         <td width="70" height="80" align="center" valign="center">
       </dhv:evaluate>
-      <a href="javascript:document.forms['icelet'].action += '&iceletId=<%= thisIcelet.getId() %>';document.forms['icelet'].submit();">
+      <a href="javascript:document.forms['icelet'].action += '&iceletId=<%= thisIcelet.getId() %>&fromWebsite=<%= icelets.getForWebsite()? "true":"false" %>';document.forms['icelet'].submit();">
         <div><%=  toHtml(thisIcelet.getName()) %></div></a>
       <dhv:evaluate if="<%= icelet == null || icelet.getId() != thisIcelet.getId() %>">
         </td>

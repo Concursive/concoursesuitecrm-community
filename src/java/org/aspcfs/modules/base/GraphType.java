@@ -24,8 +24,10 @@ import java.sql.Connection;
 import org.aspcfs.utils.DatabaseUtils;
 
 /**
- * Represents a GraphType 
+ * Represents a GraphType
+ *
  * @author     dharmas
+ * @version $Id: GraphType.java 4.1 2007-03-30 11:32:36 +0530 (Fri, 30 Mar 2007) dharmas Exp $
  * @created    Mar 30, 2007
  *
  */

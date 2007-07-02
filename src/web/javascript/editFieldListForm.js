@@ -50,19 +50,18 @@ function moveToDisplayList() {
                      for (i=0; i<numItems; i++) {
                      if(formFieldList.customerFieldList.options[i].selected) {
                             for(var j=0;j<formFieldList.customerFieldDisplayList.options.length;j++){
-                               if(formFieldList.customerFieldDisplayList.options[j].text == formFieldList.customerFieldList.options[i].text)
+                               if(formFieldList.customerFieldDisplayList.options[j].value == formFieldList.customerFieldList.options[i].id)
                            {
                                alert("Field is already exists");
                                return false;
                            }
-
                          }
-
-                            var text = formFieldList.customerFieldList.options[i].text;
-                            formFieldList.customerFieldDisplayList.options[mLenDispList]=new Option (text,text);
-                            formFieldList.customerFieldDisplayList.options[mLenDispList].value = formFieldList.customerFieldList.options[i].value;
-                            formFieldList.customerFieldList.options[i].text ="Empty";
-                            mLenDispList = formFieldList.customerFieldDisplayList.length;
+                         var text = formFieldList.customerFieldList.options[i].text;
+                         var Id = formFieldList.customerFieldList.options[i].id;
+                         formFieldList.customerFieldDisplayList.options[mLenDispList]=new Option (text,Id);
+                         formFieldList.customerFieldDisplayList.options[mLenDispList].id = formFieldList.customerFieldList.options[i].id;
+                         formFieldList.customerFieldList.options[i].text ="Empty";
+                         mLenDispList = formFieldList.customerFieldDisplayList.length;
              }
          }
          for (i=0; i<formFieldList.customerFieldList.options.length; i++) {
@@ -70,48 +69,47 @@ function moveToDisplayList() {
                  formFieldList.customerFieldList.options[i]=null;
                  --i;
              }
-
-    }//sortListValues(document.configureCountriesForm.customerFieldDisplayList);
-
+    }
    return true;
   }
 function moveUp() {
-		var formVar = document.fieldList.customerFieldDisplayList;
-		var selectIndex = formVar.selectedIndex;
+		var formFieldDisplayList = document.fieldList.customerFieldDisplayList;
+		var selectIndex = formFieldDisplayList.selectedIndex;
 		if (selectIndex != -1 && selectIndex != 0) {
-			var selectedOptionValue = formVar.options[selectIndex].value;
-			var selectedOptionText = formVar.options[selectIndex].text;
-			var previousOptionValue = formVar.options[selectIndex -1].value;
-			var previousOptionText = formVar.options[selectIndex -1].text;
-			formVar.options[selectIndex].value = previousOptionValue;
-			formVar.options[selectIndex].text = previousOptionText;
-			formVar.options[selectIndex - 1].value = selectedOptionValue;
-			formVar.options[selectIndex - 1].text = selectedOptionText;
+			var selectedOptionValue = formFieldDisplayList.options[selectIndex].value;
+			var selectedOptionText = formFieldDisplayList.options[selectIndex].text;
+			var previousOptionValue = formFieldDisplayList.options[selectIndex -1].value;
+			var previousOptionText = formFieldDisplayList.options[selectIndex -1].text;
+			formFieldDisplayList.options[selectIndex].value = previousOptionValue;
+			formFieldDisplayList.options[selectIndex].text = previousOptionText;
+			formFieldDisplayList.options[selectIndex - 1].value = selectedOptionValue;
+			formFieldDisplayList.options[selectIndex - 1].text = selectedOptionText;
 
-			formVar.options[selectIndex - 1].selected = true;
-			formVar.options[selectIndex].selected = false;
+			formFieldDisplayList.options[selectIndex - 1].selected = true;
+			formFieldDisplayList.options[selectIndex].selected = false;
 		}
 		return;
 	}
 
 	function moveDown() {
 
-		var formVar = document.fieldList.customerFieldDisplayList;
-		var selectIndex = formVar.selectedIndex;
-		var noOfOptions = formVar.length;
+		var formFieldDisplayList = document.fieldList.customerFieldDisplayList;
+		var selectIndex = formFieldDisplayList.selectedIndex;
+		var noOfOptions = formFieldDisplayList.length;
 		if (selectIndex != -1 && selectIndex != (noOfOptions - 1)) {
 
-			var selectedOptionValue = formVar.options[selectIndex].value;
-			var selectedOptionText = formVar.options[selectIndex].text;
-			var nextOptionValue = formVar.options[selectIndex + 1].value;
-			var nextOptionText = formVar.options[selectIndex + 1].text;
-			formVar.options[selectIndex].value = nextOptionValue;
-			formVar.options[selectIndex].text = nextOptionText;
-			formVar.options[selectIndex + 1].value = selectedOptionValue;
-			formVar.options[selectIndex + 1].text = selectedOptionText;
-        	formVar.options[selectIndex + 1].selected = true;
-			formVar.options[selectIndex].selected = false;
+			var selectedOptionValue = formFieldDisplayList.options[selectIndex].value;
+			var selectedOptionText = formFieldDisplayList.options[selectIndex].text;
+			var nextOptionValue = formFieldDisplayList.options[selectIndex + 1].value;
+			var nextOptionText = formFieldDisplayList.options[selectIndex + 1].text;
+			formFieldDisplayList.options[selectIndex].value = nextOptionValue;
+			formFieldDisplayList.options[selectIndex].text = nextOptionText;
+			formFieldDisplayList.options[selectIndex + 1].value = selectedOptionValue;
+			formFieldDisplayList.options[selectIndex + 1].text = selectedOptionText;
+        	formFieldDisplayList.options[selectIndex + 1].selected = true;
+			formFieldDisplayList.options[selectIndex].selected = false;
 		}
 		return;
 	}
+
 -->

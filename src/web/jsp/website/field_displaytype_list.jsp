@@ -13,7 +13,7 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-   - Version: $Id: field_displaytype_list.jsp dharmas$
+   - Version: $Id: fields_displaytype_list.jsp  4.1 2007-05-03 20:31:17 +0530 (Thu, 03 May 2007) dharmas $
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -25,10 +25,23 @@
 <jsp:useBean id="GraphType" class="org.aspcfs.modules.base.GraphType" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/folderListCheck.js"></script>
-
+<script language="JavaScript" type="text/javascript">
+ function optionsPopulate(){
+        var form = document.fieldDisplay;
+        var optionArr ="";
+        optionArr = window.opener.document.forms[0].minorAxisParam;
+        if(optionArr==""){
+            return;
+        }else{
+            for(var i=0;i < optionArr.length; i++){
+                 form.selectedList.options[form.selectedList.length]=new Option (optionArr.options[i].text, optionArr.options[i].value);
+            }
+        }
+  }
+</script>
 <html>
 <head><title>FolderGraph MinorAxis Select Page</title></head>
-<body>
+<body onLoad="return optionsPopulate();">
 <form name="fieldDisplay" action="">
 <table  width="100%" cellspacing="0" cellpadding="3" border="0" class="pagedList" >
 
@@ -91,7 +104,7 @@
         <table width="100%" cellspacing="0" cellpadding="2" border="0" class="details">
             <tr>
                 <td>
-                    <select name="selectedList" multiple id="selectedList" size="10" style="width: 250px" onChange="javascript:resetOptions();">
+                    <select name="selectedList" multiple id="selectedList" size="10" style="width: 250px">
                     </select>
                 </td> </tr></table>
     </td>

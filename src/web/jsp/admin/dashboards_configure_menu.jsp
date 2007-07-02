@@ -23,16 +23,19 @@
   var thisRowColumnId = -1;
   var thisPageRowId = -1
   var thisPageVersionId = -1;
-  function displayMenuColumn(loc, id, colId, pageRowId, pageVersionId, iceletId, subrows) {
+  var thisPosition = -1;
+  function displayMenuColumn(loc, id, colId, pageRowId, pageVersionId, iceletId, position,subrows) {
     thisRowColumnId = colId;
     thisPageRowId = pageRowId;
     thisPageVersionId = pageVersionId;
     thisIceletId = iceletId;
+    thisPosition = position;
     updateColumnMenu(iceletId, subrows);
     if (!menu_init) {
       menu_init = true;
       //Initialize all the menus in this location
       new ypSlideOutMenu("menuColumn", "down", 0, 0, 170, getHeight("menuColumnTable"));
+      new ypSlideOutMenu("menuRow", "down", 0, 0, 170, getHeight("menuRowTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
@@ -69,11 +72,11 @@
   }
 
   function addColumnLeft() {
-    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId+'&nextRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',700,500,'yes','yes');
+    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId+'&position=' + thisPosition +'&align=left'+'&nextRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',700,500,'yes','yes');
   }
 
   function addColumnRight() {
-    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId+'&previousRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',700,500,'yes','yes');
+    popURL('RowColumns.do?command=AddIcelet&pageRowId=' + thisPageRowId+'&position=' + thisPosition +'&align=right'+'&previousRowColumnId=' + thisRowColumnId + '&popup=true&auto-populate=true','AddColumn',700,500,'yes','yes');
   }
 
   function moveColumnLeft() {

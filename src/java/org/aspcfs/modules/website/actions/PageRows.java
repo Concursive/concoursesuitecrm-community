@@ -58,8 +58,9 @@ public final class PageRows extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
-      return ("PermissionError");
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+        !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
+    	return ("PermissionError");
     }
     String pageVersionId = context.getRequest().getParameter("pageVersionId");
     String rowColumnId = context.getRequest().getParameter("rowColumnId");
@@ -114,8 +115,9 @@ public final class PageRows extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
-      return ("PermissionError");
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+        !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
+    	return ("PermissionError");
     }
     String pageVersionId = context.getRequest().getParameter("pageVersionId");
     String rowColumnId = context.getRequest().getParameter("rowColumnId");
@@ -163,8 +165,9 @@ public final class PageRows extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
-      return ("PermissionError");
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+        !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
+    	return ("PermissionError");
     }
     String siteId = context.getRequest().getParameter("siteId");
     if (siteId == null || "".equals(siteId.trim())) {
@@ -224,8 +227,9 @@ public final class PageRows extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
-      return ("PermissionError");
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+        !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
+    	return ("PermissionError");
     }
     String siteId = context.getRequest().getParameter("siteId");
     if (siteId == null || "".equals(siteId.trim())) {
@@ -250,7 +254,10 @@ public final class PageRows extends CFSModule {
         tabId = pageVersion.getTabIdByPageVersionId(db);
       }
       pageRow = new PageRow();
+      pageRow.setBuildRowColumnList(true);
       pageRow.queryRecord(db, Integer.parseInt(pageRowId));
+      this.deleteFolderGraphImageFiles(context, pageRow.getRowColumnList());
+
       //delete the pageRow
       pageRow.delete(db);
     } catch (Exception e) {

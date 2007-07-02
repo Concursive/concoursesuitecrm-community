@@ -7,7 +7,7 @@ function popCalendar(formname, element) {
   return popCalendar(formname, element, 'en', 'US');
 }
 function popCalendar(formname, element, language, country, timeZone) {
-  var theDate = eval("document." + formname + "." + element + ".value");
+  var theDate = "document." + formname + "." + element + ".value";
   var filename = ('month.jsp?action=popup&form=' + formname + '&element=' + element + '&date=' + theDate + '&language=' + language + '&country=' + country + '&timeZone='+timeZone);
   var posx = 0;
   var posy = 0;

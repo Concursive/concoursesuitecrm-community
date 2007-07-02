@@ -14,6 +14,8 @@
   			<module moduleId="1" />
   			<!-- In tickets -->
   			<module moduleId="8" />
+            <!-- In tickets -->
+  			<module moduleId="25" />
   		</dashboards>
   		<containerMenus applyConstraints="true">
   			<!--
@@ -261,12 +263,14 @@
               defaultValue="Forwarded from our web site"
               additionalText=""/>
 	</icelet>
-  <icelet name="Folder Portlet" class="FolderPortlet" version="1">
+  <icelet name="Folder" class="FolderPortlet" version="1">
     <appearance website="false">
   		<dashboards applyConstraints="true">
   			<!-- In accounts -->
   			<module moduleId="1" />
-  		</dashboards>
+            <!-- In employees -->
+  			<module moduleId="25" />
+          </dashboards>
   		<containerMenus applyConstraints="true">
   			<container name="accounts" moduleId = "1"/>
   		</containerMenus>
@@ -325,6 +329,8 @@
   		<dashboards applyConstraints="true">
   			<!-- In accounts -->
   			<module moduleId="1" />
+        <!-- In employees -->
+            <module moduleId="25"/>
   		</dashboards>
   		<containerMenus applyConstraints="true">
   			<container name="accounts" moduleId = "1"/>
@@ -342,16 +348,21 @@
               description="Allows a user to choose whether the graph is x - major or y - major"
               type="majorAxisSelect"
               additionalText=""><defaultValue><![CDATA[0]]></defaultValue></property>
+    <property constant="7032116"
+              label="Graph Size"
+              description="Allows a user to choose width and height of the graph"
+              type="graphSize"
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
     <property constant="7032111"
               label="Major Axis Field"
               description="Allows a user to determine the major axis field from the fields of a folder"
               type="majorAxisField"
-              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
     <property constant="7032112"
               label="Minor Axis Parameter"
               description="Allows a user to determine the minor axis parameter from the fields of a folder"
               type="minorAxisParameter"
-              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
     <property constant="7032113"
               label="Show Legend"
               description="Determines if the legend needs to be displayed for the graph"
@@ -360,7 +371,57 @@
     <property constant="7032114"
               label="Record Range"
               description="Determines the range of records for which the graph needs to be drawn"
-              type="recordRangeSelect"
-              additionalText=""><defaultValue><![CDATA[false]]></defaultValue></property>
-	</icelet>		
+              type="text"
+              additionalText="Number of Records from the most Recent Record"><defaultValue><![CDATA[0]]></defaultValue></property>          
+    <property constant="7032115"
+              label="Graph File Name"
+              description="Creates the folder graph file name"
+              type="hiddenFileName"
+              additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
+    <property constant="7032117"
+                  label="Graph Refresh Rate"
+                  description="Renders the old image file if timestamp is less than the current timestamp, otherwise creates new image"
+                  type="text"
+                  additionalText=""><defaultValue><![CDATA[0]]></defaultValue></property>
+
+	</icelet>
+    <icelet name="Spreadsheet" class="SpreadsheetPortlet" version="1">
+    <appearance website="false">
+  		<dashboards applyConstraints="true">
+  			<!-- In accounts -->
+  			<module moduleId="1" />
+            <!-- In employees -->
+            <module moduleId="25"/>
+  		</dashboards>
+  		<containerMenus applyConstraints="true">
+  			<container name="accounts" moduleId = "1"/>
+  		</containerMenus>
+  	</appearance>
+    <description>Spreadsheet data</description>
+        <property constant="7031914"
+              label="Select Folder"
+              description="Select the folder to display/manage"
+              type="folderDropList"
+              additionalText=""><defaultValue><![CDATA[-1]]></defaultValue></property>
+        <property constant="7032114"
+              label="Range"
+              description="Determines the range of number of records from the current record"
+              type="text"
+              additionalText="(Number of Records from the Current Record)"><defaultValue><![CDATA[0]]></defaultValue></property>
+        <property constant="7031923"
+              label="Number of Cells in the Spread Sheet"
+              description="Total rows and columns in the Spread Sheet"
+              type="rowColumnsCount"
+              additionalText=""><defaultValue><![CDATA[0]]></defaultValue></property>        
+        <property constant="7031924"
+             label="Spread Sheet Configuration"
+             description=""
+             type="configureSpreadSheet"
+             additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
+         <property constant="7031925"
+             label="Spread Sheet Preview"
+             description=""
+             type="preview"
+             additionalText=""><defaultValue><![CDATA[]]></defaultValue></property>
+     </icelet>
 </icelets>

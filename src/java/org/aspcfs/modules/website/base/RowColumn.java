@@ -19,7 +19,6 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.website.icelet.HtmlContentPortlet;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,7 +40,7 @@ public class RowColumn extends GenericBean {
    */
   public final static int INITIAL_POSITION = 0;
   private int id = -1;
-  private int position = -1;
+  private int position = 1;
   private int width = -1;
   private int pageRowId = -1;
   private int iceletId = -1;
@@ -52,7 +51,8 @@ public class RowColumn extends GenericBean {
   private java.sql.Timestamp modified = null;
 
   private String iceletConfiguratorClass = null;
-
+  private String colPosition = null;
+  private String colAlign = null;
   private Icelet icelet = null;
   private boolean buildIcelet = false;
 
@@ -120,6 +120,47 @@ public class RowColumn extends GenericBean {
     this.id = tmp;
   }
 
+   /**
+   *  Sets the colPosition attribute
+   *
+   * @param  tmp  The new id value
+   */
+
+  public void setColPosition(String tmp) {
+    this.colPosition = tmp;
+    if(tmp!=null){
+        this.position = Integer.parseInt(tmp);
+    }
+  }
+
+  /**
+   *  gets the colPosition attribute
+   *
+   * @param  tmp  The new id value
+   */
+
+  public String getColPosition() {
+    return colPosition;
+  }
+
+ /**
+   *  gets the colPosition attribute
+   *
+   * @param  tmp  The new id value
+   */
+
+  public String getColAlign() {
+    return colAlign;
+  }
+
+ /**
+   *  Sets the setColAlign attribute
+   *
+   * @param  tmp  The new id value
+   */
+  public void setColAlign(String tmp) {
+    colAlign = tmp;
+  }
 
   /**
    *  Sets the id attribute of the RowColumn object
@@ -845,7 +886,6 @@ public class RowColumn extends GenericBean {
    * @throws  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-
     id = DatabaseUtils.getNextSeq(db, "web_row_column_row_column_id_seq");
 
     PreparedStatement pst = db.prepareStatement(
@@ -863,14 +903,21 @@ public class RowColumn extends GenericBean {
     if (id > -1) {
       pst.setInt(++i, id);
     }
+
+    if(this.getColAlign()!=null && this.getColAlign().equals("left")){
+      pst.setInt(++i, position);
+   }else if(this.getColAlign()!=null && this.getColAlign().equals("right")){
+      pst.setInt(++i, ++position);
+   }else{
     pst.setInt(++i, position);
+   }
+
     DatabaseUtils.setInt(pst, ++i, pageRowId);
     DatabaseUtils.setInt(pst, ++i, iceletId);
     DatabaseUtils.setInt(pst, ++i, width);
     pst.setBoolean(++i, enabled);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
-//System.out.println(pst);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_row_column_row_column_id_seq", id);
     pst.close();
@@ -1195,11 +1242,11 @@ public class RowColumn extends GenericBean {
    */
   public void updateRelatedRowColumns(Connection db, boolean add) throws SQLException {
     if (previousRowColumnId > -1) {
-      RowColumnList.updateRelatedRowColumns(db, this.getId(), previousRowColumnId, this.getPageRowId(), false, add);
+      RowColumnList.updateRelatedRowColumns(db, this.getId(), previousRowColumnId, this.getPageRowId(), false, add,"Right",this.getColPosition());
     } else if (nextRowColumnId > -1) {
-      RowColumnList.updateRelatedRowColumns(db, this.getId(), nextRowColumnId, this.getPageRowId(), true, add);
+      RowColumnList.updateRelatedRowColumns(db, this.getId(), nextRowColumnId, this.getPageRowId(), true, add,"Left",this.getColPosition());
     } else if (!add) {
-      RowColumnList.updateRelatedRowColumns(db, this.getId(), -1, this.getPageRowId(), false, add);
+      RowColumnList.updateRelatedRowColumns(db, this.getId(), -1, this.getPageRowId(), false, add,"Left",this.getColPosition());
     }
   }
 
@@ -1262,6 +1309,16 @@ public class RowColumn extends GenericBean {
    */
   public void addSubRow(Connection db) throws SQLException {
     PageRow pageRow = new PageRow();
+    
+    PageRow parentPageRow = new PageRow(db, this.getPageRowId());
+    int tmpPageVersionId = parentPageRow.getPageVersionId();
+    PageVersion tempPageVersion = new PageVersion(db, tmpPageVersionId);
+    PageVersion pageVersion = new PageVersion();
+    pageVersion.setVersionNumber(PageVersion.INITIAL_VERSION);
+    pageVersion.setPageId(tempPageVersion.getPageId());
+    pageVersion.setModifiedBy(this.getModifiedBy());
+    pageVersion.insert(db);
+
     if (subRows.size() == 0) {
       //Create the new row column to replace the existing row column.
       RowColumn rowColumn = new RowColumn();
@@ -1277,6 +1334,7 @@ public class RowColumn extends GenericBean {
       PageRow pageRow1 = new PageRow();
       pageRow1.setRowColumnId(rowColumn.getId());
       pageRow1.setPosition(PageRow.INITIAL_POSITION);
+      pageRow1.setPageVersionId(pageVersion.getId());
       pageRow1.setEnabled(true);
       pageRow1.setModifiedBy(this.getModifiedBy());
       pageRow1.insert(db);
@@ -1289,6 +1347,7 @@ public class RowColumn extends GenericBean {
       //Insert the second page_row
       pageRow.setRowColumnId(rowColumn.getId());
       pageRow.setPosition(PageRow.INITIAL_POSITION + 1);
+      pageRow.setPageVersionId(pageVersion.getId());
       pageRow.setEnabled(true);
       pageRow.setModifiedBy(this.getModifiedBy());
       pageRow.insert(db);
@@ -1302,6 +1361,7 @@ public class RowColumn extends GenericBean {
       //Insert the last page_row
       pageRow.setRowColumnId(this.getId());
       pageRow.setPosition((pageRowList.getLastPosition() != 0 ? pageRowList.getLastPosition() + 1 : pageRowList.getLastPosition()));
+      pageRow.setPageVersionId(pageVersion.getId());
       pageRow.setEnabled(true);
       pageRow.setModifiedBy(this.getModifiedBy());
       pageRow.insert(db);

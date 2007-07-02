@@ -358,10 +358,7 @@ public class CustomFieldDataList extends ArrayList implements SyncableList {
       //Determine column to sort by
       pagedListInfo.setDefaultSort("cfd.record_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
-    } else {
-      sqlOrder.append("ORDER BY cfd.entered_value ");
-    }
-
+    } 
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);

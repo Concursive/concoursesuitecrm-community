@@ -59,3 +59,12 @@
 2005-07-20-script01-mr.bsh
 2006-06-01-script01-mr.bsh
 ##############################################################################
+
+# Fix for MySQL document versions (backported to 4.1.3)
+2007-05-25-script01-mr.sql
+
+# folder and dashboard improvements
+2007-05-03-script01-rajendra.bsh
+2007-05-04-script01-rajendra.bsh
+2007-05-09-script01-alugubillis.sql
+

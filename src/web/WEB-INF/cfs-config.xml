@@ -296,7 +296,9 @@
     <forward name="ModifyIceletPropertiesPopupOK" resource="/website/website_icelet_properties.jsp" layout="style"/>
     <forward name="ReplaceIceletPopupOK" resource="/website/website_icelet_add.jsp" layout="style"/>
     <forward name="SaveIceletPopupOK" resource="/reopen_parent_or_opener.jsp"/>
-    <forward name="ShowFolderFields" resource="/website/field_select.jsp" layout="style"/>
+    <forward name="ShowFolderFieldsOK" resource="/website/field_select.jsp" layout="style"/>
+    <forward name="SpreadSheetFieldsOK" resource="/website/spreadsheet_fields.jsp" layout="style"/>      
+
   </action>
 
   <!-- End of the Website Module -->
@@ -1612,6 +1614,7 @@
              layout="style"/>
     <forward name="DeleteFieldsOK"
              resource="/CompanyDirectory.do?command=Fields"/>
+    <forward name="DashboardsViewOK" resource="/Dashboards.do?command=Default"/>
   </action>
   <action name="CompanyDirectoryProjects"
           class="org.aspcfs.modules.contacts.actions.CompanyDirectoryProjects">
@@ -2202,7 +2205,7 @@
     <!-- duplicate actions for pop ups with layout="style" -->
     <forward name="PrepareAddOppPopupOK" resource="/pipeline/leads_add.jsp"
              layout="style"/>
-  </action>
+    </action>
   <action name="LeadsComponents"
           class="org.aspcfs.modules.pipeline.actions.Leads">
     <bean name="ComponentDetails"
@@ -5212,6 +5215,8 @@
     <forward name="DeleteFieldERROR"
              resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="MoveFieldOK"
+             resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="SaveDefaultValuesOK"
              resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
   <action name="AdminCategories"

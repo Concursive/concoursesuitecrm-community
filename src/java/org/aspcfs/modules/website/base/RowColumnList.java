@@ -586,7 +586,7 @@ public class RowColumnList extends ArrayList {
       pagedListInfo.setDefaultSort("column_position", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY column_position ");
+      sqlOrder.append("ORDER BY column_position");
     }
 
     //Need to build a base SQL statement for returning records
@@ -718,22 +718,27 @@ public class RowColumnList extends ArrayList {
    * @param  addition                Description of the Parameter
    * @exception  SQLException        Description of the Exception
    */
-  public static void updateRelatedRowColumns(Connection db, int currentId, int adjacentId, int pageRowId, boolean changeAdjacentPosition, boolean addition) throws SQLException {
+  public static void updateRelatedRowColumns(Connection db, int currentId, int adjacentId, int pageRowId, boolean changeAdjacentPosition, boolean addition,String insertSide,String posID) throws SQLException {
+    PreparedStatement pst = null;
     if (addition) {
-      PreparedStatement pst = db.prepareStatement(
+
+
+      if(insertSide!=null && insertSide.equals("Left")){
+       pst = db.prepareStatement(
           "UPDATE web_row_column " +
-          "SET column_position = column_position + 1 " +
-          "WHERE row_column_id <> ? " +
-          "AND page_row_id = ? " +
-          "AND " + (changeAdjacentPosition ? "column_position >= " : "column_position > ") +
-          "(SELECT column_position FROM web_row_column WHERE row_column_id = ?) ");
-      pst.setInt(1, currentId);
-      pst.setInt(2, pageRowId);
-      pst.setInt(3, adjacentId);
+          "SET column_position = column_position + 1 where column_position>="+posID+" and page_row_id = ?");
+       pst.setInt(1, pageRowId);
+      }else if(insertSide!=null && insertSide.equals("Right")){
+        pst = db.prepareStatement(
+          "UPDATE web_row_column " +
+          "SET column_position = column_position + 1 where column_position>"+posID+" and page_row_id = ?");
+       pst.setInt(1, pageRowId);
+      }
       pst.executeUpdate();
       pst.close();
+
     } else {
-      PreparedStatement pst = db.prepareStatement(
+       pst = db.prepareStatement(
           "UPDATE web_row_column " +
           "SET column_position = column_position - 1 " +
           "WHERE page_row_id = ? " +

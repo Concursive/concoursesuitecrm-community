@@ -115,7 +115,7 @@ public final class AdminFields extends CFSModule {
       addModuleBean(context, "Configuration", "Configuration");
       context.getRequest().setAttribute("ModId", moduleId);
       context.getRequest().setAttribute(
-          "ConstantId", String.valueOf(constantId));
+              "ConstantId", String.valueOf(constantId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
       return ("AddFolderOK");
     } else {
@@ -244,7 +244,7 @@ public final class AdminFields extends CFSModule {
       db = this.getConnection(context);
       int constantId = queryConstantId(db, Integer.parseInt(moduleId));
       CustomFieldCategory thisCategory = new CustomFieldCategory(
-          db, Integer.parseInt(categoryId));
+              db, Integer.parseInt(categoryId));
       if (constantId == thisCategory.getModuleId()) {
         thisCategory.toggleEnabled(db);
       }
@@ -281,7 +281,7 @@ public final class AdminFields extends CFSModule {
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute(
-          "actionError", this.getSystemStatus(context).getLabel(
+              "actionError", this.getSystemStatus(context).getLabel(
               "object.validation.categoryDeletion"));
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -295,7 +295,6 @@ public final class AdminFields extends CFSModule {
       return ("DeleteFolderERROR");
     }
   }
-
 
   //Groups
 
@@ -573,7 +572,7 @@ public final class AdminFields extends CFSModule {
       if (!result) {
         SystemStatus systemStatus = this.getSystemStatus(context);
         thisField.getErrors().put(
-            "actionError", systemStatus.getLabel(
+                "actionError", systemStatus.getLabel(
                 "object.validation.formDataError"));
       }
     } catch (Exception e) {
@@ -631,6 +630,7 @@ public final class AdminFields extends CFSModule {
     Connection db = null;
     boolean result = false;
     boolean isValid = false;
+    String defaultValue=null;
     try {
       db = this.getConnection(context);
       CustomField thisField = (CustomField) context.getFormBean();
@@ -638,12 +638,12 @@ public final class AdminFields extends CFSModule {
 
       if (thisField.getLookupListRequired()) {
         String[] params = context.getRequest().getParameterValues(
-            "selectedList");
+                "selectedList");
         String[] names = new String[params.length];
         int j = 0;
 
         StringTokenizer st = new StringTokenizer(
-            context.getRequest().getParameter("selectNames"), "^");
+                context.getRequest().getParameter("selectNames"), "^");
         while (st.hasMoreTokens()) {
           names[j] = (String) st.nextToken();
           if (System.getProperty("DEBUG") != null) {
@@ -665,13 +665,13 @@ public final class AdminFields extends CFSModule {
           //still there, stay enabled, don't re-insert it
           if (System.getProperty("DEBUG") != null) {
             System.out.println(
-                "Here: " + thisElement.getCode() + " " + newList.getSelectedValue(
-                    thisElement.getCode()));
+                    "Here: " + thisElement.getCode() + " " + newList.getSelectedValue(
+                            thisElement.getCode()));
           }
 
           //not there, disable it, leave it
           if (newList.getSelectedValue(thisElement.getCode()).equals("") ||
-              newList.getSelectedValue(thisElement.getCode()) == null) {
+                  newList.getSelectedValue(thisElement.getCode()) == null) {
             thisElement.disableElement(db, "custom_field_lookup");
           }
         }
@@ -680,13 +680,32 @@ public final class AdminFields extends CFSModule {
         while (k.hasNext()) {
           LookupElement thisElement = (LookupElement) k.next();
           if (thisElement.getCode() == 0) {
-            thisElement.insertElement(
-                db, "custom_field_lookup", thisField.getId());
+            int thisCode = -1;
+            if ((thisCode = thisElement.isDisabled(db, "custom_field_lookup")) != -1) {
+              thisElement.setCode(thisCode);
+              thisElement.enableElement(db, "custom_field_lookup");
+              thisElement.setNewOrder(db, "custom_field_lookup");
+            } else {
+              thisElement.insertElement(db, "custom_field_lookup", thisField.getId());
+            }
           } else {
             thisElement.setNewOrder(db, "custom_field_lookup");
+            if (!thisElement.getDescription().equals(
+                    compareList.getValueFromId(thisElement.getCode()))) {
+              thisElement.setNewDescription(db, "custom_field_lookup");
+            }
           }
         }
       }
+
+      // To update default value with out existing value
+      if (thisField.getDefaultValue().equals("null")) {
+        if (thisField.getType() == CustomField.SELECT) {
+          defaultValue = "-1";
+        }
+        thisField.setDefaultValue(defaultValue);
+      }
+
       isValid = this.validateObject(context, db, thisField);
       if (isValid) {
         result = thisField.updateField(db);
@@ -729,9 +748,9 @@ public final class AdminFields extends CFSModule {
       categoryList.buildList(db);
       context.getRequest().setAttribute("CategoryList", categoryList);
       context.getRequest().setAttribute(
-          "ModId", context.getRequest().getParameter("modId"));
+              "ModId", context.getRequest().getParameter("modId"));
       context.getRequest().setAttribute(
-          "ConstantId", String.valueOf(constantId));
+              "ConstantId", String.valueOf(constantId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
     }
   }
@@ -747,8 +766,8 @@ public final class AdminFields extends CFSModule {
   private void addCategory(ActionContext context, Connection db) throws SQLException {
     int moduleId = -1;
     if ((context.getRequest().getParameter("auto-populate") == null) ||
-        (context.getFormBean() == null) ||
-        (!(context.getFormBean() instanceof CustomFieldCategory))) {
+            (context.getFormBean() == null) ||
+            (!(context.getFormBean() instanceof CustomFieldCategory))) {
 
       String categoryId = context.getRequest().getParameter("catId");
       if (categoryId == null) {
@@ -760,18 +779,18 @@ public final class AdminFields extends CFSModule {
 
       if (context.getRequest().getParameter("modId") != null) {
         moduleId = Integer.parseInt(
-            context.getRequest().getParameter("modId"));
+                context.getRequest().getParameter("modId"));
       }
 
       if (categoryId != null) {
         context.getRequest().setAttribute("catId", categoryId);
         int constantId = queryConstantId(db, moduleId);
         LookupList moduleList = (LookupList) context.getRequest().getAttribute(
-            "ModuleList");
+                "ModuleList");
         CustomFieldCategoryList categoryList = (CustomFieldCategoryList) context.getRequest().getAttribute(
-            "CategoryList");
+                "CategoryList");
         CustomFieldCategory thisCategory = categoryList.getCategory(
-            Integer.parseInt(categoryId));
+                Integer.parseInt(categoryId));
         thisCategory.setLinkModuleId(constantId);
         thisCategory.setBuildResources(true);
         thisCategory.buildResources(db);
@@ -790,8 +809,8 @@ public final class AdminFields extends CFSModule {
    */
   private void addGroup(ActionContext context, Connection db) throws SQLException {
     if ((context.getRequest().getParameter("auto-populate") == null) ||
-        (context.getFormBean() == null) ||
-        (!(context.getFormBean() instanceof CustomFieldGroup))) {
+            (context.getFormBean() == null) ||
+            (!(context.getFormBean() instanceof CustomFieldGroup))) {
 
       String groupId = context.getRequest().getParameter("grpId");
       if (groupId == null) {
@@ -803,13 +822,13 @@ public final class AdminFields extends CFSModule {
       if (groupId != null) {
         context.getRequest().setAttribute("grpId", groupId);
         LookupList moduleList = (LookupList) context.getRequest().getAttribute(
-            "ModuleList");
+                "ModuleList");
         CustomFieldCategoryList categoryList = (CustomFieldCategoryList) context.getRequest().getAttribute(
-            "CategoryList");
+                "CategoryList");
         CustomFieldCategory thisCategory = (CustomFieldCategory) context.getRequest().getAttribute(
-            "Category");
+                "Category");
         CustomFieldGroup thisGroup = thisCategory.getGroup(
-            Integer.parseInt(groupId));
+                Integer.parseInt(groupId));
         context.getRequest().setAttribute("Group", thisGroup);
       }
     }
@@ -825,8 +844,8 @@ public final class AdminFields extends CFSModule {
    */
   private void addField(ActionContext context, Connection db) throws SQLException {
     if ((context.getRequest().getParameter("auto-populate") == null) ||
-        (context.getFormBean() == null) ||
-        (!(context.getFormBean() instanceof CustomField))) {
+            (context.getFormBean() == null) ||
+            (!(context.getFormBean() instanceof CustomField))) {
 
       String fieldId = context.getRequest().getParameter("id");
       if (fieldId == null) {
@@ -838,23 +857,23 @@ public final class AdminFields extends CFSModule {
       if (fieldId != null) {
         context.getRequest().setAttribute("id", fieldId);
         LookupList moduleList = (LookupList) context.getRequest().getAttribute(
-            "ModuleList");
+                "ModuleList");
         CustomFieldCategoryList categoryList = (CustomFieldCategoryList) context.getRequest().getAttribute(
-            "CategoryList");
+                "CategoryList");
         CustomFieldCategory thisCategory = (CustomFieldCategory) context.getRequest().getAttribute(
-            "Category");
+                "Category");
         CustomFieldGroup thisGroup = (CustomFieldGroup) context.getRequest().getAttribute(
-            "Group");
+                "Group");
         if (thisGroup == null) {
           System.out.println(
-              "AdminFields-> CustomFieldGroup should not be null");
+                  "AdminFields-> CustomFieldGroup should not be null");
         }
         CustomField thisField = thisGroup.getField(Integer.parseInt(fieldId));
         context.getRequest().setAttribute("CustomField", thisField);
       }
     } else if ((context.getRequest().getParameter("auto-populate") != null) &&
-        (context.getFormBean() != null) &&
-        (context.getFormBean() instanceof CustomField)) {
+            (context.getFormBean() != null) &&
+            (context.getFormBean() instanceof CustomField)) {
       CustomField thisField = (CustomField) context.getFormBean();
       thisField.buildElementData(db);
     }
@@ -888,7 +907,7 @@ public final class AdminFields extends CFSModule {
         String direction = (String) st.nextToken();
 
         CustomFieldCategory thisCategory = (CustomFieldCategory) context.getRequest().getAttribute(
-            "Category");
+                "Category");
         Iterator groups = thisCategory.iterator();
         int groupCount = 0;
         int previousGroupId = -1;
@@ -920,11 +939,12 @@ public final class AdminFields extends CFSModule {
             ++fieldCount;
 
             if (groupCount > 1 && fieldCount == 1 && groupChange == groupCount && fieldChange == 1 && "U".equals(
-                direction)) {
+                    direction)) {
               thisField.setLevel(previousGroup.size() + 1);
               thisField.setGroupId(previousGroup.getId());
-            } else if (groups.hasNext() && !fields.hasNext() && groupChange == groupCount && fieldChange == fieldCount && "D".equals(
-                direction)) {
+            } else
+            if (groups.hasNext() && !fields.hasNext() && groupChange == groupCount && fieldChange == fieldCount && "D".equals(
+                    direction)) {
               hasNewGroup = true;
               previousFieldId = thisField.getId();
             } else if (groupCount == groupChange && "U".equals(direction)) {
@@ -970,7 +990,7 @@ public final class AdminFields extends CFSModule {
               thisField.updateLevel(db);
             }
             System.out.println(
-                "Grp: " + thisField.getGroupId() + " Fld: " + thisField.getLevel());
+                    "Grp: " + thisField.getGroupId() + " Fld: " + thisField.getLevel());
           }
           previousGroup = thisGroup;
           previousGroupId = thisGroup.getId();
@@ -1020,7 +1040,7 @@ public final class AdminFields extends CFSModule {
         String direction = (String) st.nextToken();
 
         CustomFieldCategory thisCategory = (CustomFieldCategory) context.getRequest().getAttribute(
-            "Category");
+                "Category");
         Iterator groups = thisCategory.iterator();
         int groupCount = 0;
         int level = 0;
@@ -1085,6 +1105,42 @@ public final class AdminFields extends CFSModule {
   /**
    * Description of the Method
    *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandSaveDefaultValues(ActionContext context) {
+    if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    boolean result = false;
+    boolean isValid = false;
+    try {
+      db = this.getConnection(context);
+      String fieldId[] = context.getRequest().getParameterValues("fieldId");
+      int[] id = new int[fieldId.length];
+      for (int i = 0; i < fieldId.length; i++) {
+        String defaultValue = context.getRequest().getParameter("cf" + fieldId[i]);
+        id[i] = Integer.parseInt(fieldId[i]);
+        CustomField thisField = new CustomField(db, id[i]);
+        thisField.setDefaultValue(defaultValue);
+        isValid = this.validateObject(context, db, thisField);
+        if (isValid) {
+          result = thisField.updateField(db);
+        }
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("SaveDefaultValuesOK");
+  }
+
+  /**
+   * Description of the Method
+   *
    * @param db       Description of the Parameter
    * @param moduleId Description of the Parameter
    * @return Description of the Return Value
@@ -1093,9 +1149,9 @@ public final class AdminFields extends CFSModule {
   private static int queryConstantId(Connection db, int moduleId) throws SQLException {
     int constantId = -1;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT category_id " +
-        "FROM module_field_categorylink " +
-        "WHERE module_id = ? ");
+            "SELECT category_id " +
+                    "FROM module_field_categorylink " +
+                    "WHERE module_id = ? ");
     pst.setInt(1, moduleId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

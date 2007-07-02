@@ -72,6 +72,8 @@ public class Dashboards extends CFSModule {
 			context.getRequest().setAttribute("dashboardList", dashboards);
 			context.getRequest().setAttribute("selectedDashboard", page.getName());
 			context.getRequest().setAttribute("Page", page);
+      //updates dashboards container menu if dashboard's order has shuffled
+      this.getSystemStatus(context).updateTabs(context.getServletContext(),db);
 		} catch (Exception e) {
 			LOGGER.error(e, e);
 			context.getRequest().setAttribute("Error", e);
@@ -84,7 +86,7 @@ public class Dashboards extends CFSModule {
 
 	/**
    * @param context
-   * @return
+   * @return String
    */
 	public String executeCommandViewDashboard(ActionContext context) {
 		String dashboardId = (String) context.getRequest().getAttribute("dashboardId");

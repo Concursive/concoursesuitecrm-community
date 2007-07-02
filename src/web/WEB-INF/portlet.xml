@@ -102,6 +102,18 @@
        <title>Folder Graphs</title>
        </portlet-info>
    </portlet>
+   <portlet>
+     <portlet-name>SpreadsheetPortlet</portlet-name>
+     <portlet-class>org.aspcfs.modules.website.icelet.SpreadsheetPortlet</portlet-class>
+     <supports>
+         <mime-type>text/html</mime-type>
+         <portlet-mode>view</portlet-mode>
+         <portlet-mode>config</portlet-mode>
+     </supports>
+       <portlet-info>
+       <title>Spreadsheet</title>
+       </portlet-info>
+    </portlet>    
    <custom-portlet-mode>
       <description>Provides administration functions</description>
       <name>config</name>

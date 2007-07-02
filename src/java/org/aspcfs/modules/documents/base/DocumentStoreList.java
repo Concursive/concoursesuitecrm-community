@@ -64,6 +64,8 @@ public class DocumentStoreList extends ArrayList {
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
   int siteId = -1;
+  private boolean includePublic  = false;
+
 
 
   /**
@@ -73,6 +75,24 @@ public class DocumentStoreList extends ArrayList {
    */
   public boolean getPublicOnly() {
     return this.publicOnly;
+  }
+
+  /**
+   * Sets the includePublic attribute of the DocumentStoreList object
+   *
+   * @param includePublic The new includePublic value
+   */
+  public void setIncludePublic(boolean includePublic) {
+    this.includePublic = includePublic;
+  }
+
+  /**
+   * Gets the includePublic attribute of the DocumentStoreList object
+   *
+   * @return includePublic The includePublic value
+   */
+  public boolean getIncludePublic() {
+    return this.includePublic;
   }
 
   /**
@@ -893,7 +913,12 @@ public class DocumentStoreList extends ArrayList {
       sqlFilter.append(
           "OR (ds.document_store_id IN (SELECT DISTINCT document_store_id FROM document_store_role_member WHERE item_id = ? AND site_id " + (siteId == -1 ? "IS NULL " : " = ? ") + "))");
       sqlFilter.append(
-          "OR (ds.document_store_id IN (SELECT DISTINCT document_store_id FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " WHERE item_id = ? AND site_id " + (siteId == -1 ? "IS NULL " : " = ? ") + ")))");
+          "OR (ds.document_store_id IN (SELECT DISTINCT document_store_id FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " WHERE item_id = ? AND site_id " + (siteId == -1 ? "IS NULL " : " = ? ") + "))");
+
+      if (includePublic && !publicOnly) {
+          sqlFilter.append("OR (ds.document_store_id IN (SELECT DISTINCT document_store_id from document_store where public_store = ?)) ");
+      }
+      sqlFilter.append(")");
     }
     if (userRange != null) {
       sqlFilter.append(
@@ -954,6 +979,9 @@ public class DocumentStoreList extends ArrayList {
       pst.setInt(++i, departmentId);
       if (siteId != -1) {
         pst.setInt(++i, siteId);
+      }
+      if (includePublic && !publicOnly) {
+          pst.setBoolean(++i,includePublic);
       }
     }
     if (enteredByUser > -1) {

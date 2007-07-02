@@ -2562,6 +2562,9 @@
      <param name="documents.details.isAllowedWebsiteUsersToAccess">
       <value><![CDATA[Website users are allowed to access all documents in this store]]></value>
     </param>
+     <param name="documents.details.isAllowedWebsiteAndDashboardUsersToAccess">
+      <value><![CDATA[Documents in this store can be accessed from the website and from dashboards]]></value>
+    </param>
     <param name="documents.details.title">
       <value><![CDATA[Title]]></value>
     </param>
@@ -2603,6 +2606,12 @@
     </param>
     <param name="documents.details.archivedMessage">
       <value><![CDATA[This document store was archived on&nbsp; ${time}]]></value>
+    </param>
+    <param name="documents.details.publicMessage">
+      <value><![CDATA[(Public)]]></value>
+    </param>
+    <param name="documents.details.privateMessage">
+      <value><![CDATA[ ]]></value>
     </param>
     <param name="documents.permissions.configurePermissions">
       <value><![CDATA[Configure Permissions]]></value>
@@ -6523,6 +6532,9 @@ while a Guest has very limited functionality.]]></value>
     <param name="admin.addCustomField">
       <value><![CDATA[Add a Custom Field]]></value>
     </param>
+    <param name="admin.modifyCustomField">
+      <value><![CDATA[Modify a Custom Field]]></value>
+    </param>
     <param name="admin.fieldLabel">
       <value><![CDATA[Field Label]]></value>
     </param>
@@ -6561,6 +6573,9 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="button.deleteFolderAllFields.text">
       <value><![CDATA[Delete this folder and all fields]]></value>
+    </param>
+    <param name="button.setDefaultValues.fields">
+      <value><![CDATA[Set default values for fields]]></value>
     </param>
     <param name="admin.existingField">
       <value><![CDATA[Existing Field]]></value>
@@ -6618,6 +6633,12 @@ while a Guest has very limited functionality.]]></value>
     </param>
     <param name="admin.years">
       <value><![CDATA[years]]></value>
+    </param>
+    <param name="admin.enterDefaultValues">
+      <value><![CDATA[Enter Default values]]></value>
+    </param>
+    <param name="admin.currentDefaultValues">
+      <value><![CDATA[Current Default values]]></value>
     </param>
     <param name="accounts.1to10">
       <value><![CDATA[1-10]]></value>
@@ -8701,7 +8722,7 @@ were available on a network file share.  Create a shared volume or folder to the
     </param>
     <param name="reports.emailWhenProcessed">
       <value><![CDATA[(email report when it is processed)]]></value>
-    </param>		
+    </param>
     <param name="reports.type.CSV">
       <value><![CDATA[CSV]]></value>
     </param>
@@ -10269,6 +10290,7 @@ An error occurred while adding the administrative user, the following error was 
     <param name="object.validation.actionError.blankFormCanNotBeSaved">
       <value><![CDATA[A blank form cannot be saved. Please enter valid data to save the form.]]></value>
     </param>
+
     <!-- Action List items -->
     <param name="actionlists.actionListsInProgress">
       <value><![CDATA[Action Lists (In Progress)]]></value>
@@ -10549,6 +10571,9 @@ An error occurred while adding the administrative user, the following error was 
     </param>
     <param name="button.close">
       <value><![CDATA[Close]]></value>
+    </param>
+    <param name="button.apply">
+      <value><![CDATA[Apply]]></value>
     </param>
     <param name="button.rename">
       <value><![CDATA[Rename]]></value>
@@ -12246,10 +12271,33 @@ any data still directly associated with this disabled user gets re-assigned as s
         <param name="portlet.dashboard.admin.IfVisible">
       <value><![CDATA[indicates if the Dashboard is visible]]></value>
     </param>
+    <param name="portlet.graph.width">
+      <value><![CDATA[Width]]></value>
+    </param>
+    <param name="portlet.graph.height">
+      <value><![CDATA[Height]]></value>
+    </param>
+    <param name="portlet.spreadsheet.rows">
+      <value><![CDATA[Rows]]></value>
+    </param>
+    <param name="portlet.spreadsheet.columns">
+      <value><![CDATA[Columns]]></value>
+    </param>
+    <param name="portlet.spreadsheet.configure">
+      <value><![CDATA[Configure]]></value>
+    </param>
     <param name="permission.dashboard">
       <value><![CDATA[Configure Custom Dashboards]]></value>
     </param>
-
+    <param name="folder.noDataSelected">
+      <value><![CDATA[No folder selected.]]></value>
+    </param>
+    <param name="folder.noRecords">
+      <value><![CDATA[No records in this folder.]]></value>
+    </param>
+    <param name="workArea.note">
+      <value><![CDATA[Note: Following special characters <.>?;'"[{]}&%$#@!`~ are not supported and should not contain more than 30 parameters in the work area formula.]]></value>
+    </param>
   <!-- Custom Tabs  -->
     <param name="portlet.customtab.admin.menu.ModifyDetails">
       <value><![CDATA[Modify Details]]></value>
@@ -12349,6 +12397,13 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="portlets.folder.group">
       <value><![CDATA[Group:]]></value>
+    </param>
+    <!-- Labels for Folder Graph Error messages -->
+    <param name="graph.error.message">
+     <value><![CDATA[Graph cannot be displayed because the parameters specified for the graph could not be interpreted.]]></value>
+    </param>
+    <param name="fields.delete.message">
+     <value><![CDATA[Portlet cannot be rendered because the field(s) it depends on has been removed.]]></value>
     </param>
   </config>
 

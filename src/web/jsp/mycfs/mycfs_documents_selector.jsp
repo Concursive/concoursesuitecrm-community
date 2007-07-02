@@ -111,13 +111,13 @@
         <a href="javascript:document.listForm.submit();"><dhv:label name="documents.DocumentStoreList">Document Store List</dhv:label></a> > 
       </dhv:evaluate>
       <dhv:evaluate if="<%= (linkItemId != -1 && moduleId==Constants.PROJECTS_FILES)%>">
-        <a href="javascript:document.listForm.submit();"><dhv:label name="project.projectList">Project List</dhv:label></a> > 
+        <a href="javascript:document.listForm.submit();"><dhv:label name="project.projectList">Project List</dhv:label></a> >
       </dhv:evaluate>
       <dhv:evaluate if="<%= (linkItemId == -1 && moduleId==Constants.DOCUMENTS_DOCUMENTS)%>">
         <dhv:label name="documents.DocumentStoreList">Document Store List</dhv:label>
       </dhv:evaluate>
       <dhv:evaluate if="<%= (linkItemId == -1 && moduleId==Constants.PROJECTS_FILES)%>">
-        <dhv:label name="project.projectList">Project List</dhv:label> 
+        <dhv:label name="project.projectList">Project List</dhv:label>
       </dhv:evaluate>
       <dhv:evaluate if="<%= linkItemId != -1%>">
         <zeroio:folderHierarchy module="<%= module %>" link="<%= link %>" />
@@ -132,18 +132,18 @@
     <dhv:evaluate if="<%= (!"".equals(contactId) && !"".equals(orgId))%>">
       <dhv:evaluate if="<%=!"-1".equals(orgId) %>">
         <dhv:permission name="accounts-accounts-documents-view">
-       		<option value="<%= Constants.ACCOUNTS %>" <dhv:evaluate if="<%= moduleId == Constants.ACCOUNTS %>">selected</dhv:evaluate>><dhv:label name="accounts.accounts">Accounts</dhv:label></option>			
-		</dhv:permission>       
+       		<option value="<%= Constants.ACCOUNTS %>" <dhv:evaluate if="<%= moduleId == Constants.ACCOUNTS %>">selected</dhv:evaluate>><dhv:label name="accounts.accounts">Accounts</dhv:label></option>
+		</dhv:permission>
        </dhv:evaluate>
        <dhv:evaluate if="<%= (!"-1".equals(orgId) && !"-1".equals(contactId)) %>">
        	 <dhv:permission name="accounts-accounts-contacts-documents-view">
-       		<option value="<%= Constants.CONTACTS %>" <dhv:evaluate if="<%= moduleId == Constants.CONTACTS %>">selected</dhv:evaluate>><dhv:label name="contacts">Contacts</dhv:label></option>	 	
-		 </dhv:permission>       
+       		<option value="<%= Constants.CONTACTS %>" <dhv:evaluate if="<%= moduleId == Constants.CONTACTS %>">selected</dhv:evaluate>><dhv:label name="contacts">Contacts</dhv:label></option>
+		 </dhv:permission>
        </dhv:evaluate>
        <dhv:evaluate if="<%="-1".equals(orgId) %>">
        	 <dhv:permission name="contacts-external_contacts-documents-view">
-       		<option value="<%= Constants.CONTACTS %>" <dhv:evaluate if="<%= moduleId == Constants.CONTACTS %>">selected</dhv:evaluate>><dhv:label name="contacts">Contacts</dhv:label></option>	 	
-		 </dhv:permission>       
+       		<option value="<%= Constants.CONTACTS %>" <dhv:evaluate if="<%= moduleId == Constants.CONTACTS %>">selected</dhv:evaluate>><dhv:label name="contacts">Contacts</dhv:label></option>
+		 </dhv:permission>
        </dhv:evaluate>
     </dhv:evaluate>
       <dhv:permission name="documents-view">
@@ -169,9 +169,9 @@
         <tr>
           <th><dhv:label name="message.selected">Selected</dhv:label></th>
           <th><dhv:label name="message.file">File</dhv:label></th>
-          <th style="text-align: center;"><dhv:label name="message.type">Type</dhv:label></th>                    
+          <th style="text-align: center;"><dhv:label name="message.type">Type</dhv:label></th>
           <th style="text-align: center;"><dhv:label name="message.size">Size</dhv:label></th>
-          <th style="text-align: center;"><dhv:label name="message.version">Version</dhv:label></th>          
+          <th style="text-align: center;"><dhv:label name="message.version">Version</dhv:label></th>
           <th style="text-align: center;"><dhv:label name="message.dateModified">Date Modified</dhv:label></th>
         </tr>
 	  <dhv:evaluate if="<%= fileItemList.size() == 0 && fileFolderList.size() == 0 %>">
@@ -183,25 +183,25 @@
       	int rowid = 0;
         Iterator i = fileFolderList.iterator();
         if ( i.hasNext() ) {
-          
+
           while (i.hasNext()) {
             rowid = (rowid != 1?1:2);
             FileFolder thisFolder = (FileFolder)i.next();
-      %>      
+      %>
           <tr class="row<%= rowid %>">
             <td width="10" valign="middle" style="text-align: center;" nowrap>
             &nbsp;
             </td>
             <td valign="middle" width="100%">
               <img src="images/stock_folder-23.gif" border="0" align="absmiddle">
-              
+
               <a href="DocumentSelector.do?command=ListDocuments<%=orgParam%>&previousSelection=<%=previousSelection %>&moduleId=<%= moduleId %>&linkItemId=<%=linkItemId %>&folderId=<%= thisFolder.getId() %><%= thisFolder.getDisplay() == 2?"&details=true":"" %>&listType=<%= request.getParameter("listType")%>&displayFieldId=<%= request.getParameter("displayFieldId") %>&hiddenFieldId=<%= request.getParameter("hiddenFieldId") %>" enctype="multipart/form-data"><%= toHtml(thisFolder.getSubject()) %></a>
             </td>
             <td valign="middle" width="100%">
               <dhv:label name="message.Folder">Folder</dhv:label>
             </td>
             <td style="text-align: center;" valign="middle" nowrap>
-              <%= thisFolder.getItemCount() %> 
+              <%= thisFolder.getItemCount() %>
               <% if (thisFolder.getItemCount() == 1) {%>
                 <dhv:label name="project.item.lowercase">item</dhv:label>
               <%} else {%>
@@ -218,7 +218,7 @@
           </tr>
         <%}%>
       <%}%>
-        
+
       <%
         Iterator j = fileItemList.iterator();
         if ( j.hasNext() ) {
@@ -229,11 +229,11 @@
             FileItem thisFile = (FileItem)j.next();
             String fileId = String.valueOf(thisFile.getId());
             filesExists = true;
-      %>      
+      %>
           <tr class="row<%= rowid+(selectedDocuments.indexOf(fileId) != -1 ?"hl":"") %>">
             <td width="10" valign="middle" style="text-align: center;" nowrap>
-	  <% 
- 		 if ("list".equals(request.getParameter("listType"))) { 
+	  <%
+ 		 if ("list".equals(request.getParameter("listType"))) {
 	  %>
     	 <input type="checkbox" name="file<%= count %>" value="<%= thisFile.getId() %>" <%= (selectedDocuments.indexOf(fileId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
 		<%} else {%>
@@ -263,7 +263,7 @@
       <%} %>
       </table>
 </dhv:evaluate>
-<%-- START Build document stores list--%>  
+<%-- START Build document stores list--%>
 <dhv:evaluate if="<%= (linkItemId == -1 && moduleId==Constants.DOCUMENTS_DOCUMENTS)%>">
   <%-- Show the document stores --%>
    <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -328,7 +328,7 @@
    </table>
 </dhv:evaluate>
 <%-- END Build document stores list--%>  
-<%-- START Build projects list--%>    
+<%-- START Build projects list--%>
 <dhv:evaluate if="<%= (linkItemId == -1 && moduleId==Constants.PROJECTS_FILES)%>">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   	<tr>
@@ -402,8 +402,8 @@
 	  }
 	%>
   </table>
-  
-</dhv:evaluate> 
+
+</dhv:evaluate>
     <input type="hidden" name="finalsubmit" value="false">
     <input type="hidden" name="rowcount" value="0">
     <dhv:evaluate if = '<%= !"".equals(orgId) %>'>
@@ -449,7 +449,7 @@
     <dhv:evaluate if = '<%= !"".equals(contactId) %>'>
         <input type="hidden" name="contactId" value="<%= contactId%>">
     </dhv:evaluate>
-	<table cellpadding="4" cellspacing="0" width="100%" class="details">  
+	<table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="10">
         <strong><dhv:label name="campaign.attachNewFile">Attach New File</dhv:label></strong>
@@ -470,7 +470,7 @@
 	      <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
 	    </td>
 	    <td>
-	      <input type="file" name="attachment" size="45">  
+	      <input type="file" name="attachment" size="45">
 	       <%= showAttribute(request,"attachmentError") %>
 	    </td>
 	  </tr>

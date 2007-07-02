@@ -91,6 +91,9 @@
     <tr class="row<%= rowid %>">
       <td valign="top">
         <a href="DocumentManagement.do?command=DocumentStoreCenter&documentStoreId=<%= thisDocumentStore.getId() %>"><b><%= toHtml(thisDocumentStore.getTitle()) %></b></a>
+      	<dhv:evaluate if="<%= thisDocumentStore.getPublicStore()%>">
+	      &nbsp;<dhv:label name="documents.details.publicMessage">(Public)</dhv:label>
+      </dhv:evaluate>
       </td>
       <td valign="top">
         <%= toHtml(thisDocumentStore.getShortDescription()) %>

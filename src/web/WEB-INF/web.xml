@@ -180,9 +180,23 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>
+    <servlet-name>SpreadsheetPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>SpreadsheetPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
     <servlet-name>URL</servlet-name>
     <servlet-class>org.aspcfs.servlets.url.URLServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+      <servlet-name>FolderGraphServlet</servlet-name>
+      <servlet-class>org.aspcfs.servlets.FolderGraphServlet</servlet-class>
   </servlet>
 
   <!-- Portlet Mappings -->
@@ -218,6 +232,10 @@
     <servlet-name>CartPortlet</servlet-name>
     <url-pattern>/PlutoInvoker/CartPortlet</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SpreadsheetPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/SpreadsheetPortlet</url-pattern>
+  </servlet-mapping>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -239,6 +257,10 @@
   <servlet-mapping>
     <servlet-name>URL</servlet-name>
     <url-pattern>/url/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+      <servlet-name>FolderGraphServlet</servlet-name>
+      <url-pattern>/servlets/GraphServlet</url-pattern>
   </servlet-mapping>
   
   <session-config>

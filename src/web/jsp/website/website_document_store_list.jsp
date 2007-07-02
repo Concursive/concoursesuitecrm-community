@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Author(s):
-  - Version: $Id: document_store_enterpriseview.jsp 18488 2007-01-15 20:12:32Z matt $
+  - Version: $Id: website_document_store_list.jsp 18488 2007-01-15 20:12:32Z matt $
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -84,9 +84,15 @@
       rowid = (rowid != 1 ? 1 : 2);
 %>
     <tr class="row<%= rowid %>">
-      <td valign="top">
+      <%if(thisDocumentStore.getPublicStore()){%>
+      <td valign="top" nowrap>
+        <a href="WebsiteDocuments.do?command=DocumentStoreCenter&documentStoreId=<%= thisDocumentStore.getId() %><%=addLinkParams(request,"popup|row|siteId|forEmail")%>"><b><%= toHtml(thisDocumentStore.getTitle()) %></b></a><dhv:label name="documents.details.publicMessage">(Public)</dhv:label>
+      </td>
+      <%}else{%>
+      <td valign="top" nowrap>
         <a href="WebsiteDocuments.do?command=DocumentStoreCenter&documentStoreId=<%= thisDocumentStore.getId() %><%=addLinkParams(request,"popup|row|siteId|forEmail")%>"><b><%= toHtml(thisDocumentStore.getTitle()) %></b></a>
       </td>
+      <%}%>
       <td valign="top">
         <%= toHtml(thisDocumentStore.getShortDescription()) %>
       </td>

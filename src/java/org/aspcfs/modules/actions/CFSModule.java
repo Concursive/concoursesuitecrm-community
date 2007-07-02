@@ -44,6 +44,8 @@ import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.website.base.Icelet;
 import org.aspcfs.modules.website.base.IceletPropertyMap;
+import org.aspcfs.modules.website.base.RowColumn;
+import org.aspcfs.modules.website.base.IceletProperty;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.UserUtils;
@@ -2032,4 +2034,43 @@ public class CFSModule {
     // Otherwise return the application locale
     return getPref(context, "SYSTEM.LANGUAGE");
   }
+
+  /**
+   * Deletes the Folder Graph Image Files under the RowColums.
+   * @param context
+   * @param rowColumnList
+   */
+  protected void deleteFolderGraphImageFiles(ActionContext context, ArrayList rowColumnList) {
+    // TODO: Cleanup various items centrally, not in CFSModule
+    Iterator nextIter = rowColumnList.iterator();
+    while (nextIter.hasNext()) {
+      Object ob = (Object)nextIter.next();
+      if(ob instanceof RowColumn) {
+        RowColumn rowColumn = (RowColumn) ob;
+        if (rowColumn.getIceletId() > -1) {
+          Icelet icelet = rowColumn.getIcelet();
+          HashMap propertyMap = (HashMap) this.getIcletPrefs(context, icelet.getConfiguratorClass());
+          Iterator iter = propertyMap.keySet().iterator();
+            while (iter.hasNext()) {
+              Integer key = (Integer) iter.next();
+              IceletProperty property = (IceletProperty) propertyMap.get(key);
+              if(property.getType().equals(IceletProperty.HIDDEN_FILENAME)){
+                String fileName =  ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue();
+                ApplicationPrefs appPrefs = new ApplicationPrefs(context.getServletContext());
+                String filePath =  appPrefs.get("FILELIBRARY");
+                if (fileName != null) {
+                  File checkJpgFile = new File(filePath + "graphs" +"/" + fileName + ".jpg");
+                  File checkMapFile = new File(filePath + "graphs" +"/" + fileName + ".map");
+                  if (checkJpgFile.exists() && checkMapFile.exists()) {
+                    checkJpgFile.delete();
+                    checkMapFile.delete();
+                  }
+                }
+              }
+            }
+        }
+      }
+    }
+  }
+
 }

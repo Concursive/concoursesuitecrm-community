@@ -215,6 +215,40 @@
   </tag>
 
   <tag>
+    <name>spreadsheet</name>
+    <tag-class>org.aspcfs.taglib.SpreadsheetHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>
+      Creates the spreadsheet based on the rows and cols
+    </display-name>
+    <attribute>
+      <name>rows</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>cols</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>prevRows</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>prevCols</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>configString</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+  <tag>
     <name>container</name>
     <tag-class>org.aspcfs.taglib.ContainerMenuHandler</tag-class>
     <body-content>JSP</body-content>

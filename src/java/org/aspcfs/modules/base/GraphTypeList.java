@@ -27,7 +27,9 @@ import java.sql.ResultSet;
 
 /**
  * Contains GraphType items for displaying to the user
- *  @author     dharmas
+ *
+ * @author     dharmas
+ * @version $Id: GraphTypeList.java 4.1 2007-03-30 11:32:36 +0530 (Fri, 30 Mar 2007) dharmas $
  * @created    Mar 30, 2007
  *
  */

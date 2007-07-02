@@ -247,6 +247,7 @@ if (!FrameworkI18N) {
       "check.campaign.selection":       "- Please select a valid active campaign.\r\n",
       "check.material.quantity.one":    "- Please enter a valid Number for ",
       "check.products.import.name.long":  "- Import name is too long\r\n",
+      "folderselcted.range.notzero":      "- Range should not be zero or not entered\r\n",           
       "label.sending":                  "Sending..."
     }
   }

@@ -23,7 +23,6 @@
 <jsp:useBean id="pageRoleMapList" class="org.aspcfs.modules.website.base.PageRoleMapList" scope="request"/>
 <jsp:useBean id="pageId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="roleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
-<jsp:useBean id="roleListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="permissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 
 <%@ include file="../initPage.jsp" %>
@@ -44,7 +43,6 @@
 </td></tr></table>
 <!-- End Sub Trails -->
 <%-- Begin the container contents --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="siteListInfo"/>
 <form name="Dashboard"
 	action="PageRoles.do?command=Save&moduleId=<%=permissionCategory.getId()%>&pageId=<%=pageId%>"
 	method="post">
@@ -80,4 +78,4 @@
   <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" name="Save" />
   <input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();"/>
 </form>
-<dhv:pagedListControl object="siteListInfo"/>
+

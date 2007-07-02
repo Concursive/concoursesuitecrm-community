@@ -13,82 +13,71 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   -
-  - Version: $Id: field_select.jsp rajendrad$
+  - Version: $Id: fields_select.jsp 4.1 2007-06-08 11:19:57 +0530 (Fri, 08 Jun 2007) rajendrad $
   - Description:
   --%>
+
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.aspcfs.modules.base.CustomField"%>
 <%@ page import="org.aspcfs.modules.base.CustomFieldGroup"%>
-<jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
-<jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
-<jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
 <jsp:useBean id="fieldListPropertyName" class="java.lang.String" scope="request"/>
-<jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
-<jsp:useBean id="groupList" class="org.aspcfs.modules.base.CustomFieldGroup" scope="request"/>
-<jsp:useBean id="category" class="java.lang.String" scope="request"/>
-<jsp:useBean id="folderList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
+<jsp:useBean id="fieldNamesIds" class="java.lang.String" scope="request"/>
 <jsp:useBean id="categoryList" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
+
 <script language="JavaScript" type="text/javascript" src="javascript/editFieldListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
-
-    function optionsPopulate(){
+ function optionsPopulate(){
         var usersAgent = navigator.userAgent.toLowerCase();
         var isBrowserTypeIE = (usersAgent.indexOf("msie") != -1);
-        var f = document.fieldList;
+        var form = document.fieldList;
         var optionArr ="";
         var tempList ="";
         var popValue="";
-        optionArr = window.opener.document.forms[0].<%=fieldListPropertyName%>.value;
-        if(optionArr==""){
+        optionArr = "<%=fieldNamesIds%>";
+        if(window.opener.document.forms[0].fieldIds.value!=null && window.opener.document.forms[0].fieldIds.value!=""){
+           optionArr = window.opener.document.forms[0].fieldIds.value;
+        }
+        if(optionArr=="EMPTY" || optionArr==""){
             return;
         }else
         {
-            for(var i=0;i<optionArr.length;i++){
+          var nameIDs="";
+           var splits = optionArr.split(",");
+           for(var i=0;i<splits.length;i++){
+              nameIDs = splits[i];
+              form.customerFieldDisplayList.options[i]=new Option ((nameIDs.substring(nameIDs.indexOf(":")+1,nameIDs.length)),(nameIDs.substring(0,nameIDs.indexOf(":"))));
+           }
+       }
+   }
 
-                popValue = optionArr.substring(i,i+1);
-                if(popValue=="\n"){
-                    if (isBrowserTypeIE) {
-                        tempList = tempList.substring(0,tempList.length-1);
-                    }
-                    f.customerFieldDisplayList.options[f.customerFieldDisplayList.length]=new Option (tempList,tempList);
-                    tempList ="";
-                }else
-                {
-                    tempList = tempList+popValue;
-                }
-            }
-            f.customerFieldDisplayList.options[f.customerFieldDisplayList.length]=new Option (tempList,tempList);
-        }
-    }
-
-    function processList(){
+ function processList(){
         var tempList = "";
-        var f = document.fieldList;
-        if(f.customerFieldDisplayList.options.length==0){
+        var tempListValue = "";
+        var form = document.fieldList;
+        if(form.customerFieldDisplayList.options.length==0){
             alert("Atleast one Field should be selected to Update");
-            f.customerFieldList.focus();
+            form.customerFieldList.focus();
             return false;
         }
-
-        for (var i=0; i<f.customerFieldDisplayList.options.length; i++) {
-            var text = f.customerFieldDisplayList.options[i].text;
+       for (var i=0; i<form.customerFieldDisplayList.options.length; i++) {
+            var text = form.customerFieldDisplayList.options[i].text;
+            var Id = form.customerFieldDisplayList.options[i].value;
             tempList = tempList+text;
             tempList = tempList+"\n";
+            tempListValue = tempListValue+Id+":"+text+",";
         }
         tempList = tempList.substring(0,tempList.length-1);
+        tempListValue = tempListValue.substring(0,tempListValue.length-1);
         window.opener.document.forms[0].<%=fieldListPropertyName%>.value = tempList;
+        window.opener.document.forms[0].fieldIds.value = tempListValue;
         window.close();
     }
 
 </script>
 <body onLoad="return optionsPopulate();">
-<form name="fieldList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
-
+<form name="fieldList">
     <table class="details" border="0" cellpadding="4" cellspacing="0" width="100%" >
         <tr>
             <th  width="40%"><dhv:label name="portlets.folder.fieldsInFolders">Fields in the Folder</dhv:label></th>

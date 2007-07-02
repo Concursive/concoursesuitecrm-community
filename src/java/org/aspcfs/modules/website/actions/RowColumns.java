@@ -22,12 +22,14 @@ import org.aspcfs.modules.admin.base.RoleList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.website.base.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.FolderUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Description of the Class
@@ -56,7 +58,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String rowColumnId = context.getRequest().getParameter("rowColumnId");
@@ -88,7 +91,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAddSubRow(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String rowColumnId = context.getRequest().getParameter("rowColumnId");
@@ -118,7 +122,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String siteId = context.getRequest().getParameter("siteId");
@@ -173,7 +178,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String siteId = context.getRequest().getParameter("siteId");
@@ -199,7 +205,13 @@ public final class RowColumns extends CFSModule {
         tabId = pageVersion.getTabIdByPageVersionId(db);
       }
       rowColumn = new RowColumn();
+      rowColumn.setBuildIcelet(true);
+      rowColumn.setBuildIceletPropertyMap(true);
       rowColumn.queryRecord(db, Integer.parseInt(rowColumnId));
+      ArrayList rowColumnList = new ArrayList();
+      rowColumnList.add(rowColumn);
+      this.deleteFolderGraphImageFiles(context, rowColumnList);
+      
       //delete the rowColumn
       rowColumn.delete(db);
     } catch (Exception e) {
@@ -227,7 +239,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAddIcelet(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String pageRowId = context.getRequest().getParameter("pageRowId");
@@ -236,6 +249,7 @@ public final class RowColumns extends CFSModule {
     }
     RowColumn rowColumn = (RowColumn) context.getFormBean();
     String nextRowColumnId = context.getRequest().getParameter("nextRowColumnId");
+    rowColumn.setColPosition(context.getRequest().getParameter("position"));
     if (nextRowColumnId == null || "".equals(nextRowColumnId.trim())) {
       nextRowColumnId = (String) context.getRequest().getAttribute("nextRowColumnId");
     }
@@ -263,6 +277,8 @@ public final class RowColumns extends CFSModule {
         context.getRequest().setAttribute("previousRowColumnId", String.valueOf(columnList.getLastPositionColumnId()));
       } else {
         //If the "Add Column after" is selected from the column dropdown
+        rowColumn.setColPosition(context.getRequest().getParameter("position"));
+        rowColumn.setColAlign(context.getRequest().getParameter("align"));
         String previousRowColumnId = context.getRequest().getParameter("previousRowColumnId");
         if (previousRowColumnId == null || "".equals(previousRowColumnId.trim())) {
           previousRowColumnId = (String) context.getRequest().getAttribute("previousRowColumnId");
@@ -312,7 +328,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandReplaceIcelet(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String pageRowId = context.getRequest().getParameter("pageRowId");
@@ -368,6 +385,7 @@ public final class RowColumns extends CFSModule {
         iceletList.setContainerId(page.getLinkContainerId());
       } else {
         iceletList.setForWebsite(true);
+        context.getRequest().setAttribute("fromWebsite", context.getRequest().getParameter("fromWebsite"));
       }
       iceletList.buildList(db);
       if (rowColumn.getIceletId() > -1) {
@@ -394,7 +412,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModifyIceletProperties(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String rowColumnId = context.getRequest().getParameter("rowColumnId");
@@ -402,6 +421,7 @@ public final class RowColumns extends CFSModule {
       rowColumnId = (String) context.getRequest().getAttribute("rowColumnId");
     }
     String iceletId = context.getRequest().getParameter("iceletId");
+    context.getRequest().setAttribute("fromWebsite", context.getRequest().getParameter("fromWebsite"));
     String width = context.getRequest().getParameter("width");
     RowColumn rowColumn = (RowColumn) context.getFormBean();
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -409,7 +429,8 @@ public final class RowColumns extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      if (rowColumnId != null && !"".equals(rowColumnId.trim()) && !"-1".equals(rowColumnId.trim()) && rowColumn.getId() == -1) {
+      if (rowColumnId != null && !"".equals(rowColumnId.trim()) && !"-1".equals(rowColumnId.trim()) && rowColumn.getId() == -1)
+      {
         rowColumn.setBuildIcelet(false);
         rowColumn.setBuildIceletPropertyMap(false);
         rowColumn.queryRecord(db, Integer.parseInt(rowColumnId.trim()));
@@ -462,8 +483,15 @@ public final class RowColumns extends CFSModule {
     return this.getReturn(context, "ModifyIceletProperties");
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
   public String executeCommandFieldsLists(ActionContext context) {
-    if (!(hasPermission(context, "contacts-internal_contacts-folders-view"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -486,8 +514,12 @@ public final class RowColumns extends CFSModule {
       String fieldListPropertyName = context.getRequest().getParameter("fieldListPropertyName");
       context.getRequest().setAttribute("fieldListPropertyName", fieldListPropertyName);
 
+      if(context.getRequest().getParameter("fieldNamesIds")!=null && !context.getRequest().getParameter("fieldNamesIds").equals("")){
+        context.getRequest().setAttribute("fieldNamesIds", context.getRequest().getParameter("fieldNamesIds"));
+      }
+
       CustomFieldCategory thisCategory = new CustomFieldCategory(db,
-          Integer.parseInt(folderId));
+              Integer.parseInt(folderId));
 
       thisCategory.setIncludeEnabled(Constants.TRUE);
       thisCategory.setIncludeScheduled(Constants.TRUE);
@@ -498,13 +530,108 @@ public final class RowColumns extends CFSModule {
       thisCategory.setModifiedBy(this.getUserId(context));
       thisCategory.setCanNotContinue(true);
       Iterator groups = thisCategory.iterator();
+
+
       context.getRequest().setAttribute("categoryList", thisCategory);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     }
-    return ("ShowFolderFields");
+    return ("ShowFolderFieldsOK");
   }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandSpreadSheetFieldsLists(ActionContext context) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    String finalPropertyStr = null;
+    String folderId = context.getRequest().getParameter("folderId");
+
+    try {
+      db = this.getConnection(context);
+      CustomFieldGroup group = null;
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
+      thisList.setBuildTotalNumOfRecords(true);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("folderList", thisList);
+
+      String configurePropertyName = context.getRequest().getParameter("configurePropertyName");
+      String previewPropertyName = context.getRequest().getParameter("previewPropertyName");
+
+      context.getRequest().setAttribute("configurePropertyName", configurePropertyName);
+      context.getRequest().setAttribute("previewPropertyName", previewPropertyName);
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db, Integer.parseInt(folderId));
+
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setEnteredBy(this.getUserId(context));
+      thisCategory.setModifiedBy(this.getUserId(context));
+      thisCategory.setCanNotContinue(true);
+
+      CustomFieldCategory recordCategory;
+      CustomFieldRecord thisRecord;
+      ArrayList recordCategories = new ArrayList();
+      CustomFieldRecordList recordList = new CustomFieldRecordList();
+      recordList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
+      recordList.setCategoryId(thisCategory.getId());
+      recordList.buildList(db);
+      recordList.buildRecordColumns(db, thisCategory);
+      Iterator records = recordList.iterator();
+      String recordRange = context.getRequest().getParameter("recordRange");
+      int count = 0;
+      while (records.hasNext() && count < Integer.parseInt(recordRange)) {
+        thisRecord = (CustomFieldRecord) records.next();
+        recordCategory = new CustomFieldCategory(db, thisCategory.getId());
+        recordCategory.setRecordId(thisRecord.getId());
+        recordCategory.setBuildResources(true);
+        recordCategory.buildResources(db);
+        recordCategories.add(recordCategory);
+        count++;
+      }
+
+      context.getRequest().setAttribute("Category", thisCategory);
+      context.getRequest().setAttribute("recordList", recordList);
+      context.getRequest().setAttribute("recordCategories", recordCategories);
+      context.getRequest().setAttribute("recordRange", recordRange);
+      context.getRequest().setAttribute("rows", context.getRequest().getParameter("rows"));
+      context.getRequest().setAttribute("cols", context.getRequest().getParameter("cols"));
+      context.getRequest().setAttribute("previousRows",context.getRequest().getParameter("previousRows"));
+      context.getRequest().setAttribute("previousColumns",context.getRequest().getParameter("previousColumns"));
+      context.getRequest().setAttribute("folderId", context.getRequest().getParameter("folderId"));
+      if (context.getRequest().getParameter("configString") != null && !"".equals(context.getRequest().getParameter("configString"))) {
+        context.getRequest().setAttribute("finalPropertyStr", context.getRequest().getParameter("configString"));
+        finalPropertyStr = context.getRequest().getParameter("configString");
+      }
+      if(!"".equals(context.getRequest().getParameter("finalString")) && context.getRequest().getParameter("finalString")!=null) {
+      finalPropertyStr = context.getRequest().getParameter("finalString");
+      }
+      if (finalPropertyStr != null && !finalPropertyStr.equals("") && !finalPropertyStr.equals("null")) {
+        String htmlContent = FolderUtils.buildSpreadSheet(finalPropertyStr, Integer.parseInt(folderId), Integer.parseInt(recordRange), db);
+        context.getRequest().setAttribute("htmlContent", htmlContent);
+        context.getRequest().setAttribute("finalPropertyStr", finalPropertyStr);
+      }
+      db.close();
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    }
+    return ("SpreadSheetFieldsOK");
+  }
+
 
   /**
    * Description of the Method
@@ -513,7 +640,8 @@ public final class RowColumns extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandSaveIcelet(ActionContext context) {
-    if (!(hasPermission(context, "site-editor-edit"))) {
+    if (!(hasPermission(context, "site-editor-edit") && hasPermission(context, "website-view")) &&
+            !(hasPermission(context, "admin-view") && hasPermission(context, "admin-sysconfig-dashboard-edit"))) {
       return ("PermissionError");
     }
     String pageRowId = context.getRequest().getParameter("pageRowId");

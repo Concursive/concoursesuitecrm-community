@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Author(s): 
-  - Version: $Id: document_store_center.jsp 18488 2007-01-15 20:12:32Z matt $
+  - Version: $Id: website_document_store_center.jsp 18488 2007-01-15 20:12:32Z matt $
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio"%>

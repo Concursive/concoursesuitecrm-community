@@ -149,7 +149,7 @@
       <dhv:label name="documents.details.public">Public</dhv:label>
     </td>
     <td>
-      <dhv:label name="documents.details.isAllowedWebsiteUsersToAccess">Website users are allowed to access all documents in this store</dhv:label>
+      <dhv:label name="documents.details.isAllowedWebsiteAndDashboardUsersToAccess">Documents in this store can be accessed from the website and from dashboards</dhv:label>
     </td>
   </tr>
 </dhv:evaluate>

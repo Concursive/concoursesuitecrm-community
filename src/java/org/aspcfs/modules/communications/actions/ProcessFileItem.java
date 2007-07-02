@@ -67,9 +67,18 @@ public final class ProcessFileItem extends CFSModule {
       thisItem = new FileItem(
           db, Integer.parseInt(itemId), thisDocumentStore.getId(), Constants.DOCUMENTS_DOCUMENTS);
       if (!thisDocumentStore.getPublicStore() && thisItem!=null) {
-        context.getRequest().setAttribute("Error", "You have no permissions to acess this item.");
-        return "SystemError";
+        if (getUserId(context) == -1 ) {
+          context.getRequest().setAttribute("Error", "You have no permissions to acess this item.");
+          return "SystemError";
+        } else if (!hasDocumentStoreAccess(context, db,
+              thisDocumentStore,
+              "documentcenter-documents-files-download")) {
+                        // When the user is logged in, and the store is not public, he must have access to the document store
+               context.getRequest().setAttribute("Error", "You have no permissions to acess this item.");
+                        return "SystemError";
+            }
       }
+
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
       context.getRequest().setAttribute(
           "IncludeSection", ("file_library").toLowerCase());

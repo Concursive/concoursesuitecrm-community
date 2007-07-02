@@ -1,4 +1,4 @@
-<%-- 
+<%--
   - Copyright(c) 2007 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -12,9 +12,9 @@
   - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
-  - 
+  -
   - Version: $Id: admin_fields_folder_list.jsp 11310 2005-04-13 20:05:00Z mrajkowski $
-  - Description: 
+  - Description:
   --%>
 
 <%@ page import="org.aspcfs.modules.website.base.*"%>
@@ -38,13 +38,14 @@
 		  loadImages('select');
 			function reopen() {
     		window.location.href='AdminDashboards.do?command=ConfigureDashboard&dashboardId=<%= request.getParameter("dashboardId") %>&moduleId=<%=  request.getParameter("moduleId") %>&popup=true';
-  		}		  
+  		}
 		</script>
 <table cellpadding="0" cellspacing="0" width="100%" class="portalPortlets">
 		<%
 				PageVersion pageVersion = Page.getPageVersionToView();
 				Iterator nextIter = rowsColumns.iterator();
-				Object nextObj = (Object) nextIter.next();
+        if(nextIter.hasNext()) {
+        Object nextObj = (Object) nextIter.next();
 				Iterator rowColumnIterator = rowsColumns.iterator();
 				int pb_i = 1000;
 				while (rowColumnIterator.hasNext()) {
@@ -79,11 +80,15 @@
 								<table cellpadding="4" cellspacing="0" width="100%">
 									<tr>
 										<%
-      		} else 
+      		} else
 						if (object instanceof RowColumn) {
 										RowColumn rowColumn = (RowColumn) object;
 										Icelet thisIcelet = rowColumn.getIcelet();
-										pb_i++;
+                    boolean isSubrows = false;
+                    if(rowColumn.getSubRows().size() > 0) {
+                        isSubrows = true;
+                    }
+                    pb_i++;
 							%>
 							<td class="portalColumn"
 								width="<%= (rowColumn.getParentRow().getTotalColumnWidth() != 0? String.valueOf((double)(rowColumn.getWidth() * 100)/(double)rowColumn.getParentRow().getTotalColumnWidth())+"%": String.valueOf(rowColumn.getWidth())) %>"
@@ -92,10 +97,10 @@
 									<div class="portalEditorColumn">
 										Column:
 										<a
-											href="javascript:displayMenuColumn('select<%=pb_i%>','menuColumn','<%=rowColumn.getId()%>','<%=rowColumn.getPageRowId() %>','<%=rowColumn.getParentRow().getPageVersionId() %>','<%=rowColumn.getIceletId()%>','false');"
+											href="javascript:displayMenuColumn('select<%=pb_i%>','menuColumn','<%=rowColumn.getId()%>','<%=rowColumn.getPageRowId() %>','<%=rowColumn.getParentRow().getPageVersionId() %>','<%=rowColumn.getIceletId()%>','<%=rowColumn.getPosition() %>','<%=isSubrows%>');"
 											onMouseOver="over(0, <%=pb_i%>)"
-											onmouseout="out(0, <%=pb_i%>); hideMenu('menuColumn');"> 
-											<img src="images/select.gif" name="select<%=pb_i%>"	id="select<%=pb_i%>" align="absmiddle" border="0" /> 
+											onmouseout="out(0, <%=pb_i%>); hideMenu('menuColumn');">
+											<img src="images/select.gif" name="select<%=pb_i%>"	id="select<%=pb_i%>" align="absmiddle" border="0" />
 										</a>
 									</div>
 								</dhv:evaluate>
@@ -113,10 +118,10 @@
 															</td></tr></table></td></tr></table>
 													<%} %>
 																</td></tr></table></td>	</tr>
-											<%} 
+											<%}
 														else if (rowColumn.getLevel() < nextLevel) { %>
 																	<table cellpadding="4" cellspacing="0" width="100%">
-															<%} 
+															<%}
 											} //Close the nextObj instanceOf PageRow
           						else if (nextObj != null && nextObj instanceof RowColumn) {
 											          RowColumn nextRowColumn = (RowColumn) nextObj;
@@ -135,7 +140,8 @@
 																						</td></tr>
 																	<%} //Close the nextObj == null
       			} //Close object instanceof RowColumn
-    } //Close the Iterator
+        } //Close the Iterator
+    }
 %>
 </table>
 </tr>

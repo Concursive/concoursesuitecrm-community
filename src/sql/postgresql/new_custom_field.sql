@@ -71,7 +71,8 @@ CREATE TABLE custom_field_info (
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
   additional_text VARCHAR(255),
-  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  default_value TEXT
 );
 
 CREATE INDEX "custom_field_inf_idx" ON "custom_field_info" USING btree ("group_id");

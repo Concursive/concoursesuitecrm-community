@@ -24,13 +24,7 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.website.actions.Pages;
-import org.aspcfs.modules.website.base.Page;
-import org.aspcfs.modules.website.base.PageGroup;
-import org.aspcfs.modules.website.base.PageGroupList;
-import org.aspcfs.modules.website.base.PageList;
-import org.aspcfs.modules.website.base.PageRoleMapList;
-import org.aspcfs.modules.website.base.PageRowList;
-import org.aspcfs.modules.website.base.Site;
+import org.aspcfs.modules.website.base.*;
 import org.aspcfs.modules.website.framework.IceletManager;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -213,6 +207,16 @@ public final class AdminDashboards extends CFSModule {
     try {
       db = this.getConnection(context);
       String dashboardId =  context.getRequest().getParameter("dashboardId");
+
+      Page page = new Page(db, Integer.parseInt(dashboardId));
+      page.buildPageVersionToView(db);
+      page.getPageVersionToView().buildPageRowList(db);
+      PageRowList pageRowList = page.getPageVersionToView().getPageRowList();
+      ArrayList rowColumnList = new ArrayList();
+      pageRowList.buildRowsColumns(rowColumnList, 0);
+      // TODO: Cleanup various items centrally
+      this.deleteFolderGraphImageFiles(context, rowColumnList);
+
       PageRoleMapList pageRoleMapList = new PageRoleMapList();
       pageRoleMapList.setWebPageId(Integer.parseInt(dashboardId));
       pageRoleMapList.buildList(db);

@@ -30,6 +30,7 @@ import org.aspcfs.modules.documents.actions.DocumentStoreManagementFileFolders;
 import org.aspcfs.modules.documents.base.DocumentStore;
 import org.aspcfs.modules.documents.base.DocumentStoreList;
 import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.ImageUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -37,6 +38,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import java.io.File;
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Description of the Class
@@ -80,10 +82,18 @@ public final class WebsiteDocuments extends CFSModule {
         documentStoreList.setIncludeOnlyTrashed(true);
       }
 
-      documentStoreList.setPublicOnly(true);
-      documentStoreList.setPagedListInfo(documentStoreListInfo);
+      int tmpUserId = this.getUserId(context);
+      User tmpUser = getUser(context, tmpUserId);
+      int tmpUserRoleId = tmpUser.getRoleId();
+      documentStoreList.setDocumentStoresForUser(getUserId(context));
+      documentStoreList.setUserRole(tmpUserRoleId);
+      if ("true".equals(context.getRequest().getParameter("includePublic"))){
+         documentStoreList.setIncludePublic(true);
+      } else{
+         documentStoreList.setPublicOnly(true);
+      }
+
       documentStoreList.buildList(db);
-      getDocumentStoreUserLevel(context, db, DocumentStoreTeamMember.GUEST);
       context.getRequest().setAttribute("documentStoreList", documentStoreList);
     } catch (Exception e) {
       errorMessage = e;
@@ -293,6 +303,12 @@ public final class WebsiteDocuments extends CFSModule {
       thisDocumentStore = new DocumentStore(db, Integer
           .parseInt(documentStoreId));
 
+      //return permission error if the files cannot be accessed from the document store
+      if (!hasDocumentStoreAccess(context, db,
+              thisDocumentStore,
+              "documentcenter-documents-files-download") && !thisDocumentStore.getPublicStore()) {
+          return "PermissionError";
+     }
       section = "File_Library";
 
       String folderId = context.getRequest().getParameter("folderId");

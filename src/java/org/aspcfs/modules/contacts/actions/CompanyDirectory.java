@@ -997,5 +997,16 @@ public final class CompanyDirectory extends CFSModule {
     }
     return ("DeleteFieldsOK");
   }
+ public String executeCommandDashboards(ActionContext context) {
+    if (!hasPermission(context, "contacts-internal_contacts-dashboards-view")) {
+ 	      return executeCommandListEmployees(context);
+    }
+  	String moduleId = Integer.toString(Constants.EMPLOYEES);
+  	String dashboardsContainerName = "dashboards" + moduleId;
+  	context.getRequest().setAttribute("moduleId", moduleId);
+  	context.getRequest().setAttribute("dashboardsContainerName", dashboardsContainerName);
+  	context.getRequest().setAttribute("action", context.getRequest().getAttribute("moduleAction"));
+  	return "DashboardsViewOK";
+  }
 }
 

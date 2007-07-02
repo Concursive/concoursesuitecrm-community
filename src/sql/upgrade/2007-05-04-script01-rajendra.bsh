@@ -1,0 +1,20 @@
+/* 
+ * - This script updates the permission_category to enable dashoards into employee module.
+ */
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
+
+  //Get the employee category id 
+  int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_EMPLOYEES);
+
+  //Update the employee dashboards capability
+  pst = db.prepareStatement(
+    "UPDATE permission_category " +
+    "SET dashboards = ? " +
+    "WHERE category_id = ? ");
+  pst.setBoolean(1, true);
+  pst.setInt(2, categoryId);
+  pst.execute();
+  pst.close();
+  print("dashboard permission updated");

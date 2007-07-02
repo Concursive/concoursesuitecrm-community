@@ -65,7 +65,7 @@
   }
 
   function modifyIcelet() {
-    popURL('RowColumns.do?command=ModifyIceletProperties&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&iceletId=' + thisIceletId +'&popup=true','ModifyProperties',700,500,'yes','yes');
+    popURL('RowColumns.do?command=ModifyIceletProperties&pageRowId=' + thisPageRowId +'&rowColumnId=' + thisRowColumnId + '&iceletId=' + thisIceletId +'&fromWebsite=true&popup=true','ModifyProperties',700,500,'yes','yes');
   }
 
   function replaceIcelet() {

@@ -702,8 +702,16 @@
     <permission value="employees-view"/>
     <long_html value="Employees"/>
     <short_html value="Employees"/>
-    <link value="CompanyDirectory.do?command=ListEmployees"/>
+    <link value="CompanyDirectory.do?command=Dashboards&amp;action=CompanyDirectory.do&amp;menu=Employees"/>
     <graphic width="83" height="36" on="menu-myhome-on.gif" off="menu-myhome-off.gif" rollover=""/>
+
+    <submenu name="Dashboards">
+	  <permission value="contacts-internal_contacts-dashboards-view"/>
+	  <long_html value="Dashboards"/>
+	  <short_html value="Dashboards"/>
+	  <link value="CompanyDirectory.do?command=Dashboards&amp;action=CompanyDirectory.do&amp;menu=Employees"/>
+    </submenu>
+
     <submenu name="Internal Contacts">
       <permission value="contacts-internal_contacts-view"/>
       <long_html value="View"/>

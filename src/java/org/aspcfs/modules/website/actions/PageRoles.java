@@ -47,9 +47,6 @@ public class PageRoles extends CFSModule {
       pageRoleMapList.setWebPageId(Integer.parseInt(pageId));
       pageRoleMapList.buildList(db);
       RoleList roleList = new RoleList();
-      PagedListInfo roleListInfo = getPagedListInfo(context, "roleListInfo");
-      roleListInfo.setLink("PageRoles.do?command=List&moduleId=" + moduleId +"&pageId=" +pageId);
-      roleList.setPagedListInfo(roleListInfo);
       roleList.buildList(db);
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       
@@ -82,13 +79,15 @@ public class PageRoles extends CFSModule {
       pageRoleMapList.setWebPageId(Integer.parseInt(pageId));      
       pageRoleMapList.buildList(db);      
       pageRoleMapList.delete(db);
-      for(int i=0;i<roles.length;i++){
+      if(roles!=null) {
+        for(int i=0;i<roles.length;i++){
         PageRoleMap pageRoleMap = new PageRoleMap();
         pageRoleMap.setRoleId(Integer.parseInt(roles[i]));
         pageRoleMap.setWebPageId(Integer.parseInt(pageId));
         pageRoleMap.setEnteredBy(this.getUserId(context));
         pageRoleMap.setModifiedBy(this.getUserId(context));
         pageRoleMap.insert(db);
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
