@@ -63,12 +63,13 @@
   </tr>
 	<tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="">Name</dhv:label>
+      <dhv:label name="website.page.name">Name</dhv:label>
     </td>
 		<td>
       <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
         <input type="text" size="35" maxlength="300" name="name" value="<%= toHtmlValue(thisPage.getName()) %>"><font color="red">*</font>
-      </td><td valign="top" nowrap>&nbsp;
+        <br />
+        <dhv:label name="website.page.meta.title">(This will become the page's Meta-Title)</dhv:label>&nbsp;
         <%= showAttribute(request, "nameError") %>
       </td></tr></table>
 		</td>
@@ -83,10 +84,29 @@
   </tr>
 	<tr class="containerBody">
 		<td nowrap class="formLabel">
-			<dhv:label name="">Notes</dhv:label>
+			<dhv:label name="website.page.internal.description">Internal Description</dhv:label>
 		</td>
+		<td valign="top">
+      <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+        <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(thisPage.getNotes()) %></TEXTAREA>
+        <br />
+        <dhv:label name="website.page.meta.description">(This will become the page's Meta-Description)</dhv:label>&nbsp;
+      </td>
+      </tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="website.page.keywords">Keywords</dhv:label>
+    </td>
 		<td>
-			<TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(thisPage.getNotes()) %></TEXTAREA>
+      <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+        <input type="text" size="35" maxlength="300" name="keywords" value="<%= toHtmlValue(thisPage.getKeywords()) %>">
+        <br />
+        <dhv:label name="website.page.meta.keywords">(This will become the page's Meta-Keywords)</dhv:label>&nbsp;
+      </td>
+      </tr></table>
 		</td>
 	</tr>
 	<tr class="containerBody">

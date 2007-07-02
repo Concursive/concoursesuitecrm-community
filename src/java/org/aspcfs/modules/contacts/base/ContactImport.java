@@ -26,8 +26,8 @@ import org.aspcfs.modules.accounts.base.OrganizationAddress;
 import org.aspcfs.modules.accounts.base.OrganizationEmailAddress;
 import org.aspcfs.modules.accounts.base.OrganizationPhoneNumber;
 import org.aspcfs.modules.admin.base.SICCodeList;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
@@ -54,10 +54,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  * Represents importer for Contacts
- * 
+ *
  * @author Mathur
  * @version $Id: ContactImport.java,v 1.7.12.1 2004/11/12 19:55:25 mrajkowski
  *          Exp $
@@ -91,13 +92,10 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Constructor for the ContactImport object
-   * 
-   * @param db
-   *          Description of the Parameter
-   * @param importId
-   *          Description of the Parameter
-   * @throws SQLException
-   *           Description of the Exception
+   *
+   * @param db       Description of the Parameter
+   * @param importId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public ContactImport(Connection db, int importId) throws SQLException {
     super(db, importId);
@@ -105,9 +103,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the properties attribute of the ContactImport object
-   * 
-   * @param request
-   *          The new properties value
+   *
+   * @param request The new properties value
    */
   public void setProperties(HttpServletRequest request) {
     if (request.getParameter("owner") != null) {
@@ -120,9 +117,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the owner attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new owner value
+   *
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -130,9 +126,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the owner attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new owner value
+   *
+   * @param tmp The new owner value
    */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
@@ -140,7 +135,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the ownerName attribute of the ContactImport.java object
-   * 
+   *
    * @return the ownerName
    */
   public String getOwnerName() {
@@ -149,9 +144,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the properties attribute of the ContactImport.java object
-   * 
-   * @param ownerName
-   *          the ownerName to set
+   *
+   * @param ownerName the ownerName to set
    */
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
@@ -159,9 +153,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the accessTypeId attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new accessTypeId value
+   *
+   * @param tmp The new accessTypeId value
    */
   public void setAccessTypeId(int tmp) {
     this.accessTypeId = tmp;
@@ -169,9 +162,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the accessTypeId attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new accessTypeId value
+   *
+   * @param tmp The new accessTypeId value
    */
   public void setAccessTypeId(String tmp) {
     this.accessTypeId = Integer.parseInt(tmp);
@@ -179,9 +171,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the userId attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new userId value
+   *
+   * @param tmp The new userId value
    */
   public void setUserId(int tmp) {
     this.userId = tmp;
@@ -189,9 +180,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the userId attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new userId value
+   *
+   * @param tmp The new userId value
    */
   public void setUserId(String tmp) {
     this.userId = Integer.parseInt(tmp);
@@ -199,9 +189,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the lookupAccount attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new lookupAccount value
+   *
+   * @param tmp The new lookupAccount value
    */
   public void setLookupAccount(boolean tmp) {
     this.lookupAccount = tmp;
@@ -209,9 +198,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the lookupAccount attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new lookupAccount value
+   *
+   * @param tmp The new lookupAccount value
    */
   public void setLookupAccount(String tmp) {
     this.lookupAccount = DatabaseUtils.parseBoolean(tmp);
@@ -219,9 +207,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the propertyMap attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new propertyMap value
+   *
+   * @param tmp The new propertyMap value
    */
   public void setPropertyMap(PropertyMap tmp) {
     this.propertyMap = tmp;
@@ -229,9 +216,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the filePath attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new filePath value
+   *
+   * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -239,9 +225,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the db attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new db value
+   *
+   * @param tmp The new db value
    */
   public void setDb(Connection tmp) {
     this.db = tmp;
@@ -249,9 +234,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the manager attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new manager value
+   *
+   * @param tmp The new manager value
    */
   public void setManager(ImportManager tmp) {
     this.manager = tmp;
@@ -259,9 +243,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the errorFile attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new errorFile value
+   *
+   * @param tmp The new errorFile value
    */
   public void setErrorFile(File tmp) {
     this.errorFile = tmp;
@@ -269,9 +252,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the fileItem attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new fileItem value
+   *
+   * @param tmp The new fileItem value
    */
   public void setFileItem(FileItem tmp) {
     this.fileItem = tmp;
@@ -279,9 +261,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the importThread attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new importThread value
+   *
+   * @param tmp The new importThread value
    */
   public void setImportThread(Thread tmp) {
     this.importThread = tmp;
@@ -289,7 +270,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the importThread attribute of the ContactImport object
-   * 
+   *
    * @return The importThread value
    */
   public Thread getImportThread() {
@@ -298,7 +279,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the fileItem attribute of the ContactImport object
-   * 
+   *
    * @return The fileItem value
    */
   public FileItem getFileItem() {
@@ -307,7 +288,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the errorFile attribute of the ContactImport object
-   * 
+   *
    * @return The errorFile value
    */
   public File getErrorFile() {
@@ -316,7 +297,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the manager attribute of the ContactImport object
-   * 
+   *
    * @return The manager value
    */
   public ImportManager getManager() {
@@ -325,7 +306,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the db attribute of the ContactImport object
-   * 
+   *
    * @return The db value
    */
   public Connection getDb() {
@@ -334,7 +315,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the filePath attribute of the ContactImport object
-   * 
+   *
    * @return The filePath value
    */
   public String getFilePath() {
@@ -343,7 +324,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the propertyMap attribute of the ContactImport object
-   * 
+   *
    * @return The propertyMap value
    */
   public PropertyMap getPropertyMap() {
@@ -352,7 +333,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the lookupAccount attribute of the ContactImport object
-   * 
+   *
    * @return The lookupAccount value
    */
   public boolean getLookupAccount() {
@@ -361,7 +342,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the userId attribute of the ContactImport object
-   * 
+   *
    * @return The userId value
    */
   public int getUserId() {
@@ -370,7 +351,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the owner attribute of the ContactImport object
-   * 
+   *
    * @return The owner value
    */
   public int getOwner() {
@@ -379,7 +360,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the accessTypeId attribute of the ContactImport object
-   * 
+   *
    * @return The accessTypeId value
    */
   public int getAccessTypeId() {
@@ -388,9 +369,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the connectionElement attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new connectionElement value
+   *
+   * @param tmp The new connectionElement value
    */
   public void setConnectionElement(ConnectionElement tmp) {
     this.connectionElement = tmp;
@@ -398,7 +378,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the connectionElement attribute of the ContactImport object
-   * 
+   *
    * @return The connectionElement value
    */
   public ConnectionElement getConnectionElement() {
@@ -407,7 +387,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the lead attribute of the ContactImport object
-   * 
+   *
    * @return The lead value
    */
   public boolean getLead() {
@@ -416,9 +396,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the lead attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new lead value
+   *
+   * @param tmp The new lead value
    */
   public void setLead(boolean tmp) {
     this.lead = tmp;
@@ -426,9 +405,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the lead attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new lead value
+   *
+   * @param tmp The new lead value
    */
   public void setLead(String tmp) {
     this.lead = DatabaseUtils.parseBoolean(tmp);
@@ -436,7 +414,7 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the leadStatus attribute of the ContactImport object
-   * 
+   *
    * @return The leadStatus value
    */
   public int getLeadStatus() {
@@ -445,9 +423,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the leadStatus attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new leadStatus value
+   *
+   * @param tmp The new leadStatus value
    */
   public void setLeadStatus(int tmp) {
     this.leadStatus = tmp;
@@ -455,9 +432,8 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Sets the leadStatus attribute of the ContactImport object
-   * 
-   * @param tmp
-   *          The new leadStatus value
+   *
+   * @param tmp The new leadStatus value
    */
   public void setLeadStatus(String tmp) {
     this.leadStatus = Integer.parseInt(tmp);
@@ -529,9 +505,9 @@ public class ContactImport extends Import implements Runnable {
       UserList userList = new UserList();
       userList.setBuildContact(true);
       userList.setSiteId(this.getSiteId());
-			if (this.getSiteId() != -1){ 
-				userList.setIncludeUsersWithAccessToAllSites(true);
-			}
+      if (this.getSiteId() != -1) {
+        userList.setIncludeUsersWithAccessToAllSites(true);
+      }
       userList.buildList(db);
 
       // process data
@@ -681,7 +657,7 @@ public class ContactImport extends Import implements Runnable {
                   thisContact.setOwner(userList.getUserIdByName(ownerNameProp));
                 }
                 if (thisContact.getOwner() < 0) {
-                  if(!"".equals(StringUtils.toString(ownerIdProp)) || !"".equals(StringUtils.toString(ownerNameProp))){
+                  if (!"".equals(StringUtils.toString(ownerIdProp)) || !"".equals(StringUtils.toString(ownerNameProp))) {
                     error.append("Owner is not valid");
                   }
                   thisContact.setOwner(owner);
@@ -759,6 +735,17 @@ public class ContactImport extends Import implements Runnable {
                 thisContact.setIndustryTempCode(industryCode);
               }
 
+              Property contactTypeId = propertyMap.getProperty("contactTypeId");
+              propertyValue = this.getValue(thisRecord, contactTypeId);
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                ArrayList typeList = getContactTypeList(db, 0, propertyValue, contactTypeId.getTokenizer());
+                if (typeList != null) {
+                  thisContact.setTypeList(typeList);
+                } else {
+                  error.append("; Contact type not exists");
+                }
+              }
+
               propertyValue = this.getValue(thisRecord, propertyMap
                   .getProperty("potential"));
               propertyValue = StringUtils.replace(propertyValue, "$", "");
@@ -790,12 +777,12 @@ public class ContactImport extends Import implements Runnable {
                   .getProperty("dunsNumber")));
               thisContact.setBusinessNameTwo(this.getValue(thisRecord,
                   propertyMap.getProperty("businessNameTwo")));
-									
-							//SIC Description
+
+              //SIC Description
               thisContact.setSicDescription(this.getValue(thisRecord,
                   propertyMap.getProperty("sicDescription")));
 
-							//SIC Code
+              //SIC Code
               propertyValue = this.getValue(thisRecord, propertyMap
                   .getProperty("sicCode"));
               thisContact.setSicCode(sicCodeList
@@ -803,10 +790,10 @@ public class ContactImport extends Import implements Runnable {
               if (!"".equals(propertyValue) && propertyValue != null
                   && thisContact.getSicCode() < 0) {
                 error.append("Error adding SIC");
-							}
-							if (thisContact.getSicCode() > 0){
-								thisContact.setSicDescription(sicCodeList.getDescriptionByCode(thisContact.getSicCode()));
-							}
+              }
+              if (thisContact.getSicCode() > 0) {
+                thisContact.setSicDescription(sicCodeList.getDescriptionByCode(thisContact.getSicCode()));
+              }
               // salutation
               propertyValue = this.getValue(thisRecord, propertyMap
                   .getProperty("nameSalutation"));
@@ -987,9 +974,22 @@ public class ContactImport extends Import implements Runnable {
                     thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
                     thisOrg.setSiteId(thisContact.getSiteId());
                     thisOrg.setSource(this.getSourceType());
-                    if(withoutContact){
-                    copyAddressAndPhones(thisContact,
-                        thisOrg);}
+
+                    Property accountTypeId = propertyMap.getProperty("accountTypeId");
+                    String typeValue = this.getValue(thisRecord, accountTypeId);
+                    if (!"".equals(StringUtils.toString(typeValue))) {
+                      ArrayList typeList =
+                          getAccountTypeList(db, typeValue, contactTypeId.getTokenizer());
+                      if (typeList != null) {
+                        thisOrg.setTypeList(typeList);
+                      } else {
+                        error.append("; Account type not exists");
+                      }
+                    }
+                    if (withoutContact) {
+                      copyAddressAndPhones(thisContact,
+                          thisOrg);
+                    }
                     copyPropertiesFromContactToOrganization(thisContact,
                         thisOrg);
                     if (error.length() == 0) {
@@ -1032,9 +1032,23 @@ public class ContactImport extends Import implements Runnable {
                     thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
                     thisOrg.setSiteId(this.getSiteId());
                     thisOrg.setSource(this.getSourceType());
-                    if(withoutContact){
+
+                    Property accountTypeId = propertyMap.getProperty("accountTypeId");
+                    String typeValue = this.getValue(thisRecord, accountTypeId);
+                    if (!"".equals(StringUtils.toString(typeValue))) {
+                      ArrayList typeList =
+                          getAccountTypeList(db, typeValue, contactTypeId.getTokenizer());
+                      if (typeList != null) {
+                        thisOrg.setTypeList(typeList);
+                      } else {
+                        error.append("; Account type not exists");
+                      }
+                    }
+
+                    if (withoutContact) {
                       copyAddressAndPhones(thisContact,
-                          thisOrg);}
+                          thisOrg);
+                    }
                     copyPropertiesFromContactToOrganization(thisContact,
                         thisOrg);
                     if (error.length() == 0) {
@@ -1143,7 +1157,7 @@ public class ContactImport extends Import implements Runnable {
     Iterator k = addressInstances.iterator();
     while (k.hasNext()) {
       ContactAddress contactAddress = (ContactAddress) k.next();
-      OrganizationAddress  address = new OrganizationAddress();
+      OrganizationAddress address = new OrganizationAddress();
       address.setStreetAddressLine1(contactAddress.getStreetAddressLine1());
       address.setStreetAddressLine2(contactAddress.getStreetAddressLine2());
       address.setStreetAddressLine3(contactAddress.getStreetAddressLine3());
@@ -1161,13 +1175,13 @@ public class ContactImport extends Import implements Runnable {
       address.setLatitude(contactAddress.getLatitude());
       address.setLongitude(contactAddress.getLongitude());
       address.setType(contactAddress.getType());
-       
+
       if (address.isValid()) {
         AddressFormatter thisFormatter = new AddressFormatter();
         thisFormatter.format(address);
         if (address.isValid()) {
           thisOrg.getAddressList().add(address);
-        } 
+        }
       }
     }
     // email addresses
@@ -1180,17 +1194,17 @@ public class ContactImport extends Import implements Runnable {
       OrganizationEmailAddress emailAddress = new OrganizationEmailAddress();
       emailAddress.setEmail(contactEmailAddress.getEmail());
       emailAddress.setType(contactEmailAddress.getType());
-        
+
       if (emailAddress.isValid()) {
         thisFormatter.format(emailAddress);
         if (emailAddress.isValid()) {
           thisOrg.getEmailAddressList().add(emailAddress);
-        } 
+        }
       }
     }
 
     // phone numbers
-    ContactPhoneNumberList phoneInstances =thisContact.getPhoneNumberList();
+    ContactPhoneNumberList phoneInstances = thisContact.getPhoneNumberList();
     Iterator j = phoneInstances.iterator();
     while (j.hasNext()) {
       ContactPhoneNumber contactPhoneNumber = (ContactPhoneNumber) j.next();
@@ -1203,7 +1217,7 @@ public class ContactImport extends Import implements Runnable {
         if (!"".equals(StringUtils.toString(phoneExt))) {
           phoneNumber.setExtension(phoneExt);
         }
-          phoneNumber.setType(type);
+        phoneNumber.setType(type);
         if (phoneNumber.isValid()) {
           PhoneNumberFormatter.format(phoneNumber);
           // check if number is still valid
@@ -1212,12 +1226,12 @@ public class ContactImport extends Import implements Runnable {
           }
         }
       }
-    }  
-    
+    }
+
   }
 
   private static void copyPropertiesFromContactToOrganization(Contact from,
-      Organization to) {
+                                                              Organization to) {
     to.setRevenue(from.getRevenue());
     to.setEmployees(from.getEmployees());
     to.setDunsType(from.getDunsType());
@@ -1301,13 +1315,10 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Logs an error when a record fails
-   * 
-   * @param error
-   *          Description of the Parameter
-   * @param line
-   *          Description of the Parameter
-   * @param lineNumber
-   *          Description of the Parameter
+   *
+   * @param error      Description of the Parameter
+   * @param line       Description of the Parameter
+   * @param lineNumber Description of the Parameter
    */
   private void recordError(String error, String line, int lineNumber) {
     try {
@@ -1338,11 +1349,9 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Gets the value attribute of the ContactImport object
-   * 
-   * @param thisRecord
-   *          Description of the Parameter
-   * @param type
-   *          Description of the Parameter
+   *
+   * @param thisRecord Description of the Parameter
+   * @param type       Description of the Parameter
    * @return The value value
    */
   private String getValue(ArrayList thisRecord, Property type) {
@@ -1358,12 +1367,10 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Description of the Method
-   * 
-   * @param db
-   *          Description of the Parameter
+   *
+   * @param db Description of the Parameter
    * @return Description of the Return Value
-   * @throws SQLException
-   *           Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -1389,12 +1396,10 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Deletes the import
-   * 
-   * @param db
-   *          Description of the Parameter
+   *
+   * @param db Description of the Parameter
    * @return Description of the Return Value
-   * @throws SQLException
-   *           Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     try {
@@ -1424,14 +1429,11 @@ public class ContactImport extends Import implements Runnable {
 
   /**
    * Deletes all imported records
-   * 
-   * @param db
-   *          Description of the Parameter
-   * @param thisImportId
-   *          Description of the Parameter
+   *
+   * @param db           Description of the Parameter
+   * @param thisImportId Description of the Parameter
    * @return Description of the Return Value
-   * @throws SQLException
-   *           Description of the Exception
+   * @throws SQLException Description of the Exception
    */
   public static boolean deleteImportedRecords(Connection db, int thisImportId)
       throws SQLException {
@@ -1481,4 +1483,84 @@ public class ContactImport extends Import implements Runnable {
     }
     return true;
   }
+
+  private ArrayList getContactTypeList(Connection db, int category, String propertyValue, String tokenizer) throws SQLException {
+    ContactTypeList contactTypeList = new ContactTypeList();
+    contactTypeList.setCategory(category);
+    contactTypeList.buildList(db);
+    ArrayList typeList = new ArrayList();
+    ContactType thisContactType = null;
+    if (propertyValue.indexOf(tokenizer) == -1) {
+      try {
+        thisContactType = null;
+        thisContactType =
+            contactTypeList.getElement(Integer.parseInt(propertyValue));
+      } catch (NumberFormatException nfe) {
+
+      }
+      if (thisContactType != null) {
+        typeList.add(propertyValue);
+      } else {
+        return null;
+      }
+    } else {
+      StringTokenizer tokens = new StringTokenizer(
+          propertyValue, tokenizer);
+      while (tokens.hasMoreTokens()) {
+        String tmp = tokens.nextToken();
+        try {
+          thisContactType = null;
+          thisContactType = contactTypeList.getElement(Integer.parseInt(tmp));
+        } catch (NumberFormatException nfe) {
+
+        }
+        if (thisContactType != null) {
+          typeList.add(tmp);
+        } else {
+          return null;
+        }
+      }
+
+    }
+    return typeList;
+  }
+
+  private ArrayList getAccountTypeList(Connection db, String propertyValue, String tokenizer) throws SQLException {
+    LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+    ArrayList typeList = new ArrayList();
+    boolean accountType = false;
+    if (propertyValue.indexOf(tokenizer) == -1) {
+      try {
+        accountType =
+            accountTypeList.hasCode(Integer.parseInt(propertyValue));
+      } catch (NumberFormatException nfe) {
+
+      }
+      if (accountType) {
+        typeList.add(propertyValue);
+      } else {
+        return null;
+      }
+    } else {
+      StringTokenizer tokens = new StringTokenizer(
+          propertyValue, tokenizer);
+      while (tokens.hasMoreTokens()) {
+        String tmp = tokens.nextToken();
+        try {
+          accountType = false;
+          accountType = accountTypeList.hasCode(Integer.parseInt(tmp));
+        } catch (NumberFormatException nfe) {
+
+        }
+        if (accountType) {
+          typeList.add(tmp);
+        } else {
+          return null;
+        }
+      }
+
+    }
+    return typeList;
+  }
+
 }

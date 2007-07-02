@@ -68,3 +68,5 @@
 2007-05-04-script01-rajendra.bsh
 2007-05-09-script01-alugubillis.sql
 
+# CMS Meta-tag
+2007-04-03-script1-yury.sql

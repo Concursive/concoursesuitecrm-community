@@ -57,12 +57,13 @@
   </tr>
 	<tr class="containerBody">
     <td nowrap class="formLabel">
-      <dhv:label name="">Title</dhv:label>
+      <dhv:label name="website.tab.title">Title</dhv:label>
     </td>
 		<td>
       <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
         <input type="text" size="35" maxlength="300" name="displayText" value="<%= toHtmlValue(tab.getDisplayText()) %>"><font color="red">*</font>
-      </td><td valign="top" nowrap>&nbsp;
+        <br />
+        <dhv:label name="website.tab.meta.title">(This will become the page's Meta-Title)</dhv:label>&nbsp;
         <%= showAttribute(request, "displayTextError") %>
       </td></tr></table>
 		</td>
@@ -77,12 +78,28 @@
   </tr>
 	<tr class="containerBody">
 		<td nowrap class="formLabel">
-			<dhv:label name="">Internal Description</dhv:label>
+			<dhv:label name="website.tab.internal.description">Internal Description</dhv:label>
 		</td>
 		<td>
-			<TEXTAREA NAME="internalDescription" ROWS="3" COLS="50"><%= toString(tab.getInternalDescription()) %></TEXTAREA>
+      <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+        <TEXTAREA NAME="internalDescription" ROWS="3" COLS="50"><%= toString(tab.getInternalDescription()) %></TEXTAREA>
+        <br />
+        <dhv:label name="website.tab.meta.description">(This will become the page's Meta-Description)</dhv:label>
+      </td></tr></table>
 		</td>
 	</tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="website.tab.keywords">Keywords</dhv:label>
+    </td>
+    <td>
+    <table border="0" cellpadding="0" cellspacing="0" class="empty"><tr><td valign="top">
+        <input type="text" size="35" name="keywords" value="<%= toHtmlValue(tab.getKeywords()) %>" />
+        <br />
+        <dhv:label name="website.tab.meta.keywords">(This will become the page's Meta-Keywords)</dhv:label>
+      </td></tr></table>
+    </td>
+  </tr>
 </table>
 <br />
 <dhv:evaluate if="<%= tab.getId() > -1 %>">

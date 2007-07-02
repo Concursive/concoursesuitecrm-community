@@ -49,6 +49,7 @@ public class Property implements Cloneable {
   private boolean isForPrompting = true;
   private ArrayList aliases = null;
   private ArrayList dependencies = null;
+  private String tokenizer = null;
 
 
   /**
@@ -66,10 +67,28 @@ public class Property implements Cloneable {
    *
    * @param  tmp  The new dependencies value
    */
+  
   public void setDependencies(ArrayList tmp) {
     this.dependencies = tmp;
   }
+  /**
+   *  Gets the tokenizer attribute of the Property object
+   *
+   * @return    The tokenizer value
+   */
+  public String getTokenizer() {
+    return tokenizer;
+  }
 
+
+  /**
+   *  Sets the tokenizer attribute of the Property object
+   *
+   * @param  tmp  The new tokenizer value
+   */
+  public void setTokenizer(String tmp) {
+    this.tokenizer = tmp;
+  }
 
   /**
    * Constructor for the Property object
@@ -144,6 +163,12 @@ public class Property implements Cloneable {
     tmpValue = ((Element) n).getAttribute("substitute");
     if (!"".equals(StringUtils.toString(tmpValue))) {
       this.setSubstitute(tmpValue);
+    }
+    
+    //tokenizer properties
+    tmpValue = ((Element) n).getAttribute("tokenizer");
+    if (!"".equals(StringUtils.toString(tmpValue))) {
+      this.setTokenizer(tmpValue);
     }
 
     //Check for any dependent properties

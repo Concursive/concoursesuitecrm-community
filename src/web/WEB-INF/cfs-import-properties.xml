@@ -18,7 +18,7 @@
         <property aliases="nickname,nick_name" displayName="Nickname">nickname</property>
         <property aliases="birthday, birthdate, date of birth" displayName="Date of Birth">birthDate</property>
         <property aliases="role" displayName="Role">role</property>
-        <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
+        <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Contact Type" isForPrompting="true">contactTypeId</property>
         <property aliases="site" displayName="Site" isForPrompting="false">site</property>
         <property aliases="siteid,site_id,site id" displayName="Site Id">siteId</property>
         <property aliases="sitename,site name,site_Name" displayName="Site Name">siteName</property>
@@ -80,7 +80,8 @@
         <property aliases="nickname,nick_name" displayName="Nickname">nickname</property>
         <property aliases="birthday, birthdate, date of birth" displayName="Date of Birth">birthDate</property>
         <property aliases="role" displayName="Role">role</property>
-        <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type" isForPrompting="false">typeId</property>
+        <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Account Contact Type" isForPrompting="true">contactTypeId</property>
+        <property aliases="account_type" multiple="true" tokenizer="," displayName="Account Type" isForPrompting="true">accountTypeId</property>
         <property aliases="site" displayName="Site" isForPrompting="false">site</property>
         <property aliases="siteid,site_id,site id" displayName="Site Id">siteId</property>
         <property aliases="sitename,site name,site_Name" displayName="Site Name">siteName</property>

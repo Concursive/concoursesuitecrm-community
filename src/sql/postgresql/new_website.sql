@@ -74,7 +74,8 @@ CREATE TABLE web_tab (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  keywords VARCHAR(300)
 );
 
 CREATE TABLE web_page_version (
@@ -127,7 +128,8 @@ CREATE TABLE web_page (
   modifiedby INT NOT NULL REFERENCES access(user_id),
   page_alias INT REFERENCES web_page(page_id),
   link_module_id int REFERENCES permission_category (category_id),
-  link_container_id int REFERENCES lookup_container_menu(code)
+  link_container_id int REFERENCES lookup_container_menu(code),
+  keywords VARCHAR(300)
 );
 
 ALTER TABLE web_page_version ADD COLUMN page_id INT REFERENCES web_page(page_id);

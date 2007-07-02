@@ -31,6 +31,7 @@
 <html>
 <head>
   <title><%= toHtml(site.getName()) %>: <%= toHtml(site.getTabToDisplay().getDisplayText()) %></title>
+  <dhv:meta />
   <link rel="stylesheet" href="portal/styles/style_global.css" type="text/css">
   <link rel="stylesheet" href="portal/styles/<%= style.getCss() %>" type="text/css">
 </head>

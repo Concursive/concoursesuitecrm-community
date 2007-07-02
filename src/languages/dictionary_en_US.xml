@@ -2829,6 +2829,42 @@
     <param name="website.portfolio.oneItem">
       <value><![CDATA[1 Item]]></value>
     </param>
+    <param name="website.page.name">
+      <value><![CDATA[Name]]></value>
+    </param>
+    <param name="website.page.internal.description">
+      <value><![CDATA[Internal Description]]></value>
+    </param>
+    <param name="website.page.keywords">
+      <value><![CDATA[Keywords]]></value>
+    </param>
+		<param name="website.page.meta.title">
+      <value><![CDATA[(This will become the page's Meta-Title)]]></value>
+    </param>
+    <param name="website.page.meta.description">
+      <value><![CDATA[(This will become the page's Meta-Description)]]></value>
+    </param>
+    <param name="website.page.meta.keywords">
+      <value><![CDATA[(This will become the page's Meta-Keywords)]]></value>
+    </param>
+    <param name="website.tab.title">
+      <value><![CDATA[Title]]></value>
+    </param>
+    <param name="website.tab.internal.description">
+      <value><![CDATA[Internal Description]]></value>
+    </param>
+    <param name="website.tab.keywords">
+      <value><![CDATA[Keywords]]></value>
+    </param>
+		<param name="website.tab.meta.title">
+      <value><![CDATA[(This will become the tab's Meta-Title)]]></value>
+    </param>
+    <param name="website.tab.meta.description">
+      <value><![CDATA[(This will become the tab's Meta-Description)]]></value>
+    </param>
+    <param name="website.tab.meta.keywords">
+      <value><![CDATA[(This will become the tab's Meta-Keywords)]]></value>
+    </param>  
     <param name="website.portfolio.oneCategory">
       <value><![CDATA[1 Category]]></value>
     </param>

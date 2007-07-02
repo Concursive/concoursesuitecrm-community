@@ -909,4 +909,20 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  <tag>
+    <name>meta</name>
+    <tag-class>org.aspcfs.taglib.MetaTagOutputHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>Constructs a meta tag for the website</display-name>
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>content</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>

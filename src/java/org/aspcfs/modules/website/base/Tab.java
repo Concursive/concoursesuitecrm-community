@@ -36,6 +36,7 @@ public class Tab extends GenericBean {
   public final static int INITIAL_POSITION = 0;
   private int id = -1;
   private String displayText = null;
+  private String keywords =null;
   private String internalDescription = null;
   private int siteId = -1;
   private int position = -1;
@@ -117,6 +118,15 @@ public class Tab extends GenericBean {
    */
   public void setDisplayText(String tmp) {
     this.displayText = tmp;
+  }
+  
+  /**
+   *  Sets the keywords attribute of the Tab object
+   *
+   * @param  tmp  The new keywords value
+   */
+  public void setKeywords(String tmp) {
+    this.keywords = tmp;
   }
 
 
@@ -428,6 +438,16 @@ public class Tab extends GenericBean {
   public String getDisplayText() {
     return displayText;
   }
+  
+  
+  /**
+   *  Gets the keywords attribute of the Tab object
+   *
+   * @return    The keywords value
+   */
+  public String getKeywords() {
+    return keywords;
+  }
 
 
   /**
@@ -724,8 +744,9 @@ public class Tab extends GenericBean {
         "tab_position , " +
         "enabled , " +
         "enteredby , " +
-        "modifiedby ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?)");
+        "modifiedby , " +
+        "keywords )" +
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -737,6 +758,7 @@ public class Tab extends GenericBean {
     pst.setBoolean(++i, enabled);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, modifiedBy);
+    pst.setString(++i, keywords);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_tab_tab_id_seq", id);
     pst.close();
@@ -765,6 +787,7 @@ public class Tab extends GenericBean {
         "internal_description = ? , " +
         "site_id = ? , " +
         "tab_position = ? , " +
+        "keywords = ? , " +
         "enabled = ?  ");
 
     if (!override) {
@@ -782,6 +805,7 @@ public class Tab extends GenericBean {
     pst.setString(++i, internalDescription);
     DatabaseUtils.setInt(pst, ++i, siteId);
     pst.setInt(++i, position);
+    pst.setString(++i, keywords);
     pst.setBoolean(++i, enabled);
     if (!override) {
       pst.setInt(++i, modifiedBy);
@@ -870,6 +894,7 @@ public class Tab extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    keywords = rs.getString("keywords");
   }
 
 

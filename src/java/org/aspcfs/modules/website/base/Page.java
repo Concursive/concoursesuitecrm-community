@@ -36,6 +36,7 @@ public class Page extends GenericBean {
   public final static int INITIAL_POSITION = 0;
   private int id = -1;
   private String name = null;
+  private String keywords = null;
   private int position = -1;
   private int activePageVersionId = -1;
   private int constructionPageVersionId = -1;
@@ -124,6 +125,15 @@ public class Page extends GenericBean {
    */
   public void setName(String tmp) {
     this.name = tmp;
+  }
+
+  /**
+   *  Sets the keywords attribute of the Tab object
+   *
+   * @param  tmp  The new keywords value
+   */
+  public void setKeywords(String tmp) {
+    this.keywords = tmp;
   }
 
 
@@ -488,7 +498,17 @@ public class Page extends GenericBean {
 
 
   /**
-   * Gets the position attribute of the Page object
+   *  Gets the keywords attribute of the Page object
+   *
+   * @return    The keywords value
+   */
+  public String getKeywords() {
+    return keywords;
+  }
+
+
+  /**
+   *  Gets the position attribute of the Page object
    *
    * @return The position value
    */
@@ -839,8 +859,9 @@ public class Page extends GenericBean {
         "enteredby , " +
         "modifiedby, page_alias, " +
         "link_module_id,  " +
-        "link_container_id) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?, ?)");
+        "link_container_id, " +
+        "keywords ) " +
+        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
@@ -858,12 +879,11 @@ public class Page extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, alias);
     DatabaseUtils.setInt(pst, ++i, linkModuleId);
     DatabaseUtils.setInt(pst, ++i, linkContainerId);
+    pst.setString(++i, keywords);
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "web_page_page_id_seq", id);
     pst.close();
-
     updateRelatedPages(db, true);
-
     return true;
   }
 
@@ -891,8 +911,7 @@ public class Page extends GenericBean {
         "notes = ? , " +
         "enabled = ?, page_alias = ?, " +
         "link_module_id = ?, " +
-        "link_container_id = ?  ");
-
+        "link_container_id = ?, keywords = ? ");
     if (!override) {
       sql.append(
           " , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
@@ -915,6 +934,7 @@ public class Page extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, alias);
     DatabaseUtils.setInt(pst, ++i, linkModuleId);
     DatabaseUtils.setInt(pst, ++i, linkContainerId);
+    pst.setString(++i, keywords);
     if (!override) {
       pst.setInt(++i, modifiedBy);
     }
@@ -924,7 +944,6 @@ public class Page extends GenericBean {
     }
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
@@ -1034,6 +1053,7 @@ public class Page extends GenericBean {
     alias = DatabaseUtils.getInt(rs, "page_alias");
     linkModuleId = DatabaseUtils.getInt(rs, "link_module_id");
     linkContainerId = DatabaseUtils.getInt(rs, "link_container_id");
+    keywords = rs.getString("keywords");
   }
 
 
