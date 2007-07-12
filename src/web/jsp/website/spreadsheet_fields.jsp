@@ -47,6 +47,10 @@
 
 </script>
 <script language="JavaScript" type="text/javascript">
+function loadRowsCols() {
+  window.opener.document.forms[0].prevRows.value = '<%=rows%>';
+  window.opener.document.forms[0].prevCols.value = '<%=cols%>';
+}
 function apply() {
   var cellValue = "";
   var queryString = "";
@@ -215,7 +219,7 @@ function previewGen() {
 }
 </script>
 
-<body>
+<body onLoad="javascript:loadRowsCols();">
 
 <table><tr><td><strong>Selected Folder Data</strong></td></tr>
   <tr><td>&nbsp;</td></tr>

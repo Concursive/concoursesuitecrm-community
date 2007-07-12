@@ -309,7 +309,7 @@ public final class DocumentStoreManagementTeam extends CFSModule {
       if (currentMember.getRoleId() <= Integer.parseInt(newRole)) {
         boolean changed = DocumentStoreTeamMember.changeRole(
             db, thisDocumentStore.getId(), Integer.parseInt(itemId), Integer.parseInt(
-                newRole), memberType, Integer.parseInt(siteId));
+                newRole), memberType, Integer.parseInt(siteId), currentMember.getUserLevel());
         if (!changed) {
           return ("ChangeRoleERROR");
         }

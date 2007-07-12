@@ -83,6 +83,8 @@
   String selectedFolderName = "";
   int rows = 0;
   int columns = 0;
+  int prevRows = 0;
+  int prevCols = 0;
   String selectedMajorAxisField = "";
   String isXAxisChecked = "checked";
   String isYAxisChecked = "";
@@ -405,6 +407,8 @@
 </dhv:evaluate>
 
 <dhv:evaluate if="<%= property.getType().equals(IceletProperty.ROWS_COLUMNS_COUNT) %>">
+ <input type="hidden" name="prevRows" id="prevRows" value="<%=prevRows%>"/>
+ <input type="hidden" name="prevCols" id="prevCols" value="<%=prevCols%>"/>
   <%
     String rowsColumns = toHtmlValue(rowColumn.getIceletPropertyMap() != null && rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant())) != null && ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() != null ? ((IceletProperty) rowColumn.getIceletPropertyMap().get(new Integer(property.getTypeConstant()))).getValue() : property.getDefaultValue());
     if (rowsColumns.contains(",")) {

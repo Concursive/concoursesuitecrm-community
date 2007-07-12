@@ -227,7 +227,7 @@ public class FolderUtils {
 				if (thisCell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
 					previewContent.append(thisCell.getNumericCellValue());
 				} else {
-					previewContent.append(thisCell.getStringCellValue());
+					previewContent.append(thisCell.getStringCellValue().trim());
 				}
 				previewContent.append("0xfff");
 			}
@@ -237,8 +237,8 @@ public class FolderUtils {
 	
 	/**
 	 * checks whether the given field exists or not.
-	 * @param String fieldId
-	 * @param CustomFieldCategory categoryList	 
+	 * @param fieldId
+	 * @param categoryList	 
 	 * @return boolean return true if it exists otherwise false
 	 */
 	public static boolean fieldExists(String fieldId, CustomFieldCategory categoryList) {		

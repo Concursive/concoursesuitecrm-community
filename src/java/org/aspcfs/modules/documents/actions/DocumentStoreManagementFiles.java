@@ -641,7 +641,7 @@ public final class DocumentStoreManagementFiles extends CFSModule {
           db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
       if (!hasDocumentStoreAccess(
-          context, db, thisDocumentStore, "documentcenter-documents-files-deletee")) {
+          context, db, thisDocumentStore, "documentcenter-documents-files-delete")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);

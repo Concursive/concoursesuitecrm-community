@@ -268,6 +268,10 @@ function popConfigureSpreadSheet(folderId, configurePropertyName, rows, cols, pr
  if(document.getElementById("hiddenConfigureSheet")!=null){
        finalString = document.getElementById("hiddenConfigureSheet").value;
   }
+  if(previousRows == 0 || previousColumns == 0) {
+    previousRows = document.getElementById("prevRows").value;
+    previousColumns = document.getElementById("prevCols").value;
+  }  
   var posx = (screen.width - width) / 2;
   var posy = (screen.height - height) / 2;
   var hiddenTextValue = document.getElementById("hiddenText").value;

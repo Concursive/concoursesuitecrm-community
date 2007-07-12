@@ -37,7 +37,7 @@ import java.util.HashMap;
  * @created April 06, 2007
  */
 public class FolderPortlet extends GenericPortlet {
-	
+
 	public final static String SELECT_FOLDER = "7031914";
 	public final static String NUMBER_OF_RECORDS = "7031915";
 	public final static String FOLDER_ACCESS_VIEW = "7031916";
@@ -52,7 +52,7 @@ public class FolderPortlet extends GenericPortlet {
 	private final static String VIEW_PAGE3 = "/portlets/folder/fields_modify.jsp";
 	private final static String VIEW_PAGE4 = "/portlets/folder/fields.jsp";
 	private final static String VIEW_PAGE5 = "/portlets/folder/fields_delete_error.jsp";
-	
+
 	/**
 	 * doView method of FolderPortlet
 	 *
@@ -88,7 +88,7 @@ public class FolderPortlet extends GenericPortlet {
 			requestDispatcher.include(request, response);
 		}
 	}
-	
+
 	/**
 	 * process action method of FolderPortlet
 	 *
@@ -104,7 +104,7 @@ public class FolderPortlet extends GenericPortlet {
 			updateFields(request, response);
 		}
 	}
-	
+
 	/**
 	 * Deletes selected record
 	 *
@@ -130,7 +130,7 @@ public class FolderPortlet extends GenericPortlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * build list of folder records from portlet preferences
 	 *
@@ -149,7 +149,7 @@ public class FolderPortlet extends GenericPortlet {
 		ArrayList recordCategories = new ArrayList();
 		int noOfRecords = 0;
 		PagedListInfo recordListInfo = null;
-		
+
 		try {
 			String field = null;
 			boolean valid = true;
@@ -166,11 +166,11 @@ public class FolderPortlet extends GenericPortlet {
 			String fieldList = request.getPreferences().getValue(FIELDS_TO_DISPLAY, "false");
 			thisCategory.setBuildResources(true);
 			thisCategory.buildResources(db);
-			
+
 			if(fieldList != null && !fieldList.equals("")){
 				String commSeperatValues[] = fieldList.split(",");
-				for(int i = 0;i < commSeperatValues.length;i++){					
-					field = commSeperatValues[i].substring(0,commSeperatValues[i].indexOf(":"));					
+				for(int i = 0;i < commSeperatValues.length;i++){
+					field = commSeperatValues[i].substring(0,commSeperatValues[i].indexOf(":"));
 					if(FolderUtils.fieldExists(field, thisCategory)) {
 						displayInList.add(new Integer(commSeperatValues[i].substring(0,commSeperatValues[i].indexOf(":"))));
 					} else {
@@ -214,8 +214,8 @@ public class FolderPortlet extends GenericPortlet {
 					HashMap totalMap = new HashMap();
 					HashMap avgMap = new HashMap();
 					Iterator iterator = list.iterator();
-					int fieldId = 0, key = 1;      
-					while(iterator.hasNext()) {      	
+					int fieldId = 0, key = 1;
+					while(iterator.hasNext()) {
 						fieldId = (Integer)iterator.next();
 						totalMap.put(key, thisCategory.getFieldTotal(db, fieldId));
 						avgMap.put(key, thisCategory.getFieldAverage(db, fieldId));
@@ -224,7 +224,7 @@ public class FolderPortlet extends GenericPortlet {
 					request.setAttribute("totalMap", totalMap);
 					request.setAttribute("avgMap", avgMap);
 					request.getPortletSession().setAttribute("offset", offset);
-					
+
 					int temp = 0;
 					String randomNum = Integer.toString((temp = new Random().nextInt()) > 0 ? temp / 10000 : (-temp / 10000));
 					request.setAttribute("randomNum", randomNum);
@@ -237,15 +237,15 @@ public class FolderPortlet extends GenericPortlet {
 					if(request.getPortletSession().getAttribute("isRecordId") != null) {
 						request.setAttribute("isRecordId",request.getPortletSession().getAttribute("isRecordId"));
 						request.getPortletSession().removeAttribute("isRecordId");
-					}		
-					renderPortlet = Constants.SUCCESS;					
-			} 
+					}
+					renderPortlet = Constants.SUCCESS;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 		return renderPortlet;
-	}	
-	
+	}
+
 	/**
 	 * renders the add record page into portlet
 	 *
@@ -274,14 +274,14 @@ public class FolderPortlet extends GenericPortlet {
 		requestDispatcher = getPortletContext().getRequestDispatcher(VIEW_PAGE2);
 		requestDispatcher.include(request, response);
 	}
-	
+
 	/**
 	 * new record insertion into databse
 	 *
 	 * @param request  ActionRequest
 	 * @param response ActionResponse
 	 */
-	
+
 	private void insertFields(ActionRequest request, ActionResponse response)
 	throws PortletException, IOException {
 		int resultCode;
@@ -322,14 +322,14 @@ public class FolderPortlet extends GenericPortlet {
 					thisRecord.setCategoryId(newCategory.getId());
 					thisRecord.setId(newCategory.getRecordId());
 					thisRecord.delete(db);
-					
+
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * renders modify record page
 	 *
@@ -354,7 +354,7 @@ public class FolderPortlet extends GenericPortlet {
 			thisCategory.setIncludeScheduled(Constants.TRUE);
 			thisCategory.setBuildResources(true);
 			thisCategory.buildResources(db);
-			
+
 			recordList = new CustomFieldRecordList();
 			recordList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
 			recordList.setCategoryId(thisCategory.getId());
@@ -376,7 +376,7 @@ public class FolderPortlet extends GenericPortlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * update record
 	 *
@@ -397,7 +397,7 @@ public class FolderPortlet extends GenericPortlet {
 			thisCategory = new CustomFieldCategory(db, categoryId);
 			String recordId = request.getParameter("recordId");
 			String beforeModifyTimeStamp = request.getParameter("beforeModifyTimeStamp");
-			
+
 			recordList = new CustomFieldRecordList();
 			recordList.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
 			recordList.setCategoryId(thisCategory.getId());
@@ -410,7 +410,7 @@ public class FolderPortlet extends GenericPortlet {
 					break;
 			}
 			request.getPortletSession().setAttribute("isRecordId",isRecordId);
-			
+
 			if(thisRecord.getModified().toString().equals(beforeModifyTimeStamp)) {
 				thisCategory.setLinkModuleId(Constants.FOLDERS_GLOBALFOLDERS);
 				thisCategory.setIncludeEnabled(Constants.TRUE);
@@ -463,7 +463,7 @@ public class FolderPortlet extends GenericPortlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * build record details
 	 *

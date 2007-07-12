@@ -49,7 +49,7 @@ public class DocumentStoreManagementAccounts extends CFSModule {
       db = getConnection(context);
       DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));
       thisDocumentStore.buildPermissionList(db);
-      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "accounts-accounts-documentstore-view")) {
+      if (!hasDocumentStoreAccess(context, db, thisDocumentStore, "documentcenter-accounts-view")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("documentStore", thisDocumentStore);
@@ -99,7 +99,7 @@ public class DocumentStoreManagementAccounts extends CFSModule {
       DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));      
       thisDocumentStore.buildPermissionList(db);
       if (!hasDocumentStoreAccess(
-          context, db, thisDocumentStore, "accounts-accounts-documentstore-add")) {
+          context, db, thisDocumentStore, "documentcenter-accounts-add")) {
         return "PermissionError";
       }
       AccountDocumentList accountDocumentList = new AccountDocumentList();
@@ -143,7 +143,7 @@ public class DocumentStoreManagementAccounts extends CFSModule {
       DocumentStore thisDocumentStore = new DocumentStore(db, Integer.parseInt(documentStoreId));      
       thisDocumentStore.buildPermissionList(db);
       if (!hasDocumentStoreAccess(
-          context, db, thisDocumentStore, "accounts-accounts-documentstore-delete")) {
+          context, db, thisDocumentStore, "documentcenter-accounts-delete")) {
         return "PermissionError";
       }
       AccountDocumentList accountDocumentList = new AccountDocumentList();

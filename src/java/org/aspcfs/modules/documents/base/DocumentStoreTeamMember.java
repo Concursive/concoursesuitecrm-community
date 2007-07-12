@@ -522,31 +522,33 @@ public class DocumentStoreTeamMember {
 
     //fetch the role explicitly assigned to the user for the document store
     PreparedStatement pst = null;
+    ResultSet rs = null;
     int tmpDocumentStoreRoleId = -1;
     int tmpDocumentStoreUserLevel = -1;
-    pst = db.prepareStatement(
-        "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
-            "FROM document_store_user_member m, lookup_document_store_role r " +
-            "WHERE m.document_store_id = ? " +
-            "AND m.item_id = ? " +
-            "AND m.userlevel = r.code " +
-            "AND m.site_id " + (tmpSiteId == -1 ? " IS NULL " : " = ? "));
-    pst.setInt(1, tmpDocumentStoreId);
-    pst.setInt(2, tmpTeamId);
-    if (tmpSiteId > -1) {
-      pst.setInt(3, tmpSiteId);
+    if (tmpTeamId != -1){
+	    pst = db.prepareStatement(
+	        "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
+	            "FROM document_store_user_member m, lookup_document_store_role r " +
+	            "WHERE m.document_store_id = ? " +
+	            "AND m.item_id = ? " +
+	            "AND m.userlevel = r.code " +
+	            "AND m.site_id " + (tmpSiteId == -1 ? " IS NULL " : " = ? "));
+	    pst.setInt(1, tmpDocumentStoreId);
+	    pst.setInt(2, tmpTeamId);
+	    if (tmpSiteId > -1) {
+	      pst.setInt(3, tmpSiteId);
+	    }
+	    rs = pst.executeQuery();
+	    if (rs.next()) {
+	      buildRecord(rs);
+	    }
+	    rs.close();
+	    pst.close();
+	    tmpDocumentStoreRoleId = this.getRoleId();
+	    tmpDocumentStoreUserLevel = this.getUserLevel();
     }
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      buildRecord(rs);
-      tmpDocumentStoreRoleId = this.getRoleId();
-      tmpDocumentStoreUserLevel = this.getUserLevel();
-    }
-    rs.close();
-    pst.close();
-    if (tmpDocumentStoreRoleId == -1) {
-      //get  User Role - Document store role mapping if user is not explicitly assigned
-      //to the document store
+    //get the acccess level if the permissions for the role that the user is in is higher than that provided explicitly for the user
+    if (tmpUserRoleId != -1) {
       pst = db.prepareStatement(
           "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
               "FROM document_store_role_member m, lookup_document_store_role r " +
@@ -562,39 +564,41 @@ public class DocumentStoreTeamMember {
       rs = pst.executeQuery();
       if (rs.next()) {
         buildRecord(rs);
-        tmpDocumentStoreRoleId = this.getRoleId();
-        tmpDocumentStoreUserLevel = this.getUserLevel();
       }
       rs.close();
       pst.close();
-
-      //get  Department - Document store role mapping if user is not explicitly assigned
-      //to the document store
-      if (tmpDepartmentId != -1) {
-        pst = db.prepareStatement(
-            "SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
-                "FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " m, lookup_document_store_role r " +
-                "WHERE m.document_store_id = ? " +
-                "AND m.item_id = ? " +
-                "AND m.userlevel = r.code " +
-                "AND m.site_id " + (tmpSiteId == -1 ? " IS NULL " : " = ? "));
-        pst.setInt(1, tmpDocumentStoreId);
-        pst.setInt(2, tmpDepartmentId);
-        if (tmpSiteId > -1) {
-          pst.setInt(3, tmpSiteId);
-        }
-        rs = pst.executeQuery();
-        if (rs.next()) {
-          buildRecord(rs);
-        }
-        rs.close();
-        pst.close();
-        //assign the higher of the roles (i.e., 1 is higher than 2!)
-        if (tmpDocumentStoreRoleId > this.getRoleId()) {
-          tmpDocumentStoreRoleId = this.getRoleId();
-          tmpDocumentStoreUserLevel = this.getUserLevel();
-        }
-      }
+    	//assign the higher of the roles (i.e., 1 is higher than 2!)
+    	if (tmpDocumentStoreRoleId > this.getRoleId()) {
+    		tmpDocumentStoreRoleId = this.getRoleId();
+    		tmpDocumentStoreUserLevel = this.getUserLevel();
+    	}
+    }
+    
+    //get the acccess level if the permissions for the department that the user is in is higher than the role that the user is in
+    if (tmpDepartmentId != -1) {
+    	pst = db.prepareStatement(
+    			"SELECT m.*, r." + DatabaseUtils.addQuotes(db, "level") + " " +
+    			"FROM " + DatabaseUtils.getTableName(db, "document_store_department_member") + " m, lookup_document_store_role r " +
+    			"WHERE m.document_store_id = ? " +
+    			"AND m.item_id = ? " +
+    			"AND m.userlevel = r.code " +
+    			"AND m.site_id " + (tmpSiteId == -1 ? " IS NULL " : " = ? "));
+    	pst.setInt(1, tmpDocumentStoreId);
+    	pst.setInt(2, tmpDepartmentId);
+    	if (tmpSiteId > -1) {
+    		pst.setInt(3, tmpSiteId);
+    	}
+    	rs = pst.executeQuery();
+    	if (rs.next()) {
+    		buildRecord(rs);
+    	}
+    	rs.close();
+    	pst.close();
+    	//assign the higher of the roles (i.e., 1 is higher than 2!)
+    	if (tmpDocumentStoreRoleId > this.getRoleId()) {
+    		tmpDocumentStoreRoleId = this.getRoleId();
+    		tmpDocumentStoreUserLevel = this.getUserLevel();
+    	}
     }
     if (tmpDocumentStoreRoleId == -1) {
       throw new SQLException("Member record not found.");
@@ -755,42 +759,24 @@ public class DocumentStoreTeamMember {
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
-  public static boolean changeRole(Connection db, int tmpDocumentStoreId, int tmpItemId, int tmpUserLevel, String tmpMemberType, int siteId) throws SQLException {
-    String tableName = DocumentStoreTeamMember.getTableName(tmpMemberType, db);
-    //Check current level, if user is not a leader than it doesn't matter what the change is
-    PreparedStatement pst = db.prepareStatement(
-        " SELECT " + DatabaseUtils.addQuotes(db, "level") + " " +
-            " FROM lookup_document_store_role " +
-            " WHERE code IN (SELECT userlevel FROM " + tableName + " WHERE document_store_id = ? AND item_id = ? AND site_id " + (siteId == -1 ? " IS NULL) " : "= ?) "));
-    pst.setInt(1, tmpDocumentStoreId);
-    pst.setInt(2, tmpItemId);
-    if (siteId != -1) {
-      DatabaseUtils.setInt(pst, 3, siteId);
-    }
-    ResultSet rs = pst.executeQuery();
-    int previousLevel = -1;
-    while (rs.next()) {
-      previousLevel = rs.getInt("level");
-      if (previousLevel <= DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER) {
-        break;
-      }
-    }
-    rs.close();
-    pst.close();
-    if (previousLevel <= DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER) {
-      //Make sure that there is at least 1 other user with lead status before changing
+  public static boolean changeRole(Connection db, int tmpDocumentStoreId, int tmpItemId, int tmpUserLevel, String tmpMemberType, int siteId, int effectiveAccessLevel) throws SQLException {
+   PreparedStatement pst = null;
+   ResultSet rs = null;
+   //Make sure that there is at least 1 other user (user membership) with manager status before changing if the access
+   //level is being changed for a user
+   
+   if ((effectiveAccessLevel == DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER) &&
+   (tmpUserLevel > DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER) &&
+   (tmpMemberType.equals(DocumentStoreTeamMemberList.USER))){
       pst = db.prepareStatement(
           " SELECT count(item_id) AS other " +
-              " FROM " + tableName +
+              " FROM document_store_user_member " +
               " WHERE document_store_id = ? " +
-              " AND userlevel IN (SELECT code FROM lookup_document_store_role WHERE " + DatabaseUtils.addQuotes(db, "level") + " <= ?) " +
-              " AND (item_id <> ? OR site_id " + (siteId == -1 ? " IS NOT NULL) " : " <> ?) "));
+              " AND userlevel IN (SELECT code FROM lookup_document_store_role WHERE " + DatabaseUtils.addQuotes(db, "level") + " = ?) " +
+              " AND item_id <> ? ");
       pst.setInt(1, tmpDocumentStoreId);
       pst.setInt(2, DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
       pst.setInt(3, tmpItemId);
-      if (siteId != -1) {
-        pst.setInt(4, siteId);
-      }
       rs = pst.executeQuery();
       int otherCount = -1;
       if (rs.next()) {
@@ -803,6 +789,7 @@ public class DocumentStoreTeamMember {
       }
     }
     //Now update the team
+   String tableName = DocumentStoreTeamMember.getTableName(tmpMemberType, db);
     pst = db.prepareStatement(
         " UPDATE " + tableName +
             " SET userlevel = ? " +

@@ -262,7 +262,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "tickets-view" + om)) {
           int ticketCount = 0;
           sql =
-              "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ";
+              "SELECT COUNT(*) as ticketcount FROM ticket WHERE assigned_to = ? AND closed IS NULL AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) AND trashed_date IS NULL";
           pst = db.prepareStatement(sql);
           pst.setInt(1, userId);
           rs = pst.executeQuery();
