@@ -96,6 +96,10 @@ public final class Login extends CFSModule {
     String username = loginBean.getUsername();
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
+    // Throw out empty passwords
+    if (password == null || "".equals(password.trim())) {
+      return "LoginRetry";
+    }
     //Prepare the gatekeeper
     String gkDriver = getPref(context, "GATEKEEPER.DRIVER");
     String gkHost = getPref(context, "GATEKEEPER.URL");
