@@ -41,6 +41,7 @@ public class HtmlSelectLanguage {
     select.setDefaultValue(defaultValue);
     // Chinese - Simplified ????
     select.addItem("sq_AL", "Alban\u00e9s");
+    select.addItem("bg_BG", "Bulgarian");
     select.addItem("zh_CN", "\u7b80\u4f53\u4e2d\u6587");
     select.addItem("zh_TW", "Chinese Traditional");
     select.addItem("no_NO", "Bokm\u221a\u2022l");
@@ -57,7 +58,8 @@ public class HtmlSelectLanguage {
     select.addItem("en_GB", "English - UK");
     select.addItem("en_US", "English - US");
     //Spanish
-    select.addItem("es_VE", "Espa\u00f1ol - VE");
+    select.addItem("es_VE", "Espa\u00f1ol (de America)");
+    select.addItem("es_ES", "Espa\u00f1ol (de Espa\u00f1a)");
     select.addItem("fi_FI", "Finnish");
     //French
     select.addItem("fr_FR", "Fran\u00e7ais - FR");
