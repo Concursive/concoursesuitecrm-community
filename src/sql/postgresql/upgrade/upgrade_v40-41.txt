@@ -107,3 +107,6 @@
 
 # Updating report_queue table
 2007-01-29-script01-zhenya.bsh
+
+# Fix for MySQL document versions
+2007-05-25-script01-mr.sql
