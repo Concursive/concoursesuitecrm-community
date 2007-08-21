@@ -804,6 +804,64 @@ public class Permission extends GenericBean {
     return true;
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @return Description of the Returned Value
+   * @throws SQLException 
+   */
+  public boolean update(Connection db) throws SQLException{
+    if(id < 0){
+      return false;
+    }
+    
+    StringBuffer sqlInsert = new StringBuffer( 
+      "UPDATE permission SET " +
+      "category_id = ?, " +
+      "permission = ?, " +
+      "permission_view = ?, " + "permission_add = ?, " + "permission_edit = ?, " + "permission_delete = ?, " +
+      "description = ?, " +
+      "level = ?, " +
+      "enabled = ?, " +
+      "active = ?, " +
+      "viewpoints = ?, " +
+      "permission_offline_view = ?, " + "permission_offline_add = ?, " + "permission_offline_edit = ?, " + "permission_offline_delete = ?, " +
+      "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+      "WHERE permission_id = ?");
+
+    PreparedStatement pst = db.prepareStatement(sqlInsert.toString());
+    int i = 0;
+    pst.setInt(++i, categoryId);
+    pst.setString(++i, name);
+    pst.setBoolean(++i, view);
+    pst.setBoolean(++i, add);
+    pst.setBoolean(++i, edit);
+    pst.setBoolean(++i, delete);
+    pst.setString(++i, description);
+    pst.setInt(++i, permissionLevel);
+    pst.setBoolean(++i, enabled);
+    pst.setBoolean(++i, active);
+    pst.setBoolean(++i, viewpoints);
+    pst.setBoolean(++i, offlineView);
+    pst.setBoolean(++i, offlineAdd);
+    pst.setBoolean(++i, offlineEdit);
+    pst.setBoolean(++i, offlineDelete);
+    pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
+    return true;
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @param name
+   * @return
+   * @throws SQLException Description of the Returned Value
+   */
   public static int lookupId(Connection db, String name) throws SQLException {
     if (name == null) {
       throw new SQLException("Invalid Permission Name");

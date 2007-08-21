@@ -527,4 +527,40 @@ public class RolePermission extends GenericBean {
     
     systemStatus.updateRolePermissions(db);
   }
+  
+  public boolean update(Connection db) throws SQLException{
+    if(id < 0){
+      return false;
+    }
+    StringBuffer sqlInsert = new StringBuffer( 
+      "UPDATE role_permission SET " +
+      "role_id = ?, " +
+      "permission_id = ?, " +
+      "role_view = ?, " +
+      "role_add = ?, " +
+      "role_edit = ?, " +
+      "role_delete = ?, " +
+      "role_offline_view = ?, " +
+      "role_offline_add = ?, " +
+      "role_offline_edit = ?, " +
+      "role_offline_delete = ?, " +
+      "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+      "WHERE id = ?");
+    PreparedStatement pst = db.prepareStatement(sqlInsert.toString());
+    int i = 0;
+    pst.setInt(++i, roleId);
+    pst.setInt(++i, permissionId);
+    pst.setBoolean(++i, view);
+    pst.setBoolean(++i, add);
+    pst.setBoolean(++i, edit);
+    pst.setBoolean(++i, delete);
+    pst.setBoolean(++i, offlineView);
+    pst.setBoolean(++i, offlineAdd);
+    pst.setBoolean(++i, offlineEdit);
+    pst.setBoolean(++i, offlineDelete);
+    pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
+    return true;
+  }
 }

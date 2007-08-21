@@ -1104,6 +1104,38 @@ public class PermissionCategory extends GenericBean {
     pst.close();
   }
 
+  /**
+   * Description of the Method
+   *
+   * @param constant
+   * @param db
+   * @return Description of the Returned Value
+   */
+  public static int getIdByConstant(int constant, Connection db){
+    PreparedStatement pst = null;
+    int id = -1;
+    try{
+      pst = db.prepareStatement(
+        "SELECT category_id " +
+        "FROM permission_category pc " +
+        "WHERE pc.constant = ? "
+      );
+      pst.setInt(1, constant);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        id = rs.getInt("category_id");
+      }
+    }catch(Throwable e){
+      return -1;
+    }finally{
+      if(pst!=null){
+        try{
+          pst.close();
+        }catch(SQLException se){}
+      }
+    }
+    return id;
+  }
 
   /**
    * @return the dashboards
@@ -1146,5 +1178,4 @@ public class PermissionCategory extends GenericBean {
   public void setCustomtabs(String tmp) {
     this.customtabs = DatabaseUtils.parseBoolean(tmp);
   }
-
 }

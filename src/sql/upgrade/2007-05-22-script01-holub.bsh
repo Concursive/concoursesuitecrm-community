@@ -1,0 +1,37 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.aspcfs.modules.admin.base.RolePermission;
+import org.aspcfs.modules.admin.base.RolePermissionList;
+
+ArrayList rolePermissions = RolePermissionList.recordList(db);
+Iterator iRolePermission = rolePermissions.iterator();
+
+print("[Start] Upgrade RolePermissions...");
+while (iRolePermission.hasNext()) {
+  RolePermission rolePermission = (RolePermission) iRolePermission.next();
+  boolean upgradable = false;
+  if(rolePermission.getView() != rolePermission.getOfflineView()){
+    rolePermission.setOfflineView(rolePermission.getView());
+    upgradable = true;
+  }
+  if(rolePermission.getAdd() != rolePermission.getOfflineAdd()){
+    rolePermission.setOfflineAdd(rolePermission.getAdd());
+    upgradable = true;
+  }
+  if(rolePermission.getEdit()!= rolePermission.getOfflineEdit()){
+    rolePermission.setOfflineEdit(rolePermission.getEdit());
+    upgradable = true;
+  }
+  if(rolePermission.getDelete()!= rolePermission.getOfflineDelete()){
+    rolePermission.setOfflineDelete(rolePermission.getDelete());
+    upgradable = true;
+  }
+
+  if(upgradable){
+    print("Updating rolePermission [id=" + rolePermission.getId() + "]");
+    rolePermission.update(db);
+  }
+}
+print("[Done] Upgrade RolePermissions.");
+    

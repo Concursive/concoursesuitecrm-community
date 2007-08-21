@@ -70,3 +70,8 @@
 
 # CMS Meta-tag
 2007-04-03-script1-yury.sql
+
+# Offline permissions
+2007-05-17-script01-holub.bsh
+2007-05-22-script01-holub.bsh
+

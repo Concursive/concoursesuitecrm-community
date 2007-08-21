@@ -1,0 +1,226 @@
+import java.util.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String[][] permissinCategories = 
+{
+{"13"},
+{"globalitems-search","v---"},
+{"globalitems-myitems","v---"},
+{"globalitems-recentitems","v---"},
+
+{"14"},
+{"myhomepage","v---"},
+{"myhomepage-dashboard","v---"},
+{"myhomepage-miner","----"},
+{"myhomepage-inbox","v---"},
+{"myhomepage-tasks","vaed"},
+{"myhomepage-reassign","----"},
+{"myhomepage-profile","v---"},
+{"myhomepage-profile-personal","v---"},
+{"myhomepage-profile-settings","----"},
+{"myhomepage-profile-password","--e-"},
+{"myhomepage-action-lists","vaed"},
+{"myhomepage-action-plans","vaed"},
+
+{"420041014"},
+{"products","----"},
+
+{"223061200"},
+{"website","v---"},
+{"website-portfolio","vaed"},
+{"site-editor","va-d"},
+
+{"228051100"},
+{"sales","v---"},
+{"sales-leads","vaed"},
+{"sales-import","----"},
+{"sales-dashboard","----"},
+{"sales-reports","va-d"},
+
+{"2"},
+{"contacts","v---"},
+{"contacts-external_contacts","vaed"},
+{"contacts-external_contacts-reports","va-d"},
+{"contacts-external_contacts-folders","vaed"},
+{"contacts-external_contacts-calls","vaed"},
+{"contacts-external_contacts-messages","v---"},
+{"contacts-external_contacts-documents","v---"},
+{"contacts-external_contacts-opportunities","vaed"},
+{"contacts-external_contacts-imports","vaed"},
+{"contacts-external-contact-updater","----"},
+{"contacts-external_contacts-history","vaed"},
+
+{"4"},
+{"pipeline","v---"},
+{"pipeline-opportunities","vaed"},
+{"pipeline-dashboard","----"},
+{"pipeline-reports","va-d"},
+{"pipeline-opportunities-calls","vaed"},
+{"pipeline-opportunities-documents","vaed"},
+{"pipeline-folders","vaed"},
+{"pipeline-quotes","vaed"},
+
+{"1"},
+{"accounts","v---"},
+{"accounts-accounts","vaed"},
+{"accounts-accounts-folders","vaed"},
+{"accounts-accounts-contacts","vaed"},
+{"accounts-accounts-contacts-opportunities","vaed"},
+{"accounts-accounts-contacts-calls","vaed"},
+{"accounts-accounts-contacts-completed-calls","--e-"},
+{"accounts-accounts-contacts-messages","v--d"},
+{"accounts-accounts-contacts-documents","v---"},
+{"accounts-accounts-contacts-move","----"},
+{"accounts-accounts-contacts-history","vaed"},
+{"accounts-accounts-opportunities","vaed"},
+{"accounts-accounts-tickets","vaed"},
+{"accounts-accounts-tickets-tasks","vaed"},
+{"accounts-accounts-tickets-folders","vaed"},
+{"accounts-accounts-tickets-documents","vaed"},
+{"accounts-accounts-documents","vaed"},
+{"accounts-accounts-reports","va-d"},
+{"accounts-accounts-history","vaed"},
+{"accounts-dashboard","v---"},
+{"accounts-accounts-revenue","----"},
+{"accounts-autoguide-inventory","----"},
+{"accounts-service-contracts","vaed"},
+{"accounts-assets","vaed"},
+{"accounts-accounts-tickets-maintenance-report","vaed"},
+{"accounts-accounts-tickets-activity-log","vaed"},
+{"portal-user","v---"},
+{"accounts-quotes","vaed"},
+{"accounts-orders","----"},
+{"accounts-products","----"},
+{"accounts-accounts-contacts-imports","vaed"},
+{"accounts-accounts-relationships","vaed"},
+{"accounts-accounts-contact-updater","----"},
+{"accounts-projects","v---"},
+{"accounts-action-plans","vaed"},
+{"accounts-accounts-contacts-opportunities-quotes","vaed"},
+{"accounts-directbill","----"},
+{"accounts-accounts-contacts-folders","vaed"},
+{"accounts-accounts-contacts-opps-folders","vaed"},
+{"accounts-accounts-shareddocuments","----"},
+{"accounts-accounts-documentstore","----"},
+
+{"330041409"},
+{"product-catalog","v---"},
+{"product-catalog-product","----"},
+{"product-catalog-product-imports","vaed"},
+
+{"3"},
+{"autoguide","----"},
+{"autoguide-adruns","----"},
+
+{"420041017"},
+{"quotes","v---"},
+{"quotes-quotes","vaed"},
+
+{"420041018"},
+{"orders","----"},
+{"orders-orders","----"},
+
+{"6"},
+{"campaign","v---"},
+{"campaign-dashboard","v---"},
+{"campaign-campaigns","v---"},
+{"campaign-campaigns-groups","vaed"},
+{"campaign-campaigns-messages","vaed"},
+{"campaign-campaigns-surveys","vaed"},
+{"campaign-campaign-contact-updater","----"},
+
+{"7"},
+{"projects","v---"},
+{"projects-personal","v---"},
+{"projects-enterprise","v---"},
+{"projects-projects","vaed"},
+
+{"8"},
+{"tickets","v---"},
+{"tickets-tickets","vaed"},
+{"tickets-reports","vaed"},
+{"tickets-tickets-tasks","vaed"},
+{"tickets-maintenance-report","vaed"},
+{"tickets-activity-log","vaed"},
+{"tickets-knowledge-base","vaed"},
+{"tickets-defects","vaed"},
+{"tickets-action-plans","vaed"},
+
+{"1202041528"},
+{"documents","v---"},
+{"documents_documentstore","vaed"},
+
+{"1021051129"},
+{"netapps_expiration_contracts","----"},
+{"netapps_expiration_contracts_imports","----"},
+
+{"1111031131"},
+{"employees","v---"},
+{"contacts-internal_contacts","vaed"},
+{"contacts-internal_contacts-folders","vaed"},
+{"contacts-internal_contacts-projects","v---"},
+
+{"16"},
+{"reports","v---"},
+
+{"9"},
+{"admin","v---"},
+{"admin-users","v---"},
+{"admin-roles","v---"},
+{"admin-portalroleeditor","----"},
+{"admin-usage","v---"},
+{"admin-sysconfig","v---"},
+{"admin-sysconfig-lists","v---"},
+{"admin-sysconfig-folders","v---"},
+{"admin-object-workflow","v---"},
+{"admin-sysconfig-categories","v---"},
+{"admin-sysconfig-logos","v---"},
+{"admin-actionplans","v---"},
+
+{"10"},
+{"help","v---"},
+
+{"15"},
+{"qa","----"},
+
+{"5"},
+{"demo","----"}
+};
+
+int catConst = -1;
+for(int i=0; i< permissinCategories.length; i++){
+  if(permissinCategories[i].length == 1){
+    catConst = Integer.parseInt(permissinCategories[i][0]);
+    print("Updating permissionCategory [constant=" + catConst + "]");
+  }else{
+    int catId = PermissionCategory.getIdByConstant(catConst, db);
+    if(catId > 0){
+      for(int j=0; j< permissinCategories[i].length; j++){
+        Permission perm = new Permission(db, permissinCategories[i][0]);
+        if(perm.getCategoryId() == catId){
+          if(permissinCategories[i][1].charAt(0) != '-'){
+            perm.setOfflineView(true);
+          }
+          if(permissinCategories[i][1].charAt(1) != '-'){
+            perm.setOfflineAdd(true);
+          }
+          if(permissinCategories[i][1].charAt(2) != '-'){
+            perm.setOfflineEdit(true);
+          }
+          if(permissinCategories[i][1].charAt(3) != '-'){
+            perm.setOfflineDelete(true);
+          }
+          
+          perm.update(db);
+        }else{
+          print("ERROR: wrong categoryId(" + catId + ") for permission(" + permissinCategories[i][0] + ")!");
+        }
+      }
+    }else{
+      print("ERROR: permissionCategory [constant=" + catConst + "] not found!");
+    }
+  }
+}
+
+print("Done.");
