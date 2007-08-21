@@ -1286,7 +1286,7 @@ public class TransactionItem {
             thisField = thisField.substring(0, thisField.indexOf("^"));
             if (param.startsWith("${")) {
               /**
-                SPECIAL CASE: param attribute needs to be determined. The field value should be 
+                SPECIAL CASE: param attribute needs to be determined. The field value should be
                 retrieved from the client-server mapping based upon the constant specified by the param
                 attribute
 
