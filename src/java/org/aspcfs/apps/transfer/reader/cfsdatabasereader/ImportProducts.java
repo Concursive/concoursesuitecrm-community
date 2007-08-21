@@ -16,6 +16,7 @@
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.products.base.*;
 
 import java.sql.Connection;
@@ -45,10 +46,12 @@ public class ImportProducts implements CFSDatabaseReaderImportModule {
     this.writer = writer;
     this.mappings = mappings;
     boolean processOK = true;
-
+    
     logger.info("ImportProducts-> Inserting Product Category records");
     writer.setAutoCommit(false);
     ProductCategoryList categories = new ProductCategoryList();
+    categories.setTopOnly(Constants.TRUE);
+    categories.setBuildCompleteHierarchy(true);
     categories.buildList(db);
     mappings.saveList(writer, categories, "insert");
     processOK = writer.commit();
@@ -72,7 +75,7 @@ public class ImportProducts implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-
+    
     logger.info("ImportProducts-> Inserting Product Catalog pricing records");
     writer.setAutoCommit(false);
     ProductCatalogPricingList prodCatalogPricingList = new ProductCatalogPricingList();

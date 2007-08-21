@@ -131,7 +131,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-
+    
     logger.info("ImportBaseData-> Inserting Accounts");
     writer.setAutoCommit(false);
     writer.initialize();
@@ -141,6 +141,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     accounts.setShowMyCompany(false);
     accounts.setIncludeEnabled(-1);
     accounts.setExcludeUnapprovedAccounts(false);
+    accounts.setBuildResources(false);
     accounts.buildList(db);
 
     //Build a list of trashed accounts
@@ -149,6 +150,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     trashedAccounts.setIncludeEnabled(-1);
     trashedAccounts.setExcludeUnapprovedAccounts(false);
     trashedAccounts.setIncludeOnlyTrashed(true);
+    trashedAccounts.setBuildResources(false);
     trashedAccounts.buildList(db);
 
     accounts.add(0, myCompany);
@@ -191,7 +193,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-
+    
     logger.info("ImportBaseData-> Inserting Roles");
     RoleList roles = new RoleList();
     roles.setEnabledState(-1);
@@ -392,9 +394,8 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-
     this.updateUserList(db);
-
+   
     return true;
   }
 
@@ -456,7 +457,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     Iterator users = userList.iterator();
     while (users.hasNext()) {
       User thisUser = (User) users.next();
-      DataRecord thisRecord = mappings.createDataRecord(thisUser, "insert");
+      DataRecord thisRecord = mappings.createDataRecord(thisUser, "insert", false);
       thisRecord.removeField("enteredBy");
       thisRecord.removeField("modifiedBy");
       thisRecord.removeField("contactId");
@@ -503,11 +504,6 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     while (users.hasNext()) {
       User thisUser = (User) users.next();
       DataRecord thisRecord = mappings.createDataRecord(thisUser, "update");
-      if (userIdHash.containsKey(String.valueOf(thisUser.getId()))) {
-        thisRecord.removeField("contactId");
-        thisRecord.addField("contactId",
-            (String) userIdHash.get(String.valueOf(thisUser.getId())));
-      }
       thisRecord.removeField("isXMLObject");
       thisRecord.addField("isXMLObject", "true");
       writer.save(thisRecord);

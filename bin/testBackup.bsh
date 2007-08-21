@@ -1,6 +1,7 @@
 #!/bin/sh
-//bin/true; exec java -classpath .:/usr/java/tomcat/common/lib/servlet-api.jar:lib/log4j-1.2.9.jar:lib/bsh-2.0b2.jar:build/lib/aspcfs.jar:lib/postgresql-8.1-405.jdbc3.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar bsh.Interpreter "$0" "$@"
+//bin/true; exec java -Xmx1024m -Xms1024m -classpath .:/usr/java/tomcat/common/lib/servlet-api.jar:lib/log4j-1.2.9.jar:lib/bsh-2.0b2.jar:build/lib/aspcfs.jar:lib/postgresql-8.1-405.jdbc3.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar:build/lib/isavvix.jar bsh.Interpreter "$0" "$@"
 
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.service.utils.BackupUtils;
 import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.modules.service.base.SyncClientMap;
@@ -12,32 +13,28 @@ import java.util.*;
 
 if (bsh.args.length == 0) {
   print("Usage:");
-  print("  testBackup [filename]");
+  print("  testBackup [dbname] [filename]");
   print("");
   print("The specified file will be used to restore a database");
   System.exit(0);
 }
 
-String url = "jdbc:postgresql://127.0.0.1:5432/restore-test-1";
+String url = "jdbc:postgresql://127.0.0.1:5432/" + bsh.args[0].trim();
 String user = "postgres";
 String password = "";
 String driver = "org.postgresql.Driver";
 
-// Create a Connection Pool
-ConnectionPool sqlDriver = new ConnectionPool();
-sqlDriver.setDebug(false);
-sqlDriver.setTestConnections(false);
-sqlDriver.setAllowShrinking(true);
-sqlDriver.setMaxConnections(2);
-sqlDriver.setMaxIdleTime(60000);
-sqlDriver.setMaxDeadTime(300000);
+try {
+  Class.forName(driver);
+} catch (ClassNotFoundException e) {
+  print("Driver missing -- class not found: " + e.getMessage());
+  System.exit(0);
+}
 
-ConnectionElement ce = new ConnectionElement(url, user, password);
-ce.setDriver(driver);
-Connection db = sqlDriver.getConnection(ce);
-Connection dbLookup = sqlDriver.getConnection(ce);
+Connection db = DatabaseUtils.getConnection(url, user, password);
+Connection dbLookup = DatabaseUtils.getConnection(url, user, password);
 
-String filename = bsh.args[0].trim();
+String filename = bsh.args[1].trim();
 
 //Add a new Sync client
 SyncClient syncClient = new SyncClient();
@@ -55,6 +52,6 @@ BackupUtils.restore(db, dbLookup, filename, syncClient);
 //Remove the sync client
 syncClient.delete(db);
 
-sqlDriver.free(db);
-sqlDriver.free(dbLookup);
+db.close();
+dbLookup.close();
 System.exit(0);

@@ -52,7 +52,7 @@ public class ProcessJasperReports {
   public final static String fs = System.getProperty("file.separator");
   public final static String CENTRIC_DICTIONARY = "CENTRIC_DICTIONARY";
   public final static String SCRIPT_DB_CONNECTION = "SCRIPT_DB_CONNECTION";
-
+  public final static String REPORT_OUTPUT_TYPE = "REPORT_OUTPUT_TYPE";
 
   /**
    * Constructor for the ProcessJasperReports object
@@ -209,6 +209,7 @@ public class ProcessJasperReports {
     Map parameters = criteria.getParameters(jasperReport, path);
     parameters.put(CENTRIC_DICTIONARY, localizationPrefs);
     parameters.put(SCRIPT_DB_CONNECTION, scriptdb);
+    parameters.put(REPORT_OUTPUT_TYPE, thisQueue.getOutputTypeConstant());
     if (parameters.containsKey("configure_hierarchy_list")) {
       configureHierarchyList(db, parameters);
     }
@@ -225,6 +226,13 @@ public class ProcessJasperReports {
      *  destFilename,
      *  parameters, db);
      */
+    
+    if (thisQueue.getOutputTypeConstant() == ReportQueue.REPORT_TYPE_CSV ||
+        thisQueue.getOutputTypeConstant() == ReportQueue.REPORT_TYPE_EXCEL ||
+        thisQueue.getOutputTypeConstant() == ReportQueue.REPORT_TYPE_HTML) {
+      //disable paged output if csv or excel format
+      parameters.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);      
+    }
     JasperPrint print = JasperFillManager.fillReport(jasperReport, parameters, db);
     File reportFile = new File(destFilename);
     switch (thisQueue.getOutputTypeConstant()) {

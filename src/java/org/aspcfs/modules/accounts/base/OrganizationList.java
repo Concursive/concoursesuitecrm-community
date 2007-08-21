@@ -125,7 +125,40 @@ public class OrganizationList extends Vector implements SyncableList {
   private String contactCountry = null;
 
   private boolean includeAllSites = false;
-  
+  private boolean buildResources = true;
+
+
+  /**
+   *  Gets the buildResources attribute of the OrganizationList object
+   *
+   * @return    The buildResources value
+   */
+  public boolean getBuildResources() {
+    return buildResources;
+  }
+
+
+  /**
+   *  Sets the buildResources attribute of the OrganizationList object
+   *
+   * @param  tmp  The new buildResources value
+   */
+  public void setBuildResources(boolean tmp) {
+    this.buildResources = tmp;
+  }
+
+
+  /**
+   *  Sets the buildResources attribute of the OrganizationList object
+   *
+   * @param  tmp  The new buildResources value
+   */
+  public void setBuildResources(String tmp) {
+    this.buildResources = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
   /**
    * Gets the includeAllSites attribute of the OrganizationList object
    *
@@ -353,6 +386,8 @@ public class OrganizationList extends Vector implements SyncableList {
   public String getAccountSegment() {
     return accountSegment;
   }
+
+
   /**
    *  Sets the stageId attribute of the OrganizationList object
    *
@@ -361,16 +396,18 @@ public class OrganizationList extends Vector implements SyncableList {
   public void setStageId(int tmp) {
     this.stageId = tmp;
   }
-  
+
   /**
    *  Sets the stageId attribute of the OrganizationList object
    *
    * @param  tmp  The new stageId  value
    */
   public void setStageId(String tmp) {
-	  if (tmp!=null){
-    this.stageId = Integer.parseInt(tmp);
-	  }else{this.stageId = -1;}
+    if (tmp != null) {
+      this.stageId = Integer.parseInt(tmp);
+    } else {
+      this.stageId = -1;
+    }
   }
 
 
@@ -1470,7 +1507,7 @@ public class OrganizationList extends Vector implements SyncableList {
     createFilter(db, sqlFilter);
 
     sqlSelect.append(
-        "SELECT " + sqlDate + " AS " + DatabaseUtils.addQuotes(db, "date")+ ", count(*) AS nocols " +
+        "SELECT " + sqlDate + " AS " + DatabaseUtils.addQuotes(db, "date") + ", count(*) AS nocols " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
     sqlTail.append("GROUP BY " + sqlDate);
@@ -1569,7 +1606,9 @@ public class OrganizationList extends Vector implements SyncableList {
     if (pst != null) {
       pst.close();
     }
-    buildResources(db);
+    if (buildResources) {
+      buildResources(db);
+    }
   }
 
 
@@ -1676,7 +1715,7 @@ public class OrganizationList extends Vector implements SyncableList {
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
         "i.description as industry_name, a.description AS account_size_name, " +
         "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county, " +
-        "ast.description as stage_name "+
+        "ast.description as stage_name " +
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
@@ -1685,13 +1724,13 @@ public class OrganizationList extends Vector implements SyncableList {
         "LEFT JOIN lookup_account_size a ON (o.account_size = a.code) " +
         "LEFT JOIN organization_address oa ON (o.org_id = oa.org_id) " +
         "LEFT JOIN lookup_account_stage ast ON (o.stage_id = ast.code) " +
-        "WHERE o.org_id >= 0 " );
+        "WHERE o.org_id >= 0 ");
 
-   sqlFilter.append(
-    	" AND (oa.address_id IS NULL OR oa.address_id IN ( "+
-    	"SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "+
-    	"OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND "+
-    	" ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?))) ");
+    sqlFilter.append(
+        " AND (oa.address_id IS NULL OR oa.address_id IN ( " +
+        "SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) " +
+        "OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND " +
+        " ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?))) ");
 
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -1714,11 +1753,11 @@ public class OrganizationList extends Vector implements SyncableList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    
+
     if (stageId > -1) {
       sqlFilter.append("AND o.stage_id = ? ");
     }
-    
+
     if (minerOnly != null) {
       sqlFilter.append("AND miner_only = ? ");
     }
@@ -1807,11 +1846,11 @@ public class OrganizationList extends Vector implements SyncableList {
     if (enteredSince != null) {
       sqlFilter.append("AND o.entered >= ? ");
     }
-    
+
     if (enteredTo != null) {
       sqlFilter.append("AND o.entered <= ? ");
     }
-    
+
     if (revenueOwnerId > -1) {
       sqlFilter.append(
           "AND o.org_id in (SELECT org_id from revenue WHERE owner = ?) ");
@@ -1921,10 +1960,10 @@ public class OrganizationList extends Vector implements SyncableList {
             "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " LIKE ? " +
             "AND postalcode IS NOT NULL) ");
       } else {
-          sqlFilter.append(
-              "AND o.org_id IN (SELECT org_id FROM organization_address " +
-              "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
-              "AND postalcode IS NOT NULL) ");
+        sqlFilter.append(
+            "AND o.org_id IN (SELECT org_id FROM organization_address " +
+            "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
+            "AND postalcode IS NOT NULL) ");
       }
     }
 
@@ -1944,10 +1983,10 @@ public class OrganizationList extends Vector implements SyncableList {
 
     if (state != null && !"-1".equals(state)) {
       if (state.indexOf("%") >= 0) {
-      sqlFilter.append(
-          "AND o.org_id IN (SELECT org_id FROM organization_address " +
-          "WHERE " + DatabaseUtils.toLowerCase(db, "state") + " LIKE ? " +
-          "AND state IS NOT NULL) ");
+        sqlFilter.append(
+            "AND o.org_id IN (SELECT org_id FROM organization_address " +
+            "WHERE " + DatabaseUtils.toLowerCase(db, "state") + " LIKE ? " +
+            "AND state IS NOT NULL) ");
       } else {
         sqlFilter.append(
             "AND o.org_id IN (SELECT org_id FROM organization_address " +
@@ -2049,11 +2088,11 @@ public class OrganizationList extends Vector implements SyncableList {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    
+
     if (stageId > -1) {
       pst.setInt(++i, stageId);
     }
-    
+
     if (minerOnly != null) {
       pst.setBoolean(++i, minerOnly.booleanValue());
     }
@@ -2112,11 +2151,11 @@ public class OrganizationList extends Vector implements SyncableList {
     if (enteredSince != null) {
       pst.setTimestamp(++i, enteredSince);
     }
-    
+
     if (enteredTo != null) {
       pst.setTimestamp(++i, enteredTo);
     }
-    
+
     if (revenueOwnerId > -1) {
       pst.setInt(++i, revenueOwnerId);
     }

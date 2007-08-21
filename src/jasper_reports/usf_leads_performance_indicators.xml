@@ -65,6 +65,9 @@
 	<parameter name="actionplan_module_constant" isForPrompting="false" class="java.lang.Integer">
 		<defaultValueExpression ><![CDATA[new Integer(42420034)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="REPORT_OUTPUT_TYPE" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(org.aspcfs.modules.reports.base.ReportQueue.REPORT_TYPE_PDF)]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[SELECT u.user_id as user_id,
 c.namefirst, c.namelast, c.title, c.nickname, ls.description
 FROM access u
@@ -341,6 +344,7 @@ ORDER BY namelast]]></queryString>
 		</background>
 		<title>
 			<band height="45"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[new Boolean($P{REPORT_OUTPUT_TYPE}.intValue() == new Integer(org.aspcfs.modules.reports.base.ReportQueue.REPORT_TYPE_PDF).intValue())]]></printWhenExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
@@ -644,6 +648,7 @@ ORDER BY namelast]]></queryString>
 		</columnFooter>
 		<pageFooter>
 			<band height="29"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[new Boolean($P{REPORT_OUTPUT_TYPE}.intValue() == new Integer(org.aspcfs.modules.reports.base.ReportQueue.REPORT_TYPE_PDF).intValue())]]></printWhenExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"

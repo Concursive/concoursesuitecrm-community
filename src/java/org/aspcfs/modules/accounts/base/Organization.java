@@ -66,7 +66,7 @@ public class Organization extends GenericBean {
       log.setLevel(Level.DEBUG);
     }
   }
-  
+
   protected double YTD = 0;
 
   private String errorMessage = "";
@@ -83,7 +83,7 @@ public class Organization extends GenericBean {
   private int segmentList = -1;
   private int siteId = -1;
   private int stageId = -1;
-  private String stageName = null; 
+  private String stageName = null;
   private String siteClient = null;
   public int segmentId = -1;
   private int subSegmentId = -1;
@@ -160,7 +160,40 @@ public class Organization extends GenericBean {
   private int sicCode = -1;
   private int yearStarted = -1;
   private String sicDescription = null;
-  
+
+  private boolean buildResources = true;
+
+
+  /**
+   *  Gets the buildResources attribute of the Organization object
+   *
+   * @return    The buildResources value
+   */
+  public boolean getBuildResources() {
+    return buildResources;
+  }
+
+
+  /**
+   *  Sets the buildResources attribute of the Organization object
+   *
+   * @param  tmp  The new buildResources value
+   */
+  public void setBuildResources(boolean tmp) {
+    this.buildResources = tmp;
+  }
+
+
+  /**
+   *  Sets the buildResources attribute of the Organization object
+   *
+   * @param  tmp  The new buildResources value
+   */
+  public void setBuildResources(String tmp) {
+    this.buildResources = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
   /**
    *  Constructor for the Organization object, creates an empty Organization
    *
@@ -194,7 +227,7 @@ public class Organization extends GenericBean {
   public Organization(Connection db, int org_id) throws SQLException {
     if (org_id == -1) {
       throw new SQLException("Invalid Account");
-    } 
+    }
     PreparedStatement pst = db.prepareStatement(
         "SELECT o.*, " +
         "ct_owner.namelast AS o_namelast, ct_owner.namefirst AS o_namefirst, " +
@@ -202,7 +235,7 @@ public class Organization extends GenericBean {
         "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
         "i.description AS industry_name, a.description AS account_size_name, " +
         "oa.city as o_city, oa.state as o_state, oa.postalcode as o_postalcode, oa.county as o_county, " +
-        "ast.description as stage_name "+
+        "ast.description as stage_name " +
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
@@ -213,9 +246,9 @@ public class Organization extends GenericBean {
         "LEFT JOIN lookup_account_stage ast ON (o.stage_id = ast.code) " +
         "WHERE o.org_id = ? " +
         " AND (oa.address_id IS NULL OR oa.address_id IN ( "
-		+ "SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "
-		+ "OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND "
-		+ " ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?)))");
+         + "SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "
+         + "OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND "
+         + " ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?)))");
     pst.setInt(1, org_id);
     pst.setBoolean(2, true);
     pst.setBoolean(3, true);
@@ -233,12 +266,14 @@ public class Organization extends GenericBean {
     if (this.getNameLast() != null) {
       this.populatePrimaryContact(db);
     }
-    phoneNumberList.setOrgId(this.getOrgId());
-    phoneNumberList.buildList(db);
-    addressList.setOrgId(this.getOrgId());
-    addressList.buildList(db);
-    emailAddressList.setOrgId(this.getOrgId());
-    emailAddressList.buildList(db);
+    if (buildResources) {
+      phoneNumberList.setOrgId(this.getOrgId());
+      phoneNumberList.buildList(db);
+      addressList.setOrgId(this.getOrgId());
+      addressList.buildList(db);
+      emailAddressList.setOrgId(this.getOrgId());
+      emailAddressList.buildList(db);
+    }
   }
 
 
@@ -305,6 +340,8 @@ public class Organization extends GenericBean {
   public void setInsertPrimaryContact(String tmp) {
     this.insertPrimaryContact = DatabaseUtils.parseBoolean(tmp);
   }
+
+
   /**
    *  Gets the approved attribute of the Contact object
    *
@@ -313,6 +350,7 @@ public class Organization extends GenericBean {
   public boolean isApproved() {
     return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
   }
+
 
   /**
    *  Sets the RevenueDelete attribute of the Organization object
@@ -1041,7 +1079,8 @@ public class Organization extends GenericBean {
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
   }
-  
+
+
   /**
    *  Gets the siteId attribute of the Organization object
    *
@@ -1050,7 +1089,8 @@ public class Organization extends GenericBean {
   public int getSiteId() {
     return siteId;
   }
-  
+
+
   /**
    *  Sets the stageId attribute of the Organization object
    *
@@ -1070,25 +1110,28 @@ public class Organization extends GenericBean {
     this.stageId = Integer.parseInt(tmp);
   }
 
+
   /**
    *  Gets the stageId attribute of the Organization object
    *
    * @return    The stageId value
    */
-  
+
   public int getStageId() {
     return stageId;
-  }  
+  }
+
 
   /**
    *  Gets the stageName attribute of the Organization object
    *
    * @return    The stageName value
    */
-  
+
   public String getStageName() {
     return stageName;
   }
+
 
   /**
    *  Sets the segmentId attribute of the Organization object
@@ -2151,10 +2194,11 @@ public class Organization extends GenericBean {
     this.primaryContactId = tmp;
   }
 
+
   /**
-   * Gets the city attribute of the Organization object
+   *  Gets the city attribute of the Organization object
    *
-   * @return The city value
+   * @return    The city value
    */
   public String getCity() {
     return city;
@@ -2162,72 +2206,74 @@ public class Organization extends GenericBean {
 
 
   /**
-   * Sets the city attribute of the Organization object
+   *  Sets the city attribute of the Organization object
    *
-   * @param tmp The new city value
+   * @param  tmp  The new city value
    */
   public void setCity(String tmp) {
     this.city = tmp;
   }
- 
-  /**
-   * Sets the state attribute of the Organization object
-   *
-   * @param tmp The new state value
-   */
-	 public void setState(String tmp) {
-	 	this.state = tmp;
-	 }
-
-
-	/**
-   * Sets the postalCode attribute of the Organization object
-   *
-   * @param tmp The new postalCode value
-   */
-	 public void setPostalCode(String tmp) {
-	 	this.postalCode = tmp;
-	 }
-	 
-	 
-  /**
-   * Gets the postalCode attribute of the Organization object
-   *
-   * @return The postalCode value
-   */
-	 public String getPostalCode() {
-	 	return postalCode;
-	 }
 
 
   /**
-   * Sets the county attribute of the Organization object
+   *  Sets the state attribute of the Organization object
    *
-   * @param tmp The new county value
+   * @param  tmp  The new state value
    */
-	 public void setCounty(String tmp) {
-	 	this.county = tmp;
-	 }
+  public void setState(String tmp) {
+    this.state = tmp;
+  }
 
 
   /**
-   * Gets the state attribute of the Organization object
+   *  Sets the postalCode attribute of the Organization object
    *
-   * @return The state value
+   * @param  tmp  The new postalCode value
    */
-	 public String getState() {
-	 	return state;
-	 }
+  public void setPostalCode(String tmp) {
+    this.postalCode = tmp;
+  }
 
 
   /**
-   * Gets the county attribute of the Organization object
+   *  Gets the postalCode attribute of the Organization object
    *
-   * @return The county value
+   * @return    The postalCode value
    */
-	 public String getCounty() {
-	 	return county;
-	 }
+  public String getPostalCode() {
+    return postalCode;
+  }
+
+
+  /**
+   *  Sets the county attribute of the Organization object
+   *
+   * @param  tmp  The new county value
+   */
+  public void setCounty(String tmp) {
+    this.county = tmp;
+  }
+
+
+  /**
+   *  Gets the state attribute of the Organization object
+   *
+   * @return    The state value
+   */
+  public String getState() {
+    return state;
+  }
+
+
+  /**
+   *  Gets the county attribute of the Organization object
+   *
+   * @return    The county value
+   */
+  public String getCounty() {
+    return county;
+  }
+
 
   /**
    *  Sets the primaryContactId attribute of the Organization object
@@ -2310,7 +2356,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @return the businessNameTwo
+   * @return    the businessNameTwo
    */
   public String getBusinessNameTwo() {
     return businessNameTwo;
@@ -2318,7 +2364,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @return the dunsNumber
+   * @return    the dunsNumber
    */
   public String getDunsNumber() {
     return dunsNumber;
@@ -2326,7 +2372,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @return the dunsType
+   * @return    the dunsType
    */
   public String getDunsType() {
     return dunsType;
@@ -2334,18 +2380,25 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @return the sicCode
+   * @return    the sicCode
    */
   public int getSicCode() {
     return sicCode;
   }
 
-	public String getSicDescription() {
-		return sicDescription;
-	}
 
   /**
-   * @return the yearStarted
+   *  Gets the sicDescription attribute of the Organization object
+   *
+   * @return    The sicDescription value
+   */
+  public String getSicDescription() {
+    return sicDescription;
+  }
+
+
+  /**
+   * @return    the yearStarted
    */
   public int getYearStarted() {
     return yearStarted;
@@ -2353,7 +2406,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param businessNameTwo the businessNameTwo to set
+   * @param  businessNameTwo  the businessNameTwo to set
    */
   public void setBusinessNameTwo(String businessNameTwo) {
     this.businessNameTwo = businessNameTwo;
@@ -2361,7 +2414,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param dunsNumber the dunsNumber to set
+   * @param  dunsNumber  the dunsNumber to set
    */
   public void setDunsNumber(String dunsNumber) {
     this.dunsNumber = dunsNumber;
@@ -2369,7 +2422,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param dunsType the dunsType to set
+   * @param  dunsType  the dunsType to set
    */
   public void setDunsType(String dunsType) {
     this.dunsType = dunsType;
@@ -2377,7 +2430,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param employees the employees to set
+   * @param  employees  the employees to set
    */
   public void setEmployees(int employees) {
     this.employees = employees;
@@ -2385,7 +2438,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param sicCode the sicCode to set
+   * @param  sicCode  the sicCode to set
    */
   public void setSicCode(int sicCode) {
     this.sicCode = sicCode;
@@ -2393,18 +2446,25 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param sicCode the sicCode to set
+   * @param  sicCode  the sicCode to set
    */
   public void setSicCode(String sicCode) {
     this.sicCode = Integer.parseInt(sicCode);
   }
 
-	public void setSicDescription(String tmp) {
-		this.sicDescription = tmp;
-	}
 
   /**
-   * @param yearStarted the yearStarted to set
+   *  Sets the sicDescription attribute of the Organization object
+   *
+   * @param  tmp  The new sicDescription value
+   */
+  public void setSicDescription(String tmp) {
+    this.sicDescription = tmp;
+  }
+
+
+  /**
+   * @param  yearStarted  the yearStarted to set
    */
   public void setYearStarted(int yearStarted) {
     this.yearStarted = yearStarted;
@@ -2412,7 +2472,7 @@ public class Organization extends GenericBean {
 
 
   /**
-   * @param yearStarted the yearStarted to set
+   * @param  yearStarted  the yearStarted to set
    */
   public void setYearStarted(String yearStarted) {
     this.yearStarted = Integer.parseInt(yearStarted);
@@ -2714,14 +2774,14 @@ public class Organization extends GenericBean {
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE org_id = ? ");
 
-    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+    sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, false);
     pst.setInt(++i, orgId);
 
-    if(this.getModified() != null){
+    if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
 
@@ -2757,12 +2817,12 @@ public class Organization extends GenericBean {
         "SET enabled = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE org_id = ? ");
-    sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+    sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, true);
     pst.setInt(++i, orgId);
-    if(this.getModified() != null){
+    if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
     }
     int resultCount = pst.executeUpdate();
@@ -2937,17 +2997,17 @@ public class Organization extends GenericBean {
     boolean doCommit = false;
     try {
       modifiedBy = enteredBy;
-      
-      if (stageId==-1){
-    	  LookupList stageList = new LookupList();
-    	  stageList.tableName = "lookup_account_stage";
-    	  stageList.setShowDisabledFlag(false);
-    	  stageList.buildList(db);
-    	  if (stageList.getFirstEnabledElement()>0){
-    	   stageId = stageList.getFirstEnabledElement();
-    	  }
+
+      if (stageId == -1) {
+        LookupList stageList = new LookupList();
+        stageList.tableName = "lookup_account_stage";
+        stageList.setShowDisabledFlag(false);
+        stageList.buildList(db);
+        if (stageList.getFirstEnabledElement() > 0) {
+          stageId = stageList.getFirstEnabledElement();
+        }
       }
-      
+
       if (doCommit = db.getAutoCommit()) {
         db.setAutoCommit(false);
       }
@@ -2967,8 +3027,8 @@ public class Organization extends GenericBean {
         sql.append("status_id, ");
       }
       if (stageId > -1) {
-          sql.append("stage_id, ");
-        }
+        sql.append("stage_id, ");
+      }
       if (importId > -1) {
         sql.append("import_id, ");
       }
@@ -2988,8 +3048,8 @@ public class Organization extends GenericBean {
         sql.append("?, ");
       }
       if (stageId > -1) {
-          sql.append("?, ");
-        }
+        sql.append("?, ");
+      }
       if (importId > -1) {
         sql.append("?, ");
       }
@@ -3041,8 +3101,8 @@ public class Organization extends GenericBean {
         pst.setInt(++i, this.getStatusId());
       }
       if (stageId > -1) {
-          pst.setInt(++i, this.getStageId());
-        }
+        pst.setInt(++i, this.getStageId());
+      }
       if (importId > -1) {
         pst.setInt(++i, this.getImportId());
       }
@@ -3314,7 +3374,7 @@ public class Organization extends GenericBean {
     sql.append("stage_id = ? ");
     sql.append("WHERE org_id = ? ");
     if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+      sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     }
 
     int i = 0;
@@ -3430,11 +3490,11 @@ public class Organization extends GenericBean {
       throw new SQLException("Organization ID not specified.");
     }
     boolean commit = db.getAutoCommit();
-    try { 
+    try {
       if (commit) {
         db.setAutoCommit(false);
       }
- 
+
       //build the relationship list(both from and to mappings)
       RelationshipList thisList = new RelationshipList();
       thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
@@ -3453,7 +3513,7 @@ public class Organization extends GenericBean {
       ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.setIncludeOnlyTrashed(true);
-      ticketList.buildList(db); 
+      ticketList.buildList(db);
       ticketList.delete(db, baseFilePath);
       ticketList = null;
 
@@ -3564,13 +3624,13 @@ public class Organization extends GenericBean {
         contactList.buildList(db);
         contactList.delete(db, baseFilePath, forceDelete);
         contactList = null;
-        
+
         contactList = new ContactList();
         contactList.setImportId(this.getImportId());
         contactList.setOrgId(this.getOrgId());
         contactList.setIncludeAllSites(true);
         contactList.setExcludeUnapprovedContacts(false);
-        contactList.buildList(db); 	
+        contactList.buildList(db);
         contactList.delete(db, baseFilePath, forceDelete);
       }
 
@@ -3633,11 +3693,11 @@ public class Organization extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
-      
+
       Statement st = db.createStatement();
       st.executeUpdate("DELETE FROM news WHERE org_id = " + this.getOrgId());
       st.close();
-      
+
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM organization " +
           "WHERE org_id = ? " +
@@ -4029,12 +4089,12 @@ public class Organization extends GenericBean {
     //account size table
     accountSizeName = rs.getString("account_size_name");
 
-		//organization address table
-    city=rs.getString("o_city");
-    state=rs.getString("o_state");
-    postalCode=rs.getString("o_postalcode");
-    county=rs.getString("o_county");
-    stageName=rs.getString("stage_name");
+    //organization address table
+    city = rs.getString("o_city");
+    state = rs.getString("o_state");
+    postalCode = rs.getString("o_postalcode");
+    county = rs.getString("o_county");
+    stageName = rs.getString("stage_name");
 
   }
 

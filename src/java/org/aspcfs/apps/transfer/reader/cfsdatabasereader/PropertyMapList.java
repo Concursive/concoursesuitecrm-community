@@ -31,12 +31,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Contains a list of PropertyMaps, used to translate objects into XML
+ *  Contains a list of PropertyMaps, used to translate objects into XML
  *
- * @author matt rajkowski
- * @version $Id: PropertyMapList.java,v 1.14.2.1 2003/01/22 23:08:55 akhi_m
- *          Exp $
- * @created September 18, 2002
+ * @author     matt rajkowski
+ * @created    September 18, 2002
+ * @version    $Id: PropertyMapList.java,v 1.14.2.1 2003/01/22 23:08:55 akhi_m
+ *      Exp $
  */
 public class PropertyMapList extends HashMap {
 
@@ -45,18 +45,18 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   * Constructor for the PropertyMapList object
+   *  Constructor for the PropertyMapList object
    */
-  public PropertyMapList() {
-  }
+  public PropertyMapList() { }
 
 
   /**
-   * Constructor for the PropertyMapList object
+   *  Constructor for the PropertyMapList object
    *
-   * @param configFile Description of the Parameter
-   * @param modules    Description of the Parameter
-   * @throws Exception Description of the Exception
+   * @param  configFile     Description of the Parameter
+   * @param  modules        Description of the Parameter
+   * @exception  Exception  Description of the Exception
+   * @throws  Exception     Description of the Exception
    */
   public PropertyMapList(String configFile, ArrayList modules) throws Exception {
     loadMap(configFile, modules);
@@ -64,11 +64,11 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   * Populates this object by reading an XML file with mappings
+   *  Populates this object by reading an XML file with mappings
    *
-   * @param mapFile Description of the Parameter
-   * @param modules Description of the Parameter
-   * @throws Exception Description of the Exception
+   * @param  mapFile     Description of the Parameter
+   * @param  modules     Description of the Parameter
+   * @throws  Exception  Description of the Exception
    */
   public void loadMap(String mapFile, ArrayList modules) throws Exception {
     File configFile = new File(mapFile);
@@ -157,35 +157,48 @@ public class PropertyMapList extends HashMap {
     }
 
     /*
-    //A mappings file may further refer to other config files that have mappings
-    if (xml.getFirstChild("configs") != null) {
-      ArrayList configs = new ArrayList();
-      xml.getAllChildrenText(xml.getFirstChild("configs"), "config", configs);
-      if (configs.size() > 0) {
-        logger.info("PropertyMapList config count: " + configs.size());
-        Iterator config = configs.iterator();
-        while (config.hasNext()) {
-          String configName = (String) config.next();
-          loadMap(
-            (configFile.getParentFile().getPath() + 
-              System.getProperty("file.separator") + 
-                configName), modules);
-        }
-      }
-    }
-    */
+     *  /A mappings file may further refer to other config files that have mappings
+     *  if (xml.getFirstChild("configs") != null) {
+     *  ArrayList configs = new ArrayList();
+     *  xml.getAllChildrenText(xml.getFirstChild("configs"), "config", configs);
+     *  if (configs.size() > 0) {
+     *  logger.info("PropertyMapList config count: " + configs.size());
+     *  Iterator config = configs.iterator();
+     *  while (config.hasNext()) {
+     *  String configName = (String) config.next();
+     *  loadMap(
+     *  (configFile.getParentFile().getPath() +
+     *  System.getProperty("file.separator") +
+     *  configName), modules);
+     *  }
+     *  }
+     *  }
+     */
   }
 
 
   /**
-   * Creates a DataRecord object by comparing and extracting properties from an
-   * object that must be in the loaded mappings
+   *  Description of the Method
    *
-   * @param object Description of the Parameter
-   * @param action Description of the Parameter
-   * @return Description of the Return Value
+   * @param  object  Description of the Parameter
+   * @param  action  Description of the Parameter
+   * @return         Description of the Return Value
    */
   public DataRecord createDataRecord(Object object, String action) {
+    return createDataRecord(object, action, true);
+  }
+
+
+  /**
+   *  Creates a DataRecord object by comparing and extracting properties from an
+   *  object that must be in the loaded mappings
+   *
+   * @param  object         Description of the Parameter
+   * @param  action         Description of the Parameter
+   * @param  performLookup  Description of the Parameter
+   * @return                Description of the Return Value
+   */
+  public DataRecord createDataRecord(Object object, String action, boolean performLookup) {
     if (this.containsKey(object.getClass().getName())) {
       PropertyMap thisMap = (PropertyMap) this.get(
           object.getClass().getName());
@@ -196,19 +209,23 @@ public class PropertyMapList extends HashMap {
       Iterator properties = thisMap.iterator();
       while (properties.hasNext()) {
         Property thisProperty = (Property) properties.next();
-        if (thisProperty.getLookupValue() != null && "-1".equals(
-            ObjectUtils.getParam(object, thisProperty.getName()))) {
-          //Looking up a -1 is not helpful and will cause the server to
-          //reject the transaction
-        } else {
-          if (thisProperty.hasValue()) {
-            record.addField(
-                thisProperty.getName(), thisProperty.getValue(), thisProperty.getLookupValue(), thisProperty.getAlias());
+        if (performLookup) {
+          if (thisProperty.getLookupValue() != null && "-1".equals(
+              ObjectUtils.getParam(object, thisProperty.getName()))) {
+            //Looking up a -1 is not helpful and will cause the server to
+            //reject the transaction
           } else {
-            record.addField(
-                thisProperty.getName(), ObjectUtils.getParam(
-                object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
+            if (thisProperty.hasValue()) {
+              record.addField(
+                  thisProperty.getName(), thisProperty.getValue(), thisProperty.getLookupValue(), thisProperty.getAlias());
+            } else {
+              record.addField(
+                  thisProperty.getName(), ObjectUtils.getParam(
+                  object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
+            }
           }
+        } else {
+          record.addField(thisProperty.getName(), ObjectUtils.getParam(object, thisProperty.getName()), null, thisProperty.getAlias());
         }
       }
       return record;
@@ -220,13 +237,13 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   * Writes all of the objects in the supplied list to a writer by converting
-   * them to Data Record objects first
+   *  Writes all of the objects in the supplied list to a writer by converting
+   *  them to Data Record objects first
    *
-   * @param writer Description of the Parameter
-   * @param list   Description of the Parameter
-   * @param action Description of the Parameter
-   * @return Description of the Return Value
+   * @param  writer  Description of the Parameter
+   * @param  list    Description of the Parameter
+   * @param  action  Description of the Parameter
+   * @return         Description of the Return Value
    */
   public boolean saveList(DataWriter writer, AbstractList list, String action) {
     logger.info(
@@ -244,10 +261,10 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   * Gets the map attribute of the PropertyMapList object
+   *  Gets the map attribute of the PropertyMapList object
    *
-   * @param mapId Description of the Parameter
-   * @return The map value
+   * @param  mapId  Description of the Parameter
+   * @return        The map value
    */
   public PropertyMap getMap(String mapId) {
     Iterator maps = this.keySet().iterator();

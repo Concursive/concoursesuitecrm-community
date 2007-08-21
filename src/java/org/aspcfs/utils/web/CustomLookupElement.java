@@ -109,7 +109,7 @@ public class CustomLookupElement extends HashMap {
         String columnName = meta.getColumnName(i);
         int columnType = meta.getColumnType(i);
         String data = null;
-        if (columnType == Types.CLOB || columnType == Types.BLOB) {
+        if (columnType == Types.CLOB || columnType == Types.BLOB || columnType == Types.LONGVARCHAR) {
           data = rs.getString(i);
           columnType = Types.VARCHAR;
         } else {
@@ -383,7 +383,8 @@ public class CustomLookupElement extends HashMap {
       //This code needs to be maintained. If support for new column types are
       //required, then the corresponding "else if" needs to be added.
       if (thisColumn.getType() == java.sql.Types.CHAR ||
-          thisColumn.getType() == java.sql.Types.VARCHAR) {
+          thisColumn.getType() == java.sql.Types.VARCHAR ||
+          thisColumn.getType() == java.sql.Types.LONGVARCHAR) {
         pst.setString(++paramCount, thisColumn.getValue());
       } else if (thisColumn.getType() == java.sql.Types.INTEGER) {
         if ("saved_criteriaelement".equals(getTableName()) &&
@@ -409,7 +410,8 @@ public class CustomLookupElement extends HashMap {
       } else if (thisColumn.getType() == java.sql.Types.TIMESTAMP) {
         DatabaseUtils.setTimestamp(pst, ++paramCount,
             StringUtils.hasText(thisColumn.getValue()) ?
-                DateUtils.parseTimestampString(thisColumn.getValue()) : null);
+                DateUtils.parseTimestampString(thisColumn.getValue()) : 
+                new java.sql.Timestamp(System.currentTimeMillis()));
       }
     }
     pst.execute();

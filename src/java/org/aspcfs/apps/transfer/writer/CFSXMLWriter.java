@@ -19,13 +19,15 @@ import org.apache.log4j.Logger;
 import org.aspcfs.apps.transfer.DataField;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.utils.DatabaseUtils;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Iterator;
 
 /**
- * Description of the Class
+ * Writes data records to the specified file; if the file exists the default
+ * behavior is to append a new data record set to the existing file
  *
  * @author holub
  * @version $Id$
@@ -36,7 +38,7 @@ public class CFSXMLWriter implements DataWriter {
 
   private String lastResponse = null;
   private String filename = null;
-
+  private boolean append = true;
   XMLStreamWriter writer = null;
 
   /* (non-Javadoc)
@@ -55,8 +57,40 @@ public class CFSXMLWriter implements DataWriter {
     this.filename = fileName;
   }
 
-  /* (non-Javadoc)
-   * @see org.aspcfs.apps.transfer.DataWriter#setAutoCommit(boolean)
+  /**
+   * Gets the append attribute of the CFSXMLWriter object
+   *
+   * @return The overwrite value
+   */
+  public boolean getAppend() {
+    return append;
+  }
+
+
+  /**
+   * Sets the append attribute of the CFSXMLWriter object
+   *
+   * @param tmp The new overwrite value
+   */
+  public void setAppend(boolean tmp) {
+    this.append = tmp;
+  }
+
+
+  /**
+   * Sets the append attribute of the CFSXMLWriter object
+   *
+   * @param tmp The new overwrite value
+   */
+  public void setAppend(String tmp) {
+    this.append = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Sets the autoCommit attribute of the CFSXMLWriter object
+   *
+   * @param flag The new autoCommit value
    */
   public void setAutoCommit(boolean flag) {
     // TODO Auto-generated method stub
@@ -83,11 +117,9 @@ public class CFSXMLWriter implements DataWriter {
     if (filename == null) {
       return false;
     }
-
     try {
       XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-      writer = outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(filename), "utf-8");
-
+      writer = outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(filename, append), "utf-8");
       writer.writeStartElement("aspcfs");
       writer.writeStartElement("cfsdata");
     } catch (Exception e) {

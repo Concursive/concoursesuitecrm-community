@@ -441,7 +441,10 @@ public class ParameterList extends ArrayList {
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
     this.addParam("user_hierarchy", UserUtils.getUserIdRange(request));
     this.addParam("user_contact_name", UserUtils.getUserContactName(request));
-    
+    //default output type
+    this.addParam("REPORT_OUTPUT_TYPE", String.valueOf(
+            org.aspcfs.modules.reports.base.ReportQueue.REPORT_TYPE_PDF));
+
     //Determine the module and add the constants required
     PermissionCategory thisCategory = (PermissionCategory) request.getAttribute("category");
     if (thisCategory != null) {
