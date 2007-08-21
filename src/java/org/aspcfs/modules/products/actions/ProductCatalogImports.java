@@ -510,8 +510,7 @@ public class ProductCatalogImports extends CFSModule {
         context.getRequest().setAttribute("ImportValidator", validator);
 
         if (validator.getErrors().size() == 0) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandProcess(context);
+          return executeCommandProcess(context,db);
         }
       } else {
         context.getRequest().setAttribute(
@@ -538,8 +537,20 @@ public class ProductCatalogImports extends CFSModule {
    */
   public String executeCommandProcess(ActionContext context) {
     Connection db = null;
+    String status = null;
     try {
       db = this.getConnection(context);
+      status = this.executeCommandProcess(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+    
+  private String executeCommandProcess(ActionContext context,Connection db) throws SQLException {
       String moduleId = context.getRequest().getParameter("moduleId");
       if (moduleId == null || "-1".equals(moduleId)) {
         moduleId = Integer.toString(PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_PRODUCT_CATALOG));
@@ -584,10 +595,6 @@ public class ProductCatalogImports extends CFSModule {
         context.getRequest().setAttribute(
             "actionError", template.getParsedText());
       }
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    }
     return getReturn(context, "Process");
   }
 

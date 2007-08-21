@@ -22,8 +22,29 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
-	<parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
-		<defaultValueExpression ><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	<parameter name="lookup_role_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND myuser.role_id = $P{lookup_role}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup_role" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[accounts.accounts_add.Role]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup_department_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND c.department = $P{lookup_department}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lookup_department" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[reports.employees.employees.department]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[new Integer(1)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="boolean_enabled_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND myuser.enabled = $P{boolean_enabled}]]></parameterDescription>
+		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="boolean_enabled" isForPrompting="true" class="java.lang.String">
+		<parameterDescription><![CDATA[reports.admin.users.enabled]]></parameterDescription>
+		<defaultValueExpression ><![CDATA["-1"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="language" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["en"]]></defaultValueExpression>
@@ -32,19 +53,25 @@
 		<defaultValueExpression ><![CDATA["US"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CENTRIC_DICTIONARY" isForPrompting="false" class="java.util.Map"/>
-  <parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<parameter name="SCRIPT_DB_CONNECTION" isForPrompting="false" class="java.sql.Connection"/>
+	<parameter name="DB-TRUE" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="DB-FALSE" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT myuser.user_id, myuser.username,
 myuser.last_login, myuser.expires, myuser.enabled, 
-c.namefirst, c.namelast, c.title,
+c.namefirst, c.namelast, c.title, ld.description as department,
 r."role",
 manager.namefirst AS manager_namefirst, 
 manager.namelast AS manager_namelast  
 FROM "access" myuser
 LEFT JOIN contact c ON (myuser.user_id = c.user_id)
-LEFT JOIN contact manager ON (myuser.manager_id = manager.user_id),
+LEFT JOIN contact manager ON (myuser.manager_id = manager.user_id)
+LEFT JOIN lookup_department ld ON (c.department = ld.code),
 "role" r
 WHERE myuser.role_id = r.role_id
 AND myuser.user_id > 0
+$P!{boolean_enabled_where}
+$P!{lookup_role_where}
+$P!{lookup_department_where}
 ORDER BY r."role",
 c.namelast, c.namefirst,
 myuser.username]]></queryString>
@@ -56,6 +83,7 @@ myuser.username]]></queryString>
 	<field name="namefirst" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>
 	<field name="title" class="java.lang.String"/>
+	<field name="department" class="java.lang.String"/>
 	<field name="role" class="java.lang.String"/>
 	<field name="manager_namefirst" class="java.lang.String"/>
 	<field name="manager_namelast" class="java.lang.String"/>
@@ -159,9 +187,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="4"
+						x="1"
 						y="18"
-						width="127"
+						width="121"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -181,9 +209,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="273"
+						x="348"
 						y="18"
-						width="124"
+						width="112"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -203,9 +231,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="498"
+						x="559"
 						y="18"
-						width="132"
+						width="84"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -225,7 +253,7 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="632"
+						x="644"
 						y="18"
 						width="44"
 						height="13"
@@ -247,9 +275,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="683"
+						x="691"
 						y="18"
-						width="51"
+						width="48"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -269,9 +297,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="135"
+						x="123"
 						y="18"
-						width="133"
+						width="116"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -291,9 +319,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="398"
+						x="462"
 						y="18"
-						width="98"
+						width="95"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -309,6 +337,28 @@ new Integer(0))]]></variableExpression>
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.admin.users.username", "Username")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="240"
+						y="18"
+						width="105"
+						height="13"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-8"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLabel($P{CENTRIC_DICTIONARY}, "reports.employees.employees.department", "Department")]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
@@ -360,9 +410,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="4"
+						x="1"
 						y="2"
-						width="127"
+						width="121"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -382,9 +432,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="135"
+						x="123"
 						y="2"
-						width="133"
+						width="116"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -404,9 +454,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="273"
+						x="348"
 						y="2"
-						width="124"
+						width="112"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -426,9 +476,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="498"
+						x="559"
 						y="2"
-						width="132"
+						width="84"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -448,7 +498,7 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="632"
+						x="644"
 						y="2"
 						width="44"
 						height="13"
@@ -470,9 +520,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="683"
+						x="691"
 						y="2"
-						width="51"
+						width="48"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -492,9 +542,9 @@ new Integer(0))]]></variableExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="398"
+						x="462"
 						y="2"
-						width="98"
+						width="95"
 						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -510,6 +560,28 @@ new Integer(0))]]></variableExpression>
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{username}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="240"
+						y="2"
+						width="105"
+						height="13"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-9"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1250" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{department}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

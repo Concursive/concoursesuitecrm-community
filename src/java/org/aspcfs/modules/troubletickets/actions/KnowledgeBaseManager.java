@@ -249,6 +249,21 @@ public final class KnowledgeBaseManager extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAdd(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+    
+  private String executeCommandAdd(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "tickets-knowledge-base-add"))) {
       return ("PermissionError");
     }
@@ -262,19 +277,9 @@ public final class KnowledgeBaseManager extends CFSModule {
     kb.setTitle(title);
     kb.setDescription(description);
     kb.setCategoryId(categoryId);
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       TicketCategory category = new TicketCategory(db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("thisCategory", category);
       context.getRequest().setAttribute("kb", kb);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return getReturn(context, "Add");
   }
 
@@ -286,6 +291,21 @@ public final class KnowledgeBaseManager extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModify(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+  
+  private String executeCommandModify(ActionContext context,Connection db) throws NumberFormatException, SQLException {  
     if (!(hasPermission(context, "tickets-knowledge-base-view"))) {
       return ("PermissionError");
     }
@@ -298,9 +318,6 @@ public final class KnowledgeBaseManager extends CFSModule {
     String categoryId = (String) context.getRequest().getAttribute("categoryId");
 
     KnowledgeBase kb = new KnowledgeBase();
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       if (kb.getId() == -1) {
         kb = new KnowledgeBase();
         kb.setBuildResources(true);
@@ -317,13 +334,6 @@ public final class KnowledgeBaseManager extends CFSModule {
       TicketCategory category = new TicketCategory(db, kb.getCategoryId());
       context.getRequest().setAttribute("thisCategory", category);
       context.getRequest().setAttribute("kb", kb);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return getReturn(context,"Modify");
   }
 
@@ -443,11 +453,9 @@ public final class KnowledgeBaseManager extends CFSModule {
           if (kb.getDescription() != null) {
             context.getRequest().setAttribute("description", kb.getDescription());
           }
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAdd(context);
+          return executeCommandAdd(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModify(context);
+          return executeCommandModify(context,db);
         }
       }
     } catch (Exception e) {

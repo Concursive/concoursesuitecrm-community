@@ -206,14 +206,33 @@ public class ParameterList extends ArrayList {
         if (param.getName().startsWith("boolean_")) {
           Parameter whereParam = this.getParameter(param.getName() + "_where");
           if (whereParam != null) {
-            if ("1".equals(param.getValue())) {
-              //Replace the default with the description value
-              addParam(whereParam.getName(), whereParam.getDescription());
-            } else if ("0".equals(param.getValue())) {
-              //Leave the default
+            //check to see if the description needs to be parsed
+            if (whereParam.getDescription().indexOf("$P{") > -1) {
+              Template where = new Template(whereParam.getDescription());
+              Parameter dbTrue = this.getParameter("DB-TRUE");
+              Parameter dbFalse = this.getParameter("DB-FALSE");
+              if (dbTrue != null && dbFalse != null) {
+                if ("1".equals(param.getValue())) {
+                  where.addParseElement("$P{" + param.getName() + "}", dbTrue.getValue());
+                  addParam(whereParam.getName(), where.getParsedText());
+                } else if ("0".equals(param.getValue())) {
+                  where.addParseElement("$P{" + param.getName() + "}", dbFalse.getValue());
+                  addParam(whereParam.getName(), where.getParsedText());
+                } else {
+                  //Blank out the default
+                  addParam(whereParam.getName(), "");
+                }
+              }
             } else {
-              //Blank out the default
-              addParam(whereParam.getName(), "");
+              if ("1".equals(param.getValue())) {
+                //Replace the default with the description value
+                addParam(whereParam.getName(), whereParam.getDescription());
+              } else if ("0".equals(param.getValue())) {
+                //Leave the default
+              } else {
+                //Blank out the default
+                addParam(whereParam.getName(), "");
+              }
             }
           }
           addParam(param.getName(), param.getValue());
@@ -422,7 +441,7 @@ public class ParameterList extends ArrayList {
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
     this.addParam("user_hierarchy", UserUtils.getUserIdRange(request));
     this.addParam("user_contact_name", UserUtils.getUserContactName(request));
-
+    
     //Determine the module and add the constants required
     PermissionCategory thisCategory = (PermissionCategory) request.getAttribute("category");
     if (thisCategory != null) {

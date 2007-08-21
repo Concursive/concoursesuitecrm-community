@@ -91,7 +91,6 @@ public class OrganizationAddressList extends AddressList implements SyncableList
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
   public PreparedStatement prepareList(Connection db) throws SQLException {

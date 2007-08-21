@@ -57,6 +57,21 @@ public final class Tabs extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);      
+      status = this.executeCommandAdd(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }      
+    
+  private String executeCommandAdd(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
     }
@@ -82,22 +97,12 @@ public final class Tabs extends CFSModule {
       context.getRequest().setAttribute("nextTabId", nextTabId);
     }
     Site site = null;
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       site = new Site();
       site.setBuildTabList(true);
       site.queryRecord(db, Integer.parseInt(siteId));
       context.getRequest().setAttribute("site", site);
       tab.setSiteId(siteId);
       context.getRequest().setAttribute("tab", tab);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return this.getReturn(context, "Add");
   }
 
@@ -109,6 +114,21 @@ public final class Tabs extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);      
+      status = this.executeCommandModify(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }      
+    
+  private String executeCommandModify(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
     }
@@ -123,9 +143,6 @@ public final class Tabs extends CFSModule {
     Tab tab = (Tab) context.getFormBean();
     Site site = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       site = new Site();
       site.setBuildTabList(true);
       site.queryRecord(db, Integer.parseInt(siteId));
@@ -135,13 +152,6 @@ public final class Tabs extends CFSModule {
       }
       tab.setSiteId(siteId);
       context.getRequest().setAttribute("tab", tab);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return this.getReturn(context, "Modify");
   }
 
@@ -195,11 +205,9 @@ public final class Tabs extends CFSModule {
           context.getRequest().setAttribute("previousTabId", previousTabId);
         }
         if (tab.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModify(context);
+          return executeCommandModify(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAdd(context);
+          return executeCommandAdd(context,db);
         }
       }
       context.getRequest().setAttribute("siteId", String.valueOf(tab.getSiteId()));

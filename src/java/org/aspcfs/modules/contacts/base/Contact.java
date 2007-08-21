@@ -33,7 +33,6 @@ import org.aspcfs.modules.communications.base.RecipientList;
 import org.aspcfs.modules.communications.base.SurveyResponseList;
 import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
-import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.quotes.base.QuoteList;
 import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
@@ -197,15 +196,15 @@ public class Contact extends GenericBean {
 
   //filter used by xml api to retrieve the contact info for a particular user
   private String username = null;
-  
+
   public void setUsername(String tmp) {
     this.username = tmp;
   }
-  
+
   public String getUsername() {
     return username;
   }
-  
+
   /**
    * Gets the permission attribute of the Contact object
    *
@@ -360,7 +359,7 @@ public class Contact extends GenericBean {
   public Contact(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-   
+
 
 
   /**
@@ -454,15 +453,7 @@ public class Contact extends GenericBean {
     pst.setInt(1, contactId);
     pst.setBoolean(2, true);
     pst.setBoolean(3, true);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-    //  logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       buildRecord(rs);
     }
@@ -1477,15 +1468,7 @@ public class Contact extends GenericBean {
             "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-   //   logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       this.setHasEnabledOwnerAccount(true);
     } else {
@@ -4072,15 +4055,7 @@ public class Contact extends GenericBean {
             "FROM search_fields " +
             "WHERE description = ? ");
     pst.setString(1, "Contact ID");
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-     // logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-     // logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       fieldId = rs.getInt("id");
     }
@@ -4265,15 +4240,7 @@ public class Contact extends GenericBean {
             "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
             "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       userId = rs.getInt("user_id");
       setHasAccount(true);
@@ -4305,15 +4272,7 @@ public class Contact extends GenericBean {
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, id);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    rs = DatabaseUtils.executeQuery(db, pst);
     while (rs.next()) {
       LookupElement thisType = new LookupElement();
       thisType.setCode(rs.getInt("type_id"));
@@ -4348,15 +4307,7 @@ public class Contact extends GenericBean {
             "AND enabled = ? ");
     pst.setInt(1, this.getId());
     pst.setBoolean(2, true);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       setHasEnabledAccount(true);
     } else {
@@ -4385,15 +4336,7 @@ public class Contact extends GenericBean {
             "AND campaign_id = ? ");
     pst.setInt(1, this.getId());
     pst.setInt(2, campaignId);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       setExcludedFromCampaign(true);
     } else {
@@ -4610,14 +4553,14 @@ public class Contact extends GenericBean {
 
  /**
   * Populates this object from a shortened result set
-  * 
+  *
   * @param rs
   * @throws SQLException
   */
   protected void buildShortRecord(ResultSet rs) throws SQLException{
 	  // c.user_id, c.contact_id, c.namelast, c.namefirst, o.name, c.owner, c.status_id, c.entered
 	  this.setId(rs.getInt("contact_id"));
-	    userId = DatabaseUtils.getInt(rs, "user_id");      
+	    userId = DatabaseUtils.getInt(rs, "user_id");
 	    nameLast = rs.getString("namelast");
 	    nameFirst = rs.getString("namefirst");
 	    orgName = rs.getString("name");
@@ -4629,7 +4572,7 @@ public class Contact extends GenericBean {
       orgId = DatabaseUtils.getInt(rs, "org_id");
       siteId = DatabaseUtils.getInt(rs, "site_id");
   }
-  
+
   /**
    * Populates this object from a result set
    *
@@ -4805,15 +4748,7 @@ public class Contact extends GenericBean {
             "FROM excluded_recipient " +
             "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       excludedCount = rs.getInt("excludedcount");
     }
@@ -4832,15 +4767,7 @@ public class Contact extends GenericBean {
             "FROM cfsinbox_messagelink " +
             "WHERE sent_to = ? ");
     pst.setInt(1, this.getId());
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       messageCount = rs.getInt("messagecount");
     }
@@ -4862,15 +4789,7 @@ public class Contact extends GenericBean {
             "FROM action_item_log " +
             "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
     pst.setInt(1, this.getId());
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       actionItemLogCount = rs.getInt("actionitemlogcount");
     }
@@ -4887,15 +4806,7 @@ public class Contact extends GenericBean {
             "FROM action_item " +
             "WHERE link_item_id = ? ");
     pst.setInt(1, this.getId());
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       actionItemCount = rs.getInt("actionitemcount");
     }
@@ -4992,11 +4903,11 @@ public class Contact extends GenericBean {
 		if (title != null && !"".equals(title)) {
 			return Contact.getNameLastFirst(nameLast, nameFirst) + " - " + title;
 		}
-		
+
 		return Contact.getNameLastFirst(nameLast, nameFirst);
 	}
-	
-	
+
+
   /**
    * Gets the nameFirstLast attribute of the Contact class
    *
@@ -5071,15 +4982,7 @@ public class Contact extends GenericBean {
               "WHERE contact_id = ? " +
               (this.getOrgId() != -1 ? "AND opp_id IS NULL " : ""));
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-//        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-//        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("activities");
@@ -5097,15 +5000,7 @@ public class Contact extends GenericBean {
               "WHERE cfr.link_module_id = " + Constants.CONTACTS + " " +
               "AND cfr.link_item_id = ? ");
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-//        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-//        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("folders");
@@ -5124,15 +5019,7 @@ public class Contact extends GenericBean {
               "AND trashed_date IS NULL " +
               "AND ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-//        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-//        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("tickets");
@@ -5149,15 +5036,7 @@ public class Contact extends GenericBean {
               "FROM tasklink_contact " +
               "WHERE contact_id = ? ");
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-//        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-//        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("tasks");
@@ -5175,15 +5054,7 @@ public class Contact extends GenericBean {
               "FROM service_contract " +
               "WHERE contact_id = ? AND trashed_date IS NULL");
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-//        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-//        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("contracts");
@@ -5201,15 +5072,7 @@ public class Contact extends GenericBean {
               "FROM asset " +
               "WHERE contact_id = ? AND trashed_date IS NULL");
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-//        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-//        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName("assets");
@@ -5351,15 +5214,7 @@ public class Contact extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(sqlSelect);
     pst.setInt(++i, tmpContactId);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       contactSiteId = DatabaseUtils.getInt(rs, "site_id");
     }
@@ -5419,15 +5274,7 @@ public class Contact extends GenericBean {
                 "FROM search_fields " +
                 "WHERE description = ? ");
         pst.setString(1, "Contact ID");
-        if (System.getProperty("DEBUG") != null) {
-          milies = System.currentTimeMillis();
-//          logger.debug(pst.toString());
-        }
-        ResultSet rs = pst.executeQuery();
-        if (System.getProperty("DEBUG") != null) {
-          milies = System.currentTimeMillis() - milies;
-//          logger.debug(String.valueOf(milies) + " ms");
-        }
+        ResultSet rs = DatabaseUtils.executeQuery(db, pst);
         if (rs.next()) {
           fieldId = rs.getInt("id");
         }
@@ -5615,15 +5462,7 @@ public class Contact extends GenericBean {
             "FROM contact " +
             "WHERE contact_id = ?");
     pst.setInt(1, this.getId());
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-//      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-//      logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       oldId = rs.getInt("owner");
     }
@@ -5870,10 +5709,10 @@ public class Contact extends GenericBean {
     }
     return result;
   }
-  
+
   public void select(Connection db) throws SQLException {
     int contactId = -1;
-    
+
     if (username != null) {
       PreparedStatement pst = db.prepareStatement(
         "SELECT c.contact_id " +
@@ -5887,7 +5726,7 @@ public class Contact extends GenericBean {
       }
       rs.close();
       pst.close();
-      
+
       if (contactId > -1) {
         queryRecord(db, contactId);
       }

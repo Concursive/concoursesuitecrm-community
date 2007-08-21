@@ -56,6 +56,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -534,11 +535,27 @@ public final class Leads extends CFSModule {
    * @param context Description of Parameter
    * @return Description of the Returned Value
    */
+  
+  
   public String executeCommandSearchForm(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandSearchForm(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+      
+  private String executeCommandSearchForm(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-    Connection db = null;
     PagedListInfo searchOppListInfo = this.getPagedListInfo(
         context, "SearchOppListInfo");
     //Prepare viewpoints
@@ -551,8 +568,6 @@ public final class Leads extends CFSModule {
     if (vpUserId != -1 && vpUserId != userId) {
       userId = vpUserId;
     }
-    try {
-      db = this.getConnection(context);
       //Opportunity types drop-down menu
       LookupList environmentSelect = systemStatus.getLookupList(
           db, "lookup_opportunity_environment");
@@ -616,12 +631,6 @@ public final class Leads extends CFSModule {
       siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
       siteList.setJsEvent("onChange=\"javascript:resetSiteData(this.form);\"");
       context.getRequest().setAttribute("SiteIdList", siteList);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "Search Opportunities", "Search Opportunities");
     return ("SearchOK");
   }
@@ -1466,8 +1475,7 @@ public final class Leads extends CFSModule {
         return ("OppListOK");
       } else {
         processErrors(context, oppList.getErrors());
-        // TODO: Executing a new action within an open db can create a deadlock
-        return executeCommandSearchForm(context);
+        return executeCommandSearchForm(context,db);
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);

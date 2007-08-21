@@ -214,6 +214,8 @@ public final class AccountsCalls extends CFSModule {
       addFormElements(context, db);
       ContactList cl = new ContactList();
       cl.setOrgId(orgId);
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList", cl);
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -266,6 +268,8 @@ public final class AccountsCalls extends CFSModule {
       addFormElements(context, db);
       ContactList cl = new ContactList();
       cl.setOrgId(orgId);
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList", cl);
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -448,6 +452,8 @@ public final class AccountsCalls extends CFSModule {
       addFormElements(context, db);
       ContactList cl = new ContactList();
       cl.setOrgId(thisCall.getOrgId());
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList", cl);
       if (!recordInserted && resultCount == -1) {
@@ -547,6 +553,8 @@ public final class AccountsCalls extends CFSModule {
       Contact thisContact = addFormElements(context, db);
       ContactList cl = new ContactList();
       cl.setOrgId(orgId);
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList",cl);
       addModifyFormElements(db, context, thisCall);
@@ -673,6 +681,8 @@ public final class AccountsCalls extends CFSModule {
       context.getRequest().setAttribute("callResultList", resultList);
       ContactList cl = new ContactList();
       cl.setOrgId(thisCall.getOrgId());
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList",cl);
       //Priority Lookup

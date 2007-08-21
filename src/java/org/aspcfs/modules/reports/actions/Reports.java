@@ -364,6 +364,11 @@ public final class Reports extends CFSModule {
       params = new ParameterList();
       params.setSystemStatus(systemStatus);
       params.setParameters(jasperReport);
+      
+      //db param values will be used to set existing parameter based on user input 
+      params.addParam("DB-TRUE", DatabaseUtils.getTrue(db));
+      params.addParam("DB-FALSE", DatabaseUtils.getFalse(db));
+      
       //Set the user supplied parameters from the request
       toInsert = params.setParameters(context.getRequest());
       if (toInsert) {

@@ -209,7 +209,7 @@
       <record><![CDATA[Territory 5: Southwest]]></record>
     </lookup>
     <lookup table="lookup_asset_status">
-      <record default_item="true"><![CDATA[In use]]></record>
+      <record><![CDATA[In use]]></record>
       <record><![CDATA[Not in use]]></record>
       <record><![CDATA[Requires maintenance]]></record>
       <record><![CDATA[Retired]]></record>

@@ -62,6 +62,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -381,13 +382,25 @@ public final class Sales extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandSearchForm(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }    
+    return status;
+  }
+    
+  private String executeCommandSearchForm(ActionContext context,Connection db) throws SQLException {
     if (!(hasPermission(context, "sales-view"))) {
       return ("PermissionError");
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
-    Connection db = null;
-    try {
-      db = getConnection(context);
       // Create the paged list info to store the search form
       PagedListInfo salesListInfo = this.getPagedListInfo(context, "SalesListInfo");
       salesListInfo.setCurrentLetter("");
@@ -414,14 +427,6 @@ public final class Sales extends CFSModule {
         siteList.addItem(Constants.INVALID_SITE, systemStatus.getLabel("accounts.allSites"));
       }
       context.getRequest().setAttribute("SiteIdList", siteList);
-
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      e.printStackTrace();
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "Leads", "Leads");
     return "SearchOK";
   }
@@ -433,10 +438,24 @@ public final class Sales extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAdd(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+
+  private String executeCommandAdd(ActionContext context, Connection db) throws SQLException {
     if (!(hasPermission(context, "sales-leads-add"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     Contact thisContact = null;
     String addAnother = (String) context.getRequest().getAttribute("addAnother");
     if (addAnother == null || "".equals(addAnother.trim())) {
@@ -445,8 +464,6 @@ public final class Sales extends CFSModule {
        thisContact = new Contact();
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = getConnection(context);
       // prepare userList for reassigning owner
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       User thisRec = thisUser.getUserRecord();
@@ -470,13 +487,6 @@ public final class Sales extends CFSModule {
       if (thisContact != null) {
         context.getRequest().setAttribute("ContactDetails", thisContact);
       }
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      e.printStackTrace();
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "Leads", "Leads");
     return "PrepareOK";
   }
@@ -488,10 +498,25 @@ public final class Sales extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModify(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+
+  
+  private String executeCommandModify(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "sales-leads-add"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     String reset = context.getRequest().getParameter("reset");
     String contactId = context.getRequest().getParameter("contactId");
     if (contactId == null || "".equals(contactId.trim())) {
@@ -501,8 +526,6 @@ public final class Sales extends CFSModule {
     String addAnother = (String) context.getRequest().getAttribute("addAnother");
     thisContact = (Contact) context.getFormBean();
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = getConnection(context);
 
       if (reset == null || !"true".equals(reset)) {
         thisContact = new Contact();
@@ -528,13 +551,6 @@ public final class Sales extends CFSModule {
       context.getRequest().setAttribute("IndustryList", industryList);
       context.getRequest().setAttribute("UserList", userList);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      e.printStackTrace();
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "Leads", "Leads");
     return "PrepareOK";
   }
@@ -598,11 +614,9 @@ public final class Sales extends CFSModule {
         }
       } else {
         if (thisContact.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModify(context);
+          return executeCommandModify(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAdd(context);
+          return executeCommandAdd(context,db);
         }
       }
     } catch (Exception e) {
@@ -725,8 +739,7 @@ public final class Sales extends CFSModule {
       context.getRequest().setAttribute("systemStatus", systemStatus);
       if (!fetchedList) {
         processErrors(context, contacts.getErrors());
-        // TODO: Executing a new action within an open db can create a deadlock
-        return executeCommandSearchForm(context);
+        return executeCommandSearchForm(context,db);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

@@ -105,70 +105,77 @@ public final class UserGroups extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!hasPermission(context, "admin-view")) {
-      return ("PermissionError");
-    }
     Connection db = null;
-    UserGroup group = (UserGroup) context.getFormBean();
-    if (group == null) {
-      group = new UserGroup();
-    }
-    SystemStatus systemStatus = this.getSystemStatus(context);
+    String status = null;
     try {
       db = this.getConnection(context);
-      context.getRequest().setAttribute("userGroup", group);
-      StringBuffer vectorUserId = new StringBuffer();
-      StringBuffer vectorState = new StringBuffer();
-      HtmlSelect selCurrentTeam = new HtmlSelect();
-      LookupList siteid = new LookupList(db, "lookup_site_id");
-      siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("SiteIdList", siteid);
-      if (group.getGroupUsers() != null) {
-        Iterator iter = group.getGroupUsers().iterator();
-        while (iter.hasNext()) {
-          User selUser = (User) iter.next();
-          if (selUser.getContact().getOrgId() == 0) {
-            selCurrentTeam.addItem(selUser.getId(), selUser.getContact().getNameFirstLast() + (!selUser.getEnabled() ? " (X)" : ""));
-          } else {
-            //Append organization name if this user is not a primary contact of his organization
-            Organization organization = new Organization(db, selUser.getContact().getOrgId());
-            String userNameForDisplay = selUser.getContact().getNameFirstLast() + " (" + organization.getName() + ")" +
-                (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
-            if (organization.getPrimaryContact() != null) {
-              if (organization.getPrimaryContact().getId() == selUser.getContact().getId()) {
-                userNameForDisplay = selUser.getContact().getNameFirstLast() +
-                    (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
-              }
-            }
-            selCurrentTeam.addItem(selUser.getId(), userNameForDisplay);
-          }
-          vectorUserId.append(selUser.getId());
-          vectorState.append("user");
-          if (iter.hasNext()) {
-            vectorUserId.append("|");
-            vectorState.append("|");
-          }
-        }
-      }
-      context.getRequest().setAttribute("currentTeam", selCurrentTeam);
-      context.getRequest().setAttribute("vectorUserId", vectorUserId.toString());
-      context.getRequest().setAttribute("vectorState", vectorState.toString());
+      status = this.executeCommandAdd(context, db);
     } catch (Exception e) {
-      e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return status;
+  }
+
+  private String executeCommandAdd(ActionContext context, Connection db) throws SQLException {
+    if (!hasPermission(context, "admin-view")) {
+      return ("PermissionError");
+    }
+    UserGroup group = (UserGroup) context.getFormBean();
+    if (group == null) {
+      group = new UserGroup();
+    }
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("userGroup", group);
+    StringBuffer vectorUserId = new StringBuffer();
+    StringBuffer vectorState = new StringBuffer();
+    HtmlSelect selCurrentTeam = new HtmlSelect();
+    LookupList siteid = new LookupList(db, "lookup_site_id");
+    siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SiteIdList", siteid);
+    if (group.getGroupUsers() != null) {
+      Iterator iter = group.getGroupUsers().iterator();
+      while (iter.hasNext()) {
+        User selUser = (User) iter.next();
+        if (selUser.getContact().getOrgId() == 0) {
+          selCurrentTeam.addItem(selUser.getId(), selUser.getContact().getNameFirstLast() + (!selUser.getEnabled() ? " (X)" : ""));
+        } else {
+          // Append organization name if this user is not a primary contact of
+          // his organization
+          Organization organization = new Organization(db, selUser.getContact().getOrgId());
+          String userNameForDisplay = selUser.getContact().getNameFirstLast() + " (" + organization.getName() + ")"
+              + (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
+          if (organization.getPrimaryContact() != null) {
+            if (organization.getPrimaryContact().getId() == selUser.getContact().getId()) {
+              userNameForDisplay = selUser.getContact().getNameFirstLast()
+                  + (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
+            }
+          }
+          selCurrentTeam.addItem(selUser.getId(), userNameForDisplay);
+        }
+        vectorUserId.append(selUser.getId());
+        vectorState.append("user");
+        if (iter.hasNext()) {
+          vectorUserId.append("|");
+          vectorState.append("|");
+        }
+      }
+    }
+    context.getRequest().setAttribute("currentTeam", selCurrentTeam);
+    context.getRequest().setAttribute("vectorUserId", vectorUserId.toString());
+    context.getRequest().setAttribute("vectorState", vectorState.toString());
     return "AddOK";
   }
 
 
   /**
-   *  Description of the Method
-   *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * Description of the Method
+   * 
+   * @param context
+   *          Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {
@@ -203,11 +210,9 @@ public final class UserGroups extends CFSModule {
       context.getRequest().setAttribute("userGroup", group);
       if (!isValid || (!recordInserted && recordCount == -1)) {
         if (group.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAdd(context);
+          return executeCommandAdd(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModify(context);
+          return executeCommandModify(context,db);
         }
       }
     } catch (Exception e) {
@@ -228,73 +233,80 @@ public final class UserGroups extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-    if (!hasPermission(context, "admin-view")) {
-      return ("PermissionError");
-    }
     Connection db = null;
-    String groupId = context.getRequest().getParameter("groupId");
-    UserGroup group = (UserGroup) context.getFormBean();
-    SystemStatus systemStatus = this.getSystemStatus(context);
+    String status = null;
     try {
       db = this.getConnection(context);
-      if (group.getId() == -1) {
-        group = new UserGroup();
-        group.setBuildResources(true);
-        group.queryRecord(db, Integer.parseInt(groupId));
-      }
-      LookupList siteid = new LookupList(db, "lookup_site_id");
-      siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
-      context.getRequest().setAttribute("SiteIdList", siteid);
-      StringBuffer vectorUserId = new StringBuffer();
-      StringBuffer vectorState = new StringBuffer();
-      HtmlSelect selCurrentTeam = new HtmlSelect();
-      if (group.getGroupUsers() != null) {
-        Iterator iter = group.getGroupUsers().iterator();
-        while (iter.hasNext()) {
-          User selUser = (User) iter.next();
-          if (selUser.getContact().getOrgId() == 0) {
-            selCurrentTeam.addItem(selUser.getId(), selUser.getContact().getNameFirstLast() + (!selUser.getEnabled() ? " (X)" : ""));
-          } else {
-            //Append organization name if this user is not a primary contact of his organization
-            Organization organization = new Organization(db, selUser.getContact().getOrgId());
-            String userNameForDisplay = selUser.getContact().getNameFirstLast() + " (" + organization.getName() + ")" +
-                (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
-            if (organization.getPrimaryContact() != null) {
-              if (organization.getPrimaryContact().getId() == selUser.getContact().getId()) {
-                userNameForDisplay = selUser.getContact().getNameFirstLast() +
-                    (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
-              }
-            }
-            selCurrentTeam.addItem(selUser.getId(), userNameForDisplay);
-          }
-          vectorUserId.append(selUser.getId());
-          vectorState.append("user");
-          if (iter.hasNext()) {
-            vectorUserId.append("|");
-            vectorState.append("|");
-          }
-        }
-      }
-      context.getRequest().setAttribute("currentTeam", selCurrentTeam);
-      context.getRequest().setAttribute("vectorUserId", vectorUserId.toString());
-      context.getRequest().setAttribute("vectorState", vectorState.toString());
-      context.getRequest().setAttribute("userGroup", group);
+      status = this.executeCommandModify(context, db);
     } catch (Exception e) {
-      e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return status;
+  }
+
+  private String executeCommandModify(ActionContext context, Connection db) throws NumberFormatException, SQLException {
+    if (!hasPermission(context, "admin-view")) {
+      return ("PermissionError");
+    }
+    String groupId = context.getRequest().getParameter("groupId");
+    UserGroup group = (UserGroup) context.getFormBean();
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    if (group.getId() == -1) {
+      group = new UserGroup();
+      group.setBuildResources(true);
+      group.queryRecord(db, Integer.parseInt(groupId));
+    }
+    LookupList siteid = new LookupList(db, "lookup_site_id");
+    siteid.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
+    context.getRequest().setAttribute("SiteIdList", siteid);
+    StringBuffer vectorUserId = new StringBuffer();
+    StringBuffer vectorState = new StringBuffer();
+    HtmlSelect selCurrentTeam = new HtmlSelect();
+    if (group.getGroupUsers() != null) {
+      Iterator iter = group.getGroupUsers().iterator();
+      while (iter.hasNext()) {
+        User selUser = (User) iter.next();
+        if (selUser.getContact().getOrgId() == 0) {
+          selCurrentTeam.addItem(selUser.getId(), selUser.getContact().getNameFirstLast() + (!selUser.getEnabled() ? " (X)" : ""));
+        } else {
+          // Append organization name if this user is not a primary contact of
+          // his organization
+          Organization organization = new Organization(db, selUser.getContact().getOrgId());
+          String userNameForDisplay = selUser.getContact().getNameFirstLast() + " (" + organization.getName() + ")"
+              + (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
+          if (organization.getPrimaryContact() != null) {
+            if (organization.getPrimaryContact().getId() == selUser.getContact().getId()) {
+              userNameForDisplay = selUser.getContact().getNameFirstLast()
+                  + (!selUser.getEnabled() || !selUser.getContact().getEnabled() || selUser.getContact().isTrashed() ? " (X)" : "");
+            }
+          }
+          selCurrentTeam.addItem(selUser.getId(), userNameForDisplay);
+        }
+        vectorUserId.append(selUser.getId());
+        vectorState.append("user");
+        if (iter.hasNext()) {
+          vectorUserId.append("|");
+          vectorState.append("|");
+        }
+      }
+    }
+    context.getRequest().setAttribute("currentTeam", selCurrentTeam);
+    context.getRequest().setAttribute("vectorUserId", vectorUserId.toString());
+    context.getRequest().setAttribute("vectorState", vectorState.toString());
+    context.getRequest().setAttribute("userGroup", group);
     return "AddOK";
   }
 
 
   /**
-   *  Description of the Method
-   *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * Description of the Method
+   * 
+   * @param context
+   *          Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "admin-view")) {

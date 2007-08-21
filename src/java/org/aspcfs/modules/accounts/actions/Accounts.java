@@ -1592,11 +1592,27 @@ public final class Accounts extends CFSModule {
    * @param  context  Description of Parameter
    * @return          Description of the Returned Value
    */
+
   public String executeCommandFields(ActionContext context) {
+	  Connection db = null;
+	  String status = null;
+    try{
+        db = this.getConnection(context);
+        status = this.executeCommandFields(context,db);
+    } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");    
+	} finally {
+	    this.freeConnection(context, db);
+	}
+	return status;
+  }
+  
+  private String executeCommandFields(ActionContext context, Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
       return ("PermissionError");
     }
-    Connection db = null;
+
     Organization thisOrganization = null;
     String source = context.getRequest().getParameter("source");
     String actionStepId = context.getRequest().getParameter("actionStepId");
@@ -1609,9 +1625,7 @@ public final class Accounts extends CFSModule {
     String recordId = null;
     boolean showRecords = true;
     String selectedCatId = null;
-    try {
-      String orgId = context.getRequest().getParameter("orgId");
-      db = this.getConnection(context);
+      String orgId = context.getRequest().getParameter("orgId");      
       //Check access permission to organization record
       if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
         return ("PermissionError");
@@ -1690,12 +1704,6 @@ public final class Accounts extends CFSModule {
         }
         context.getRequest().setAttribute("Category", thisCategory);
       }
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "View Accounts", "Custom Fields Details");
     if (Integer.parseInt(selectedCatId) <= 0) {
       return getReturn(context, "FieldsEmpty");
@@ -1799,15 +1807,12 @@ public final class Accounts extends CFSModule {
           context.getRequest().setAttribute("Records", recordList);
         } else if (thisCategory.getRecordId() != -1 && thisCategory.getAllowMultipleRecords()) {
           context.getRequest().setAttribute("recordDeleted", "true");
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandFields(context);
+          return executeCommandFields(context,db);
         } else if (thisCategory.getRecordId() != -1 && !thisCategory.getAllowMultipleRecords()) {
           context.getRequest().setAttribute("recId", recordId);
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModifyFields(context);
+          return executeCommandModifyFields(context,db);
         } else if (thisCategory.getRecordId() == -1 && !thisCategory.getAllowMultipleRecords()) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAddFolderRecord(context);
+          return executeCommandAddFolderRecord(context,db);
         }
         //The user requested a specific record, or this category only
         //allows a single record.
@@ -1839,10 +1844,24 @@ public final class Accounts extends CFSModule {
    * @return          Description of the Returned Value
    */
   public String executeCommandAddFolderRecord(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try{
+        db = this.getConnection(context);
+        status = this.executeCommandAddFolderRecord(context,db);
+    } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");    
+  } finally {
+      this.freeConnection(context, db);
+  }
+  return status;
+  }
+    
+  private String executeCommandAddFolderRecord(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     String source = context.getRequest().getParameter("source");
     String actionStepId = context.getRequest().getParameter("actionStepId");
     if (source != null && !"".equals(source.trim())) {
@@ -1852,9 +1871,7 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("actionStepId", actionStepId);
     }
     Organization thisOrganization = null;
-    try {
       String orgId = context.getRequest().getParameter("orgId");
-      db = this.getConnection(context);
       //Check access permission to organization record
       if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
         return ("PermissionError");
@@ -1874,12 +1891,6 @@ public final class Accounts extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "View Accounts", "Add Folder Record");
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));
@@ -1894,11 +1905,27 @@ public final class Accounts extends CFSModule {
    * @param  context  Description of Parameter
    * @return          Description of the Returned Value
    */
-  public String executeCommandModifyFields(ActionContext context) {
+  
+  public String executeCommandModifyFields(ActionContext context){
+    Connection db = null;
+    String status = null;
+    try{
+        db = this.getConnection(context);
+        status = this.executeCommandModifyFields(context,db);
+    } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");    
+  } finally {
+      this.freeConnection(context, db);
+  }
+  return status;
+  }
+  
+  
+  private String executeCommandModifyFields(ActionContext context, Connection db) throws SQLException{ 
     if (!hasPermission(context, "accounts-accounts-folders-edit")) {
       return ("PermissionError");
     }
-    Connection db = null;
     Organization thisOrganization = null;
     String source = context.getRequest().getParameter("source");
     String actionStepId = context.getRequest().getParameter("actionStepId");
@@ -1916,9 +1943,7 @@ public final class Accounts extends CFSModule {
         recordId = String.valueOf(-1);
       }
     }
-    try {
       String orgId = context.getRequest().getParameter("orgId");
-      db = this.getConnection(context);
       //Check access permission to organization record
       if (!isRecordAccessPermitted(context, db, Integer.parseInt(orgId))) {
         return ("PermissionError");
@@ -1937,12 +1962,6 @@ public final class Accounts extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     addModuleBean(context, "View Accounts", "Modify Custom Fields");
     context.getRequest().setAttribute(
         "systemStatus", this.getSystemStatus(context));

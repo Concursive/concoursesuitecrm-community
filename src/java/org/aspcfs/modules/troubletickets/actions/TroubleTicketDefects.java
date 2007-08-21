@@ -102,13 +102,25 @@ public final class TroubleTicketDefects extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAdd(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+  
+  private String executeCommandAdd(ActionContext context,Connection db) throws SQLException {  
     if (!(hasPermission(context, "tickets-defects-add"))) {
       return ("PermissionError");
     }
     TicketDefect defect = (TicketDefect) context.getFormBean();
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       if (context.getRequest().getParameter("title") == null) {
         defect.setStartDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
         defect.setEnabled(true);
@@ -120,13 +132,6 @@ public final class TroubleTicketDefects extends CFSModule {
       }
       context.getRequest().setAttribute("defect", defect);
       buildFormElements(context, db);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return ("AddOK");
   }
 
@@ -138,6 +143,21 @@ public final class TroubleTicketDefects extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModify(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }  
+    
+  private String executeCommandModify(ActionContext context,Connection db) throws Exception {
     if (!(hasPermission(context, "tickets-defects-edit"))) {
       return ("PermissionError");
     }
@@ -147,9 +167,6 @@ public final class TroubleTicketDefects extends CFSModule {
     }
 
     TicketDefect defect = (TicketDefect) context.getFormBean();
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       if (defect.getId() == -1) {
         defect = new TicketDefect(db, Integer.parseInt(defectId));
       }
@@ -160,13 +177,6 @@ public final class TroubleTicketDefects extends CFSModule {
       defect.printDefect();
       context.getRequest().setAttribute("defect", defect);
       buildFormElements(context, db);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return ("ModifyOK");
   }
 
@@ -204,11 +214,9 @@ public final class TroubleTicketDefects extends CFSModule {
       if (!isValid || (!recordInserted && resultCount == -1)) {
         context.getRequest().setAttribute("defect", defect);
         if (defect.getId() != -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModify(context);
+          return executeCommandModify(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAdd(context);
+          return executeCommandAdd(context,db);
         }
       }
     } catch (Exception e) {

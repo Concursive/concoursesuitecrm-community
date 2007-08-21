@@ -1525,7 +1525,10 @@ public class Call extends GenericBean {
       }
       Contact thisContact = new Contact();
       if (this.getContactId() > 0) {
-        thisContact = new Contact(db, this.getContactId());
+        thisContact.setBuildDetails(false);
+        thisContact.setBuildTypes(false);
+        thisContact.setId(this.getContactId());
+        thisContact.build(db);
       }
       StringBuffer sql = new StringBuffer();
       id = DatabaseUtils.getNextSeq(db, "call_log_call_id_seq");

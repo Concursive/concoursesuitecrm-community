@@ -35,6 +35,7 @@ import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -151,9 +152,25 @@ public final class ActionPlanEditor extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAddPlan(ActionContext context) {
+  Connection db = null;
+  String status = null;
+  try {
+    db = this.getConnection(context);
+    status = this.executeCommandAddPlan(context, db);
+  } catch (Exception e) {
+    context.getRequest().setAttribute("Error", e);
+    return ("SystemError");
+  } finally {
+    this.freeConnection(context, db);
+  }
+  return status;
+}
+  
+  
+  private String executeCommandAddPlan(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!hasPermission(context, "admin-actionplans-add")) {
       return ("PermissionError");
-    }
+    }    
     addModuleBean(context, "ActionPlan", "AddPlan");
     String siteId = context.getRequest().getParameter("siteId");
     String moduleId = context.getRequest().getParameter("moduleId");
@@ -161,8 +178,6 @@ public final class ActionPlanEditor extends CFSModule {
     User user = this.getUser(context, this.getUserId(context));
     SystemStatus systemStatus = this.getSystemStatus(context);
     ActionPlan plan = (ActionPlan) context.getFormBean();
-    Connection db = null;
-    try {
       if (context.getRequest().getParameter("enabled") == null) {
         plan.setEnabled(true);
       }
@@ -179,7 +194,6 @@ public final class ActionPlanEditor extends CFSModule {
       } else if (user.getSiteId() > -1) {
         plan.setSiteId(user.getSiteId());
       }
-      db = this.getConnection(context);
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("permissionCategory", permissionCategory);
       context.getRequest().setAttribute("constantId", constantId);
@@ -254,13 +268,6 @@ public final class ActionPlanEditor extends CFSModule {
         plan.setSubCat3(0);
       }
       context.getRequest().setAttribute("actionPlan", plan);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "AddPlanOK";
   }
 
@@ -308,11 +315,9 @@ public final class ActionPlanEditor extends CFSModule {
       }
       if (!isValid) {
         if (plan.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandRenamePlan(context);
+          return executeCommandRenamePlan(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAddPlan(context);
+          return executeCommandAddPlan(context,db);
         }
       }
       context.getRequest().setAttribute("planId", String.valueOf(plan.getId()));
@@ -383,6 +388,22 @@ public final class ActionPlanEditor extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandRenamePlan(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandRenamePlan(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+  
+  
+  private String executeCommandRenamePlan(ActionContext context, Connection db) throws NumberFormatException, SQLException {
     if (!hasPermission(context, "admin-actionplans-edit")) {
       return ("PermissionError");
     }
@@ -394,11 +415,9 @@ public final class ActionPlanEditor extends CFSModule {
       planId = (String) context.getRequest().getAttribute("planId");
     }
     ActionPlan plan = (ActionPlan) context.getFormBean();
-    Connection db = null;
     addModuleBean(context, "ActionPlan", "RenamePlan");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
+
       PermissionCategory permissionCategory = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("permissionCategory", permissionCategory);
       context.getRequest().setAttribute("constantId", constantId);
@@ -478,12 +497,6 @@ public final class ActionPlanEditor extends CFSModule {
       context.getRequest().setAttribute("SiteIdList", siteid);
 
       context.getRequest().setAttribute("actionPlan", plan);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "AddPlanOK";
   }
 
@@ -691,6 +704,21 @@ public final class ActionPlanEditor extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAddPhase(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAddPhase(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+
+  private String executeCommandAddPhase(ActionContext context,Connection db) throws SQLException {  
     if (!hasPermission(context, "admin-actionplans-add")) {
       return ("PermissionError");
     }
@@ -708,11 +736,8 @@ public final class ActionPlanEditor extends CFSModule {
     }
     ActionPlan plan = null;
     ActionPhase phase = (ActionPhase) context.getFormBean();
-    Connection db = null;
     addModuleBean(context, "ActionPlan", "AddPhase");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
       LookupList durationType = systemStatus.getLookupList(db, "lookup_duration_type");
       context.getRequest().setAttribute("durationType", durationType);
       plan = new ActionPlan();
@@ -730,12 +755,6 @@ public final class ActionPlanEditor extends CFSModule {
       HtmlSelect thisSelect = list.getHtmlSelectObject();
       thisSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "-- None --"), 0);
       context.getRequest().setAttribute("actionPhaseSelect", thisSelect);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "AddPhaseOK";
   }
 
@@ -786,11 +805,9 @@ public final class ActionPlanEditor extends CFSModule {
           context.getRequest().setAttribute("nextPhaseId", nextPhaseId);
         }
         if (phase.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModifyPhase(context);
+          return executeCommandModifyPhase(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAddPhase(context);
+          return executeCommandAddPhase(context,db);
         }
       } else {
           if (previousPhaseId != null && !"".equals(previousPhaseId)) {
@@ -868,6 +885,21 @@ public final class ActionPlanEditor extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandModifyPhase(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModifyPhase(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+  
+  private String executeCommandModifyPhase(ActionContext context,Connection db) throws NumberFormatException, SQLException {  
     if (!hasPermission(context, "admin-actionplans-add")) {
       return ("PermissionError");
     }
@@ -881,11 +913,8 @@ public final class ActionPlanEditor extends CFSModule {
     }
     ActionPlan plan = null;
     ActionPhase phase = (ActionPhase) context.getFormBean();
-    Connection db = null;
     addModuleBean(context, "ActionPhase", "Modify Phase");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
       plan = new ActionPlan();
       plan.setBuildPhases(true);
       plan.queryRecord(db, Integer.parseInt(planId));
@@ -901,12 +930,6 @@ public final class ActionPlanEditor extends CFSModule {
       HtmlSelect thisSelect = list.getHtmlSelectObject();
       thisSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "-- None --"), 0);
       context.getRequest().setAttribute("actionPhaseSelect", thisSelect);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "AddPhaseOK";
   }
 
@@ -1013,10 +1036,24 @@ public final class ActionPlanEditor extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandAddStep(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAddStep(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+  
+  private String executeCommandAddStep(ActionContext context,Connection db) throws NumberFormatException, SQLException {  
     if (!hasPermission(context, "admin-actionplans-add")) {
       return ("PermissionError");
     }
-    Connection db = null;
     User user = this.getUser(context, this.getUserId(context));
     String previousStepId = context.getRequest().getParameter("previousStepId");
     if (previousStepId != null && !"".equals(previousStepId)) {
@@ -1046,8 +1083,6 @@ public final class ActionPlanEditor extends CFSModule {
     step = (ActionStep) context.getFormBean();
     addModuleBean(context, "ActionStep", "AddStep");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
       plan = new ActionPlan(db, Integer.parseInt(planId));
       phase = new ActionPhase();
       phase.setBuildSteps(true);
@@ -1123,12 +1158,6 @@ public final class ActionPlanEditor extends CFSModule {
       }
       mappedStepActions.addItem(-1,systemStatus.getLabel("admin.actionPlan.noAdditionalActionRequired.text","-- No additional action required --"));
       context.getRequest().setAttribute("stepActionSelect", mappedStepActions);
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "AddStepOK";
   }
 
@@ -1140,10 +1169,24 @@ public final class ActionPlanEditor extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandModifyStep(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModifyStep(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }    
+
+  private String executeCommandModifyStep(ActionContext context,Connection db) throws NumberFormatException, SQLException {    
     if (!hasPermission(context, "admin-actionplans-add")) {
       return ("PermissionError");
     }
-    Connection db = null;
     String planId = context.getRequest().getParameter("planId");
     if (planId == null || "".equals(planId)) {
       planId = (String) context.getRequest().getAttribute("planId");
@@ -1167,8 +1210,6 @@ public final class ActionPlanEditor extends CFSModule {
     ActionStep step = (ActionStep) context.getFormBean();
     addModuleBean(context, "ActionStep", "AddStep");
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
       plan = new ActionPlan(db, Integer.parseInt(planId));
       phase = new ActionPhase(db, Integer.parseInt(phaseId));
       if (step.getId() == -1) {
@@ -1246,12 +1287,6 @@ public final class ActionPlanEditor extends CFSModule {
       //Make the account types available in the request
       context.getRequest().setAttribute(
             "typeList", step.getAccountTypes());
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "ModifyStepOK";
   }
 
@@ -1310,11 +1345,9 @@ public final class ActionPlanEditor extends CFSModule {
         context.getRequest().setAttribute(
             "typeList", step.getAccountTypes());
         if (step.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModifyStep(context);
+          return executeCommandModifyStep(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAddStep(context);
+          return executeCommandAddStep(context,db);
         }
       } else {
         if (previousStepId != null && !"".equals(previousStepId)) {

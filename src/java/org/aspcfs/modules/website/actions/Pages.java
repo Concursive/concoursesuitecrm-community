@@ -54,6 +54,21 @@ public final class Pages extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAdd(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }   
+    
+  private String executeCommandAdd(ActionContext context,Connection db) throws NumberFormatException, SQLException {
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
     }
@@ -81,21 +96,11 @@ public final class Pages extends CFSModule {
       page.setNextPageId(nextPageId);
     }
     PageGroup pageGroup = null;
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       pageGroup = new PageGroup();
       pageGroup.queryRecord(db, Integer.parseInt(pageGroupId));
       pageGroup.buildPageList(db);
       context.getRequest().setAttribute("pageGroup", pageGroup);
       context.getRequest().setAttribute("thisPage", page);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return this.getReturn(context, "Add");
   }
 
@@ -107,6 +112,21 @@ public final class Pages extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModify(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }   
+  
+  private String executeCommandModify(ActionContext context,Connection db) throws NumberFormatException, SQLException {  
     if (!(hasPermission(context, "site-editor-edit"))) {
       return ("PermissionError");
     }
@@ -121,9 +141,6 @@ public final class Pages extends CFSModule {
     Page page = (Page) context.getFormBean();
     PageGroup pageGroup = null;
     SystemStatus systemStatus = this.getSystemStatus(context);
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
       pageGroup = new PageGroup();
       pageGroup.queryRecord(db, Integer.parseInt(pageGroupId));
       pageGroup.buildPageList(db);
@@ -133,13 +150,6 @@ public final class Pages extends CFSModule {
       }
       page.setPageGroupId(pageGroupId);
       context.getRequest().setAttribute("thisPage", page);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return this.getReturn(context, "Modify");
   }
 
@@ -193,11 +203,9 @@ public final class Pages extends CFSModule {
           context.getRequest().setAttribute("previousPageId", previousPageId);
         }
         if (page.getId() > -1) {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModify(context);
+          return executeCommandModify(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAdd(context);
+          return executeCommandAdd(context,db);
         }
       }
       context.getRequest().setAttribute("pageGroupId", String.valueOf(page.getPageGroupId()));

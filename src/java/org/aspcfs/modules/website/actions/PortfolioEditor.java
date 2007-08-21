@@ -361,6 +361,22 @@ public final class PortfolioEditor extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandAddItem(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandAddItem(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }      
+
+  
+  private String executeCommandAddItem(ActionContext context,Connection db) throws SQLException {
     if (!hasPermission(context, "website-portfolio-add")) {
       return ("PermissionError");
     }
@@ -378,7 +394,6 @@ public final class PortfolioEditor extends CFSModule {
     String enabled = context.getRequest().getParameter("enabled");
     String positionId = context.getRequest().getParameter("positionId");
     String doSubmit = context.getRequest().getParameter("dosubmit");
-    Connection db = null;
     PortfolioCategory category = null;
     PortfolioItem item = new PortfolioItem();
     if (item.getCategoryId() == -1) {
@@ -395,21 +410,12 @@ public final class PortfolioEditor extends CFSModule {
       item.setEnabled(enabled);
     }
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
       if (item.getCategoryId() != -1) {
         category = new PortfolioCategory(db, item.getCategoryId());
         context.getRequest().setAttribute("category", category);
       }
       PortfolioEditor.buildHierarchy(db, context);
       context.getRequest().setAttribute("item", item);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "AddItemOK";
   }
 
@@ -421,6 +427,21 @@ public final class PortfolioEditor extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandModifyItem(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandModifyItem(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }      
+    
+  private String executeCommandModifyItem(ActionContext context,Connection db) throws SQLException {
     if (!hasPermission(context, "website-portfolio-edit")) {
       return ("PermissionError");
     }
@@ -438,12 +459,9 @@ public final class PortfolioEditor extends CFSModule {
     String caption = context.getRequest().getParameter("caption");
     String enabled = context.getRequest().getParameter("enabled");
     String positionId = context.getRequest().getParameter("positionId");
-    Connection db = null;
     PortfolioCategory category = null;
     PortfolioItem item = new PortfolioItem();
     SystemStatus systemStatus = this.getSystemStatus(context);
-    try {
-      db = this.getConnection(context);
       if (item.getId() == -1) {
         item = new PortfolioItem();
         item.setBuildResources(true);
@@ -473,13 +491,6 @@ public final class PortfolioEditor extends CFSModule {
         context.getRequest().setAttribute("category", category);
       }
       context.getRequest().setAttribute("item", item);
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
-    }
     return "ModifyItemOK";
   }
 
@@ -637,11 +648,9 @@ public final class PortfolioEditor extends CFSModule {
           if (item.getEnabled()) {
             context.getRequest().setAttribute("enabled", "true");
           }
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandAddItem(context);
+          return executeCommandAddItem(context,db);
         } else {
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandModifyItem(context);
+          return executeCommandModifyItem(context,db);
         }
       }
     } catch (Exception e) {

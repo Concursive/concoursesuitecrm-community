@@ -39,6 +39,7 @@ import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -59,10 +60,24 @@ public final class Reassignments extends CFSModule {
    * @return Description of the Returned Value
    */
   public String executeCommandReassign(ActionContext context) {
+    Connection db = null;
+    String status = null;
+    try {
+      db = this.getConnection(context);
+      status = this.executeCommandReassign(context, db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return status;
+  }
+
+  private String executeCommandReassign(ActionContext context,Connection db) throws SQLException {  
     if (!(hasPermission(context, "myhomepage-reassign-view"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     SystemStatus thisSystem = this.getSystemStatus(context);
     User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     int userId = -1;
@@ -116,9 +131,6 @@ public final class Reassignments extends CFSModule {
     }
     //Generate the counts of all of the items
     if (sourceUser != null) {
-      try {
-        db = getConnection(context);
-
         sourceAccounts = new OrganizationList();
         sourceAccounts.setOwnerId(userId);
         sourceAccounts.buildList(db);
@@ -285,13 +297,7 @@ public final class Reassignments extends CFSModule {
             userToAssignList.setIncludeMe(false);
           }
         }
-      } catch (Exception e) {
-        context.getRequest().setAttribute("Error", e);
-        return ("SystemError");
-      } finally {
-        this.freeConnection(context, db);
-      }
-    }
+    } 
     context.getRequest().setAttribute("SourceUser", sourceUser);
     context.getRequest().setAttribute("UserList", userToAssignList);
     context.getRequest().setAttribute("UserSelectList", userSelectList);
@@ -478,8 +484,7 @@ public final class Reassignments extends CFSModule {
           thisRec.buildResources(db);
         } else {
           processErrors(context, errors);
-          // TODO: Executing a new action within an open db can create a deadlock
-          return executeCommandReassign(context);
+          return executeCommandReassign(context,db);
         }
       }
       //Reassign accounts

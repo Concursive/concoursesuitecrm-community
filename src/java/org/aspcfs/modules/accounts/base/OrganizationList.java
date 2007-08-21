@@ -802,7 +802,7 @@ public class OrganizationList extends Vector implements SyncableList {
   public void setShowMyCompany(boolean showMyCompany) {
     this.showMyCompany = showMyCompany;
   }
-  
+
   public void setShowMyCompany(String showMyCompany) {
     this.showMyCompany = DatabaseUtils.parseBoolean(showMyCompany);
   }
@@ -1591,7 +1591,6 @@ public class OrganizationList extends Vector implements SyncableList {
    *  to be streamed with lower overhead
    *
    * @param  db             Description of the Parameter
-   * @param  pst            Description of the Parameter
    * @return                Description of the Return Value
    * @throws  SQLException  Description of the Exception
    */
@@ -1693,7 +1692,7 @@ public class OrganizationList extends Vector implements SyncableList {
     	"SELECT ora.address_id FROM organization_address ora WHERE ora.org_id = o.org_id AND ora.primary_address = ?) "+
     	"OR oa.address_id IN (SELECT MIN(ctodd.address_id) FROM organization_address ctodd WHERE ctodd.org_id = o.org_id AND "+
     	" ctodd.org_id NOT IN (SELECT org_id FROM organization_address WHERE organization_address.primary_address = ?))) ");
-      
+
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

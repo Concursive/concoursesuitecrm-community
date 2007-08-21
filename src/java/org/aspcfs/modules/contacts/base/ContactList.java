@@ -16,7 +16,6 @@
 package org.aspcfs.modules.contacts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
@@ -31,7 +30,6 @@ import org.aspcfs.modules.base.UserCentric;
 import org.aspcfs.modules.communications.base.SearchCriteriaElement;
 import org.aspcfs.modules.communications.base.SearchCriteriaGroup;
 import org.aspcfs.modules.communications.base.SearchCriteriaList;
-import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -202,7 +200,6 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   private int portalUsersOnly = Constants.UNDEFINED;
 
   // Logger
-  private static long milies = -1;
   private static Logger logger = Logger.getLogger(org.aspcfs.modules.contacts.base.ContactList.class);
 
   /**
@@ -273,7 +270,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   public void setSyncType(String syncType) {
     this.syncType = Integer.parseInt(syncType);
   }
-  
+
   /**
    * Gets the contactUserId attribute of the ContactList object
    *
@@ -3027,7 +3024,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    * @since 1.1
    */
   public PreparedStatement prepareList(Connection db) throws SQLException {
-  
+
     ResultSet rs = null;
     int items = -1;
 
@@ -3056,15 +3053,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       PreparedStatement pst = db.prepareStatement(sqlCount.toString()
           + sqlFilter.toString());
       items = prepareFilter(pst);
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
@@ -3081,15 +3070,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter()
             .toLowerCase());
-        if (System.getProperty("DEBUG") != null) {
-          milies = System.currentTimeMillis();
-          logger.debug(pst.toString());
-        }
-        rs = pst.executeQuery();
-        if (System.getProperty("DEBUG") != null) {
-          milies = System.currentTimeMillis() - milies;
-          logger.debug(String.valueOf(milies) + " ms");
-        }
+        rs = DatabaseUtils.executeQuery(db, pst);
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
           pagedListInfo.setCurrentOffset(offsetCount);
@@ -3189,8 +3170,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     items = prepareFilter(pst);
     return pst;
   }
-  
-  
+
+
   /**
    * Builds a list of contacts based on several parameters. The parameters are
    * set after this object is constructed, then the buildList method is called
@@ -4603,7 +4584,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         sqlFilter.append(") ");
       }
     }
-    
+
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND c.entered > ? ");
@@ -4614,7 +4595,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       sqlFilter.append("AND c.modified > ? ");
       sqlFilter.append("AND c.entered < ? ");
       sqlFilter.append("AND c.modified < ? ");
-    }    
+    }
   }
 
   /**
@@ -5352,15 +5333,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     if (moduleId == Constants.ACCOUNTS) {
       pst.setInt(2, itemId);
     }
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-      logger.debug(pst.toString());
-    }
-    ResultSet rs = pst.executeQuery();
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis() - milies;
-      logger.debug(String.valueOf(milies) + " ms");
-    }
+    ResultSet rs = DatabaseUtils.executeQuery(db, pst);
     if (rs.next()) {
       count = rs.getInt("itemcount");
     }
@@ -5512,15 +5485,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       pst = db.prepareStatement(sqlCount.toString()
           + sqlFilter.toString());
       items = prepareFilter(pst);
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis();
-        logger.debug(pst.toString());
-      }
-      rs = pst.executeQuery();
-      if (System.getProperty("DEBUG") != null) {
-        milies = System.currentTimeMillis() - milies;
-        logger.debug(String.valueOf(milies) + " ms");
-      }
+      rs = DatabaseUtils.executeQuery(db, pst);
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
@@ -5537,15 +5502,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter()
             .toLowerCase());
-        if (System.getProperty("DEBUG") != null) {
-          milies = System.currentTimeMillis();
-          logger.debug(pst.toString());
-        }
-        rs = pst.executeQuery();
-        if (System.getProperty("DEBUG") != null) {
-          milies = System.currentTimeMillis() - milies;
-          logger.debug(String.valueOf(milies) + " ms");
-        }
+        rs = DatabaseUtils.executeQuery(db, pst);
         if (rs.next()) {
           int offsetCount = rs.getInt("recordcount");
           pagedListInfo.setCurrentOffset(offsetCount);
@@ -5638,21 +5595,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (System.getProperty("DEBUG") != null) {
-      milies = System.currentTimeMillis();
-			logger.debug(pst.toString());
-		}
-		if (pagedListInfo != null) {
-			pagedListInfo.doManualOffset(db, pst);
-		}
-		rs = pst.executeQuery();
-		if (System.getProperty("DEBUG") != null) {
-			milies = System.currentTimeMillis() - milies;
-			logger.debug(String.valueOf(milies) + " ms");
-		}
-		if (pagedListInfo != null) {
-			pagedListInfo.doManualOffset(db, rs);
-		}
+		rs = DatabaseUtils.executeQuery(db, pst, pagedListInfo);
 		boolean foundDefaultContact = false;
 		while (rs.next()) {
 			Contact thisContact = new Contact();

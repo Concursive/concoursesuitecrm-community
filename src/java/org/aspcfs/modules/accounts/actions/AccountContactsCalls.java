@@ -448,6 +448,8 @@ public final class AccountContactsCalls extends CFSModule {
 
       ContactList cl = new ContactList();
       cl.setOrgId(thisCall.getOrgId());
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList",cl);
       
@@ -547,6 +549,8 @@ public final class AccountContactsCalls extends CFSModule {
 
       ContactList cl = new ContactList();
       cl.setOrgId(thisCall.getOrgId());
+      cl.setBuildDetails(false);
+      cl.setBuildTypes(false);
       cl.buildList(db);
       context.getRequest().setAttribute("contactList",cl);
       addModifyFormElements(db, context, thisCall);
