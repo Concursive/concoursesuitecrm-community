@@ -831,7 +831,7 @@
 			<fileset dir="${CENTRIC_HOME}/WEB-INF/reports" includes="*.jasper" />
 		</delete>
 		<!-- Compile the reports -->
-		<compileJasperReport srcdir="${CENTRIC_HOME}/WEB-INF/reports" destdir="${CENTRIC_HOME}/WEB-INF/reports" compiler="net.sf.jasperreports.compilers.JRBshCompiler" />
+		<compileJasperReport srcdir="${CENTRIC_HOME}/WEB-INF/reports" destdir="${CENTRIC_HOME}/WEB-INF/reports" />
 	</target>
 
 	<target name="deploy.jasper" depends="deploy.jasper.status" unless="build.config.war">
@@ -1142,8 +1142,7 @@
     </copy>
     <compileJasperReport
         srcdir="${dist.dir}/cfs/WEB-INF/reports"
-        destdir="${dist.dir}/cfs/WEB-INF/reports"
-        compiler="net.sf.jasperreports.compilers.JRBshCompiler"/>
+        destdir="${dist.dir}/cfs/WEB-INF/reports"/>
     <delete>
       <fileset dir="${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>

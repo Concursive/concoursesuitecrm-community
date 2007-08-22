@@ -697,7 +697,7 @@ ORDER BY name]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="true"
 						isPrintWhenDetailOverflows="true">
-							<printWhenExpression><![CDATA[new Boolean($V{accounts_COUNT} == 0)]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean($V{accounts_COUNT} == new Integer(0))]]></printWhenExpression>
 						</reportElement>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">

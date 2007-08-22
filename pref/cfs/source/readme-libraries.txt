@@ -47,8 +47,7 @@ This distribution includes the required Centric CRM 3rd party libraries:
   DaffodilDB_410_Embedded.jar
   interclient.jar
   iText-1.3.jar
-  jasperreports-1.0.2.jar
-  jasperreports-bsh-1.0.2.jar
+  jasperreports-1.3.4.jar
   jaybird-full-2.0.1.jar
   jcommon-1.0.0-rc1.jar
   jfreechart-1.0.0-rc1.jar

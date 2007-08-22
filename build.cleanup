@@ -195,3 +195,7 @@ WEB-INF/lib/derby-10.1.3.jar
 WEB-INF/lib/poi-2.5-final-20040302.jar
 WEB-INF/lib/poi-3.0-alpha2.jar
 WEB-INF/lib/poi-scratchpad-2.5-final-20040302.jar
+
+## 2007-07-09 updated jasper-reports libs
+WEB-INF/lib/jasperreports-1.0.2.jar
+WEB-INF/lib/jasperreports-bsh-1.0.2.jar
