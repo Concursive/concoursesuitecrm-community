@@ -26,6 +26,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Completed" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%
   String trailSource = request.getParameter("trailSource");
@@ -61,8 +62,12 @@
     <a href="AccountContactsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "view|trailSource") %>"><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></a> >
   <% } %>
   <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
-<% }else{ %>
- <dhv:label name="accounts.accounts_contacts_calls_add.LogAnActivity">Log an Activity</dhv:label>
+<% }else{ 
+     if("schedule".equals(request.getAttribute("action"))){ %>
+       <dhv:label name="accounts.accounts_contacts_calls_add.ScheduleAnActivity">Schedule an Activity</dhv:label>
+     <% }else{ %>
+       <dhv:label name="accounts.accounts_contacts_calls_add.LogAnActivity">Log an Activity</dhv:label>
+     <% } %>
 <% } %>
 </td>
 </tr>
@@ -72,22 +77,30 @@
 <dhv:container name="accounts" selected="contacts" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>'>
     <%-- include call add form --%>
-    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+    <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
     <% if ("list".equals(request.getParameter("return"))) {%>
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
     <% }else{ %>
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
     <%}%>
     <br />
     <dhv:formMessage />
     <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     <%@ include file="../contacts/call_include.jsp" %>
     <br>
-    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+    <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
     <% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
+      <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
     <% }else{ %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
+      <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
     <%}%>
     <input type="hidden" name="dosubmit" value="true">
     <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">

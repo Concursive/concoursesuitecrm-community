@@ -19,6 +19,18 @@ function deleteOptions(optionListId){
      frm.options[insertIndex] = new Option(text,value);
     }
     
+    function insertHighlightedOption(text,value,optionListId){
+     var frm = document.getElementById(optionListId);
+     if (frm.selectedIndex>0){
+       insertIndex=frm.selectedIndex;
+     }
+     else{
+       insertIndex= frm.options.length;
+     }
+     frm.options[insertIndex] = new Option(text,value);
+     frm.options[insertIndex].selected="true";
+    }
+    
     
     function insertOptionGroup(text, optionListId) {
       var frm = document.getElementById(optionListId);
@@ -46,6 +58,24 @@ function deleteOptions(optionListId){
 		}
 	}
   
+function changeDivDisplayStyle(divName, displayStyle) {
+    if(document.layers){
+			// Netscape 4 or equiv.
+			divToChange = document.layers[divName];
+			divToChange.document.open();
+      divToChange.document.style.display=displayStyle;
+      divToChange.document.close();
+		} else if(document.all){
+			// MS IE or equiv.
+			divToChange = document.all[divName];
+      divToChange.style.display=displayStyle;
+		} else if(document.getElementById){
+			// Netscape 6 or equiv.
+      divToChange = document.getElementById(divName);
+      divToChange.style.display=displayStyle;
+    }
+	}
+
   function resetNumericFieldValue(fieldId){
     document.getElementById(fieldId).value = -1;
   }

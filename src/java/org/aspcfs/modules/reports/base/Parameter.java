@@ -551,9 +551,15 @@ public class Parameter
     } else if (name.startsWith("range_date")) {
       HtmlSelect select = new HtmlSelect();
       select.addItem("-1", "All");
+      select.addItem("0", "Today");
+      select.addItem("24", "Last 24 hours");
+      select.addItem("48", "Last 48 hours");
       select.addItem("7", "Last 7 days");
       select.addItem("14", "Last 14 days");
       select.addItem("30", "Last 30 days");
+      select.addItem("1", "This year");
+      select.addItem("10", "Custom...");
+      select.setJsEvent("onChange=\"javascript:"+name+"Change('" + name + "');\"");
       request.setAttribute(name, select);
     } else if (name.startsWith("hidden_")) {
       //Nothing, this object is static, but behaviour could change in the future

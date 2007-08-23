@@ -196,6 +196,9 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%"
        class="pagedList">
   <tr>
+    <th width="2%">
+      <img src="images\icons\stock_insert_bookmark-16.gif">
+    </th>
     <th width="43%"><strong><dhv:label
         name="accounts.accounts_calls_list.Subject">Subject</dhv:label></strong>
     </th>
@@ -222,8 +225,11 @@
   %>
   <tr class="row<%= rowid %>">
     <td>
-        <%-- <a href="ExternalContacts.do?command=ContactMessageDetails&id=<%= contactMessage.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(contactMessage.getContactMessage().getMessageSubject()) %></a> --%>
-      <%= toHtml(contactMessage.getContactMessage().getMessageSubject()) %>
+      <%-- TODO: Import messages from Outlook with attachments and provide support to display such attachments --%>
+      &nbsp;
+    </td>
+    <td>
+      <a href="ExternalContacts.do?command=ContactMessageDetails&id=<%= contactMessage.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(contactMessage.getContactMessage().getMessageSubject()) %></a>
     </td>
     <td>
       <% if (contactMessage.getContactMessage().getName() != null && !"".equals(contactMessage.getContactMessage().getName())) {%>
@@ -253,7 +259,7 @@
   <%}%>
   <%} else {%>
   <tr class="containerBody">
-    <td colspan="4">
+    <td colspan="5">
       <dhv:label
           name="accounts.accounts_contacts_messages_view.NoMessagesFound">No
         messages found.</dhv:label>

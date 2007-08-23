@@ -171,6 +171,11 @@ public final class Leads extends CFSModule {
       //add access types
       AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.OPPORTUNITIES);
       context.getRequest().setAttribute("accessTypeList", accessTypeList);
+
+      if (context.getRequest().getParameter("actionSource") != null) {
+        return getReturn(context, "AddPipelineLeads");
+      }
+
       return "PrepareOK";
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -417,6 +422,9 @@ public final class Leads extends CFSModule {
     if (recordInserted) {
       addRecentItem(context, newOpp.getHeader());
       if (context.getRequest().getParameter("popup") != null) {
+          if(context.getRequest().getParameter("fromPop").equals("true")){
+           context.getRequest().setAttribute("fromPop", "true");
+          }
         return ("CloseInsertOppPopup");
       }
       context.getRequest().setAttribute(

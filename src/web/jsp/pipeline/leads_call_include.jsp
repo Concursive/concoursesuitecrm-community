@@ -24,6 +24,7 @@
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="action" class="java.lang.String" scope="request"/>
+<jsp:useBean id="followupContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
@@ -96,7 +97,6 @@
       form.alertDate.value = '';
       form.reminderId.value = '-1';
       form.reminderTypeId.value = '0';
-      form.owner.value = '-1';
       form.priorityId.value = '-1';
     }else{
       if(form.reminder[0].checked){

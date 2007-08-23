@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.accounts.base.NewsArticle,org.aspcfs.modules.mycfs.beans.*" %>
 <%@ page import="org.aspcfs.modules.quotes.base.*" %>
 <%@ page import="org.aspcfs.modules.troubletickets.base.*" %>
@@ -27,6 +28,11 @@
 <jsp:useBean id="IndSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="syncClient" class="org.aspcfs.modules.service.base.SyncClient" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
+
+<jsp:useBean id="historyList" class="org.aspcfs.modules.contacts.base.ContactHistoryList" scope="request"/>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="contactHistoryListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%
@@ -155,7 +161,7 @@
         </tr>
         <tr>
           <td width="100%" valign="top" height="380">
-            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="380" src="empty.html">
+            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="350" src="empty.html">
             </iframe>
           </td>
         </tr>
@@ -168,8 +174,8 @@
   </tr>
 </table>
 <%-- Next section --%>
-<br>
 <dhv:permission name="myhomepage-miner-view">
+<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <td>
@@ -214,4 +220,70 @@
 	<%}%>
 </table>
 </dhv:permission>
-
+<dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="contactHistoryListInfo"/>
+<br />
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <!-- <th width="8" nowrap>&nbsp;</th> -->
+    <th nowrap>
+      <strong><a href="MyCFS.do?command=Home&&column=type<%= isPopup(request)?"&popup=true":"" %>"><dhv:label name="reports.accounts.type">Type</dhv:label></a></strong>
+        <%= contactHistoryListInfo.getSortIcon("type") %>
+    </th>
+    <th width="100%">
+      <strong><dhv:label name="reports.helpdesk.ticket.maintenance.partDescription">Description</dhv:label></strong>
+    </th>
+    <th nowrap>
+      <strong><a href="MyCFS.do?command=Home&column=entered<%= isPopup(request)?"&popup=true":"" %>"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></a></strong>
+        <%= contactHistoryListInfo.getSortIcon("entered") %>
+    </th>    
+  </tr>
+<%
+  Iterator iterator	 = historyList.iterator();
+  if ( iterator.hasNext() ) {
+  int rowid = 0;
+  int i = 0;
+  boolean popup = isPopup(request);
+  while (iterator.hasNext()) {
+    i++;
+        rowid = (rowid != 1?1:2);
+    ContactHistory thisHistoryElement = (ContactHistory) iterator.next();
+    String modify = thisHistoryElement.getPermission(true, (ContactDetails.getOrgId() == -1));
+    String view = thisHistoryElement.getPermission(false,  (ContactDetails.getOrgId() == -1));
+    String delete = thisHistoryElement.getDeletePermission((ContactDetails.getOrgId() == -1));
+    String historyPermission = thisHistoryElement.getViewOrModifyOrDeletePermission((ContactDetails.getOrgId() == -1));    
+    boolean canView = false;
+    boolean canModify = false;
+    boolean canDelete = false;
+%>
+    <tr class="row<%= rowid %>">
+    <!--  Contect menu is hidden now, it can be used later if required -->
+    <!-- <td valign="top" nowrap>
+          <a href="javascript:displayMenu('select<%= i %>','menuContactHistory', '<%= thisHistoryElement.getId() %>', '<%= thisHistoryElement.getContactId() %>', '<%= thisHistoryElement.getLinkObjectId() %>', '<%= thisHistoryElement.getLinkItemId() %>', true, true, true);"
+          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuContactHistory');">
+          <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0" /></a>
+    </td> -->
+    <td valign="top" nowrap>
+      <dhv:evaluate if="<%= !thisHistoryElement.getEnabled() %>"><font color="red"><%= toHtml(thisHistoryElement.getType()) %></font></dhv:evaluate>
+      <dhv:evaluate if="<%= thisHistoryElement.getEnabled() %>"><%= toHtml(thisHistoryElement.getType()) %></dhv:evaluate>
+    </td>
+    <td valign="top" width="100%">
+      <dhv:evaluate if="<%= !thisHistoryElement.getEnabled() %>"><font color="red"><%= toHtml(thisHistoryElement.getDescription()) %></font></dhv:evaluate>
+      <dhv:evaluate if="<%= thisHistoryElement.getEnabled() %>"><%= toHtml(thisHistoryElement.getDescription()) %></dhv:evaluate>
+    </td>
+    <td valign="top" nowrap>
+      <dhv:evaluate if="<%= !thisHistoryElement.getEnabled() %>"><font color="red"><zeroio:tz timestamp="<%= thisHistoryElement.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false" dateOnly="true" /></font></dhv:evaluate>
+      <dhv:evaluate if="<%= thisHistoryElement.getEnabled() %>"><zeroio:tz timestamp="<%= thisHistoryElement.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false" dateOnly="true" /></dhv:evaluate>
+        <%-- <zeroio:tz timestamp="<%= thisHistoryElement.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false" dateOnly="true" /> --%>
+    </td>    
+    </tr>
+<%}%>
+<%} else { %>
+      <tr class="containerBody">
+    <td colspan="5">
+      <dhv:label name="accounts.accountHistory.noHistoryFound">No history found.</dhv:label>
+    </td>
+  </tr>
+<%}%>
+  </table>
+  
+  

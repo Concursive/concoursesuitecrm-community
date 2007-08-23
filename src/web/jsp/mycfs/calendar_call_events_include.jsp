@@ -67,7 +67,7 @@
     <tr <%= toString(pendingCall.getPriorityString()).startsWith("H") ? "class=\"highlightRow\"" : ""%>>
      <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getFollowupContactId() %>', '<%= pendingCall.getId() %>','pending');" 
+       <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getFollowupContactId() %>', '<%= pendingCall.getId() %>','pending',<%=User.getUserId()== pendingCall.getOwner()%>);" 
           onMouseOver="over(0, <%= menuCount %>);" 
           onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');"><img
           src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
@@ -83,10 +83,10 @@
        <%}%>
      </td>
      <td nowrap valign="top">
-        <% if (pendingCall.getContact().getPhoneNumberList().size() > 1) { %>
-            <%= pendingCall.getContact().getPhoneNumberList().getHtmlSelect("contactphone", -1) %>
-        <% } else if (pendingCall.getContact().getPhoneNumberList().size() == 1) { 
-             PhoneNumber thisNumber = (PhoneNumber) pendingCall.getContact().getPhoneNumberList().get(0);
+        <% if (pendingCall.getFollowupContact().getPhoneNumberList().size() > 1) { %>
+                <%= pendingCall.getFollowupContact().getPhoneNumberList().getHtmlSelect("contactphone", -1) %>
+          <% } else if (pendingCall.getFollowupContact().getPhoneNumberList().size() == 1) { 
+             PhoneNumber thisNumber = (PhoneNumber) pendingCall.getFollowupContact().getPhoneNumberList().get(0);
          %>
              <%= String.valueOf(thisNumber.getTypeName().charAt(0)) + ":" + thisNumber.getNumber() %>
         <%}%>
@@ -143,13 +143,13 @@
   <tr>
    <td valign="top">
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
+     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '',<%=User.getUserId()== completedCall.getOwner()%>);" 
         onMouseOver="over(0, <%= menuCount %>)" 
         onMouseOut="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0"></a>
    </td>
    <td nowrap valign="top">
-     <zeroio:tz timestamp="<%= completedCall.getCompleteDate() %>" timeOnly="true"/>
+     <zeroio:tz timestamp="<%= completedCall.getCallStartDate() %>" timeOnly="true"/>
    </td>
    <td nowrap valign="top">
          <% if(completedCall.getContactName()!=null){ %>

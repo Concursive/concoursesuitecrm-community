@@ -38,7 +38,21 @@ if (!FrameworkI18N) {
       "Subject.required":               "- Subject is required\r\n",
       "relationshiptype.needs.selected":"- A relationship type needs to be selected\r\n",
       "Filename.required":              "- Filename is required\r\n",
+      "specify.activity.length.format": "- Check that the activity length is entered correctly\r\n",
       "specify.alert.date":             "- Please specify an alert date\r\n",
+      "specify.activity.start.date":    "- Please specify an activity start date\r\n",
+      "specify.activity.end.date":      "- Please specify an activity end date\r\n",
+      "specify.activity.start.date.format": "- Check that the activity start date is entered correctly\r\n",
+      "specify.activity.end.date.format":   "- Check that the activity end date is entered correctly\r\n",
+      "activity.end.must.later.start.date":  "- Activity end date must be at a later date than start date!\r\n",
+      "select.activity.participant.or.remove.notification": "- Please select at least one activity participant or remove email notification!\r\n",
+      "specify.followup.length.format": "- Check that the followup length is entered correctly\r\n",
+      "specify.followup.start.date":    "- Please specify a followup start date\r\n",
+      "specify.followup.end.date":      "- Please specify a followup end date\r\n",
+      "specify.followup.start.date.format": "- Check that the followup start date is entered correctly\r\n",
+      "specify.followup.end.date.format":   "- Check that the followup end date is entered correctly\r\n",
+      "followup.end.must.later.start.date":  "- Followup end date must be at a later date than start date!\r\n",
+      "select.followup.participant.or.remove.notification": "- Please select at least one followup participant or remove email notification!\r\n",
       "specify.opportunity.type":       "- Please select an opportunity type (account or contact)\r\n",
       "check.ticket.issue.entered":     "- Check that issue is entered\r\n",
       "check.ticket.contact.entered":   "- Check that contact is selected\r\n",
@@ -246,9 +260,10 @@ if (!FrameworkI18N) {
       "confirm.restart.campaign":       "Are you sure you want to restart this campaign?",
       "check.campaign.selection":       "- Please select a valid active campaign.\r\n",
       "check.material.quantity.one":    "- Please enter a valid Number for ",
-      "check.products.import.name.long":  "- Import name is too long\r\n",
-      "folderselcted.range.notzero":      "- Range should not be zero or not entered\r\n",           
-      "label.sending":                  "Sending..."
+      "check.products.import.name.long":"- Import name is too long\r\n",
+      "label.sending":                  "Sending...",
+      "check.companylastname.blanks":	  "- Please enter a valid company name or last name.\r\n",
+      "folderselcted.range.notzero":    "- Range should not be zero or not entered\r\n"
     }
   }
 }

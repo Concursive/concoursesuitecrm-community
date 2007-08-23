@@ -25,12 +25,14 @@
 <jsp:useBean id="action" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="followupContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -43,45 +45,108 @@
     formTest = true;
     message = "";
     alertMessage = "";
-    if ((form.actionSource) && (form.actionSource.value == "GlobalItem") && (((form.contactId) && (form.contactId.value == "-1")) || ((form.followupContactId) && (form.followupContactId.value == "-1") && (form.action.value=='schedule')))) { 
-      message += label("check.ticket.contact.entered","- Check that a Contact is selected\r\n");
-      formTest = false;
-    }
-    
     if (form.subject && checkNullString(form.subject.value)) { 
       message += label("specify.blank.records","- Blank records cannot be saved\r\n");
       formTest = false;
     }
-    
     if (form.callTypeId && form.callTypeId.value == "0") { 
       message += label("specify.type","- Please specify a type\r\n");
       formTest = false;
     }
+    if(form.callLength &&!checkNullString(form.callLength.value) && !checkNumber(form.callLength.value)){
+      message += label("specify.activity.length.format","- Check that the activity length is entered correctly\r\n");
+      formTest = false;
+    }
+    if (form.callStartDate && checkNullString(form.callStartDate.value)) { 
+      message += label("specify.activity.start.date", "- Please specify an activity start date\r\n");
+      formTest = false;
+    }
+    if (form.callEndDate && checkNullString(form.callEndDate.value)) { 
+      message += label("specify.activity.end.date", "- Please specify an activity end date\r\n");
+      formTest = false;
+    }
+    if(form.callStartDate && form.callEndDate && !checkNullString(form.callStartDate.value) && !checkNullString(form.callEndDate.value)){
+      if(!checkDate(form.callStartDate.value)){
+        message += label("specify.activity.start.date.format","- Check that the activity start date is entered correctly\r\n");
+        formTest = false;
+      }
+      if(!checkDate(form.callEndDate.value)){
+        message += label("specify.activity.end.date.format","- Check that the activity end date is entered correctly\r\n");
+        formTest = false;
+      }
+      if(checkDate(form.callStartDate.value) && checkDate(form.callEndDate.value)){
+        if(compareDates(form.callStartDate.value, form.callEndDate.value) == 1){
+          message += label("activity.end.must.later.start.date", "- Activity end date must be at a later date than start date!\r\n");
+          formTest = false;
+        }
+      }
+    }
+    if(form.emailParticipants && form.emailParticipants.checked && (form.participantId[0].value == 'none' || form.participantId[0].value == '-1')){
+      message += label("select.activity.participant.or.remove.notification", "- Please select at least one activity participant or remove email notification!\r\n");
+      formTest = false;
+    }
     if(form.hasFollowup != null && form.hasFollowup.checked || form.action.value=='schedule'){
-    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
-      message += label("specify.alert.date", "- Please specify an alert date\r\n");
-      formTest = false;
-    }
-    if (form.alertText && checkNullString(form.alertText.value)) { 
-      message += label("specify.alert.description", "- Please specify an alert description\r\n");
-      formTest = false;
-    }
-    if (form.alertCallTypeId.value == "0") { 
-      message += label("specify.alert.type","- Please specify an alert type\r\n");
-      formTest = false;
-    }
-    //if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-    //  alertMessage += label("AlertDate.before.today", "Alert Date is before today's date\r\n");
-    //}
-    if (form.reminder[1].checked && !checkNumber(form.reminderId.value)) { 
-      message += label("check.reminder","- Check that the reminder is entered correctly\r\n");
-      formTest = false;
-    }
+      if (checkNullString(form.alertDate.value)) { 
+        message += label("specify.followup.start.date", "- Please specify a followup start date\r\n");
+        formTest = false;
+      }
+      if (checkNullString(form.followupEndDate.value)) { 
+        message += label("specify.followup.end.date", "- Please specify a followup end date\r\n");
+        formTest = false;
+      }
+      if(!checkNullString(form.alertDate.value) && !checkNullString(form.followupEndDate.value)){
+        if(!checkAlertDate(form.alertDate.value)){
+          message += label("specify.followup.start.date.format","- Check that the followup start date is entered correctly\r\n");
+          formTest = false;
+        }
+        if(!checkAlertDate(form.followupEndDate.value)){
+          message += label("specify.followup.end.date.format","- Check that the followup end date is entered correctly\r\n");
+          formTest = false;
+        }
+        if(checkDate(form.alertDate.value) && checkDate(form.followupEndDate.value)){
+          if(compareDates(form.alertDate.value, form.followupEndDate.value) == 1){
+            message += label("followup.end.must.later.start.date", "- Followup end date must be at a later date than start date!\r\n");
+            formTest = false;
+          }
+        }
+      }
+      if (form.alertText && checkNullString(form.alertText.value)) { 
+        message += label("specify.alert.description", "- Please specify an alert description\r\n");
+        formTest = false;
+      }
+      if(form.followupLength && !checkNullString(form.followupLength.value) && !checkNumber(form.followupLength.value)){
+        message += label("specify.followup.length.format","- Check that the followup length is entered correctly\r\n");
+        formTest = false;
+      }
+      if (form.alertCallTypeId && form.alertCallTypeId.value == "0") { 
+        message += label("specify.alert.type","- Please specify an alert type\r\n");
+        formTest = false;
+      }
+      //if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+      //  alertMessage += label("AlertDate.before.today", "Alert Date is before today's date\r\n");
+      //}
+      if (form.reminder[1].checked && !checkNumber(form.reminderId.value)) { 
+        message += label("check.reminder","- Check that the reminder is entered correctly\r\n");
+        formTest = false;
+      }
+      if(form.emailFollowupParticipants && form.emailFollowupParticipants.checked && (form.followupParticipantId[0].value == 'none' || form.followupParticipantId[0].value == '-1')){
+        message += label("select.followup.participant.or.remove.notification", "- Please select at least one followup participant or remove email notification!\r\n");
+        formTest = false;
+      }
     }
     if (formTest == false) {
       alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
+      var test = document.addCall.participant;
+      if (test != null) {
+        selectAllOptions(document.addCall.participant);
+      } else{
+        var test = document.addCall.followupparticipant;
+        if (test != null) {
+          selectAllOptions(document.addCall.followupparticipant);
+      }
+      }
       if(alertMessage != ""){
         return confirmAction(alertMessage);
       }
@@ -98,7 +163,6 @@
       form.alertDate.value = '';
       form.reminderId.value = '-1';
       form.reminderTypeId.value = '0';
-      form.owner.value = '-1';
       form.priorityId.value = '-1';
     }else{
       if(form.reminder[0].checked){
@@ -113,6 +177,9 @@
     if (cb.checked) {
       if (form.alertText.value == "") {
         form.alertText.value = form.subject.value;
+      }
+      if (form.followupLocation.value == "") {
+        form.followupLocation.value = form.callLocation .value;
       }
       showSpan(tag);
       form.alertCallTypeId.focus();

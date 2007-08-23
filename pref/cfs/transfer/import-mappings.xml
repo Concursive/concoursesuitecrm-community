@@ -952,7 +952,6 @@
       <property field="length">length</property>
       <property field="subject">subject</property>
       <property field="notes">notes</property>
-      <property field="followup_date">followupDate</property>
       <property field="alertdate">alertDate</property>
       <property field="followup_notes">followupNotes</property>
       <property field="entered">entered</property>
@@ -975,6 +974,32 @@
       <property field="alertdate_timezone">alertDateTimeZone</property>
       <property field="trashed_date">trashedDate</property>
       <property field="followup_contact_id" lookup="contact">followupContactId</property>
+      <property field="followup_end_date">followupEndDate</property>
+      <property field="followup_end_date_timezone">followupEndDateTimeZone</property>
+      <property field="followup_location">followupLocation</property>
+      <property field="followup_length">followupLength</property>
+      <property field="followup_length_duration" lookup="lookupCallReminder">followupLengthDuration</property>
+      <property field="call_start_date">callStartDate</property>
+      <property field="call_start_date_timezone">callStartDateTimeZone</property>
+      <property field="call_end_date">callEndDate</property>
+      <property field="call_end_date_timezone">callEndDateTimeZone</property>
+      <property field="call_location">callLocation</property>
+      <property field="call_length_duration" lookup="lookupCallReminder">callLengthDuration</property>
+      <property field="email_participants">emailParticipants</property>
+      <property field="email_followup_participants">emailFollowupParticipants</property>
+    </map>
+
+    <map class="org.aspcfs.modules.contacts.base.CallParticipant" id="callParticipant"
+         sequence="call_log_participant_participant_id_seq" table="call_log_participant" uniqueField="participant_id">
+      <property field="participant_id" alias="guid">participantId</property>
+      <property field="call_id" lookup="call">callId</property>
+      <property field="contact_id" lookup="contact">contactId</property>
+      <property field="is_available">isAvailable</property>
+      <property field="entered">entered</property>
+      <property field="modified">modified</property>
+      <property field="enteredby" lookup="user">enteredBy</property>
+      <property field="modifiedby" lookup="user">modifiedBy</property>
+      <property field="is_followup">isFollowup</property>
     </map>
 
     <map class="org.aspcfs.modules.pipeline.base.OpportunityComponentLog" id="opportunityComponentLog"
@@ -2410,11 +2435,11 @@
       <property field="name">name</property>
       <property field="description">description</property>
       <property field="template_id">templateId</property>
-      <property field="subject">subject</property>
-      <property field="body">body</property>
-      <property field="reply_addr">replyAddr</property>
+      <property field="subject">messageSubject</property>
+      <property field="body">messageText</property>
+      <property field="reply_addr">replyTo</property>
       <property field="url">url</property>
-      <property field="img">img</property>
+      <property field="img">image</property>
       <property field="enabled">enabled</property>
       <property field="entered">entered</property>
       <property field="enteredby">enteredBy</property>

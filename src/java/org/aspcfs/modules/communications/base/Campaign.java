@@ -15,8 +15,21 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.GenericBean;
-import com.zeroio.iteam.base.FileItemList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionplans.base.ActionStepList;
@@ -33,10 +46,8 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.PasswordHash;
 import org.aspcfs.utils.Template;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.*;
-import java.text.DateFormat;
-import java.util.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileItemList;
 
 /**
  * Description of the Class
@@ -337,7 +348,6 @@ public class Campaign extends GenericBean {
     this.addressSurveyId = Integer.parseInt(tmp);
   }
 
-
   /**
    * Sets the addressResponseCount attribute of the Campaign object
    *
@@ -416,7 +426,6 @@ public class Campaign extends GenericBean {
   public boolean getHasAddressRequest() {
     return hasAddressRequest;
   }
-
 
   /**
    * Gets the addressSurveyId attribute of the Campaign object
@@ -1446,7 +1455,7 @@ public class Campaign extends GenericBean {
   public String getActiveDateString() {
     String tmp = "";
     try {
-      return DateFormat.getDateInstance(3).format(activeDate);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(activeDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -2099,8 +2108,7 @@ public class Campaign extends GenericBean {
       this.setHasAddressRequest(false);
     }
   }
-
-
+  
   /**
    * Description of the Method
    *
@@ -2879,7 +2887,6 @@ public class Campaign extends GenericBean {
           activeSurvey.insert(db);
           this.addressSurveyId = activeSurvey.getId();
         }
-
         //Lock in the message
         Message thisMessage = new Message(db, this.getMessageId());
 
@@ -3264,7 +3271,7 @@ public class Campaign extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE campaign " +
-            "SET description = ?, active_date = ?, active_date_timezone = ?, " +
+            "SET name = ?, description = ?, active_date = ?, active_date_timezone = ?, " +
             "enabled = ?, trashed_date = ?, ");
     if (cc != null && !"".equals(cc)) {
       sql.append("cc = ?, ");
@@ -3283,6 +3290,7 @@ public class Campaign extends GenericBean {
             "WHERE campaign_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
     DatabaseUtils.setTimestamp(pst, ++i, this.getActiveDate());
     pst.setString(++i, this.getActiveDateTimeZone());

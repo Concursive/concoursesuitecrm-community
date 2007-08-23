@@ -50,7 +50,7 @@
 %>
   <tr class="row<%= column %>">
     <td>
-      <a href="Admin.do?command=ConfigDetails&moduleId=<%= thisPermissionCat.getId() %>"><%= toHtml(thisPermissionCat.getCategory()) %></a>
+      <dhv:label name="<%= "" + thisPermissionCat.getConstant() %>"><a href="Admin.do?command=ConfigDetails&moduleId=<%= thisPermissionCat.getId() %>"><%= toHtml(thisPermissionCat.getCategory()) %></a></dhv:label>
     </td>
   </tr>
 <%}%>

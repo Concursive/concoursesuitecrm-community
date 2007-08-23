@@ -21,6 +21,8 @@
 <jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="selectedContacts" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="contactPrimaryEmail" class="java.lang.String" scope="request"/>
+<jsp:useBean id="isEmail" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
@@ -37,7 +39,21 @@
 		}
 	%>	
 	}
-	/**
+  function doClose() {
+        setParentList(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("source") %>','<%= request.getParameter("from") %>','<%= request.getParameter("last") %>','<%=User.getBrowserId()%>');
+        <%
+		   if(isEmail != null && !"".equals(isEmail) && isEmail.equals("true")) {
+             if (contactPrimaryEmail != null && "".equals(contactPrimaryEmail)) { %>
+             opener.changeDivDisplayStyle("contactemail", "");
+             opener.document.getElementById('emptyEmail').value="true";
+          <% } else  if (contactPrimaryEmail != null) { %>
+            opener.changeDivDisplayStyle("contactemail", "none");
+          <% }
+           }
+         %>
+        window.close();
+  }
+  /**
     The Search fields' default values displayed to the user are translated. "Last Name" and "First Name"
     literals must be translated in both the xml and javascript dictionary files for the 'Search' feature to 
     work correctly.
@@ -92,6 +108,7 @@
   <input type="hidden" name="actionItemId" value="<%= (request.getAttribute("actionItemId") != null? (String) request.getAttribute("actionItemId"):"") %>"/>
   <input type="hidden" name="recipient" value="<%= (request.getAttribute("recipient") != null? (String) request.getAttribute("recipient"):"") %>"/>
   <input type="hidden" name="allowDuplicateRecipient" value="<%= (request.getAttribute("allowDuplicateRecipient") != null? (String) request.getAttribute("allowDuplicateRecipient"):"") %>"/>
+  <input type="hidden" name="displayType" value="<%= (request.getAttribute("displayType") != null? (String) request.getAttribute("displayType"):"") %>"/>
   <%@ include file="contactlist_include.jsp" %>
 
 <% if("list".equals(request.getParameter("listType"))){ %>
@@ -121,7 +138,7 @@
   <%} else if ("true".equals((String) request.getAttribute("leads"))) {%>
   <body onLoad="javascript:setParentListLead(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("source") %>','<%= request.getParameter("from") %>','<%= request.getParameter("last") %>','<%=User.getBrowserId()%>');window.close();">
   <%} else {%>
-  <body onLoad="javascript:setParentList(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
+  <body onLoad="javascript:doClose()">
   <%}%>
   <script>recipientEmails = new Array();recipientIds = new Array();</script>
 <%

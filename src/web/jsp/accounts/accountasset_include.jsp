@@ -117,7 +117,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong><dhv:label name="accounts.accountasset_include.SpecificInformation">Specific Information</dhv:label></strong>
+	    <strong><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">

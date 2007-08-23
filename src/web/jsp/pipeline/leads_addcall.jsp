@@ -30,6 +30,8 @@
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
 <jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Completed" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Log" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body>
 <script type="text/javascript">
@@ -85,16 +87,30 @@ function reopenOpportunity(id) {
    String param2 = addLinkParams(request, "viewSource");
 %>
 <dhv:container name="opportunities" selected="calls" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+  <% if ("Log".equals(Log)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else if ("cancel".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
   <br />
   <dhv:formMessage />
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <%@ include file="leads_call_include.jsp" %>
   &nbsp;
   <br />
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+  <% if ("Log".equals(Log)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else if ("cancel".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="oppHeaderId" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">

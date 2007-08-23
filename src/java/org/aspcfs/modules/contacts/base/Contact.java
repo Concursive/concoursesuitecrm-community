@@ -4563,6 +4563,7 @@ public class Contact extends GenericBean {
 	    userId = DatabaseUtils.getInt(rs, "user_id");
 	    nameLast = rs.getString("namelast");
 	    nameFirst = rs.getString("namefirst");
+	    company = rs.getString("company");
 	    orgName = rs.getString("name");
 	    statusId = DatabaseUtils.getInt(rs, "status_id");
 	    owner = DatabaseUtils.getInt(rs, "owner");

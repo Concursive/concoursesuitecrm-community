@@ -33,11 +33,13 @@
 <jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
 <jsp:useBean id="action" class="java.lang.String" scope="request"/>
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="followupContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -109,7 +111,6 @@
       form.alertDate.value = '';
       form.reminderId.value = '-1';
       form.reminderTypeId.value = '0';
-      form.owner.value = '-1';
       form.priorityId.value = '-1';
     }else{
       if(form.reminder != null && form.reminder[0].checked){
@@ -211,7 +212,9 @@
       <%@ include file="call_followup_include.jsp" %>
       &nbsp;
       <%-- include completed activity details --%>
-      <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+      <% if (CallDetails.getSubject() != null && !"".equals(CallDetails.getSubject())) { %>
+        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+      <% } %>
     <% }else{ %>
       <% if(CallDetails.getStatusId() != Call.CANCELED){ %>
       <%-- include completed activity form --%>
@@ -258,12 +261,13 @@
     <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|view|actionId") %>';this.form.dosubmit.value='false';">
   </dhv:evaluate>
   <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <input type="hidden" name="contactId" value="<%= CallDetails.getContactId() %>">
   <input type="hidden" name="oppHeaderId" value="<%= CallDetails.getOppHeaderId() != -1? CallDetails.getOppHeaderId():PreviousCallDetails.getOppHeaderId() %>">
   <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
   <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
   <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
   <input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
+  <input type="hidden" name="callOwner" value="<%= CallDetails.getOwner() %>">
   <%= addHiddenParams(request, "return|view|popup|popupType|actionId") %>
   <% if("pending".equals(request.getParameter("view"))){ %>
     <%-- include completed activity values --%>
@@ -272,17 +276,38 @@
     <input type="hidden" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>">
     <input type="hidden" name="notes" value="<%= toString(CallDetails.getNotes()) %>">
     <input type="hidden" name="resultId" value="<%= CallDetails.getResultId() %>">
+    
+    <zeroio:dateSelect field="callEndDate" timestamp="<%= CallDetails.getCallEndDate() %>" hidden="true" />
+    <zeroio:timeSelect baseName="callEndDate" value="<%= CallDetails.getCallEndDate() %>" timeZone="<%= CallDetails.getCallEndDateTimeZone()%>" hidden="true" />
+    <zeroio:dateSelect field="callStartDate" timestamp="<%= CallDetails.getCallStartDate() %>" hidden="true" />
+    <zeroio:timeSelect baseName="callStartDate" value="<%= CallDetails.getCallStartDate() %>" timeZone="<%= CallDetails.getCallStartDateTimeZone()%>" hidden="true" />
+    <input type="hidden" name="callLocation" value="<%=(CallDetails.getCallLocation())%>" />
+    <input type="hidden" name="callLengthDuration" value="<%=(CallDetails.getCallLengthDuration())%>" />
+    <input type="hidden" name="emailParticipants" value="<%=(CallDetails.getEmailParticipants())%>" />
+    <input type="hidden" name="callEndDateTimeZone" value="<%=(CallDetails.getCallEndDateTimeZone())%>" />
+    <input type="hidden" name="contactName" value="<%=(CallDetails.getContactName())%>" />
+    <input type="hidden" name="callStartDateTimeZone" value="<%=(CallDetails.getCallStartDateTimeZone())%>" />
   <% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)&& (request.getAttribute("alertDateWarning") == null)){ %>
     <%-- include pending activity values --%>
     <input type="hidden" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>">
     <input type="hidden" name="alertCallTypeId" value="<%= CallDetails.getAlertCallTypeId() %>">
     <zeroio:dateSelect field="alertDate" timestamp="<%= CallDetails.getAlertDate() %>" hidden="true" />
     <zeroio:timeSelect baseName="alertDate" value="<%= CallDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" hidden="true"/>
-    <input type="hidden" name="owner" value="<%= CallDetails.getOwner() %>">
     <input type="hidden" name="reminderId" value="<%= CallDetails.getReminderId() %>">
     <input type="hidden" name="reminderTypeId" value="<%= CallDetails.getReminderTypeId() %>">
     <input type="hidden" name="followupNotes" value="<%= toString(CallDetails.getFollowupNotes()) %>">
     <input type="hidden" name="priorityId" value="<%= CallDetails.getPriorityId() %>">
+    
+    <zeroio:dateSelect field="followupEndDate" timestamp="<%= CallDetails.getFollowupEndDate() %>" hidden="true" />
+    <zeroio:timeSelect baseName="followupEndDate" value="<%= CallDetails.getFollowupEndDate() %>" timeZone="<%= CallDetails.getFollowupEndDateTimeZone()%>" hidden="true" />
+    <input type="hidden" name="followupLocation" value="<%=(CallDetails.getFollowupLocation())%>" />
+    <input type="hidden" name="followupLength" value="<%=(CallDetails.getFollowupLength())%>" />  
+    <input type="hidden" name="followupLengthDuration" value="<%=(CallDetails.getFollowupLengthDuration())%>" />
+    <input type="hidden" name="emailFollowupParticipants" value="<%=(CallDetails.getEmailFollowupParticipants())%>" />
+    <input type="hidden" name="followupEndDateTimeZone" value="<%=(CallDetails.getFollowupEndDateTimeZone())%>" />
+    <input type="hidden" name="followupContactName" value="<%=(CallDetails.getFollowupContactName())%>" />
+    <input type="hidden" name="followupContactId" value="<%=(CallDetails.getFollowupContactId())%>" />
+    <input type="hidden" name="alertDateTimeZone" value="<%=(CallDetails.getAlertDateTimeZone())%>" />
   <% } %>
 </dhv:container>
 </form>

@@ -251,11 +251,24 @@ public class ContactEmailAddress
    * @throws SQLException Description of Exception
    */
   public void delete(Connection db) throws SQLException {
+    String where = "";
+    if(this.getContactId() != -1){
+      where += " contact_id = ?";
+    }
+    if(this.getId() != -1){
+      where += " emailaddress_id = ?";
+    }
+
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM contact_emailaddress " +
-        "WHERE emailaddress_id = ? ");
+        "WHERE " + (where.length() != 0?where:"1 = 0"));
     int i = 0;
-    pst.setInt(++i, this.getId());
+    if(this.getContactId() != -1){
+      pst.setInt(++i, this.getContactId());
+    }
+    if(this.getId() != -1){
+      pst.setInt(++i, this.getId());
+    }
     pst.execute();
     pst.close();
   }

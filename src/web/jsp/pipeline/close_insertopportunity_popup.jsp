@@ -18,10 +18,14 @@
   --%>
 <%@ page import="org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="oppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
+<jsp:useBean id="fromPop" class="java.lang.String" scope="request"/>
 <html>
   <body onLoad="javascript:doClose();">
     <script language="JavaScript" TYPE="text/javascript">
       function doClose() {
+        <%
+        if(fromPop!=null && !fromPop.equals("true")){
+        %>
         var source = '<%= request.getParameter("source") %>';
         if (source == 'attachplan') {
           var itemId = '<%= request.getParameter("itemId") %>';
@@ -33,6 +37,7 @@
           opener.document.getElementById('opportunityLink').value="<%= oppDetails.getHeader().getId() %>";
           opener.changeDivContent("changeopportunity", "<%= StringUtils.jsStringEscape(oppDetails.getHeader().getDescription()) %>");
         }
+      <%}%>    
         window.close();
       }
     </script>

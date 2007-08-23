@@ -68,6 +68,8 @@ public class CampaignList extends Vector implements SyncableList{
   private java.sql.Timestamp runRangeStart = null;
   private java.sql.Timestamp runRangeEnd = null;
 
+  private int id = -1;
+
   public final static String tableName = "campaign";
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
@@ -474,6 +476,26 @@ public class CampaignList extends Vector implements SyncableList{
     return description;
   }
 
+  /**
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = Integer.parseInt(id);
+  }
 
   /**
    * Gets the htmlSelect attribute of the CampaignList object
@@ -715,7 +737,7 @@ public class CampaignList extends Vector implements SyncableList{
             "FROM campaign c " +
             "LEFT JOIN " + DatabaseUtils.addQuotes(db, "message") + " msg ON (c.message_id = msg.id) " +
             "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-            "WHERE c.campaign_id > -1 ");
+            "WHERE ");
     if(sqlFilter == null || sqlFilter.length() == 0){
       StringBuffer buff = new StringBuffer();
       createFilter(db, buff);
@@ -747,7 +769,7 @@ public class CampaignList extends Vector implements SyncableList{
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
             "FROM campaign c " +
-            "WHERE c.campaign_id > -1 ");
+            "WHERE ");
     createFilter(db, sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -815,6 +837,12 @@ public class CampaignList extends Vector implements SyncableList{
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    if(id == -1){
+      sqlFilter.append("c.campaign_id > ?");
+    }else{
+      sqlFilter.append("c.campaign_id = ?");
+    }
+
     if (activeDate != null) {
       sqlFilter.append("AND c.active_date = ? ");
     }
@@ -914,6 +942,9 @@ public class CampaignList extends Vector implements SyncableList{
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    pst.setInt(++i, id);
+
     if (activeDate != null) {
       pst.setTimestamp(++i, activeDate);
     }
@@ -1015,7 +1046,7 @@ public class CampaignList extends Vector implements SyncableList{
     String sqlCount =
         "SELECT COUNT(*) AS recordcount " +
             "FROM campaign c " +
-            "WHERE c.campaign_id > -1 ";
+            "WHERE ";
     createFilter(db, sqlFilter);
     PreparedStatement pst = db.prepareStatement(
         sqlCount + sqlFilter.toString());
@@ -1063,6 +1094,16 @@ public class CampaignList extends Vector implements SyncableList{
       }
     }
     return result;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @throws SQLException Description of the Returned Value
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
   }
 }
 

@@ -18,7 +18,7 @@ function popContactsListSingle(hiddenFieldId, displayFieldId, params) {
   }
 }
 
-function popContactsListMultiple(displayFieldId, highLightedId, params) {
+function popContactsListMultiple(displayFieldId, highLightedId, params, hiddenFieldId) {
   title  = 'Contacts';
   width  =  '700';
   height =  '425';
@@ -42,7 +42,7 @@ function popContactsListMultiple(displayFieldId, highLightedId, params) {
   if(params != null && params != ""){
     params = '&' + params;
   }
-  var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId + params, title, windowParams);
+  var newwin=window.open('ContactsList.do?command=ContactList&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&listType=list&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId + '&hiddenFieldId='+hiddenFieldId +params, title, windowParams);
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
@@ -166,10 +166,14 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
     return ;
   }
   var i = 0;
+  var ids="";
   if (listType == "list"){
     opener.deleteOptions(displayFieldId);
     for (i=0; i < recipientEmails.length; i++) {
       opener.insertOption(recipientEmails[i],recipientIds[i],displayFieldId);
+      ids=ids+recipientIds[i]+"|";
+      if(hiddenFieldId!=null && 'undefined'!=hiddenFieldId)
+      {opener.document.getElementById(hiddenFieldId).value=ids;}
     }
   } else if(listType == "single") {
     opener.document.getElementById(hiddenFieldId).value = recipientIds[i];

@@ -38,7 +38,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<form name="addAccountAsset" action="AccountsAssets.do?command=Update&auto-populate=true&return<%= request.getParameter("return") %><%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return doCheck(this);" method="post">
+<form name="addAccountAsset" action="AccountsAssets.do?command=Update&auto-populate=true<%= addLinkParams(request, "popup|popupType|actionId") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -75,7 +75,7 @@
     <%}%>
     <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
     <input type="hidden" name="id" value="<%= asset.getId() %>" />
-    <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
+    <input type="hidden" name="ret" value="<%= request.getParameter("ret") %>" />
     <br />
     <dhv:formMessage />
     <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

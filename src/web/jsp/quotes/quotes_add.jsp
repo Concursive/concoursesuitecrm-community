@@ -57,8 +57,16 @@
 <% Quote quote = quoteBean; %>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <form method="post" name="addQuote" action="Quotes.do?command=AddQuote&auto-populate=true" onSubmit="return checkForm(this);">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <input type="submit" value="<dhv:label name="global.button.insert">Insert</dhv:label>"/>
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Search&orgId=<%= OrgDetails.getId() %>';"/>
+</dhv:evaluate>
+ <dhv:evaluate if="<%= isPopup(request) %>">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>"/>
+<input value="Cancel" onclick="javascript:self.close();" type="button">
+</dhv:evaluate>
+
+
 <br />
 <%= showError(request, "actionError") %>
 <%
@@ -74,7 +82,14 @@
 <%@ include file="quotes_modify_include.jsp" %>
 &nbsp;
 <br />
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <input type="submit" value="<dhv:label name="global.button.insert">Insert</dhv:label>" />
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Search&orgId=<%= OrgDetails.getId() %>';" />
+</dhv:evaluate>
+<dhv:evaluate if="<%= isPopup(request) %>">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
+<input value="Cancel" onclick="javascript:self.close();" type="button">
+</dhv:evaluate>
+
 </form>
 

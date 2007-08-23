@@ -16,6 +16,7 @@
 package org.aspcfs.modules.contacts.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
+
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.utils.DatabaseUtils;
@@ -45,6 +46,7 @@ public class CallList extends ArrayList implements SyncableList {
   protected int syncType = Constants.NO_SYNC;
 
   protected PagedListInfo pagedListInfo = null;
+  protected int followupContactId = -1;
   protected int contactId = -1;
   protected int orgId = -1;
   protected int oppHeaderId = -1;
@@ -54,8 +56,6 @@ public class CallList extends ArrayList implements SyncableList {
   protected java.sql.Timestamp alertDate = null;
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
-  protected java.sql.Timestamp notificationRangeStart = null;
-  protected java.sql.Timestamp notificationRangeEnd = null;
   protected boolean onlyPending = false;
   protected boolean excludeCanceled = false;
   protected boolean onlyCompleted = false;
@@ -66,6 +66,8 @@ public class CallList extends ArrayList implements SyncableList {
   protected boolean includeOnlyTrashed = false;
   protected int oppCallsOnly = Constants.UNDEFINED;
   protected int avoidDisabledContacts = Constants.UNDEFINED;
+
+  private int id = -1;
 
   /**
    * Constructor for the CallList object
@@ -365,26 +367,6 @@ public class CallList extends ArrayList implements SyncableList {
 
 
   /**
-   * Sets the notificationRangeStart attribute of the CallList object
-   *
-   * @param notificationRangeStart The new notificationRangeStart value
-   */
-  public void setNotificationRangeStart(java.sql.Timestamp notificationRangeStart) {
-    this.notificationRangeStart = notificationRangeStart;
-  }
-
-
-  /**
-   * Sets the notificationRangeEnd attribute of the CallList object
-   *
-   * @param notificationRangeEnd The new notificationRangeEnd value
-   */
-  public void setNotificationRangeEnd(java.sql.Timestamp notificationRangeEnd) {
-    this.notificationRangeEnd = notificationRangeEnd;
-  }
-
-
-  /**
    * Sets the allContactsInAccount attribute of the CallList object
    *
    * @param allContactsInAccount The new allContactsInAccount value
@@ -413,26 +395,6 @@ public class CallList extends ArrayList implements SyncableList {
    */
   public int getContactOrgId() {
     return contactOrgId;
-  }
-
-
-  /**
-   * Gets the notificationRangeStart attribute of the CallList object
-   *
-   * @return The notificationRangeStart value
-   */
-  public java.sql.Timestamp getNotificationRangeStart() {
-    return notificationRangeStart;
-  }
-
-
-  /**
-   * Gets the notificationRangeEnd attribute of the CallList object
-   *
-   * @return The notificationRangeEnd value
-   */
-  public java.sql.Timestamp getNotificationRangeEnd() {
-    return notificationRangeEnd;
   }
 
 
@@ -703,6 +665,26 @@ public class CallList extends ArrayList implements SyncableList {
     this.avoidDisabledContacts = Integer.parseInt(tmp);
   }
 
+  /**
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = Integer.parseInt(id);
+  }
 
   /**
    * Description of the Method
@@ -722,27 +704,28 @@ public class CallList extends ArrayList implements SyncableList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
 
-    String sqlDate = (onlyPending ? "alertdate" : "entered");
+    String sqlDate = (onlyPending ? "alertdate" : "call_start_date");
 
     createFilter(sqlFilter);
 
     sqlSelect.append(
         "SELECT " + sqlDate + " AS " + DatabaseUtils.addQuotes(db, "date") + " " +
             "FROM call_log c " +
-            "WHERE call_id > -1 ");
+            "WHERE ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertDate = DateUtils.getServerToUserDateString(
-          timeZone, DateFormat.SHORT, rs.getTimestamp("date"));
-      if (events.containsKey(alertDate)) {
-        Integer count = (Integer) events.get(alertDate);
-        int tmpCount = count.intValue();
-        events.put(alertDate, new Integer(++tmpCount));
-      } else {
-        events.put(alertDate, new Integer(1));
+      if(rs.getTimestamp("date") != null){
+        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("date"));
+        if (events.containsKey(alertDate)) {
+          Integer count = (Integer) events.get(alertDate);
+          int tmpCount = count.intValue();
+          events.put(alertDate, new Integer(++tmpCount));
+        } else {
+          events.put(alertDate, new Integer(1));
+        }
       }
     }
     rs.close();
@@ -768,15 +751,17 @@ public class CallList extends ArrayList implements SyncableList {
         "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
             "c.owner, c.notes, c." + DatabaseUtils.addQuotes(db, "length") + ", c.followup_notes, c.complete_date, c.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " +
             "ct.org_name as ctcompany, o.name as orgname, c.status_id, c.entered, p.description as priority, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, " +
-            "c.followup_contact_id " +
+            "c.followup_contact_id, " +
+            "c.call_start_date, c.call_end_date," +
+            "c.enteredby " +
             "FROM call_log c " +
             "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
             "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
             "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
             "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-            "WHERE c.call_id > -1 ");
+            "WHERE ");
     if (onlyCompleted) {
-      sqlOrder.append("ORDER BY c.entered ");
+      sqlOrder.append("ORDER BY c.call_start_date ");
     } else {
       sqlOrder.append("ORDER BY c.alertdate, p.weight DESC ");
     }
@@ -798,6 +783,8 @@ public class CallList extends ArrayList implements SyncableList {
       thisCall.setLength(rs.getInt("length"));
       thisCall.setFollowupNotes(rs.getString("followup_notes"));
       thisCall.setCompleteDate(rs.getTimestamp("complete_date"));
+      thisCall.setCallStartDate(rs.getTimestamp("call_start_date"));
+      thisCall.setCallEndDate(rs.getTimestamp("call_end_date"));
       //contact details
       thisCall.setContactOrgId(DatabaseUtils.getInt(rs, "contact_org_id"));
       String contactName = Contact.getNameLastFirst(
@@ -809,6 +796,7 @@ public class CallList extends ArrayList implements SyncableList {
       thisCall.setContactName(contactName);
       thisCall.setStatusId(rs.getInt("status_id"));
       thisCall.setEntered(rs.getTimestamp("entered"));
+      thisCall.setEnteredBy(rs.getInt("enteredby"));
       thisCall.setPriorityString(rs.getString("priority"));
       thisCall.setFollowupContactId(DatabaseUtils.getInt(rs, "followup_contact_id"));
       String followupContactName = Contact.getNameLastFirst(
@@ -822,10 +810,11 @@ public class CallList extends ArrayList implements SyncableList {
         Contact thisContact = new Contact();
         thisContact.setId(thisCall.getContactId());
         thisCall.setContact(thisContact);
-      } else if (thisCall.getFollowupContactId() > 0) {
+      }
+      if (thisCall.getFollowupContactId() > 0) {
         Contact thisContact = new Contact();
         thisContact.setId(thisCall.getFollowupContactId());
-        thisCall.setContact(thisContact);
+        thisCall.setFollowupContact(thisContact);
       }
 
       //add call to list
@@ -837,7 +826,10 @@ public class CallList extends ArrayList implements SyncableList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Call thisCall = (Call) i.next();
-      thisCall.getContact().buildPhoneNumberList(db);
+      if (thisCall.getContact().getId() > -1)
+      	thisCall.getContact().buildPhoneNumberList(db);
+      if (thisCall.getFollowupContact().getId() > -1)
+      	thisCall.getFollowupContact().buildPhoneNumberList(db);
     }
   }
 
@@ -871,21 +863,38 @@ public class CallList extends ArrayList implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length") + ", " +
-            "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
-            "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
-            "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-            "c.alert_call_type_id, c.followup_contact_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, t.*, talert.description as alertType, " +
-            "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.org_name as ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name as orgname, p.description as priority " +
-            "FROM " + tableName + " c " +
-            "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-            "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
-            "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
-            "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
-            "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
-            "LEFT JOIN contact ct2 ON (c.followup_contact_id = ct2.contact_id) " +
-            "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-            "WHERE call_id > -1 ");
+    		"c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, " +
+    		"c." + DatabaseUtils.addQuotes(db, "length") + ", " +
+        "c.subject, c.notes, c.alertdate, c.followup_notes, c.entered as entered_date, c.enteredby, c.modified as modified_date, c.modifiedby, " +
+        "c.alert, c.alert_call_type_id, c.parent_id, c.owner, " +
+        "c.assignedby, c.assign_date, " +
+        "c.completedby, c.complete_date, " +
+        "c.result_id, c.priority_id, c.status_id, " +
+        "c.reminder_value, c.reminder_type_id, " +
+        "c.alertdate_timezone, c.trashed_date, " +
+        "c.followup_contact_id, " +
+        "c.followup_end_date, c.followup_end_date_timezone, " +
+        "c.followup_location, " +
+        "c.followup_length, c.followup_length_duration, " +
+        "c.call_start_date, c.call_start_date_timezone, " +
+        "c.call_end_date, c.call_end_date_timezone, " +
+        "c.call_location, " +
+        "c.call_length_duration, " +
+        "c.email_participants, " +
+        "c.email_followup_participants, " +
+        "t.*, talert.description AS alertdescription," +
+        "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, " +
+        "fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, " +
+        "o.name AS orgname, " +
+        "p.description AS priority " +
+        "FROM call_log c " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
+        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
+        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+        "WHERE ");
     if (sqlFilter == null || sqlFilter.length() == 0) {
       StringBuffer buff = new StringBuffer();
       createFilter(buff);
@@ -918,7 +927,7 @@ public class CallList extends ArrayList implements SyncableList {
             "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
             "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
             "LEFT JOIN contact ct2 ON (c.followup_contact_id = ct2.contact_id) " +
-            "WHERE call_id > -1 ");
+            "WHERE ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -975,9 +984,19 @@ public class CallList extends ArrayList implements SyncableList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+
+    if(id == -1){
+      sqlFilter.append("c.call_id > ? ");
+    }else{
+      sqlFilter.append("c.call_id = ? ");
+    }
+
     if (contactId != -1) {
-      sqlFilter.append("AND (c.contact_id = ? ");
-      sqlFilter.append("OR c.followup_contact_id = ? )");
+      sqlFilter.append("AND c.contact_id = ? ");
+    }
+    
+    if (followupContactId != -1) {
+      sqlFilter.append("AND c.followup_contact_id = ? ");
     }
 
     if (allContactsInAccount) {
@@ -1007,7 +1026,7 @@ public class CallList extends ArrayList implements SyncableList {
       sqlFilter.append("AND c.opp_id = ? ");
     }
     if (enteredBy != -1) {
-      sqlFilter.append("AND c.enteredby = ? ");
+      sqlFilter.append("AND (c.enteredby = ? OR ? IN (SELECT ct.user_id FROM contact ct WHERE ct.contact_id IN (SELECT contact_id FROM call_log_participant clp WHERE c.call_id = clp.call_id))) ");
     }
     if (alertDate != null) {
       sqlFilter.append("AND c.alertdate = ? ");
@@ -1017,31 +1036,23 @@ public class CallList extends ArrayList implements SyncableList {
     }
 
     if (owner != -1) {
-      sqlFilter.append("AND c.owner = ? ");
+      sqlFilter.append("AND (c.owner = ? OR ? IN (SELECT ct.user_id FROM contact ct WHERE ct.contact_id IN (SELECT contact_id FROM call_log_participant clp WHERE c.call_id = clp.call_id))) ");
     }
 
     if (alertRangeStart != null) {
       if (onlyCompleted) {
-        sqlFilter.append("AND c.entered >= ? ");
+        sqlFilter.append("AND c.call_start_date >= ? ");
       } else {
         sqlFilter.append("AND c.alertdate >= ? ");
       }
-    }
+    } 
 
     if (alertRangeEnd != null) {
       if (onlyCompleted) {
-        sqlFilter.append("AND c.entered < ? ");
+        sqlFilter.append("AND c.call_start_date < ? ");
       } else {
         sqlFilter.append("AND c.alertdate < ? ");
       }
-    }
-
-    if (notificationRangeStart != null) {
-      sqlFilter.append("AND c.followup_date >= ? ");
-    }
-
-    if (notificationRangeEnd != null) {
-      sqlFilter.append("AND c.followup_date < ? ");
     }
 
     if (onlyPending) {
@@ -1106,9 +1117,15 @@ public class CallList extends ArrayList implements SyncableList {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    pst.setInt(++i, id);
+
     if (contactId != -1) {
       pst.setInt(++i, contactId);
-      pst.setInt(++i, contactId);
+    }
+
+    if (followupContactId != -1) {
+      pst.setInt(++i, followupContactId);
     }
 
     if (allContactsInAccount) {
@@ -1125,6 +1142,7 @@ public class CallList extends ArrayList implements SyncableList {
     }
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
+      pst.setInt(++i, enteredBy);
     }
     if (alertDate != null) {
       pst.setTimestamp(++i, alertDate);
@@ -1134,19 +1152,16 @@ public class CallList extends ArrayList implements SyncableList {
     }
     if (owner != -1) {
       pst.setInt(++i, owner);
+      pst.setInt(++i, owner);
     }
     if (alertRangeStart != null) {
       pst.setTimestamp(++i, alertRangeStart);
     }
+
     if (alertRangeEnd != null) {
       pst.setTimestamp(++i, alertRangeEnd);
     }
-    if (notificationRangeStart != null) {
-      pst.setTimestamp(++i, notificationRangeStart);
-    }
-    if (notificationRangeEnd != null) {
-      pst.setTimestamp(++i, notificationRangeEnd);
-    }
+
     if (onlyPending) {
       pst.setInt(++i, Call.COMPLETE_FOLLOWUP_PENDING);
     }
@@ -1170,6 +1185,7 @@ public class CallList extends ArrayList implements SyncableList {
     } else {
       // do nothing
     }
+    
     if (!allContactsInAccount) {
       if (this.getAvoidDisabledContacts() == Constants.TRUE) {
         pst.setBoolean(++i, true);
@@ -1288,6 +1304,25 @@ public class CallList extends ArrayList implements SyncableList {
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
+
+	/**
+	 * @return the followupContactId
+	 */
+	public int getFollowupContactId() {
+		return followupContactId;
+	}
+
+	/**
+	 * @param followupContactId the followupContactId to set
+	 */
+	public void setFollowupContactId(int followupContactId) {
+		this.followupContactId = followupContactId;
+	}
+	
+	/**
+	 * @param followupContactId the followupContactId to set
+	 */
+	public void setFollowupContactId(String followupContactId) {
+		this.followupContactId = Integer.parseInt(followupContactId);
+	}
 }
-
-

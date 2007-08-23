@@ -32,6 +32,15 @@
         } else {
           opener.document.getElementById('contactLink').value="<%= ContactDetails.getId() %>";
           opener.changeDivContent("changecontact", "<%= StringUtils.jsStringEscape(ContactDetails.getNameLastFirst()) %>");
+          if(source == 'sendMailHomePage') {
+          <% System.out.println("source is::");  
+          if ("".equals(ContactDetails.getPrimaryEmailAddress())) { %>
+            opener.changeDivDisplayStyle("contactemail","");
+            opener.document.getElementById('emptyEmail').value="true";
+          <% } else { %>
+            opener.changeDivDisplayStyle("contactemail","none");
+          <%} %>
+          }
         }
         window.close();
       }

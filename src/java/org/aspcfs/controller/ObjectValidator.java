@@ -504,26 +504,26 @@ public class ObjectValidator {
         callOwner = systemStatus.getUser(call.getOwner());
       }
       if (callOwner != null && !callOwner.getEnabled()) {
-        addWarning(
-            systemStatus, object, "owner", "object.validation.disabledUser");
+        addWarning(systemStatus, object, "owner", "object.validation.disabledUser");
       }
       if (callOwner != null && callOwner.getExpires() != null && callOwner.getExpires().after(
           new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
-        addWarning(
-            systemStatus, object, "owner", "object.validation.expiredUser");
-      }
-      if (call.getFollowupContactId() == -1 && call.getContactId() == -1 && call.getOrgId() == -1 && call.getOppHeaderId() == -1)
-      {
-        addError(
-            systemStatus, object, "link", "object.validation.call.notAssociated");
+        addWarning(systemStatus, object, "owner", "object.validation.expiredUser");
       }
       if (call.getLength() < 0) {
-        addError(
-            systemStatus, object, "length", "object.validation.call.lengthNotLTZero");
+        addError(systemStatus, object, "length", "object.validation.call.lengthNotLTZero");
       }
-      if (call.getAlertDate() != null || call.getHasFollowup()) {
-        if ("".equals(StringUtils.toString(call.getAlertText().trim()))) {
-          addError(systemStatus, object, "description", REQUIRED_FIELD);
+      if (call.getAlertDate() == null) {
+	      if(call.getCallEndDate() != null && call.getCallEndDate().before(call.getCallStartDate())){
+	        addError(systemStatus, object, "callEndDate", "activity.end.must.later.start.date");
+	      }
+	      if(call.getSubject() != null && call.getSubject().length() < 1){
+	        addError(systemStatus, object, "subject", REQUIRED_FIELD);
+	      }
+      }
+      if (call.getHasFollowup() || call.getAlertDate() != null) {
+        if (call.getFollowupLength() < 0) {
+          addError(systemStatus, object, "followupLength", "object.validation.call.lengthNotLTZero");
         }
         if (call.getAlertCallTypeId() < 1) {
           addError(systemStatus, object, "followupType", REQUIRED_FIELD);
@@ -534,11 +534,18 @@ public class ObjectValidator {
         if (call.getAlertDate() == null) {
           addError(systemStatus, object, "alertDate", REQUIRED_FIELD);
         }
+	      checkError(systemStatus, object, "alertDate", IS_BEFORE_TODAY);
+	      checkError(systemStatus, object, "followupEndDate", IS_BEFORE_TODAY);
+        if(call.getFollowupEndDate() != null && call.getFollowupEndDate().before(call.getAlertDate())){
+          addError(systemStatus, object, "followupEndDate", "followup.end.must.later.start.date");
+        }
+        if ("".equals(StringUtils.toString(call.getAlertText().trim()))) {
+          addError(systemStatus, object, "description", REQUIRED_FIELD);
+        }
       } else {
         //reset priority Id as it does not have a "none" option
         call.setPriorityId(-1);
       }
-      checkWarning(systemStatus, object, "alertDate", IS_BEFORE_TODAY);
     }
 
     //  FileItem
@@ -727,7 +734,9 @@ public class ObjectValidator {
         addError(systemStatus, object, "name", REQUIRED_FIELD);
       }
       checkError(systemStatus, object, "messageSubject", REQUIRED_FIELD);
-      checkError(systemStatus, object, "replyTo", INVALID_EMAIL);
+      if(!message.getDisableReplyToValidation()){
+        checkError(systemStatus, object, "replyTo", INVALID_EMAIL);
+      }
     }
 
     //  Survey

@@ -1378,6 +1378,10 @@ public final class Quotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    if (context.getRequest().getParameter("actionSource") != null) {
+       return getReturn(context, "AddQuotes");
+    }
+
     return "AddQuoteFormOK";
   }
 

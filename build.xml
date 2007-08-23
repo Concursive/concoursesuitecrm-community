@@ -742,6 +742,10 @@
 	</target>
 
   <target name="deploy.copy" unless="build.config.war">
+  	<!-- Copy the About This Software reference file -->
+    <copy file="${base.dir}/pref/cfs/source/readme-libraries.txt" 
+        todir="${CENTRIC_HOME}/WEB-INF" />
+  	
     <!-- Copy the .jars, only if new -->
     <copy todir="${CENTRIC_HOME}/WEB-INF/lib">
       <fileset dir="${build.lib.dir}">

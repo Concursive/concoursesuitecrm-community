@@ -25,11 +25,13 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Completed" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Log" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript">
   function showHistory() {
-    popURL('CalendarCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&popup=true&source=calendar','CONTACT_HISTORY','650','500','yes','yes');
+    popURL('CalendarCalls.do?command=View&contactId=<%= "pending".equals(request.getParameter("view"))?PreviousCallDetails.getFollowupContactId():PreviousCallDetails.getContactId() %>&popup=true&source=calendar','CONTACT_HISTORY','650','500','yes','yes');
   }
 </script>
 <body onLoad="javascript:document.addCall.subject.focus();">
@@ -43,16 +45,35 @@
   <dhv:evaluate if="<%= hasText(ContactDetails.getEmailAddressList().getPrimaryEmailAddress()) %>"><%= toHtml(ContactDetails.getEmailAddressList().getPrimaryEmailAddress()) %><br /></dhv:evaluate>
   <br />
   <%-- include call add form --%>
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-  [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
+  <% if ("Log".equals(Log)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else if ("cancel".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="javascript:window.close();">
+  <% if (!"pending".equals(request.getParameter("view"))) { %>
+    <dhv:evaluate if="<%= PreviousCallDetails.getContactId() != -1 %>">
+    [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
+    </dhv:evaluate>
+  <% } else { %>
+    <dhv:evaluate if="<%= PreviousCallDetails.getFollowupContactId() != -1 %>">
+    [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
+    </dhv:evaluate>
+  <% } %>  
   <br />
   <dhv:formMessage />
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <%@ include file="../contacts/call_include.jsp" %>
   <br />
-  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="javascript:window.close();">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
   <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">

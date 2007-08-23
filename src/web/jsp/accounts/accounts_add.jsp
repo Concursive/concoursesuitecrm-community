@@ -455,7 +455,7 @@
   <dhv:include name="accounts-name" none="true">
   <tr>
     <td nowrap class="formLabel" name="orgname1" id="orgname1">
-      <dhv:label name="accounts.accounts_add.OrganizationName">Organization Name</dhv:label>
+      <dhv:label name="organization.name">Account Name</dhv:label>
     </td>
     <td>
       <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" maxlength="80" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>

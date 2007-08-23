@@ -39,7 +39,7 @@ CREATE TABLE business_process_parameter_library (
   component_id INTEGER NULL,
   param_name VARCHAR(255),
   description VARCHAR(510),
-  default_value VARCHAR(4000),
+  default_value TEXT,
   enabled BOOLEAN DEFAULT true NOT NULL
 );
 
@@ -75,7 +75,7 @@ CREATE TABLE business_process_parameter (
   id INTEGER DEFAULT nextval('business_process_param_id_seq') NOT NULL PRIMARY KEY,
   process_id INTEGER NOT NULL REFERENCES business_process,
   param_name VARCHAR(255),
-  param_value VARCHAR(4000),
+  param_value TEXT,
   enabled BOOLEAN DEFAULT true NOT NULL
 );
 
@@ -86,7 +86,7 @@ CREATE TABLE business_process_component_parameter (
   id INTEGER DEFAULT nextval('business_process_comp_pa_id_seq') NOT NULL PRIMARY KEY,
   component_id INTEGER NOT NULL REFERENCES business_process_component,
   parameter_id INTEGER NOT NULL REFERENCES business_process_parameter_library,
-  param_value VARCHAR(4000),
+  param_value TEXT,
   enabled BOOLEAN DEFAULT true NOT NULL
 );
 

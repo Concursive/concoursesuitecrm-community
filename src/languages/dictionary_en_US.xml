@@ -26,7 +26,87 @@
   -->
 <aspcfs>
   <config name="system.fields.label" enabled="true">
-    <param name="global.label.allRightsReserved">
+  <!-- Permission Category Constants, name corresponds to id in permissions_en_US.xml, value corresponds to name in permissions_en_US.xml -->
+     <param name="1">
+      <value><![CDATA[Accounts]]></value>
+     </param>
+     <param name="2">
+      <value><![CDATA[Contacts]]></value>
+     </param>
+     <param name="3">
+      <value><![CDATA[Auto Guide]]></value>
+     </param>
+     <param name="4">
+      <value><![CDATA[Pipeline]]></value>
+     </param>
+     <param name="5">
+      <value><![CDATA[Demo]]></value>
+     </param>
+     <param name="6">
+      <value><![CDATA[Communications]]></value>
+     </param>
+     <param name="7">
+      <value><![CDATA[Projects]]></value>
+     </param>
+     <param name="8">
+      <value><![CDATA[Help Desk]]></value>
+     </param>
+     <param name="9">
+      <value><![CDATA[Admin]]></value>
+     </param>
+     <param name="10">
+      <value><![CDATA[Help]]></value>
+     </param>
+     <param name="13">
+      <value><![CDATA[System]]></value>
+     </param>
+     <param name="14">
+      <value><![CDATA[My Home Page]]></value>
+     </param>
+     <param name="15">
+      <value><![CDATA[QA]]></value>
+     </param>
+     <param name="16">
+      <value><![CDATA[Reports]]></value>
+     </param>
+     <param name="130041000">
+      <value><![CDATA[Assets]]></value>
+     </param>
+     <param name="130041100">
+      <value><![CDATA[Service Contracts]]></value>
+     </param>
+     <param name="223061200">
+      <value><![CDATA[Website]]></value>
+     </param>
+     <param name="228051100">
+      <value><![CDATA[Leads]]></value>
+     </param>
+     <param name="327071502">
+      <value><![CDATA[Global Folders]]></value>
+     </param>
+     <param name="330041409">
+      <value><![CDATA[Product Catalog]]></value>
+     </param>
+     <param name="420041014">
+      <value><![CDATA[Products and Services]]></value>
+     </param>
+     <param name="420041017">
+      <value><![CDATA[Quotes]]></value>
+     </param>
+     <param name="420041018">
+      <value><![CDATA[Orders]]></value>
+     </param>
+     <param name="1021051129">
+      <value><![CDATA[NetApp]]></value>
+     </param>
+     <param name="1111031131">
+      <value><![CDATA[Employees]]></value>
+     </param>
+     <param name="1202041528">
+      <value><![CDATA[Documents]]></value>
+     </param>
+     <!-- Field Labels -->
+     <param name="global.label.allRightsReserved">
       <value><![CDATA[All rights reserved.]]></value>
     </param>
 	<param name="global.button.Attach">
@@ -40,6 +120,9 @@
     </param>
     <param name="global.button.Logout">
       <value><![CDATA[Logout]]></value>
+    </param>
+    <param name="global.button.About">
+      <value><![CDATA[About]]></value>
     </param>
     <param name="global.button.Sync">
       <value><![CDATA[Sync]]></value>
@@ -68,6 +151,24 @@
     <param name="login.msg.accountExpired">
       <value><![CDATA[Access denied: Account Expired.]]></value>
     </param>
+    <param name="login.forgot">
+      <value><![CDATA[Forgot Password?]]></value>
+    </param>
+    <param name="login.enterYourUsername">
+      <value><![CDATA[Enter your Username]]></value>
+    </param>
+    <param name="login.emailPassword">
+      <value><![CDATA[Email Password]]></value>
+    </param>
+    <param name="login.confirmation">
+      <value><![CDATA[Confirmation]]></value>
+    </param>
+    <param name="login.yourPassword">
+      <value><![CDATA[Your password has been emailed to the address available for the specified user name]]></value>
+    </param>
+    <param name="login.proceedToLogin">
+      <value><![CDATA[Proceed to Login]]></value>
+    </param>
     <param name="calendar.Today">
       <value><![CDATA[Today]]></value>
     </param>
@@ -94,6 +195,9 @@
     </param>
     <param name="contacts.documents">
       <value><![CDATA[Documents]]></value>
+    </param>
+    <param name="contacts.add.LastNameOrCompanyIsRequired">
+      <value><![CDATA[Last Name or Company is a required field]]></value>
     </param>
     <param name="accounts.contacts.documents">
       <value><![CDATA[Contact Documents]]></value>
@@ -398,8 +502,8 @@
     <param name="accounts.accounts_contacts_validateimport.FieldMappings">
       <value><![CDATA[Field Mappings]]></value>
     </param>
-    <param name="accounts.accounts_contacts_calls_details_followup_include.BeforeDueDate">
-      <value><![CDATA[before due date ]]></value>
+    <param name="accounts.accounts_contacts_calls_details_followup_include.BeforeTheStartDate">
+      <value><![CDATA[before the start date]]></value>
     </param>
     <param name="accounts.tickets.information">
       <value><![CDATA[Ticket Information]]></value>
@@ -689,6 +793,9 @@
     <param name="accounts.accountasset_include.ModelVersion">
       <value><![CDATA[Model/Version]]></value>
     </param>
+    <param name="accounts.accountasset_include.EmailParticipants">
+      <value><![CDATA[Email Participants]]></value>
+    </param>
     <param name="accounts.accountasset_include.Inclusions">
       <value><![CDATA[Inclusions]]></value>
     </param>
@@ -890,6 +997,9 @@
     <param name="accounts.accounts_contacts_calls_add.ActivityDetails">
       <value><![CDATA[Activity Details]]></value>
     </param>
+        <param name="accounts.accounts_contacts_calls_add.ScheduleAnActivity">
+      <value><![CDATA[Schedule an Activity]]></value>
+    </param>
     <param name="accounts.accounts_documents_file_move.Home">
       <value><![CDATA[Home]]></value>
     </param>
@@ -1047,7 +1157,7 @@
       <value><![CDATA[Review and manage campaigns with the following options:]]></value>
     </param>
     <param name="communications.campaign.MessagesCanBeSentOut">
-      <value><![CDATA[Messages can be sent out by any combination of email, fax, or mail merge. The Dashboard shows an overview of sent messages and allows you to drill down and view recipients and any survey results.]]></value>
+      <value><![CDATA[Messages can be sent out selby any combination of email, fax, or mail merge. The Dashboard shows an overview of sent messages and allows you to drill down and view recipients and any survey results.]]></value>
     </param>
     <param name="accounts.accounts_contacts_listimports.MyImports">
       <value><![CDATA[My Imports]]></value>
@@ -1438,6 +1548,15 @@
     </param>
     <param name="accounts.accounts_contacts_calls_details_include.Subject">
       <value><![CDATA[Subject]]></value>
+    </param>
+    <param name="accounts.accounts_contacts_calls_details_include.Location">
+      <value><![CDATA[Location]]></value>
+    </param>
+    <param name="accounts.accounts_contacts_calls_details_include.StartDate">
+      <value><![CDATA[Start Date]]></value>
+    </param>
+    <param name="accounts.accounts_contacts_calls_details_include.End Date">
+      <value><![CDATA[End Date]]></value>
     </param>
     <param name="accounts.account">
       <value><![CDATA[Account]]></value>
@@ -1837,6 +1956,9 @@
     </param>
     <param name="global.button.Enable">
       <value><![CDATA[Enable]]></value>
+    </param>
+    <param name="global.button.Copy">
+      <value><![CDATA[Copy]]></value>
     </param>
     <param name="global.button.DeleteOpportunity">
       <value><![CDATA[Delete Opportunity]]></value>
@@ -10040,6 +10162,12 @@ and tailoring Centric CRM to your organization.]]></value>
     <param name="object.validation.call.lengthNotLTZero">
       <value><![CDATA[Length cannot be less than 0]]></value>
     </param>
+    <param name="activity.end.must.later.start.date">
+      <value><![CDATA[Activity end date must be at a later date than start date]]></value>
+    </param>
+    <param name="followup.end.must.later.start.date">
+      <value><![CDATA[Followup end date must be at a later date than start date]]></value>
+    </param>
     <param name="object.validation.noId">
       <value><![CDATA[Id not specified]]></value>
     </param>
@@ -10346,6 +10474,9 @@ An error occurred while adding the administrative user, the following error was 
     <param name="quickactions.select">
       <value><![CDATA[Select...]]></value>
     </param>
+    <param name="quickactions.more">
+      <value><![CDATA[-- More --]]></value>
+    </param>
     <param name="quickactions.addTask">
       <value><![CDATA[Add a Task]]></value>
     </param>
@@ -10357,6 +10488,9 @@ An error occurred while adding the administrative user, the following error was 
     </param>
     <param name="quickactions.addContact">
       <value><![CDATA[Add a Contact]]></value>
+    </param>
+    <param name="quickactions.mailToContact">
+      <value><![CDATA[Send an Email]]></value>
     </param>
     <param name="quickactions.addActivity">
       <value><![CDATA[Add an Activity]]></value>
@@ -10375,6 +10509,18 @@ An error occurred while adding the administrative user, the following error was 
     </param>
     <param name="quickactions.addActivity">
       <value><![CDATA[Add an Activity]]></value>
+    </param>
+     <param name="quickactions.addLead">
+      <value><![CDATA[Add a Lead]]></value>
+    </param>
+    <param name="quickactions.addQuote">
+      <value><![CDATA[Add a Quote]]></value>
+    </param>
+    <param name="quickactions.addNote">
+      <value><![CDATA[Add a Note]]></value>
+    </param>
+    <param name="quickactions.addOpportunity">
+      <value><![CDATA[Add an Opportunity]]></value>
     </param>
 
     <param name="myitems.header">
@@ -12858,6 +13004,18 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="sync.upload">
       <value><![CDATA[Upload Data]]></value>
+    </param>
+    <param name="about.library">
+      <value><![CDATA[Library]]></value>
+    </param>
+    <param name="about.license">
+      <value><![CDATA[License]]></value>
+    </param>
+    <param name="about.versionCRM">
+      <value><![CDATA[VersionCRM]]></value>
+    </param>
+    <param name="about.aboutCentricCRM">
+      <value><![CDATA[About CentricCRM]]></value>
     </param>
   </config>
 </aspcfs>

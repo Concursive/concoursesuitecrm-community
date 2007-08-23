@@ -289,7 +289,7 @@ public class ContactMessage extends GenericBean {
             "LEFT JOIN contact ct_rf ON (cm.received_from = ct_rf.contact_id) " +
             "LEFT JOIN contact ct_rb ON (cm.received_by = ct_rb.user_id) " +
             "WHERE cm.id = ? ");
-    pst.setInt(1, messageId);
+    pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);

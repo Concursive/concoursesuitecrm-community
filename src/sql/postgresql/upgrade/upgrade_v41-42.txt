@@ -78,3 +78,12 @@
 # Contact History start times
 2007-02-09-script01-vadim.bsh
 
+# Activity improvements
+2007-05-02-script01-holub.sql
+2007-05-05-script01-ok.sql
+2007-05-10-script01-david.sql
+2007-05-11-script01-holub.bsh
+2007-06-20-script01-holub.sql
+# TODO: Fix the following script
+2007-08-22-script01-mr.sql
+

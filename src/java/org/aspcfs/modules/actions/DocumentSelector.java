@@ -56,16 +56,12 @@ public final class DocumentSelector extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
-     /**/
-
     Exception errorMessage = null;
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
     String view = (String) context.getRequest().getParameter("view");
-    ////
     String moduleId = context.getRequest().getParameter("moduleId");
     String linkItemId = context.getRequest().getParameter("linkItemId");
-    ////
     String fileDir = null;
     FileItem thisItem = null;
     Connection db = null;
@@ -75,7 +71,6 @@ public final class DocumentSelector extends CFSModule {
     Project thisProject = null;
     try {
       db = getConnection(context);
-      ////
       switch (Integer.parseInt(moduleId)) {
         case Constants.CONTACTS:
           if (!hasPermission(context,
@@ -244,6 +239,9 @@ public final class DocumentSelector extends CFSModule {
       contactId = (String) context.getRequest().getAttribute("contactId");
     }
 
+    if( (contactId.equals("-1") || contactId == null) ) {
+          contactId = (String) context.getRequest().getParameter("contId");
+    }    
     SystemStatus thisSystem = this.getSystemStatus(context);
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context,

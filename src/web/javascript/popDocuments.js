@@ -51,6 +51,17 @@ function popDocumentsListMultiple(hiddenFieldId, displayFieldId, moduleId, param
   height =  '425';
   resize =  'yes';
   bars   =  'yes';
+  var messageText = "";
+
+  if(document.getElementById('contactLink') != null) {
+    var contId = document.getElementById('contactLink').value;
+    if(contId == "-1" || contId == "") {
+      messageText += label("check.ticket.contact.entered", "- Check that a Contact is selected\r\n");
+      alert(label("check.send.email", "The message could not be sent, please check the following:\r\n\r\n") + messageText);
+      return;
+    }
+  }
+
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
@@ -66,8 +77,11 @@ function popDocumentsListMultiple(hiddenFieldId, displayFieldId, moduleId, param
       selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
     }
   }
-  
-  var newwin=window.open('DocumentSelector.do?command=ListDocuments&popup=true&listType=list&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + '&moduleId='+moduleId + '&previousSelection=' + selectedIds + params, title, windowParams);
+  if(document.getElementById('contactLink') != null) {
+    var newwin=window.open('DocumentSelector.do?command=ListDocuments&popup=true&listType=list&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + '&moduleId='+moduleId + '&previousSelection=' + selectedIds + '&contId=' + contId + params, title, windowParams);
+  } else {
+    var newwin=window.open('DocumentSelector.do?command=ListDocuments&popup=true&listType=list&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + '&moduleId='+moduleId + '&previousSelection=' + selectedIds + params, title, windowParams);
+  }
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)

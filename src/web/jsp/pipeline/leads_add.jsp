@@ -118,6 +118,9 @@ function checkForm(form) {
       }
   </dhv:include>
     }
+  <dhv:evaluate if="<%= isPopup(request) %>">
+   window.close();
+  </dhv:evaluate>      
   }
 }
 </script>
@@ -164,6 +167,9 @@ function checkForm(form) {
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
 <input type="hidden" name="itemId" value="<%= toHtmlValue(request.getParameter("itemId")) %>">
+<dhv:evaluate if="<%= isPopup(request) %>">
+<input type="hidden" name="fromPop" value="true">
+</dhv:evaluate>
     </td>
   </tr>
 </table>

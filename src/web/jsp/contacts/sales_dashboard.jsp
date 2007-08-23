@@ -193,15 +193,19 @@
             src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
           </td>
           <td valign="top" width="100%">
-            <dhv:evaluate if='<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) %>'>
+          	<dhv:evaluate if="<%= hasText(thisLead.getNameLastFirst()) %>">
               <%= toHtml(thisLead.getNameLastFirst()) %>
-            </dhv:evaluate>
-            <dhv:evaluate if='<%= thisLead.getNameLastFirst() != null && !"".equals(thisLead.getNameLastFirst()) && thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) %>'>
-              <br />
-            </dhv:evaluate>
-            <dhv:evaluate if='<%= thisLead.getCompany() != null && !"".equals(thisLead.getCompany()) && !thisLead.getPrimaryContact() %>'>
+          	</dhv:evaluate>
+          	<dhv:evaluate if="<%= !hasText(thisLead.getNameLastFirst()) %>">
+				<dhv:label name="account.na">N/A</dhv:label>
+          	</dhv:evaluate>
+              / 
+          	<dhv:evaluate if="<%= hasText(thisLead.getCompany()) %>">
               <%= toHtml(thisLead.getCompany()) %>
-            </dhv:evaluate>
+          	</dhv:evaluate>
+          	<dhv:evaluate if="<%= !hasText(thisLead.getCompany()) %>">
+				<dhv:label name="account.na">N/A</dhv:label>
+          	</dhv:evaluate>
           </td>
           <td valign="top">
             <dhv:evaluate if="<%= !thisLead.getIsLead() %>" >

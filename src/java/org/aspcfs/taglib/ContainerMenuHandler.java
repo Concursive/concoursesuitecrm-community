@@ -189,7 +189,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
       container.setSelected(selected);
       container.setStringParams(stringParams);
       container.setItem(pageContext.getRequest().getAttribute(object));
-      container.setParent((ContainerMenuClass) pageContext.getRequest().getAttribute("parent"));
+      container.setParent((ContainerMenuClass) pageContext.getRequest().getAttribute("parentContainer"));
       HashMap stack = null;
       // Determine the style for embedded containers
       if (style == SIDE_TABS) {
@@ -209,7 +209,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
       stack.remove(name);
       stack.put(name, container);
       pageContext.getSession().setAttribute("stack", stack);
-      pageContext.getRequest().setAttribute("parent", container);
+      pageContext.getRequest().setAttribute("parentContainer", container);
       LinkedHashMap containerMenu = null;
       HashMap containerProperties = null;
       SystemStatus systemStatus = null;

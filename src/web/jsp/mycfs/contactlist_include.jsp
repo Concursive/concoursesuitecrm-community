@@ -203,4 +203,6 @@
   <input type="hidden" name="siteId" value="<%=request.getAttribute("siteId")%>">
   <input type="hidden" name="includeAllSites" value="<%=request.getAttribute("includeAllSites")%>">
   <input type="hidden" name="mySiteOnly" value="<%=request.getAttribute("mySiteOnly")%>">
+  <input type="hidden" name="isEmail" value="<%=request.getAttribute("isEmail")%>">
+  <input type="hidden" name="contactPrimaryEmail" value="<%=request.getAttribute("contactPrimaryEmail")%>">
 </table>

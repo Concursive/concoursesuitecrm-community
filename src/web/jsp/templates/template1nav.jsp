@@ -81,6 +81,8 @@
       |</dhv:permission>
       <img src="images/icons/stock_exit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="Login.do?command=Logout" class="s"><dhv:label name="global.button.Logout">Logout</dhv:label></a>
+      |<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+      <a href="javascript:popURL('About.do?popup=true','CRM_About','600','650','yes','yes');" class="s"><dhv:label name="global.button.About">About</dhv:label></a>
       <dhv:evaluate if='<%= !User.getUserRecord().getContact().getNameFirstLast().equals("") %>'>
         <br />
         <% if(User.getActualUserId() != User.getUserId()) {%>

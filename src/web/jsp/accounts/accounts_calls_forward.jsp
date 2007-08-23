@@ -69,7 +69,7 @@
     <% if("list".equals(request.getParameter("return"))){ %>
       <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
     <% }else{ %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>&orgId=<%= request.getParameter("orgId") %><%= addLinkParams(request, "view|trailSource") %>'">
     <% } %>
     <br><br>
     <%-- include the message form --%>
@@ -79,7 +79,7 @@
     <% if("list".equals(request.getParameter("return"))){ %>
       <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
     <% }else{ %>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AccountsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>&orgId=<%= request.getParameter("orgId") %><%= addLinkParams(request, "view|trailSource") %>'">
     <% } %>
   </dhv:container>
 <input type="hidden" name="id" value="<%= request.getParameter("id") %>">

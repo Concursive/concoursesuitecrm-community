@@ -266,6 +266,7 @@
     <td>
       <input type="text" size="35" maxlength="255" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
       <font color="red">-</font> <%= showAttribute(request, "companyError") %>
+	&nbsp;&nbsp;<font color="red"><dhv:label name="contacts.add.LastNameOrCompanyIsRequired">Last Name or Company is a required field</dhv:label></font>
     </td>
   </tr>
   <tr class="containerBody">

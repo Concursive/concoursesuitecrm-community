@@ -32,7 +32,7 @@
         <action type="insert" process="dhv.application.account.contact.insert" enabled="false"/>
         <action type="update" process="dhv.application.account.contact.update" enabled="false"/>
       </actions>
-    </hook>
+     </hook>
     <hook class="org.aspcfs.modules.contacts.base.Call" module="2">
       <actions>
         <action type="insert" process="dhv.application.contact.call.insert" enabled="true" />

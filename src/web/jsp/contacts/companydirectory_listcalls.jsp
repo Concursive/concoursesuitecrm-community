@@ -21,7 +21,8 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
 <%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="CallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
+<jsp:useBean id="LogActivitiesList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
+<jsp:useBean id="ScheduledActivitieslList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="CompletedCallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="CallsListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="CompletedCallsListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -72,7 +73,7 @@
   </dhv:evaluate>
   <% if ((request.getParameter("pagedListSectionId") == null && !CompletedCallsListInfo.getExpandedSelection()) || CallsListInfo.getExpandedSelection()) { %>
   <%-- Pending list --%>
-  <dhv:pagedListStatus showExpandLink="true" title='<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.PendingActivities", "Pending Activities") %>' object="CallsListInfo"/>
+  <dhv:pagedListStatus showExpandLink="true" title='<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.PendingActivities", "Pending Activities") %>' object="ScheduledActivitiesListInfo"/>
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
     <tr>
       <th width="8">&nbsp;</th>
@@ -93,7 +94,7 @@
       </th>
     </tr>
 <%
-      Iterator j = CallList.iterator();
+      Iterator j = ScheduledActivitieslList.iterator();
       if ( j.hasNext() ) {
         int rowid = 0;
           while (j.hasNext()) {
@@ -105,13 +106,13 @@
       <td <%= CallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap>
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>" >
-          <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', 'pending', '<%= thisCall.isTrashed() %>');"
+          <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= request.getParameter("contactId") %>', '<%= thisCall.getId() %>', 'pending', '<%= thisCall.isTrashed() %>');"
           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall')"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
         </dhv:evaluate>
         <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>" >&nbsp;</dhv:evaluate>
       </td>
       <td valign="top" nowrap>
-        <%= toHtml(thisCall.getContactName()) %>
+        <%= toHtml(thisCall.getFollowupContactName()) %>
       </td>
       <td valign="top" nowrap>
         <% if(!User.getTimeZone().equals(thisCall.getAlertDateTimeZone())){%>
@@ -127,7 +128,7 @@
         <%= toHtml(CallTypeList.getSelectedValue(thisCall.getAlertCallTypeId())) %>
       </td>
       <td width="100%" valign="top">
-        <a href="ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&view=pending&trailSource=accounts">
+        <a href="ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|popupType|actionId") %>&view=pending&trailSource=accounts">
         <%= toHtml(thisCall.getAlertText()) %>
         </a>
       </td>
@@ -190,7 +191,7 @@
       <td <%= CompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="8" valign="top" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <dhv:evaluate if="<%= ContactDetails.getEnabled() && !ContactDetails.isTrashed() %>" >
-          <a href="javascript:displayMenu('select<%= i %>','menuCall','<%= thisCall.getContactId() %>','<%= thisCall.getId() %>','<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>','<%= thisCall.isTrashed() %>');"
+          <a href="javascript:displayMenu('select<%= i %>','menuCall','<%= request.getParameter("contactId") %>','<%= thisCall.getId() %>','<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>','<%= thisCall.isTrashed() %>');"
           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
         </dhv:evaluate>
         <dhv:evaluate if="<%= !ContactDetails.getEnabled() || ContactDetails.isTrashed() %>" >&nbsp;</dhv:evaluate>
@@ -205,7 +206,7 @@
         <%= toHtml(CallTypeList.getSelectedValue(thisCall.getCallTypeId())) %>
       </td>
       <td width="50%" valign="top">
-        <a href="ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&trailSource=accounts">
+        <a href="ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|popupType|actionId") %>&trailSource=accounts">
           <%= toHtml(thisCall.getSubject()) %>
         </a>
       </td>

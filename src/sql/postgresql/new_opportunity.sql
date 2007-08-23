@@ -191,7 +191,6 @@ CREATE TABLE call_log (
   length INTEGER,
   subject VARCHAR(255),
   notes TEXT,
-  followup_date TIMESTAMP(3),
   alertdate TIMESTAMP(3),
   followup_notes TEXT,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -213,7 +212,20 @@ CREATE TABLE call_log (
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
   alertdate_timezone VARCHAR(255),
   trashed_date TIMESTAMP(3),
-  followup_contact_id INT REFERENCES contact(contact_id)
+  followup_contact_id INT REFERENCES contact(contact_id),
+  followup_end_date TIMESTAMP(3),
+  followup_end_date_timezone VARCHAR(255),
+  followup_location VARCHAR(255),
+  followup_length INTEGER,
+  followup_length_duration INT REFERENCES lookup_call_reminder(code),
+  call_start_date TIMESTAMP(3),
+  call_start_date_timezone VARCHAR(255),
+  call_end_date TIMESTAMP(3),
+  call_end_date_timezone VARCHAR(255),
+  call_location VARCHAR(255),
+  call_length_duration INT REFERENCES lookup_call_reminder(code),
+  email_participants BOOLEAN DEFAULT false,
+  email_followup_participants BOOLEAN DEFAULT false
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");
@@ -245,4 +257,17 @@ CREATE TABLE opportunity_component_log(
   closed TIMESTAMP(3),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE SEQUENCE call_log_participant_participant_id_seq;
+CREATE TABLE call_log_participant(
+  participant_id INT NOT NULL DEFAULT nextval('call_log_participant_participant_id_seq') PRIMARY KEY,
+  call_id INT NOT NULL REFERENCES call_log (call_id),
+  contact_id INT NOT NULL REFERENCES contact (contact_id),
+  is_available INT DEFAULT 1,
+  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES "access" (user_id),
+  modifiedby INT NOT NULL REFERENCES "access" (user_id),
+  is_followup INT DEFAULT 0
+); 
 

@@ -33,12 +33,34 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
  function resetNumericFieldValue(fieldId){
   document.getElementById(fieldId).value = -1;
  }
+ 
+ function range_dateChange(selectName){
+  value = document.getElementsByName(selectName)[0].options[document.getElementsByName(selectName)[0].selectedIndex].value;
+  if (value == '10'){
+    showSpan('dateRange');
+  } else {
+    hideSpan('dateRange');
+  }
+ }
+ 
+ function checkForm(form){
+  errors = "";
+  if (form.range_date.options[form.range_date.selectedIndex].value =="10"  && form.date_start.value == ""){
+    errors +="Invalid value for start date\n";
+  }
+  if (errors != ""){
+    alert(errors);
+    return false;
+  }
+  return true;
+ }
 </script>
-<form name="paramForm" method="post" action="Reports.do?command=GenerateReport&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">
+<form name="paramForm" method="post" action="Reports.do?command=GenerateReport&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>" onsubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -66,12 +88,19 @@
 <%
   int count = 0;
   Iterator i = parameterList.iterator();
+  ArrayList parameters = new ArrayList();
   while (i.hasNext()) {
     Parameter parameter = (Parameter) i.next();
     //Show only the parameters that require input from the user and those that are required
     //siteid is to be prompted but not when user belongs to a specific site (required == false)
 %>
-<dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% ++count; %>
+<dhv:evaluate if="<%= parameter.getIsForPrompting() %>"><% 
+      ++count; 
+      if (parameter.getName().startsWith("date_")){
+        parameters.add(parameter);
+      } else {
+%>
+  <tr><td class='clean'><table cellpadding="4" cellspacing="0"  width="100%">
   <dhv:evaluate if='<%= !parameter.getName().startsWith("hidden_") %>'>
     <tr>
       <td class="formLabel"><%= toHtml(parameter.getDisplayName(systemStatus)) %></td>
@@ -84,6 +113,8 @@
       </td>
     </tr>
   </dhv:evaluate>
+  </td></tr></table>
+  <%} %>
 </dhv:evaluate>
 <%-- 
   In the report design if the parameter was specified to be used for prompting and while
@@ -102,6 +133,9 @@
     <td colspan="2"><dhv:label name="reports.noParametersRequired">No parameters required.</dhv:label></td>
   </tr>
 </dhv:evaluate>
+  <tr><td class='clean'>
+    <%=parameterList.groupSpanedParameters(parameters, "dateRange", "dateRange", request, systemStatus) %>
+  </td></tr>
 </table>
 <dhv:evaluate if="<%= count > 0 %>">
 <br>

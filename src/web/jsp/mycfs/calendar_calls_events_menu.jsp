@@ -23,11 +23,13 @@
   var thisCallId = -1;
   var thisView = "";
   var menu_init = false;
+  var thisOwner = false;
   //Set the action parameters for clicked item
-  function displayCallMenu(loc, id, accountId, contactId, callId, view) {
+  function displayCallMenu(loc, id, accountId, contactId, callId, view, isOwner) {
     thisAccountId = accountId;
     thisContactId = contactId;
     thisCallId = callId;
+    thisOwner = isOwner;
     thisView = view;
     updateCallMenu();
     if (!menu_init) {
@@ -75,6 +77,20 @@
       hideSpan('menuViewContactHistory');
       hideSpan('menuViewContactDetail');
     }
+    if (!thisOwner){
+      hideSpan('menuModifyCall');
+      hideSpan('menuCompleteCall');
+      hideSpan('menuCancelCall');
+      hideSpan('menuRescheduleCall');
+    }
+  }
+
+  function details() {
+    var url = 'CalendarCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId +'&orgId=' + thisAccountId+ '&popup=true';
+    if(thisView == 'pending'){
+      url += '&view=pending';
+    }
+    popURL(url, 'CONFIRM_DELETE','500','600','yes','yes');
   }
   
   function completeCall() {
@@ -82,7 +98,7 @@
     if(thisView == 'pending'){
       url += '&view=pending';
     }
-    popURL(url, 'CONFIRM_DELETE','500','600','yes','yes');
+    popURL(url, 'CONFIRM_DELETE','630','425','yes','yes');
   }
   
   function modifyCall() {
@@ -90,7 +106,7 @@
     if(thisView == 'pending'){
       url += '&view=pending';
     }
-    popURL(url, 'CONFIRM_DELETE','500','600','yes','yes');
+    popURL(url, 'CONFIRM_DELETE','630','425','yes','yes');
   }
   
   function deleteCall() {
@@ -98,7 +114,7 @@
     if(thisView == 'pending'){
       url += '&view=pending';
     }
-    popURL(url, 'CONFIRM_DELETE','500','600','yes','no');
+    popURL(url, 'CONFIRM_DELETE','630','425','yes','yes');
   }
   
   function showContactCall() {
@@ -128,6 +144,17 @@
 <div id="menuCallContainer" class="menu">
   <div id="menuCallContent">
     <table id="menuCallTable" class="pulldown" width="170" cellspacing="0">
+      <dhv:permission name="accounts-accounts-contacts-calls-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="details()">
+        <th>
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+        <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-calls-edit">
       <tr id="menuCompleteCall" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="completeCall()">

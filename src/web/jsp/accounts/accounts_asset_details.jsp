@@ -38,7 +38,8 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js">
+</script>
 <form name="viewAccountAsset" action="AccountsAssets.do?command=Modify&auto-populate=true&id=<%=asset.getId()%>&return=details<%= addLinkParams(request, "popup|popupType|actionId") %>" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -68,7 +69,7 @@
 <% String param2 = "id=" + asset.getId() + "|parentId="+asset.getId()+"|orgId="+OrgDetails.getOrgId(); %>
 <dhv:container name="accountsassets" selected="details" object="asset" param="<%= param2 %>" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() || !asset.isTrashed()%>">
-    <dhv:permission name="accounts-assets-edit"><input type=submit value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
+    <dhv:permission name="accounts-assets-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" /></dhv:permission>
     <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true<%= isPopup(request)?"&popupType=inline":"" %>','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
   </dhv:evaluate>
     <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />

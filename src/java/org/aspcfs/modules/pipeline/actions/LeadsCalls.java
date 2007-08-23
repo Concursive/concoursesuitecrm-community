@@ -215,11 +215,17 @@ public final class LeadsCalls extends CFSModule {
     addModuleBean(context, "View Opportunities", "Opportunity Activities");
 
     Connection db = null;
+    Call thisCall = null;
+    thisCall = (Call) context.getRequest().getAttribute("CallDetails");
+    thisCall.setCallStartDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+    thisCall.setAlertDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+    context.getRequest().setAttribute("CallDetails", thisCall);
     try {
       db = this.getConnection(context);
 
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
+      context.getRequest().setAttribute("Log", "Log");
 
       if (oppHeader.getAccountLink() > -1) {
         Organization oppOrg = new Organization(db, oppHeader.getAccountLink());
@@ -297,11 +303,16 @@ public final class LeadsCalls extends CFSModule {
     addModuleBean(context, "View Opportunities", "Opportunity Activities");
 
     Connection db = null;
+    Call thisCall = null;
+    thisCall = (Call) context.getRequest().getAttribute("CallDetails");
+    thisCall.setAlertDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+    context.getRequest().setAttribute("CallDetails", thisCall);
     try {
       db = this.getConnection(context);
 
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
+      context.getRequest().setAttribute("Log", "Log");
 
       if (oppHeader.getAccountLink() > -1) {
         Organization oppOrg = new Organization(db, oppHeader.getAccountLink());
@@ -427,7 +438,7 @@ public final class LeadsCalls extends CFSModule {
         }
         isValid = this.validateObject(context, db, thisCall);
         if (isValid) {
-          resultCount = thisCall.update(db, context);
+          resultCount = thisCall.update(db);
         }
       } else {
         //set the status
@@ -475,7 +486,7 @@ public final class LeadsCalls extends CFSModule {
         if (parentCall != null) {
           previousParentCall = new Call(db, parentCall.getId());
           parentCall.setStatusId(Call.COMPLETE);
-          parentCall.update(db, context);
+          parentCall.update(db);
           this.processUpdateHook(context, previousParentCall, parentCall);
         }
         thisCall = new Call(db, thisCall.getId());
@@ -867,11 +878,37 @@ public final class LeadsCalls extends CFSModule {
     }
     Connection db = null;
     Call thisCall = null;
+    Call completedCalls = (Call) context.getRequest().getAttribute("CallDetails");
     try {
       db = this.getConnection(context);
       //Load the previous Call to get details for completed activity
       thisCall = new Call(db, callId);
       context.getRequest().setAttribute("PreviousCallDetails", thisCall);
+      context.getRequest().setAttribute("Completed", "completed");
+      
+      if ((thisCall.getSubject()!=null) && (!"".equals(thisCall.getSubject()))) {
+      	completedCalls.setCallTypeId(thisCall.getCallTypeId());
+      	completedCalls.setCallLengthDuration(thisCall.getCallLengthDuration());
+      	completedCalls.setCallStartDate(thisCall.getCallStartDate());
+      	completedCalls.setCallEndDate(thisCall.getCallEndDate());
+      	completedCalls.setContact(thisCall.getContact());
+      	completedCalls.setCallLocation(thisCall.getCallLocation());
+      	completedCalls.setSubject(thisCall.getSubject());
+      	completedCalls.setNotes(thisCall.getNotes());
+      	completedCalls.setParticipants(thisCall.getParticipants());
+      	context.getRequest().setAttribute("CallDetails", completedCalls);
+      }else {
+      	completedCalls.setCallTypeId(thisCall.getAlertCallTypeId());
+      	completedCalls.setCallLengthDuration(thisCall.getFollowupLength());
+      	completedCalls.setCallStartDate(thisCall.getAlertDate());
+      	completedCalls.setCallEndDate(thisCall.getFollowupEndDate());
+      	completedCalls.setContact(thisCall.getFollowupContact());
+      	completedCalls.setCallLocation(thisCall.getFollowupLocation());
+      	completedCalls.setSubject(thisCall.getAlertText());
+      	completedCalls.setNotes(thisCall.getFollowupNotes());
+      	completedCalls.setParticipants(thisCall.getFollowupParticipants());
+      	context.getRequest().setAttribute("CallDetails", completedCalls);
+      }
 
       OpportunityHeader oppHeader = new OpportunityHeader(
           db, Integer.parseInt(headerId));
@@ -942,23 +979,44 @@ public final class LeadsCalls extends CFSModule {
     }
     Connection db = null;
     Call thisCall = null;
-
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(
         context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-
     try {
       db = this.getConnection(context);
       //Load the previous Call to get details for completed activity
       thisCall = new Call(db, callId);
       context.getRequest().setAttribute("PreviousCallDetails", thisCall);
+      context.getRequest().setAttribute("Completed", "cancel");
+      
+      
+            
       //Create an empty next call based on the previous call
-      Call nextCall = new Call();
-      nextCall.setCallTypeId(thisCall.getAlertCallTypeId());
-      nextCall.setSubject(thisCall.getAlertText());
-      nextCall.setNotes(thisCall.getFollowupNotes());
-      context.getRequest().setAttribute("CallDetails", nextCall);
+      Call cancelCalls = new Call();
+      if ((thisCall.getSubject()!=null) && (!"".equals(thisCall.getSubject()))) {
+      	cancelCalls.setCallTypeId(thisCall.getCallTypeId());
+      	cancelCalls.setCallLengthDuration(thisCall.getCallLengthDuration());
+      	cancelCalls.setCallStartDate(thisCall.getCallStartDate());
+      	cancelCalls.setCallEndDate(thisCall.getCallEndDate());
+      	cancelCalls.setContact(thisCall.getContact());
+      	cancelCalls.setCallLocation(thisCall.getCallLocation());
+      	cancelCalls.setSubject(thisCall.getSubject());
+      	cancelCalls.setNotes(thisCall.getNotes());
+      	cancelCalls.setParticipants(thisCall.getParticipants());
+      	context.getRequest().setAttribute("CallDetails", cancelCalls);
+      }else {
+      	cancelCalls.setCallTypeId(thisCall.getAlertCallTypeId());
+      	cancelCalls.setCallLengthDuration(thisCall.getFollowupLength());
+      	cancelCalls.setCallStartDate(thisCall.getAlertDate());
+      	cancelCalls.setCallEndDate(thisCall.getFollowupEndDate());
+      	cancelCalls.setContact(thisCall.getFollowupContact());
+      	cancelCalls.setCallLocation(thisCall.getFollowupLocation());
+      	cancelCalls.setSubject(thisCall.getAlertText());
+      	cancelCalls.setNotes(thisCall.getFollowupNotes());
+      	cancelCalls.setParticipants(thisCall.getFollowupParticipants());
+      	context.getRequest().setAttribute("CallDetails", cancelCalls);
+      }
 
       //load contact details
       OpportunityHeader oppHeader = new OpportunityHeader(
@@ -1044,6 +1102,10 @@ public final class LeadsCalls extends CFSModule {
         CallResultList resultList = new CallResultList();
         resultList.buildList(db);
         context.getRequest().setAttribute("callResultList", resultList);
+      }
+      if (thisCall.getFollowupContactId() != -1) {
+      	Contact followupContact = new Contact(db, thisCall.getFollowupContactId());
+      	context.getRequest().setAttribute("followupContactDetails", followupContact);
       }
     } else {
       //Result Lookup

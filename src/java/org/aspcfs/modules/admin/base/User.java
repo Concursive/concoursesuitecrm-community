@@ -2001,13 +2001,20 @@ public class User extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
-              "SET " + DatabaseUtils.addQuotes(db, "password") + " = ?, webdav_password = ?, hidden = ?, " +
-                     "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedBy = ? " +
-              "WHERE user_id = ? ");
+              "SET " + DatabaseUtils.addQuotes(db, "password") + " = ?, "+
+              " webdav_password = ?, " +
+              " temp_password = ?, " +
+              " temp_webdav_password = ?, " +
+              " hidden = ?, " +
+              " modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+              " modifiedBy = ? " +
+              " WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, encryptPassword(password1));
       pst.setString(++i, this.encryptWebdavPassword(username, password1));
+      pst.setString(++i, null);
+      pst.setString(++i, null);
       pst.setBoolean(++i, this.getHidden());
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, getId());
@@ -3294,4 +3301,78 @@ public class User extends GenericBean {
   public String toString() {
     return this.getUsername() + "(" + this.getId() + ")";
   }
+  
+  public int insertNewPassword(Connection db, String newPassword) throws SQLException{
+   	int resultCount = 0;
+   	StringBuffer sql = new StringBuffer();
+   	PreparedStatement pst = null;
+      sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + " SET ");
+         if (newPassword != null) {
+           sql.append("temp_password = ?, ");
+    	   sql.append("temp_webdav_password = ? ");
+         }
+           sql.append("WHERE user_id = ? ");
+           int i = 0;
+    	     pst = db.prepareStatement(sql.toString());
+    	     if (newPassword != null) {
+    	       pst.setString(++i, encryptPassword(newPassword));
+    	       pst.setString(++i, encryptWebdavPassword(username, newPassword));
+    	     }
+      pst.setInt(++i, id);
+      resultCount = pst.executeUpdate();
+      pst.close();
+    return resultCount;
+  } 
+  
+  public void overwritePassword(Connection db, String password, String username, int id) throws SQLException{
+    int resultCount = 0;
+    String pw = null;
+    String tempPassword = null;    
+    String tempWebdavPassword = null;    
+    PreparedStatement pst = db.prepareStatement(
+            "SELECT a.temp_password, a.temp_webdav_password " +
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
+            "WHERE " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? ");
+    pst.setString(1, username.toLowerCase());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+    	tempPassword = rs.getString("temp_password");
+    	tempWebdavPassword = rs.getString("temp_webdav_password");
+    }
+    rs.close();
+    pst.close();
+    if (tempPassword.equals(password)){
+   	 int i =0;
+     StringBuffer sql = new StringBuffer();
+     PreparedStatement ps = null;
+     // Set password and webdav password
+     sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + 
+    		 	" SET " +
+       		" password = ?, " +
+       		" webdav_password = ? " +
+          " WHERE user_id = ? ");
+     ps = db.prepareStatement(sql.toString());
+     ps.setString(++i, tempPassword);
+     ps.setString(++i, tempWebdavPassword);
+     ps.setInt(++i, id);
+     ps.executeUpdate();
+     ps.close();
+     
+     i = 0;
+     sql = new StringBuffer();
+     //reset temporary passwords
+     sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + 
+     			" SET " +
+       		" temp_password = ?, " +
+       		" temp_webdav_password = ? " +
+       		" WHERE user_id = ? ");
+     ps = db.prepareStatement(sql.toString());
+     ps.setString(++i, null);
+     ps.setString(++i, null);
+     ps.setInt(++i, id);
+     ps.executeUpdate();
+     ps.close();
+    }
+  }
+  
 }

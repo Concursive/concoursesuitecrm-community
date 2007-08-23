@@ -357,7 +357,6 @@ public final class CampaignManager extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     Campaign campaign = null;
     try {
@@ -2526,6 +2525,10 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    String commandName =  (String)context.getRequest().getAttribute("commandName");
+    if(commandName != null && !"".equals(commandName) && commandName.equals("executeCommandPrepareQuickMessage")) {      
+      return getReturn(context, "HomePageMessageJSList");
     }
     return getReturn(context, "MessageJSList");
   }

@@ -18,8 +18,6 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="org.aspcfs.utils.StringUtils,
-                 org.aspcfs.utils.web.ClientType" %>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>

@@ -282,8 +282,9 @@ public class ComponentContext extends HashMap {
         Iterator i = templateVariables.iterator();
         while (i.hasNext()) {
           String variable = (String) i.next();
-          String value = retrieveContextValue(
-              variable, thisObject, previousObject);
+          String value = retrieveContextValue(variable, thisObject, previousObject);
+          if (value.indexOf("${") > -1)
+          	value = processParameters(value, thisObject, previousObject);
           if (System.getProperty("DEBUG") != null) {
             System.out.println(
                 "ComponentContext-> " + parameterName + ": ${" + variable + "} = " + value);
@@ -307,6 +308,20 @@ public class ComponentContext extends HashMap {
     }
   }
 
+  private String processParameters(String param, Object thisObject, Object previousObject) {
+    Template template = new Template();
+    template.setText(param);
+    ArrayList templateVariables = template.getVariables();
+    Iterator i = templateVariables.iterator();
+    while (i.hasNext()) {
+      String variable = (String) i.next();
+      String value = retrieveContextValue(variable, thisObject, previousObject);
+      if (value.indexOf("${") > -1)
+      	value = processParameters(value, thisObject, previousObject);
+      template.addParseElement("${" + variable + "}", value);
+    }
+    return template.getParsedText();
+  }
 
   /**
    * Sets the attribute attribute of the ComponentContext object

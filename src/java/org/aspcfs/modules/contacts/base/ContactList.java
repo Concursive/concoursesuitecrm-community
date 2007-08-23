@@ -199,6 +199,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   private boolean includeAllSites = false;
   private int portalUsersOnly = Constants.UNDEFINED;
 
+  private int id = -1;
+
   // Logger
   private static Logger logger = Logger.getLogger(org.aspcfs.modules.contacts.base.ContactList.class);
 
@@ -2813,6 +2815,27 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   }
 
   /**
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = Integer.parseInt(id);
+  }
+
+  /**
    * Gets the HtmlSelect attribute of the ContactList object
    *
    * @param selectName Description of Parameter
@@ -3044,7 +3067,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
-            + "WHERE c.contact_id > -1 ");
+            + "WHERE ");
 
     createFilter(db, sqlFilter);
 
@@ -3164,7 +3187,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
-            + "WHERE c.contact_id > -1 ");
+            + "WHERE ");
     PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -3327,6 +3350,13 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+
+    if(id == -1){
+      sqlFilter.append("c.contact_id > ?");
+    }else{
+      sqlFilter.append("c.contact_id = ?");
+    }
+
     sqlFilter
         .append("AND (ca.address_id IS NULL OR ca.address_id IN ( "
             + "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) "
@@ -4609,6 +4639,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    pst.setInt(++i, id);
+
     pst.setBoolean(++i, true);
     pst.setBoolean(++i, true);
 
@@ -5476,7 +5509,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
-            + "WHERE c.contact_id > -1 ");
+            + "WHERE ");
 
     createFilter(db, sqlFilter);
 
@@ -5582,7 +5615,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     // c.user_id, c.contact_id, c.namelast, c.namefirst, o.name, c.owner,
     // c.status_id, c.entered,
     sqlSelect
-        .append("c.user_id, c.contact_id, c.namelast, c.namefirst, o.name, c.owner, c.status_id, c.entered, c.lead, c.lead_status, c.org_id, c.site_id "
+        .append("c.user_id, c.contact_id, c.namelast, c.namefirst, c.company, o.name, c.owner, c.status_id, c.entered, c.lead, c.lead_status, c.org_id, c.site_id "
             + "FROM contact c "
             + "LEFT JOIN organization o ON (c.org_id = o.org_id) "
             + "LEFT JOIN lookup_department d ON (c.department = d.code) "
@@ -5591,7 +5624,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
-            + "WHERE c.contact_id > -1 ");
+            + "WHERE ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());
     items = prepareFilter(pst);

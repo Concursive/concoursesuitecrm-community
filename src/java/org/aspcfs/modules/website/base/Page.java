@@ -960,7 +960,7 @@ public class Page extends GenericBean {
     boolean commit = db.getAutoCommit();
     try {
       if (commit) {
-        db.setAutoCommit(false);
+        db.setAutoCommit(false); 
       }
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_page SET " +

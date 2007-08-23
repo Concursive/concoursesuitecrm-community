@@ -108,6 +108,7 @@
   <config name="system.fields.label" enabled="true">
     <!--
     <param name="logo"><value><![CDATA[<img src="images/centriccrm.gif" align="absMiddle" height="30" width="135" border="0" />]]></value></param>
+    <param name="1111031131"><value><![CDATA[Company]]></value></param>
     <param name="organization.employees"><value><![CDATA[Subscriber Count]]></value></param>
     <param name="sales.Unprocessed"><value><![CDATA[Unassigned]]></value></param>
     <param name="sales.Unprocessed"><value><![CDATA[Unassigned]]></value></param>

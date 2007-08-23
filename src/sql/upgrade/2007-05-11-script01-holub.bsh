@@ -1,0 +1,89 @@
+//script to update activities (calls)
+
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.admin.base.User;
+import java.sql.Timestamp;
+import org.aspcfs.modules.contacts.base.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+print("Updating Calls/Alerts...");
+ArrayList idList = new ArrayList();
+
+PreparedStatement pst = null;
+ResultSet rs = null;
+int base_value = 1;
+pst = db.prepareStatement("select code from lookup_call_reminder where base_value=60");
+rs = pst.executeQuery();
+if (rs.next()) {
+  base_value = rs.getInt("code");
+}
+rs.close();
+pst.close();
+
+StringBuffer sqlSelect = new StringBuffer();
+sqlSelect.append(
+  "SELECT c.call_id " +
+  "FROM call_log c ");
+pst = db.prepareStatement(sqlSelect.toString());
+rs = pst.executeQuery();
+while (rs.next()) {
+  idList.add(new Integer(rs.getInt("call_id")));
+}
+rs.close();
+pst.close();
+
+Iterator c = idList.iterator();
+ while (c.hasNext()) {
+  Call call = new Call(db,((Integer)c.next()).intValue());
+  //print("updating Call: " + call.getId());
+  User user = new User();
+  user.buildRecord(db, (call.getOwner()==-1)?call.getEnteredBy():call.getOwner());
+  if(call.getCallStartDateTimeZone() == null || "".equals(call.getCallStartDateTimeZone().trim())){
+    //print("setting callStartDateTimeZone to " + user.getTimeZone());
+    call.setCallStartDateTimeZone(user.getTimeZone());
+  }
+  if(call.getCallEndDateTimeZone() == null || "".equals(call.getCallEndDateTimeZone().trim())){
+    //print("setting callStartDateTimeZone to " + user.getTimeZone());
+    call.setCallEndDateTimeZone(user.getTimeZone());
+  }
+  if(call.getAlertDateTimeZone() == null || "".equals(call.getAlertDateTimeZone().trim())){
+    //print("setting alertDateTimeZone to " + user.getTimeZone());
+    call.setAlertDateTimeZone(user.getTimeZone());
+  }
+  
+  if(call.getAlertDate() != null){
+   if(call.getCallStartDate() == null || call.getCallEndDate() == null){
+    call.setCallStartDate(call.getEntered());
+    //print("setting call_start_date to " + call.getEntered());
+    call.setCallEndDate(call.getEntered());
+    //print("setting call_end_date to " + call.getEntered());
+   }
+ }
+
+  if(call.getFollowupLengthDuration() < 0){
+    call.setFollowupLengthDuration(base_value);
+  }
+  if(call.getCallLengthDuration() < 0){
+    call.setCallLengthDuration(base_value);
+  }
+  
+  if(call.getFollowupEndDate() == null){
+      if(call.getAlertDate() != null){
+        call.setFollowupEndDate(call.getAlertDate());
+        //print("setting followupEndDate to " + call.getAlertDate());
+      }
+      if(call.getAlertDateTimeZone() != null){
+        call.setFollowupEndDateTimeZone(call.getAlertDateTimeZone());
+        //print("setting followupEndDateTimeZone to " + call.getAlertDateTimeZone());
+      }
+  }
+  if(call.getFollowupEndDateTimeZone() == null || "".equals(call.getFollowupEndDateTimeZone().trim())){
+    call.setFollowupEndDateTimeZone(user.getTimeZone());
+    //print("setting followupEndDateTimeZone to " + user.getTimeZone());
+  }
+  
+  call.update(db);
+}

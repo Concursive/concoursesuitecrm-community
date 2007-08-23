@@ -355,7 +355,7 @@
 	<% if (!"true".equals(request.getParameter("contactSet"))) { %>
   <tr>
     <td class="formLabel">
-      <dhv:label name="ticket.organizationLink">Organization</dhv:label>
+      <dhv:label name="accounts.account">Account</dhv:label>
     </td>
     <td>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">

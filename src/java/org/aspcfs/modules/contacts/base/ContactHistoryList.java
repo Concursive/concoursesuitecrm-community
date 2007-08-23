@@ -631,12 +631,10 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
    */
   public ContactHistoryList() { }
 
-
   /**
    *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
@@ -653,11 +651,9 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM history " +
-        "WHERE history_id > 0 " +
-        "AND org_id IS NULL ");
+    		"WHERE history_id > 0 ");
 
     createFilter(db, sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       PreparedStatement pst = db.prepareStatement(
@@ -702,14 +698,12 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
     sqlSelect.append(
         "ch.* " +
         "FROM history ch " +
-        "WHERE history_id > 0 " +
-        "AND org_id IS NULL ");
+    		"WHERE history_id > 0 ");
     PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     return pst;
   }
-
 
   /**
    *  Description of the Method
@@ -729,7 +723,6 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
       pst.close();
     }
   }
-
 
   /**
    *  Gets the object attribute of the ContactHistoryList object
@@ -812,7 +805,6 @@ public class ContactHistoryList extends ArrayList implements SyncableList {
       sqlFilter.append("AND modified < ? ");
     }
   }
-
 
   /**
    *  Description of the Method

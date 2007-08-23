@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
@@ -27,6 +28,8 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.modules.contacts.base.CallList;
+import org.aspcfs.modules.contacts.base.CallParticipant;
+import org.aspcfs.modules.contacts.base.CallParticipantList;
 import org.aspcfs.modules.contacts.base.CallResult;
 import org.aspcfs.modules.contacts.base.CallResultList;
 import org.aspcfs.modules.contacts.base.Contact;
@@ -208,6 +211,11 @@ public final class AccountsCalls extends CFSModule {
     String orgId = context.getRequest().getParameter("orgId");
     addModuleBean(context, "View Accounts", "Log an Activity");
     Connection db = null;
+    Call thisCall = null;
+    thisCall = (Call) context.getRequest().getAttribute("CallDetails");
+    thisCall.setCallStartDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+    thisCall.setAlertDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+    context.getRequest().setAttribute("CallDetails", thisCall);
     try {
       db = this.getConnection(context);
       // add account and contact to the request
@@ -224,6 +232,7 @@ public final class AccountsCalls extends CFSModule {
           "lookup_call_types");
       callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
+      context.getRequest().setAttribute("Log", "Log");
 
       // Result Lookup
       CallResultList resultList = new CallResultList();
@@ -262,6 +271,10 @@ public final class AccountsCalls extends CFSModule {
     String orgId = context.getRequest().getParameter("orgId");
     addModuleBean(context, "View Accounts", "Log an Activity");
     Connection db = null;
+    Call thisCall = null;
+    thisCall = (Call) context.getRequest().getAttribute("CallDetails");
+    thisCall.setAlertDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+    context.getRequest().setAttribute("CallDetails", thisCall);
     try {
       db = this.getConnection(context);
       // add account and contact to the request
@@ -278,6 +291,7 @@ public final class AccountsCalls extends CFSModule {
           "lookup_call_types");
       callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
+      context.getRequest().setAttribute("Log", "Log");
 
       // Result Lookup
       CallResultList resultList = new CallResultList();
@@ -335,14 +349,13 @@ public final class AccountsCalls extends CFSModule {
 
       // build the call
       thisCall = new Call(db, callId);
+      thisCall.buildParticipants(db);
 
-      if (thisCall.getAlertDate() != null) {
-        SystemStatus systemStatus = this.getSystemStatus(context);
-        // Need the call types for display purposes
-        LookupList reminderList = systemStatus.getLookupList(db,
-            "lookup_call_reminder");
-        context.getRequest().setAttribute("ReminderTypeList", reminderList);
-      }
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      // Need the call types for display purposes
+      LookupList reminderList = systemStatus.getLookupList(db,
+          "lookup_call_reminder");
+      context.getRequest().setAttribute("ReminderTypeList", reminderList);
 
       // Result Lookup
       // Need the result types for display purposes
@@ -384,7 +397,10 @@ public final class AccountsCalls extends CFSModule {
     String followupContactId = context.getRequest().getParameter("followupContactId");
     String parentId = context.getRequest().getParameter("parentId");
     String action = context.getRequest().getParameter("action");
-    //Save the current call
+    String participantIds = context.getRequest().getParameter("participantIdValues");
+    String followupParticipantIds = context.getRequest().getParameter("followupParticipantIdValues");    //Save the current call
+    CallParticipantList participants = null;
+    CallParticipantList followupParticipants = null;
     Call thisCall = (Call) context.getFormBean();
     Call previousParentCall = null;
     thisCall.setModifiedBy(getUserId(context));
@@ -401,6 +417,12 @@ public final class AccountsCalls extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      if (participantIds!=null && !"".equals(participantIds)) {
+        participants = CallParticipantList.buildList(participantIds, getUserId(context), db, CallParticipant.LOGGED_CALL);
+      }
+      if (followupParticipantIds!=null && !"".equals(followupParticipantIds)) {
+        followupParticipants = CallParticipantList.buildList(followupParticipantIds, getUserId(context), db, CallParticipant.SCHEDULED_CALL);
+      }
       if (parentId != null && Integer.parseInt(parentId) > -1) {
         parentCall = new Call(db, Integer.parseInt(parentId));
       }
@@ -410,6 +432,13 @@ public final class AccountsCalls extends CFSModule {
           context.getRequest().getParameter("view")))) {
         thisCall.setCheckAlertDate(false);
       }
+      if (participantIds!=null && !"".equals(participantIds)) {
+        participants = CallParticipantList.buildList(participantIds, getUserId(context), db, CallParticipant.LOGGED_CALL);
+      }
+      if (followupParticipantIds!=null && !"".equals(followupParticipantIds)) {
+        followupParticipants = CallParticipantList.buildList(followupParticipantIds, getUserId(context), db, CallParticipant.SCHEDULED_CALL);
+      }
+      
       //update or insert the call
       if (thisCall.getId() > 0) {
         previousCall = new Call(db, thisCall.getId());
@@ -420,7 +449,20 @@ public final class AccountsCalls extends CFSModule {
         }
         isValid = this.validateObject(context, db, thisCall);
         if (isValid) {
-          resultCount = thisCall.update(db, context);
+          resultCount = thisCall.update(db);
+          if (resultCount > 0) {
+            thisCall.buildParticipants(db);
+            if (participants != null) {
+              thisCall.getParticipants().delete(db);
+              thisCall.setParticipants(participants);
+              thisCall.getParticipants().save(db);
+            }
+            if (followupParticipants != null) {
+              thisCall.getFollowupParticipants().delete(db);
+              thisCall.setFollowupParticipants(followupParticipants);
+              thisCall.getFollowupParticipants().save(db);
+            }
+          }
         }
       } else {
         //set the status
@@ -443,6 +485,33 @@ public final class AccountsCalls extends CFSModule {
         isValid = this.validateObject(context, db, thisCall);
         if (isValid) {
           recordInserted = thisCall.insert(db, context);
+          if (recordInserted) {
+            if (participantIds!=null) {
+              StringTokenizer st = new StringTokenizer(participantIds, "|");
+              while(st.hasMoreTokens()){
+                CallParticipant pers = new CallParticipant();
+                pers.setCallId(thisCall.getId());
+                pers.setContactId(st.nextToken());
+                pers.setIsFollowup(CallParticipant.LOGGED_CALL);
+                pers.setEnteredBy(getUserId(context));
+                pers.setModifiedBy(getUserId(context));
+                pers.insert(db);
+              }
+            }
+              if (followupParticipantIds!=null) {
+                StringTokenizer st = new StringTokenizer(followupParticipantIds, "|");
+                while(st.hasMoreTokens()){
+                CallParticipant pers = new CallParticipant();
+                pers.setCallId(thisCall.getId());
+                pers.setContactId(st.nextToken());
+                pers.setIsFollowup(CallParticipant.SCHEDULED_CALL);
+                pers.setEnteredBy(getUserId(context));
+                pers.setModifiedBy(getUserId(context));
+                pers.insert(db);
+                
+              }
+            }
+          }
         }
       }
       if("schedule".equals(context.getRequest().getParameter("action")))
@@ -482,7 +551,7 @@ public final class AccountsCalls extends CFSModule {
         if (parentCall != null) {
           previousParentCall = new Call(db, parentCall.getId());
           parentCall.setStatusId(Call.COMPLETE);
-          parentCall.update(db, context);
+          parentCall.update(db);
           this.processUpdateHook(context, previousParentCall, parentCall);
         }
         thisCall = new Call(db, thisCall.getId());
@@ -543,11 +612,13 @@ public final class AccountsCalls extends CFSModule {
     int callId = Integer.parseInt(context.getRequest().getParameter("id"));
     
     Connection db = null;
-    Call thisCall = null;
+    Call thisCall = new Call();
 
+    
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, callId);
+      thisCall.buildParticipants(db);
 
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
@@ -593,11 +664,37 @@ public final class AccountsCalls extends CFSModule {
     }
     Connection db = null;
     Call thisCall = null;
+    Call completedCalls = (Call) context.getRequest().getAttribute("CallDetails");
     try {
       db = this.getConnection(context);
       //Load the previous Call to get details for completed activity
       thisCall = new Call(db, callId);
       context.getRequest().setAttribute("PreviousCallDetails", thisCall);
+      context.getRequest().setAttribute("Completed", "completed");
+      
+      if ((thisCall.getSubject()!=null) && (!"".equals(thisCall.getSubject()))) {
+      	completedCalls.setCallTypeId(thisCall.getCallTypeId());
+	      completedCalls.setCallLengthDuration(thisCall.getCallLengthDuration());
+ 		    completedCalls.setCallStartDate(thisCall.getCallStartDate());
+ 	      completedCalls.setCallEndDate(thisCall.getCallEndDate());
+ 	      completedCalls.setContact(thisCall.getContact());
+ 	      completedCalls.setCallLocation(thisCall.getCallLocation());
+      	completedCalls.setSubject(thisCall.getSubject());
+      	completedCalls.setNotes(thisCall.getNotes());
+      	completedCalls.setParticipants(thisCall.getParticipants());
+      	context.getRequest().setAttribute("CallDetails", completedCalls);
+      }else {
+      	completedCalls.setCallTypeId(thisCall.getAlertCallTypeId());
+	      completedCalls.setCallLengthDuration(thisCall.getFollowupLength());
+ 		    completedCalls.setCallStartDate(thisCall.getAlertDate());
+ 	      completedCalls.setCallEndDate(thisCall.getFollowupEndDate());
+ 	      completedCalls.setContact(thisCall.getFollowupContact());
+ 	      completedCalls.setCallLocation(thisCall.getFollowupLocation());
+ 	      completedCalls.setSubject(thisCall.getAlertText());
+      	completedCalls.setNotes(thisCall.getFollowupNotes());
+      	completedCalls.setParticipants(thisCall.getFollowupParticipants());
+      	context.getRequest().setAttribute("CallDetails", completedCalls);
+      }
 
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
@@ -660,13 +757,34 @@ public final class AccountsCalls extends CFSModule {
       //Load the previous Call to get details for completed activity
       thisCall = new Call(db, callId);
       context.getRequest().setAttribute("PreviousCallDetails", thisCall);
+      context.getRequest().setAttribute("Completed", "cancel");     
+      
       //Create an empty next call based on the previous call
-      Call nextCall = new Call();
-      nextCall.setCallTypeId(thisCall.getAlertCallTypeId());
-      nextCall.setSubject(thisCall.getAlertText());
-      nextCall.setNotes(thisCall.getFollowupNotes());
-      nextCall.setContactId(thisCall.getFollowupContactId());
-      context.getRequest().setAttribute("CallDetails", nextCall);
+      Call cancelCalls = new Call();
+      if ((thisCall.getSubject()!=null) && (!"".equals(thisCall.getSubject()))) {
+      	cancelCalls.setCallTypeId(thisCall.getCallTypeId());
+	      cancelCalls.setCallLengthDuration(thisCall.getCallLengthDuration());
+ 		    cancelCalls.setCallStartDate(thisCall.getCallStartDate());
+ 	      cancelCalls.setCallEndDate(thisCall.getCallEndDate());
+ 	      cancelCalls.setContact(thisCall.getContact());
+ 	      cancelCalls.setCallLocation(thisCall.getCallLocation());
+      	cancelCalls.setSubject(thisCall.getSubject());
+      	cancelCalls.setNotes(thisCall.getNotes());
+      	cancelCalls.setParticipants(thisCall.getParticipants());
+      	context.getRequest().setAttribute("CallDetails", cancelCalls);
+      }else {
+      	cancelCalls.setCallTypeId(thisCall.getAlertCallTypeId());
+	      cancelCalls.setCallLengthDuration(thisCall.getFollowupLength());
+ 		    cancelCalls.setCallStartDate(thisCall.getAlertDate());
+ 	      cancelCalls.setCallEndDate(thisCall.getFollowupEndDate());
+ 	      cancelCalls.setContact(thisCall.getFollowupContact());
+ 	      cancelCalls.setCallLocation(thisCall.getFollowupLocation());
+ 	      cancelCalls.setSubject(thisCall.getAlertText());
+      	cancelCalls.setNotes(thisCall.getFollowupNotes());
+      	cancelCalls.setParticipants(thisCall.getFollowupParticipants());
+      	context.getRequest().setAttribute("CallDetails", cancelCalls);
+      }
+      
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -881,6 +999,10 @@ public final class AccountsCalls extends CFSModule {
         CallResultList resultList = new CallResultList();
         resultList.buildList(db);
         context.getRequest().setAttribute("callResultList", resultList);
+      }
+      if (thisCall.getFollowupContactId() != -1) {
+      	Contact followupContact = new Contact(db, thisCall.getFollowupContactId());
+      	context.getRequest().setAttribute("followupContactDetails", followupContact);
       }
     } else {
       //Result Lookup

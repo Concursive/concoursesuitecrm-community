@@ -56,6 +56,7 @@ public class Message extends GenericBean {
   private boolean formatLineFeeds = true;
   private int accessType = -1;
   private boolean disableNameValidation = false;
+  private boolean disableReplyToValidation = false;
   private int inactiveCount = -1;
   private HashMap parseElements = new HashMap();
   private MessageAttachmentList messageAttachments = new MessageAttachmentList();
@@ -309,7 +310,6 @@ public class Message extends GenericBean {
   public boolean getDisableNameValidation() {
     return disableNameValidation;
   }
-
 
   /**
    * Gets the accessType attribute of the Message object
@@ -925,6 +925,26 @@ public class Message extends GenericBean {
     this.messageAttachments = attachments;
   }
 
+  /**
+   * @return the disableReplyToValidation
+   */
+  public boolean getDisableReplyToValidation() {
+    return disableReplyToValidation;
+  }
+
+  /**
+   * @param disableReplyToValidation the disableReplyToValidation to set
+   */
+  public void setDisableReplyToValidation(boolean disableReplyToValidation) {
+    this.disableReplyToValidation = disableReplyToValidation;
+  }
+
+  /**
+   * @param disableReplyToValidation the disableReplyToValidation to set
+   */
+  public void setDisableReplyToValidation(String disableReplyToValidation) {
+    this.disableReplyToValidation = DatabaseUtils.parseBoolean(disableReplyToValidation);
+  }
 
   /**
    * Description of the Method
@@ -945,7 +965,7 @@ public class Message extends GenericBean {
       id = DatabaseUtils.getNextSeq(db, "message_id_seq");
       sql.append(
           "INSERT INTO " + DatabaseUtils.addQuotes(db, "message") + " " +
-              "(name, access_type, ");
+              "(name, description, template_id, subject, body, reply_addr, url, img, access_type, enabled, ");
       if (id > -1) {
         sql.append("id, ");
       }
@@ -956,7 +976,7 @@ public class Message extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?,");
       }
@@ -971,7 +991,15 @@ public class Message extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
+      pst.setString(++i, this.getDescription());
+      pst.setInt(++i, this.getTemplateId());
+      pst.setString(++i, this.getMessageSubject());
+      pst.setString(++i, this.getMessageText());
+      pst.setString(++i, this.getReplyTo());
+      pst.setString(++i, this.getUrl());
+      pst.setString(++i, this.getImage());
       pst.setInt(++i, this.getAccessType());
+      pst.setBoolean(++i, this.getEnabled());
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -1168,8 +1196,12 @@ public class Message extends GenericBean {
     sql.append(
         "UPDATE " + DatabaseUtils.addQuotes(db, "message") + " " +
             "SET name=?, description = ?, template_id = ?, subject = ?, " +
-            "body = ?, reply_addr = ?, url = ?, img = ?, access_type = ?, " +
+            "body = ?, url = ?, img = ?, access_type = ?, " +
             "enabled = ?, ");
+
+    if (!"".equals(replyTo)){
+      sql.append("reply_addr = ?, ");
+    }
 
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
@@ -1189,11 +1221,13 @@ public class Message extends GenericBean {
     pst.setInt(++i, this.getTemplateId());
     pst.setString(++i, this.getMessageSubject());
     pst.setString(++i, this.getMessageText());
-    pst.setString(++i, this.getReplyTo());
     pst.setString(++i, this.getUrl());
     pst.setString(++i, this.getImage());
     pst.setInt(++i, this.getAccessType());
     pst.setBoolean(++i, this.getEnabled());
+    if (!"".equals(replyTo)){
+      pst.setString(++i, this.getReplyTo());
+    }
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 

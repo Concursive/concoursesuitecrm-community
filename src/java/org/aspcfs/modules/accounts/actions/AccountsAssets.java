@@ -222,7 +222,11 @@ public class AccountsAssets extends CFSModule {
       this.freeConnection(context, db);
     }
     if (inserted) {
-      return (executeCommandList(context));
+      if( context.getRequest().getParameter("popup")!=null) {
+        return "ReloadOK";
+      }
+      else {
+      return (executeCommandList(context));}
     }
     return (executeCommandAdd(context));
   }
@@ -263,8 +267,12 @@ public class AccountsAssets extends CFSModule {
       buildFormElements(context, db);
       buildCategories(context, db, thisAsset);
       thisAsset.buildCompleteParentList(db);
+      String returnParam = context.getRequest().getParameter("ret");
+      if (returnParam == null){
+        returnParam = (String)context.getRequest().getAttribute("ret"); 
+      }
       context.getRequest().setAttribute(
-          "return", context.getRequest().getParameter("return"));
+          "ret", returnParam);
 
       Organization orgDetails = (Organization) context.getRequest().getAttribute("OrgDetails");
       ContactList contactList = new ContactList();
@@ -293,6 +301,9 @@ public class AccountsAssets extends CFSModule {
    * @param context Description of the Parameter
    * @return Description of the Return Value
    */
+  public String executeCommandReload() {
+	  return ("ReloadOk");
+  }
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "accounts-assets-edit")) {
       return ("PermissionError");
@@ -335,7 +346,7 @@ public class AccountsAssets extends CFSModule {
       this.freeConnection(context, db);
     }
     if (resultCount == 1) {
-      if ("list".equals(context.getRequest().getParameter("return"))) {
+      if ("list".equals(context.getRequest().getAttribute("ret"))) {  
         return executeCommandList(context);
       } else {
         return executeCommandView(context);

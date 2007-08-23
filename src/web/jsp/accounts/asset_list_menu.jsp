@@ -49,7 +49,7 @@
 
 
   function modify() {
-    window.location.href = 'AccountsAssets.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisAssetId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href = 'AccountsAssets.do?command=Modify&orgId=' + thisOrgId + '&id=' + thisAssetId + '&ret=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
 
   function deleteAsset() {

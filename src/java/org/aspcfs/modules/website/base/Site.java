@@ -973,5 +973,48 @@ public class Site extends GenericBean {
     pst.close();
     styleId = newStyleId;
   }
+  
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  pageRowList       Description of the Parameter
+   * @param  column            Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */ 
+  public void copyRowColumn(Connection db,PageRowList pageRowList, int column) throws SQLException{
+    Iterator pageRowIterator = pageRowList.iterator();
+    while (pageRowIterator.hasNext()) {
+    PageRow pageRow = (PageRow) pageRowIterator.next();
+    pageRow.buildRowColumnList(db);
+    pageRow.setId(-1);
+    pageRow.setRowColumnId(column);
+    pageRow.insert(db);
+    Iterator rowColumnIterator = pageRow.getRowColumnList().iterator();
+    while (rowColumnIterator.hasNext()) {
+      RowColumn rowColumn = (RowColumn) rowColumnIterator.next();
+      rowColumn.setPageRowId(pageRow.getId());
+      rowColumn.buildIceletPropertyMap(db);
+      rowColumn.setId(-1);
+      rowColumn.insert(db);
+      IceletPropertyMap iceletPropertyMap = rowColumn.getIceletPropertyMap();
+      if (iceletPropertyMap!=null){
+      iceletPropertyMap.setIceletRowColumnId(rowColumn.getId());
+      Iterator iceletPropertyIterator = iceletPropertyMap.keySet().iterator();
+      while (iceletPropertyIterator.hasNext()) {
+          Integer name = (Integer) iceletPropertyIterator.next();
+          IceletProperty tmpIceletProperty = (IceletProperty) iceletPropertyMap.get(name);
+          tmpIceletProperty.setRowColumnId(rowColumn.getId());
+          tmpIceletProperty.setId(-1);
+          tmpIceletProperty.insert(db);
+        }
+      }
+      if  (rowColumn.getBuildSubRows()) {
+        copyRowColumn(db, rowColumn.getSubRows(),rowColumn.getId());
+      }
+    } 
+    }
+  }
+  
 }
 

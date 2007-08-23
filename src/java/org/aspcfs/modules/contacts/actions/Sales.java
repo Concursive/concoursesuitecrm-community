@@ -487,6 +487,9 @@ public final class Sales extends CFSModule {
       if (thisContact != null) {
         context.getRequest().setAttribute("ContactDetails", thisContact);
       }
+   if (context.getRequest().getParameter("actionSource") != null) {
+       return getReturn(context, "AddLeads");
+    }
     addModuleBean(context, "Leads", "Leads");
     return "PrepareOK";
   }

@@ -51,32 +51,30 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if (form.company.value != "" && checkNullString(form.company.value)) {
-       message += label("check.company.blanks", "- Please enter a valid company name.\r\n");
-			 formTest = false;
+    if (document.addLead.company.value == "" && checkNullString(document.addLead.company.value) &&
+    	document.addLead.nameLast.value == "" && checkNullString(document.addLead.nameLast.value)) {
+       message += label("check.companylastname.blanks", "- Please enter a valid company name or last name.\r\n");
+	   formTest = false;
     }
-    if (form.nameLast.value != "" && checkNullString(form.nameLast.value)) {
-       message += label("check.name.last.blanks", "- Please enter a valid last name.\r\n");
-			 formTest = false;
-    }
+    
 <dhv:include name="contact.phoneNumbers" none="true">
-    if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) || (checkNullString(form.phone1number.value) && !checkNullString(form.phone1ext.value)) || (checkNullString(form.phone2number.value) && !checkNullString(form.phone2ext.value)) || (checkNullString(form.phone3number.value) && !checkNullString(form.phone3ext.value))) { 
+    if ((!checkPhone(document.addLead.phone1number.value)) || (!checkPhone(document.addLead.phone2number.value)) || (!checkPhone(document.addLead.phone3number.value)) || (checkNullString(document.addLead.phone1number.value) && !checkNullString(document.addLead.phone1ext.value)) || (checkNullString(document.addLead.phone2number.value) && !checkNullString(document.addLead.phone2ext.value)) || (checkNullString(document.addLead.phone3number.value) && !checkNullString(document.addLead.phone3ext.value))) {
       message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
       formTest = false;
     }
-    if ((checkNullString(form.phone1ext.value) && form.phone1ext.value != "") || (checkNullString(form.phone2ext.value) && form.phone2ext.value != "") || (checkNullString(form.phone3ext.value) && form.phone3ext.value != "")) {
+    if ((checkNullString(document.addLead.phone1ext.value) && document.addLead.phone1ext.value != "") || (checkNullString(document.addLead.phone2ext.value) && document.addLead.phone2ext.value != "") || (checkNullString(document.addLead.phone3ext.value) && document.addLead.phone3ext.value != "")) {
       message += label("check.phone.ext","- Please enter a valid phone number extension\r\n");
       formTest = false;
     }
 </dhv:include>
 <dhv:include name="contact.emailAddresses" none="true">
-    if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value)) || (!checkEmail(form.email3address.value))){
+    if ((!checkEmail(document.addLead.email1address.value)) || (!checkEmail(document.addLead.email2address.value)) || (!checkEmail(document.addLead.email3address.value))){
       message += label("check.email", "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
 </dhv:include>
 <dhv:include name="contact.textMessageAddresses" none="true">
-    if ((!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value))){
+    if ((!checkEmail(document.addLead.textmessage1address.value)) || (!checkEmail(document.addLead.textmessage1address.value)) || (!checkEmail(document.addLead.textmessage1address.value))){
       message += label("check.textmessage", "- At least one entered text message address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
@@ -89,6 +87,9 @@
       if (test != null) {
         return selectAllOptions(document.addLead.selectedList);
       }
+     <dhv:evaluate if="<%= isPopup(request) %>">
+        window.close();
+     </dhv:evaluate>
     }
   }
 
@@ -147,9 +148,18 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
+  <dhv:evaluate if="<%= !isPopup(request) %>">
   <input type="submit" value="<dhv:label name="global.button.saveAndReturnDashboard">Save and Return to Dashboard</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndAddAnotherLead">Save and Add another Lead</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndViewDetails">Save and View Details</dhv:label>" onClick="this.form.saveAndClone.value='true';this.form.dosubmit.value='true';">
+<br />
+</dhv:evaluate>
+ <br />
+<dhv:evaluate if="<%= isPopup(request) %>">
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href=\"ExternalContacts.do?command=SearchContacts\";this.form.dosubmit.value=\"false\";" %>'>
+    <input type="hidden" name="dosubmit" value="true">
+</dhv:evaluate>
 <br />
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -247,6 +257,7 @@
     <td>
       <input type="text" size="35" maxlength="255" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
       <font color="red">-</font> <%= showAttribute(request, "companyError") %>
+      &nbsp;&nbsp;<font color="red"><dhv:label name="contacts.add.LastNameOrCompanyIsRequired">Last Name or Company is a required field</dhv:label></font>
     </td>
   </tr>
   <tr class="containerBody">
@@ -376,10 +387,17 @@
 <%--  include basic contact form --%>
 <%@ include file="contact_include.jsp" %>
 <br />
+  <dhv:evaluate if="<%= isPopup(request) %>">
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href=\"ExternalContacts.do?command=SearchContacts\";this.form.dosubmit.value=\"false\";" %>'>
+    <input type="hidden" name="dosubmit" value="true">
+   </dhv:evaluate>
+  <dhv:evaluate if="<%= !isPopup(request) %>">
   <input type="submit" value="<dhv:label name="global.button.saveAndReturnDashboard">Save and Return to Dashboard</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndAddAnotherLead">Save and Add another Lead</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndViewDetails">Save and View Details</dhv:label>" onClick="this.form.saveAndClone.value='true';this.form.dosubmit.value='true';">
-<input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="dosubmit" value="true">
+  </dhv:evaluate>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>

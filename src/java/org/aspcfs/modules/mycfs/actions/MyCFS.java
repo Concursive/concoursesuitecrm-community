@@ -20,11 +20,13 @@ import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactHistoryList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.mycfs.base.AlertType;
 import org.aspcfs.modules.mycfs.base.CFSNote;
@@ -35,7 +37,6 @@ import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
-
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -849,7 +850,7 @@ public final class MyCFS extends CFSModule {
     }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
-    
+
     //this is how we get the multiple-level heirarchy...recursive function.
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(
@@ -864,9 +865,10 @@ public final class MyCFS extends CFSModule {
         "userId", getUserId(context));
     userListSelect.addAttribute("id", "userId");
     context.getRequest().setAttribute("NewUserList", userListSelect);
-
+    Connection db = null;
+    CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute(
+    		"CalendarInfo");
     if (isOfflineMode(context)) {
-      Connection db = null;
       try {
         db = this.getConnection(context);
         SyncClient syncClient = new SyncClient(db, 0);
@@ -878,12 +880,33 @@ public final class MyCFS extends CFSModule {
         this.freeConnection(context, db);
       }
     }
-    
+    try {
+    	if (calendarInfo == null) {
+        calendarInfo = new CalendarBean(thisRec.getLocale());
+    	}
+	    db = this.getConnection(context);
+	    Contact newContact = null;
+	    newContact = new Contact();
+	    PagedListInfo contactHistoryListInfo = this.getPagedListInfo(
+	            context, "contactHistoryListInfo");
+	    contactHistoryListInfo.setLink(
+          "MyCFS.do?command=Home" + RequestUtils.addLinkParams(
+              context.getRequest(), "popup|popupType|actionId"));
+	    context.getRequest().setAttribute("ContactDetails", newContact);
+	    ContactHistoryList historyList = new ContactHistoryList();
+	    historyList.setNotes(true);
+	    historyList.setPagedListInfo(contactHistoryListInfo);
+	    contactHistoryListInfo.setSearchCriteria(historyList, context);
+	    historyList.buildList(db);
+	    context.getRequest().setAttribute("historyList", historyList);
+    } catch (Exception errorMessage) {
+	      context.getRequest().setAttribute("Error", errorMessage);
+	      return "SystemError";
+    } finally {
+      	this.freeConnection(context, db);
+    }
     SystemStatus systemStatus = this.getSystemStatus(context);
-    CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute(
-        "CalendarInfo");
-    if (calendarInfo == null) {
-      calendarInfo = new CalendarBean(thisRec.getLocale());
+    if (calendarInfo.getAlertTypes().size() == 0) {
       if (hasPermission(context, "myhomepage-tasks-view")) {
         calendarInfo.addAlertType(
             "Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", systemStatus.getLabel(
@@ -928,13 +951,12 @@ public final class MyCFS extends CFSModule {
             "Project Ticket", "org.aspcfs.modules.troubletickets.base.ProjectTicketListScheduledActions", systemStatus.getLabel(
                 "calendar.projectTickets"));
       }
-      context.getSession().setAttribute("CalendarInfo", calendarInfo);
     } else {
-      calendarInfo.setSelectedUserId(-1);
+    	calendarInfo.setSelectedUserId(-1);
     }
+    context.getSession().setAttribute("CalendarInfo", calendarInfo);
     return "HomeOK";
   }
-
 
   /**
    * Description of the Method
@@ -964,7 +986,7 @@ public final class MyCFS extends CFSModule {
       companyCalendar = new CalendarView(calendarInfo, thisUser.getLocale());
       companyCalendar.setSystemStatus(this.getSystemStatus(context));
       companyCalendar.addHolidays();
-      
+
       //check if the user's account is expiring
       if (context.getRequest().getParameter("userId") != null) {
         userId = Integer.parseInt(context.getRequest().getParameter("userId"));
@@ -1115,7 +1137,7 @@ public final class MyCFS extends CFSModule {
       selectedUser.setBuildContact(true);
       selectedUser.buildRecord(db, userId);
       context.getRequest().setAttribute("SelectedUser", selectedUser);
-      
+
       //Use reflection to invoke methods on scheduler classes
       String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";
@@ -1540,10 +1562,10 @@ public final class MyCFS extends CFSModule {
         db, "lookup_contactaddress_types");
     context.getRequest().setAttribute(
         "ContactAddressTypeList", addressTypeList);
-    
-    //Make the StateSelect and CountrySelect drop down menus available in the request. 
+
+    //Make the StateSelect and CountrySelect drop down menus available in the request.
     //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-    
+
     StateSelect stateSelect = (StateSelect) context.getRequest().getAttribute("StateSelect");
     if (stateSelect == null) {
       stateSelect = new StateSelect(systemStatus);
@@ -1551,5 +1573,5 @@ public final class MyCFS extends CFSModule {
     }
     CountrySelect countrySelect = new CountrySelect(systemStatus);
     context.getRequest().setAttribute("CountrySelect", countrySelect);
-  }  
+  }
 }

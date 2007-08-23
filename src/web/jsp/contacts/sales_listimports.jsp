@@ -29,8 +29,8 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
-  loadImages('select');
+<%-- Preload image rollovers for drop-down menu --%>
+loadImages('select');
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -45,21 +45,19 @@
 <dhv:permission name="sales-import-view">
   <a href="SalesImports.do?command=New"><dhv:label name="contacts.companydirectory_confirm_importupload.NewImport">New Import</dhv:label></a><br>
 </dhv:permission><br>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="SalesImports.do?command=View">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
-        <option <%= SalesImportListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_listimports.AllImports">All Imports</dhv:label></option>
-        <option <%= SalesImportListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_listimports.MyImports">My Imports</dhv:label></option>
-      </select>
-    </td>
-    <td>
-      <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SalesImportListInfo"/>
-    </td>
-    </form>
-  </tr>
-</table>
+<form name="listView" method="post" action="SalesImports.do?command=View">
+<table width="100%" border="0"><tr>
+  <td align="left">
+    <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+      <option <%= SalesImportListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_listimports.AllImports">All Imports</dhv:label></option>
+      <option <%= SalesImportListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_listimports.MyImports">My Imports</dhv:label></option>
+    </select>
+  </td>
+  <td>
+    <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SalesImportListInfo"/>
+  </td>
+</tr></table>
+</form>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th rowspan="2">

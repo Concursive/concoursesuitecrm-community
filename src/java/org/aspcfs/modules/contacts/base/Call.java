@@ -28,6 +28,7 @@ import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.PhoneNumber;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.LookupList;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -44,6 +45,8 @@ import java.util.TimeZone;
  * @created January 8, 2002
  */
 public class Call extends GenericBean {
+
+  private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(org.aspcfs.modules.contacts.base.Call.class);
 
   //static variables
   //PENDING :followup due of a completed activity
@@ -85,14 +88,31 @@ public class Call extends GenericBean {
   private String priorityString = "";
   private String orgName = null;
   private String alertDateTimeZone = null;
+  private String followupEndDateTimeZone = null;
+  private String followupLocation = null;
+  private String callStartDateTimeZone = null;
+  private String callEndDateTimeZone = null;
+  private String callLocation = null;
+  private boolean emailParticipants = false;
+  private boolean emailFollowupParticipants = false;
+  private boolean reminder = false;
 
   private String action = null;
-  private java.sql.Timestamp alertDate = null;
+  protected java.sql.Timestamp alertDate = null;
+  protected java.sql.Timestamp followupEndDate = null;
+  protected java.sql.Timestamp callStartDate = null;
+  protected java.sql.Timestamp callEndDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-  private java.sql.Timestamp followupDate = null;
   private java.sql.Timestamp assignDate = null;
   private java.sql.Timestamp completeDate = null;
+  private int followupStatusId = -1;
+
+  private int followupLength = 0;
+  private int followupLengthDuration = -1;
+  private int callLengthDuration = -1;
+  private String callLengthDurationText = null;
+  private String followupCallLengthDurationText = null;
 
   private boolean hasFollowup = false;
   private java.sql.Timestamp trashedDate = null;
@@ -103,6 +123,10 @@ public class Call extends GenericBean {
 
   private boolean updateOrganization = false;
   Contact contact = new Contact();
+  Contact followupContact = new Contact();
+  CallParticipantList participants = new CallParticipantList();
+  CallParticipantList followupParticipants = new CallParticipantList();
+
 
 
   /**
@@ -160,12 +184,30 @@ public class Call extends GenericBean {
   public void queryRecord(Connection db, int callId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c." + DatabaseUtils.addQuotes(db, "length") + ", " +
-            "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
-            "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
-            "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-            "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, c.trashed_date, c.followup_contact_Id, t.*, talert.description AS alertType, " +
-            "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, o.name AS orgname, p.description AS priority " +
+        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, " +
+        		"c." + DatabaseUtils.addQuotes(db, "length") + ", " +
+            "c.subject, c.notes, c.alertdate, c.followup_notes, c.entered as entered_date, c.enteredby, c.modified as modified_date, c.modifiedby, " +
+            "c.alert, c.alert_call_type_id, c.parent_id, c.owner, " +
+            "c.assignedby, c.assign_date, " +
+            "c.completedby, c.complete_date, " +
+            "c.result_id, c.priority_id, c.status_id, " +
+            "c.reminder_value, c.reminder_type_id, " +
+            "c.alertdate_timezone, c.trashed_date, " +
+            "c.followup_contact_Id, " +
+            "c.followup_end_date, c.followup_end_date_timezone, " +
+            "c.followup_location, " +
+            "c.followup_length, c.followup_length_duration, " +
+            "c.call_start_date, c.call_start_date_timezone, " +
+            "c.call_end_date, c.call_end_date_timezone, " +
+            "c.call_location, " +
+            "c.call_length_duration, " +
+            "c.email_participants, " +
+            "c.email_followup_participants, " +
+            "t.code, talert.description AS alertdescription," +
+            "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, " +
+            "fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, " +
+            "o.name AS orgname, " +
+            "p.description AS priority " +
             "FROM call_log c " +
             "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
             "LEFT JOIN contact fct ON (c.followup_contact_id = fct.contact_id) " +
@@ -271,16 +313,14 @@ public class Call extends GenericBean {
     this.alertDate = alertDate;
   }
 
-
   /**
    * Sets the alertDate attribute of the Call object
    *
-   * @param tmp The new alertDate value
+   * @param alertDate The new alertDate value
    */
-  public void setAlertDate(String tmp) {
-    this.alertDate = DatabaseUtils.parseTimestamp(tmp);
+  public void setAlertDate(String alertDate) {
+    this.alertDate = DatabaseUtils.parseTimestamp(alertDate);
   }
-
 
   /**
    * Sets the Id attribute of the Call object
@@ -303,7 +343,6 @@ public class Call extends GenericBean {
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
   }
-
 
   /**
    * Sets the modified attribute of the Call object
@@ -415,12 +454,15 @@ public class Call extends GenericBean {
   /**
    * Sets the owner attribute of the Call object
    *
-   * @param owner The new owner value
+   * @param tmp The new owner value
    */
-  public void setOwner(int owner) {
-    this.owner = owner;
+  public void setOwner(int tmp) {
+    this.owner = tmp;
   }
-
+  
+  public void setCallOwner(String tmp) {
+  	this.owner = Integer.parseInt(tmp);
+  }
 
   /**
    * Sets the hasFollowup attribute of the Call object
@@ -485,10 +527,10 @@ public class Call extends GenericBean {
   /**
    * Sets the owner attribute of the Call object
    *
-   * @param owner The new owner value
+   * @param tmp The new owner value
    */
-  public void setOwner(String owner) {
-    this.owner = Integer.parseInt(owner);
+  public void setOwner(String tmp) {
+    this.owner = Integer.parseInt(tmp);
   }
 
 
@@ -601,26 +643,6 @@ public class Call extends GenericBean {
    */
   public void setReminderId(String reminderId) {
     this.reminderId = Integer.parseInt(reminderId);
-  }
-
-
-  /**
-   * Sets the followupDate attribute of the Call object
-   *
-   * @param followupDate The new followupDate value
-   */
-  public void setFollowupDate(java.sql.Timestamp followupDate) {
-    this.followupDate = followupDate;
-  }
-
-
-  /**
-   * Sets the followupDate attribute of the Call object
-   *
-   * @param tmp The new followupDate value
-   */
-  public void setFollowupDate(String tmp) {
-    this.followupDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -742,7 +764,6 @@ public class Call extends GenericBean {
   public String getAlertDateTimeZone() {
     return alertDateTimeZone;
   }
-
 
   /**
    * Gets the contact attribute of the Call object
@@ -927,16 +948,6 @@ public class Call extends GenericBean {
    */
   public int getAlertCallTypeId() {
     return alertCallTypeId;
-  }
-
-
-  /**
-   * Gets the followupDate attribute of the Call object
-   *
-   * @return The followupDate value
-   */
-  public java.sql.Timestamp getFollowupDate() {
-    return followupDate;
   }
 
 
@@ -1171,7 +1182,6 @@ public class Call extends GenericBean {
     return alertDate;
   }
 
-
   /**
    * Gets the entered attribute of the Call object
    *
@@ -1327,7 +1337,6 @@ public class Call extends GenericBean {
     }
   }
 
-
   /**
    * Description of the Method
    *
@@ -1335,6 +1344,15 @@ public class Call extends GenericBean {
    */
   public boolean hasLength() {
     return (length > 0);
+  }
+  
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Return Value
+   */
+  public boolean hasFollowupLength() {
+    return (followupLength > 0);
   }
 
 
@@ -1459,7 +1477,6 @@ public class Call extends GenericBean {
     this.updateOrganization = DatabaseUtils.parseBoolean(tmp);
   }
 
-
   /**
    * Gets the updateOrganization attribute of the Call object
    *
@@ -1467,6 +1484,225 @@ public class Call extends GenericBean {
    */
   public boolean getUpdateOrganization() {
     return updateOrganization;
+  }
+
+  /**
+   * @return the followupEndDate
+   */
+  public java.sql.Timestamp getFollowupEndDate() {
+    return followupEndDate;
+  }
+
+  /**
+   * @param followupEndDate the followupEndDate to set
+   */
+  public void setFollowupEndDate(java.sql.Timestamp followupEndDate) {
+    this.followupEndDate = followupEndDate;
+  }
+
+  /**
+   * @param followupEndDate the followupEndDate to set
+   */
+  public void setFollowupEndDate(String followupEndDate) {
+    this.followupEndDate = DatabaseUtils.parseTimestamp(followupEndDate);
+  }
+
+  /**
+   * @return the followupEndDateTimeZone
+   */
+  public String getFollowupEndDateTimeZone() {
+    return followupEndDateTimeZone;
+  }
+
+  /**
+   * @param followupEndDateTimeZone the followupEndDateTimeZone to set
+   */
+  public void setFollowupEndDateTimeZone(String followupEndDateTimeZone) {
+    this.followupEndDateTimeZone = followupEndDateTimeZone;
+  }
+
+  /**
+   * @return the callStartDateTimeZone
+   */
+  public String getCallStartDateTimeZone() {
+    return callStartDateTimeZone;
+  }
+
+  /**
+   * @param callStartDateTimeZone the callDateTimeZone to set
+   */
+  public void setCallStartDateTimeZone(String callStartDateTimeZone) {
+    this.callStartDateTimeZone = callStartDateTimeZone;
+  }
+
+
+  /**
+   * @return the callEndDate
+   */
+  public java.sql.Timestamp getCallEndDate() {
+    return callEndDate;
+  }
+
+  /**
+   * @param callEndDate the callEndDate to set
+   */
+  public void setCallEndDate(java.sql.Timestamp callEndDate) {
+    this.callEndDate = callEndDate;
+  }
+
+  /**
+   * @param callEndDate the callEndDate to set
+   */
+  public void setCallEndDate(String callEndDate) {
+    this.callEndDate = DatabaseUtils.parseTimestamp(callEndDate);
+  }
+
+  /**
+   * @return the callEndDateTimeZone
+   */
+  public String getCallEndDateTimeZone() {
+    return callEndDateTimeZone;
+  }
+
+
+  /**
+   * @param callEndDateTimeZone the callEndDateTimeZone to set
+   */
+  public void setCallEndDateTimeZone(String callEndDateTimeZone) {
+    this.callEndDateTimeZone = callEndDateTimeZone;
+  }
+
+
+  /**
+   * @return the callLengthDuration
+   */
+  public int getCallLengthDuration() {
+    return callLengthDuration;
+  }
+
+
+  /**
+   * @param callLengthDuration the callLengthDuration to set
+   */
+  public void setCallLengthDuration(int callLengthDuration) {
+    this.callLengthDuration = callLengthDuration;
+  }
+
+  /**
+   * @param callLengthDuration the callLengthDuration to set
+   */
+  public void setCallLengthDuration(String callLengthDuration) {
+    if (Integer.parseInt(callLengthDuration) > 0) {
+      this.callLengthDuration = Integer.parseInt(callLengthDuration);
+    }
+  }
+
+  /**
+   * @return the callLocation
+   */
+  public String getCallLocation() {
+    return callLocation;
+  }
+
+
+  /**
+   * @param callLocation the callLocation to set
+   */
+  public void setCallLocation(String callLocation) {
+    this.callLocation = callLocation;
+  }
+
+
+  /**
+   * @return the callStartDate
+   */
+  public java.sql.Timestamp getCallStartDate() {
+    return callStartDate;
+  }
+
+  /**
+   * @param callStartDate the callStartDate to set
+   */
+  public void setCallStartDate(java.sql.Timestamp callStartDate) {
+    this.callStartDate = callStartDate;
+  }
+
+  /**
+   * @param callStartDate the callStartDate to set
+   */
+  public void setCallStartDate(String callStartDate) {
+    this.callStartDate = DatabaseUtils.parseTimestamp(callStartDate);
+  }
+
+  /**
+   * @return the followupLength
+   */
+  public int getFollowupLength() {
+    return followupLength;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @return Description of the Returned Value
+   */
+  public String getFollowupLengthString() {
+    return String.valueOf(followupLength);
+  }
+
+  /**
+   * @param followupLength the followupLength to set
+   */
+  public void setFollowupLength(int followupLength) {
+    this.followupLength = followupLength;
+  }
+
+  /**
+   * @param followupLength the followupLength to set
+   */
+  public void setFollowupLength(String followupLength) {
+    try {
+      this.followupLength = Integer.parseInt(followupLength);
+    } catch (Exception e) {}
+  }
+
+  /**
+   * @return the followupLengthDuration
+   */
+  public int getFollowupLengthDuration() {
+    return followupLengthDuration;
+  }
+
+
+  /**
+   * @param followupLengthDuration the followupLengthDuration to set
+   */
+  public void setFollowupLengthDuration(int followupLengthDuration) {
+    this.followupLengthDuration = followupLengthDuration;
+  }
+
+  /**
+   * @param followupLengthDuration the followupLengthDuration to set
+   */
+  public void setFollowupLengthDuration(String followupLengthDuration) {
+    if (Integer.parseInt(followupLengthDuration) > 0) {
+      this.followupLengthDuration = Integer.parseInt(followupLengthDuration);
+    }
+  }
+
+  /**
+   * @return the followupLocation
+   */
+  public String getFollowupLocation() {
+    return followupLocation;
+  }
+
+
+  /**
+   * @param followupLocation the followupLocation to set
+   */
+  public void setFollowupLocation(String followupLocation) {
+    this.followupLocation = followupLocation;
   }
 
 
@@ -1536,15 +1772,31 @@ public class Call extends GenericBean {
           "INSERT INTO call_log " +
               "(org_id, contact_id, opp_id, call_type_id, " + DatabaseUtils.addQuotes(db, "length") + ", subject, notes, " +
               "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
-              "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, followup_contact_id, ");
+              "reminder_value, reminder_type_id, priority_id, alertdate_timezone, followup_contact_id, ");
+      sql.append(
+              "followup_end_date, followup_end_date_timezone, " +
+              "followup_location, " +
+              "followup_length, followup_length_duration, " +
+              "call_start_date, call_start_date_timezone, call_end_date, call_end_date_timezone, " +
+              "call_location, " +
+              "call_length_duration," +
+              "email_participants, email_followup_participants, ");
       if (id > -1) {
         sql.append("call_id, ");
       }
-
       sql.append("entered, modified, ");
       sql.append("enteredBy, modifiedBy ) ");
       sql.append(
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append(
+          "?, ?, " +
+          "?, " +
+          "?, ?, " +
+          "?, ?, ?, ?, " +
+          "?, " +
+          "?, " +
+          "?, ?,"
+          );
       if (id > -1) {
         sql.append("?, ");
       }
@@ -1595,18 +1847,30 @@ public class Call extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, owner);
       pst.setString(++i, this.getFollowupNotes());
       pst.setInt(++i, statusId);
-      DatabaseUtils.setInt(pst, ++i, reminderId);
-      DatabaseUtils.setInt(pst, ++i, reminderTypeId);
+      DatabaseUtils.setInt(pst, ++i, reminder ? reminderId : -1);
+      DatabaseUtils.setInt(pst, ++i, reminder ? reminderTypeId : -1);
       DatabaseUtils.setInt(pst, ++i, priorityId);
-      DatabaseUtils.setTimestamp(pst, ++i, followupDate);
       pst.setString(++i, alertDateTimeZone);
       if (this.getFollowupContactId() > 0) {
         pst.setInt(++i, this.getFollowupContactId());
-      } else if (this.getContactId() > 0) {
-        pst.setInt(++i, this.getContactId());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
+      
+      DatabaseUtils.setTimestamp(pst, ++i, this.getFollowupEndDate());
+      pst.setString(++i, this.getFollowupEndDateTimeZone());
+      pst.setString(++i, this.getFollowupLocation());
+      DatabaseUtils.setInt(pst, ++i, this.getFollowupLength());
+      DatabaseUtils.setInt(pst, ++i, this.getFollowupLengthDuration());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getCallStartDate());
+      pst.setString(++i, this.getCallStartDateTimeZone());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getCallEndDate());
+      pst.setString(++i, this.getCallEndDateTimeZone());
+      pst.setString(++i, this.getCallLocation());
+      DatabaseUtils.setInt(pst, ++i, this.getCallLengthDuration());
+      pst.setBoolean(++i, this.getEmailParticipants());
+      pst.setBoolean(++i, this.getEmailFollowupParticipants());
+
       if (id > -1) {
         pst.setInt(++i, id);
       }
@@ -1765,7 +2029,7 @@ public class Call extends GenericBean {
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
-  public int update(Connection db, ActionContext context) throws SQLException {
+  public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Call ID was not specified");
     }
@@ -1778,7 +2042,15 @@ public class Call extends GenericBean {
             "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, " +
             "followup_notes = ?, status_id = ?, result_id = ?, owner = ?, " +
             "reminder_value = ?, reminder_type_id = ?, priority_id = ?, " +
-            "followup_date = ?, alertdate_timezone = ?, trashed_date = ?, opp_id = ?, followup_contact_id=?, contact_id=?, " +
+            "alertdate_timezone = ?, trashed_date = ?, opp_id = ?, followup_contact_id=?, contact_id=?, " +
+            "followup_end_date = ?, followup_end_date_timezone = ?, " +
+            "followup_location = ?, " +
+            "followup_length = ?, followup_length_duration = ?, " +
+            "call_start_date = ?, call_start_date_timezone = ?, call_end_date = ?, call_end_date_timezone = ?, " +
+            "call_location = ?, " +
+            "call_length_duration = ?, " +
+            "email_participants = ?, " +
+            "email_followup_participants = ?, " +
             "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE call_id = ? " +
             "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
@@ -1807,15 +2079,29 @@ public class Call extends GenericBean {
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    DatabaseUtils.setInt(pst, ++i, reminderId);
-    DatabaseUtils.setInt(pst, ++i, reminderTypeId);
+    DatabaseUtils.setInt(pst, ++i, reminder ? reminderId : -1);
+    DatabaseUtils.setInt(pst, ++i, reminder ? reminderTypeId : -1);
     DatabaseUtils.setInt(pst, ++i, priorityId);
-    DatabaseUtils.setTimestamp(pst, ++i, followupDate);
     pst.setString(++i, alertDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, trashedDate);
     DatabaseUtils.setInt(pst, ++i, this.getOppHeaderId());
     DatabaseUtils.setInt(pst, ++i, this.getFollowupContactId());
     DatabaseUtils.setInt(pst, ++i, this.getContactId());
+
+    DatabaseUtils.setTimestamp(pst, ++i, this.getFollowupEndDate());
+    pst.setString(++i, this.getFollowupEndDateTimeZone());
+    pst.setString(++i, this.getFollowupLocation());
+    DatabaseUtils.setInt(pst, ++i, this.getFollowupLength());
+    DatabaseUtils.setInt(pst, ++i, this.getFollowupLengthDuration());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getCallStartDate());
+    pst.setString(++i, this.getCallStartDateTimeZone());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getCallEndDate());
+    pst.setString(++i, this.getCallEndDateTimeZone());
+    pst.setString(++i, this.getCallLocation());
+    DatabaseUtils.setInt(pst, ++i, this.getCallLengthDuration());
+    pst.setBoolean(++i, this.getEmailParticipants());
+    pst.setBoolean(++i, this.getEmailFollowupParticipants());
+    
     pst.setInt(++i, this.getId());
     if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
@@ -1836,10 +2122,8 @@ public class Call extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
-    int resultCount = 0;
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    int count = 0;
     boolean commit = true;
     try {
       commit = db.getAutoCommit();
@@ -1862,7 +2146,7 @@ public class Call extends GenericBean {
       }
       DatabaseUtils.setInt(pst, ++i, tmpUserId);
       pst.setInt(++i, this.id);
-      resultCount = pst.executeUpdate();
+      pst.executeUpdate();
       pst.close();
       // Disable the contact history for the call
       if (this.getStatusString().equals("Complete")) {
@@ -1973,12 +2257,14 @@ public class Call extends GenericBean {
     length = rs.getInt("length");
     subject = rs.getString("subject");
     notes = rs.getString("notes");
-    entered = rs.getTimestamp("entered");
-    enteredBy = rs.getInt("enteredby");
-    modified = rs.getTimestamp("modified");
-    modifiedBy = rs.getInt("modifiedby");
     alertDate = rs.getTimestamp("alertdate");
-    followupDate = rs.getTimestamp("followup_date");
+    followupNotes = rs.getString("followup_notes");
+    entered = rs.getTimestamp("entered_date");
+    enteredBy = rs.getInt("enteredby");
+    modified = rs.getTimestamp("modified_date");
+    modifiedBy = rs.getInt("modifiedby");
+    alertText = rs.getString("alert");
+    alertCallTypeId = DatabaseUtils.getInt(rs, "alert_call_type_id");
     parentId = DatabaseUtils.getInt(rs, "parent_id");
     owner = DatabaseUtils.getInt(rs, "owner");
     assignedBy = DatabaseUtils.getInt(rs, "assignedBy");
@@ -1990,16 +2276,25 @@ public class Call extends GenericBean {
     statusId = rs.getInt("status_id");
     reminderId = DatabaseUtils.getInt(rs, "reminder_value");
     reminderTypeId = DatabaseUtils.getInt(rs, "reminder_type_id");
-    alertCallTypeId = DatabaseUtils.getInt(rs, "alert_call_type_id");
-    alertText = rs.getString("alert");
-    followupNotes = rs.getString("followup_notes");
     alertDateTimeZone = rs.getString("alertdate_timezone");
     trashedDate = rs.getTimestamp("trashed_date");
     followupContactId = DatabaseUtils.getInt(rs, "followup_contact_id");
+    followupEndDate = rs.getTimestamp("followup_end_date");
+    followupEndDateTimeZone = rs.getString("followup_end_date_timezone");
+    followupLocation = rs.getString("followup_location");
+    followupLength = DatabaseUtils.getInt(rs, "followup_length");
+    followupLengthDuration = DatabaseUtils.getInt(rs, "followup_length_duration");
+    callStartDate = rs.getTimestamp("call_start_date");
+    callStartDateTimeZone = rs.getString("call_start_date_timezone");
+    callEndDate = rs.getTimestamp("call_end_date");
+    callEndDateTimeZone = rs.getString("call_end_date_timezone");
+    callLocation = rs.getString("call_location");
+    callLengthDuration = DatabaseUtils.getInt(rs, "call_length_duration");
+    emailParticipants = rs.getBoolean("email_participants");
+    emailFollowupParticipants = rs.getBoolean("email_followup_participants");
     //lookup_call_types table
     callTypeId = DatabaseUtils.getInt(rs, "code");
-    callType = rs.getString("description");
-    alertCallType = rs.getString("alertType");
+   	alertCallType = rs.getString("alertdescription");
     //contact table
     contactName = Contact.getNameLastFirst(
         rs.getString("ctlast"), rs.getString("ctfirst"));
@@ -2024,6 +2319,9 @@ public class Call extends GenericBean {
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("alertDate");
+    thisList.add("followupEndDate");
+    thisList.add("callStartDate");
+    thisList.add("callEndDate");
     return thisList;
   }
 
@@ -2040,7 +2338,7 @@ public class Call extends GenericBean {
   public boolean reassign(Connection db, ActionContext context, int newOwner) throws SQLException {
     int result = -1;
     this.setOwner(newOwner);
-    result = this.update(db, context);
+    result = this.update(db);
     if (result == -1) {
       return false;
     }
@@ -2061,7 +2359,7 @@ public class Call extends GenericBean {
     int result = -1;
     this.setOrgId(newOrgId);
     this.setUpdateOrganization(true);
-    result = this.update(db, context);
+    result = this.update(db);
     if (result == -1) {
       return false;
     }
@@ -2207,7 +2505,6 @@ public class Call extends GenericBean {
     return this.followupContactName;
   }
 
-
   /**
    * Sets the followupContactName attribute of the Call object
    *
@@ -2216,5 +2513,163 @@ public class Call extends GenericBean {
   public void setFollowupContactName(String followupContactName) {
     this.followupContactName = followupContactName;
   }
-}
 
+  /**
+   * Gets the participants attribute of the Call object
+   *
+   * @return participants The participants value
+   */
+  public CallParticipantList getParticipants() {
+    return this.participants;
+  }
+
+  /**
+   * Sets the participants attribute of the Call object
+   *
+   * @param tmp The new participants value
+   */
+  public void setParticipants(CallParticipantList tmp) {
+		if (tmp != null) {
+			Iterator i = tmp.iterator();
+			while (i.hasNext()) {
+				CallParticipant participant = (CallParticipant) i.next();
+				participant.setCallId(this.getId());
+			}
+			this.participants = tmp;
+		}
+	}
+
+  /**
+   * Gets the buildParticipants attribute of the Call object
+   *
+   * @return buildParticipants The buildParticipants value
+   * @throws SQLException 
+   */
+  public void buildParticipants(Connection db) throws SQLException {
+    
+    participants.setCallId(id);
+    participants.setIsFollowup(CallParticipant.LOGGED_CALL);
+    participants.buildList(db);
+    followupParticipants.setCallId(id);
+    followupParticipants.setIsFollowup(CallParticipant.SCHEDULED_CALL);
+    followupParticipants.buildList(db);
+  }
+  
+  /**
+   * Gets the followupParticipants attribute of the Call object
+   *
+   * @return followupParticipants The followupParticipants value
+   */
+  public CallParticipantList getFollowupParticipants() {
+    return this.followupParticipants;
+  }
+
+  /**
+   * Sets the followupParticipants attribute of the Call object
+   *
+   * @param tmp The new followupParticipants value
+   */
+  public void setFollowupParticipants(CallParticipantList tmp) {
+		if (tmp != null) {
+			Iterator i = tmp.iterator();
+			while (i.hasNext()) {
+				CallParticipant participant = (CallParticipant) i.next();
+				participant.setCallId(this.getId());
+			}
+			this.followupParticipants = tmp;
+		}
+	}
+
+	public boolean getEmailFollowupParticipants() {
+		return emailFollowupParticipants;
+	}
+  public String getEmailFollowupParticipantsString() {
+    return emailFollowupParticipants?"Yes":"No";
+  }
+	public void setEmailFollowupParticipants(String tmp) {
+		this.emailFollowupParticipants = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+	}
+
+	public boolean getEmailParticipants() {
+		return emailParticipants;
+	}
+
+	public void setEmailParticipants(String tmp) {
+		this.emailParticipants = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+	}
+
+
+	/**
+	 * @return the reminder
+	 */
+	public boolean getReminder() {
+		return reminder;
+	}
+
+
+	/**
+	 * @param reminder the reminder to set
+	 */
+	public void setReminder(String tmp) {
+		this.reminder = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+	}
+
+
+	/**
+	 * @return the callLengthDurationText
+	 */
+	public String getCallLengthDurationText() {
+		return callLengthDurationText;
+	}
+
+
+	/**
+	 * @param callLengthDurationText the callLengthDurationText to set
+	 */
+	public void setCallLengthDurationText(String callLengthDurationText) {
+		this.callLengthDurationText = callLengthDurationText;
+	}
+
+  public void setCallLengthDurationText(Connection db) throws SQLException {
+  	LookupList lengthTypes = new LookupList(db, "lookup_call_reminder");
+  	callLengthDurationText = lengthTypes.getValueFromId(callLengthDuration);
+  }
+
+
+	/**
+	 * @return the followupCallLengthDurationText
+	 */
+	public String getFollowupCallLengthDurationText() {
+		return followupCallLengthDurationText;
+	}
+
+
+	/**
+	 * @param followupCallLengthDurationText the followupCallLengthDurationText to set
+	 */
+	public void setFollowupCallLengthDurationText(String followupCallLengthDurationText) {
+		this.followupCallLengthDurationText = followupCallLengthDurationText;
+	}
+
+  public void setFollowupCallLengthDurationText(Connection db) throws SQLException {
+  	LookupList lengthTypes = new LookupList(db, "lookup_call_reminder");
+  	followupCallLengthDurationText = lengthTypes.getValueFromId(followupLengthDuration);
+  }
+
+
+	/**
+	 * @return the followupContact
+	 */
+	public Contact getFollowupContact() {
+		return followupContact;
+	}
+
+
+	/**
+	 * @param followupContact the followupContact to set
+	 */
+	public void setFollowupContact(Contact followupContact) {
+		this.followupContact = followupContact;
+	}
+
+}

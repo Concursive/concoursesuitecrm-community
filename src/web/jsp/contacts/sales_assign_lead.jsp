@@ -89,6 +89,7 @@
     url += "&rating="+rating;
   </dhv:evaluate>
     url += "&actionPlan=" + actionPlan + "&manager=" + manager + "&popup=true";
+    window.resizeTo(600,500);
     window.location.href= url;
     opener.hideSpan("worklead");
     opener.showSpan("nextlead");

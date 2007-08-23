@@ -21,6 +21,7 @@
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <jsp:useBean id="bcc" class="java.lang.String" scope="request"/>
 <jsp:useBean id="cc" class="java.lang.String" scope="request"/>
+<jsp:useBean id="commandName" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
@@ -37,6 +38,34 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
+<% if (commandName != null && !"".equals(commandName) && commandName.equals("executeCommandPrepareQuickMessage") ) { %>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th>
+      <dhv:label name="actionList.messageSentToContacts.text">Your message has been queued and will be sent to the following contacts:</dhv:label>
+    </th>
+  </tr>
+  <tr class="row2">
+    <td>
+      <%= ContactDetails.getNameFull() %> (<%= ContactDetails.getPrimaryEmailAddress() %>)
+    </td>
+  </tr>
+  <dhv:evaluate if='<%= cc != null && !"".equals(cc) %>'>
+  <tr class="row2">
+    <td>
+      <dhv:label name="quotes.cc">CC</dhv:label>: <%= toHtml(cc) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if='<%= bcc != null && !"".equals(bcc) %>'>
+  <tr class="row2">
+    <td>
+      <dhv:label name="quotes.bcc">BCC</dhv:label>: <%= toHtml(bcc) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+</table>
+<% } else { %>
 <dhv:container name="contacts" selected="messages" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -65,3 +94,4 @@
   </dhv:evaluate>
 </table>
 </dhv:container>
+<% } %>

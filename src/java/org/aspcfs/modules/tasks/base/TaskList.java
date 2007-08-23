@@ -61,6 +61,7 @@ public class TaskList extends ArrayList implements UserCentric {
   protected int areAssigned = Constants.UNDEFINED;
   private java.sql.Timestamp trashedDate = null;
   private boolean includeOnlyTrashed = false;
+  private int id = -1;
 
 
   /**
@@ -457,6 +458,26 @@ public class TaskList extends ArrayList implements UserCentric {
     this.includeOnlyTrashed = DatabaseUtils.parseBoolean(tmp);
   }
 
+  /**
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = Integer.parseInt(id);
+  }
 
   /**
    * Return a mapping of number of alerts for each alert category.
@@ -476,7 +497,7 @@ public class TaskList extends ArrayList implements UserCentric {
     sqlSelect.append(
         "SELECT duedate, count(*) AS nocols " +
             "FROM task t " +
-            "WHERE t.task_id > -1 ");
+            "WHERE ");
     createFilter(sqlFilter);
     sqlFilter.append("AND duedate IS NOT NULL ");
     sqlFilter.append("AND t.complete = ? ");
@@ -516,7 +537,7 @@ public class TaskList extends ArrayList implements UserCentric {
         "SELECT t.task_id, t.description, t.duedate, t.complete, t.priority, t.entered, tc.contact_id " +
             "FROM task t " +
             "LEFT JOIN tasklink_contact tc ON (t.task_id = tc.task_id) " +
-            "WHERE t.task_id > -1 ");
+            "WHERE ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
@@ -566,7 +587,7 @@ public class TaskList extends ArrayList implements UserCentric {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
             "FROM task t " +
-            "WHERE t.task_id > -1 ");
+            "WHERE ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -616,7 +637,7 @@ public class TaskList extends ArrayList implements UserCentric {
             "t.estimatedloetype, t." + DatabaseUtils.addQuotes(db, "type") + ", t.owner, t.completedate, t.modified, " +
             "t.modifiedby, t.category_id, t.duedate_timezone, t.trashed_date, t.ticket_task_category_id " +
             "FROM task t " +
-            "WHERE t.task_id > -1 ");
+            "WHERE ");
     pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -698,6 +719,12 @@ public class TaskList extends ArrayList implements UserCentric {
       sqlFilter = new StringBuffer();
     }
 
+    if(id == -1){
+      sqlFilter.append("t.task_id > ?");
+    }else{
+      sqlFilter.append("t.task_id = ?");
+    }
+    
     if (enteredBy != -1) {
       sqlFilter.append("AND t.enteredby = ? ");
     }
@@ -775,14 +802,14 @@ public class TaskList extends ArrayList implements UserCentric {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND t.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND t.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND t.modified > ? ");
+      sqlFilter.append("AND t.entered < ? ");
+      sqlFilter.append("AND t.modified < ? ");
     }
   }
 
@@ -797,6 +824,8 @@ public class TaskList extends ArrayList implements UserCentric {
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
+    pst.setInt(++i, id);
+    
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
@@ -916,6 +945,16 @@ public class TaskList extends ArrayList implements UserCentric {
       tmpTask.updateStatus(db, toTrash, tmpUserId);
     }
     return true;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param db
+   * @throws SQLException Description of the Returned Value
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
   }
 }
 

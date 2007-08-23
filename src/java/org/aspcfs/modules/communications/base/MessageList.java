@@ -47,6 +47,7 @@ public class MessageList extends ArrayList {
   private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
+  private int id = -1;
   private String name = "";
   private String description = "";
   private int owner = -1;
@@ -333,6 +334,27 @@ public class MessageList extends ArrayList {
 
 
   /**
+   * @return the id
+   */
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = Integer.parseInt(id);
+  }
+
+  /**
    * Gets the htmlSelect attribute of the MessageList object
    *
    * @param selectName Description of Parameter
@@ -381,6 +403,15 @@ public class MessageList extends ArrayList {
     }
   }
 
+  /**
+   * Builds a list, a part of the XML API
+   *
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
 
   /**
    * Queries the database and adds Message objects to this collection based on
@@ -486,6 +517,10 @@ public class MessageList extends ArrayList {
       sqlFilter = new StringBuffer();
     }
 
+    if (id != -1) {
+      sqlFilter.append("AND m.id = ? ");
+    }
+
     if (owner != -1) {
       sqlFilter.append("AND m.enteredby = ? ");
     }
@@ -519,14 +554,14 @@ public class MessageList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND m.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND m.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND m.modified > ? ");
+      sqlFilter.append("AND m.entered < ? ");
+      sqlFilter.append("AND m.modified < ? ");
     }
 
   }
@@ -541,6 +576,10 @@ public class MessageList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    if (id != -1) {
+      pst.setInt(++i, id);
+    }
 
     if (owner != -1) {
       pst.setInt(++i, owner);

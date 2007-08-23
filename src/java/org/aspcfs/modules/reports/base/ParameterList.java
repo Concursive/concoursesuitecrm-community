@@ -20,14 +20,17 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.UserUtils;
 import org.aspcfs.utils.web.HtmlSelectProbabilityRange;
 import org.aspcfs.utils.web.PagedListInfo;
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -239,84 +242,67 @@ public class ParameterList extends ArrayList {
         }
         //HtmlSelect date range. Proceed only if both start and end dates are null
         if (param.getName().equals("range_date")) {
-          Parameter startParam = this.getParameter("date_start");
-          Parameter endParam = this.getParameter("date_end");
-          if (startParam != null && endParam != null) {
-            //set the values available in the request
-            startParam.setValue(request.getParameter(startParam.getName()));
-            endParam.setValue(request.getParameter(endParam.getName()));
-
-            if (startParam.getValue() != null && endParam.getValue() != null) {
-              if (!"".equals(startParam.getValue().trim()) && "".equals(endParam.getValue().trim())) {
-                //Only start date provided
-                startDate = this.getTimestamp(request, startParam.getValue());
-                String start = this.getDateAsString(startDate);
-                startParam.setValue(start);
-                //set the start date
-                this.setDateRange(start, "");
-                //remove the end date filter
-                Parameter rangeEndParam = this.getParameter("range_date_end");
-                addParam(rangeEndParam.getName(), "");
-              } else if (!"".equals(endParam.getValue().trim()) && "".equals(startParam.getValue().trim())) {
-                //Only end date provided
-                endDate = this.getTimestamp(request, endParam.getValue());
-                String end = this.getDateAsString(endDate);
-                endParam.setValue(end);
-                //set the end date
-                this.setDateRange("", end);
-                //remove the start date filter
-                Parameter rangeStartParam = this.getParameter("range_date_start");
-                addParam(rangeStartParam.getName(), "");
-              } else if (!"".equals(endParam.getValue().trim()) && !"".equals(startParam.getValue().trim())) {
-                startDate = this.getTimestamp(request, startParam.getValue());
-                String start = this.getDateAsString(startDate);
-                startParam.setValue(start);
-
-                endDate = this.getTimestamp(request, endParam.getValue());
-                String end = this.getDateAsString(endDate);
-                endParam.setValue(end);
-                //set the date range
-                this.setDateRange(start, end);
-              } else {
-                //No dates provided. So determine the range. End date should be a timestamp to include
-                //all the records entered today until this time.
-                String end = DateUtils.roundUpToNextFive(System.currentTimeMillis()).toString();
-                String start = "";
-                if ("7".equals(param.getValue())) {
-                  //Replace the start and end dates to match last 7 days
-                  today.add(Calendar.DATE, -7);
-                  start = getDateAsString(request, today);
-                } else if ("14".equals(param.getValue())) {
-                  //Replace the start and end dates to match last 14 days
-                  today.add(Calendar.DATE, -14);
-                  start = getDateAsString(request, today);
-                } else if ("30".equals(param.getValue())) {
-                  //Replace the start and end dates to match last 30 days
-                  today.add(Calendar.DATE, -30);
-                  start = getDateAsString(request, today);
-                }
-
-                if (!"-1".equals(param.getValue())) {
-                  this.setDateRange(start, end);
-                  addParam(startParam.getName(), start);
-                  addParam(endParam.getName(), end);
-                } else {
-                  //All records need to be displayed
-                  Parameter rangeStartParam = this.getParameter("range_date_start");
-                  Parameter rangeEndParam = this.getParameter("range_date_end");
-                  addParam(rangeStartParam.getName(), "");
-                  addParam(rangeEndParam.getName(), "");
-                }
-              }
-            }
-          }
-          addParam(param.getName(), param.getValue());
-        }
+					Parameter startParam = this.getParameter("date_start");
+					Parameter endParam = this.getParameter("date_end");
+					if (startParam != null && endParam != null) {
+						// set the values available in the request
+						startParam.setValue(request.getParameter(startParam.getName()));
+						endParam.setValue(request.getParameter(endParam.getName()));
+						if (startParam.getValue() != null && endParam.getValue() != null) {
+							// No dates provided. So determine the range. End date should be a
+							// timestamp to include
+							// all the records entered today until this time.
+							String end = DateUtils.roundUpToNextFive(System.currentTimeMillis()).toString();
+							String start = "";
+							if ("7".equals(param.getValue())) {
+								// Replace the start and end dates to match last 7 days
+								today.add(Calendar.DATE, -7);
+								start = getDateAsString(request, today);
+							} else if ("14".equals(param.getValue())) {
+								// Replace the start and end dates to match last 14 days
+								today.add(Calendar.DATE, -14);
+								start = getDateAsString(request, today);
+							} else if ("30".equals(param.getValue())) {
+								// Replace the start and end dates to match last 30 days
+								today.add(Calendar.DATE, -30);
+								start = getDateAsString(request, today);
+							} else if ("0".equals(param.getValue())) {
+								start = getDateAsString(request, today);
+							} else if ("24".equals(param.getValue())) {
+								today.add(Calendar.HOUR, -24);
+								start = getDateAsString(request, today);
+							} else if ("48".equals(param.getValue())) {
+								today.add(Calendar.HOUR, -48);
+								start = getDateAsString(request, today);
+							} else if ("1".equals(param.getValue())) {
+								today.add(Calendar.YEAR, -1);
+								start = getDateAsString(request, today);
+							} else if ("10".equals(param.getValue())) {
+								startDate = this.getTimestamp(request, startParam.getValue());
+								start = this.getDateAsString(startDate);
+								endDate = this.getTimestamp(request, endParam.getValue());
+								end = endDate == null ? this.getDateAsString(DateUtils.roundUpToNextFive(System.currentTimeMillis())) : this.getDateAsString(endDate);
+							}
+							if (!"-1".equals(param.getValue()) && errors.size() == 0) {
+								this.setDateRange(start, end);
+								addParam(startParam.getName(), start);
+								addParam(endParam.getName(), end);
+							} else {
+								// All records need to be displayed
+								Parameter rangeStartParam = this.getParameter("range_date_start");
+								Parameter rangeEndParam = this.getParameter("range_date_end");
+								addParam(rangeStartParam.getName(), "");
+								addParam(rangeEndParam.getName(), "");
+							}
+						}
+					}
+					addParam(param.getName(), param.getValue());
+				}
         if (param.getName().startsWith("textlookup_")) {
           Parameter whereParam = this.getParameter(param.getName() + "_where");
           if (whereParam != null) {
             if (!"".equals(param.getValue())) {
-              //New case, replace query param with another param and parse
+              // New case, replace query param with another param and parse
               Template where = new Template(whereParam.getDescription());
               where.addParseElement("$P{" + param.getName() + "}", param.getValue());
               addParam(whereParam.getName(), where.getParsedText());
@@ -813,5 +799,36 @@ public class ParameterList extends ArrayList {
     Template t2 = new Template(rangeEndParam.getDescription());
     t2.addParseElement("$P{date_end}", "'" + end + "'");
     addParam(rangeEndParam.getName(), t2.getParsedText());
+  }
+  
+  public String groupSpanedParameters(ArrayList parameters, String spanName, String spanId, HttpServletRequest request, SystemStatus systemStatus) {
+  	String result = "";
+  	if (parameters != null && parameters.size() > 0) {
+  		Iterator i = parameters.iterator();
+  		String style = "";
+  		while (i.hasNext()) {
+  			Parameter parameter = (Parameter) i.next();
+  			if (request.getAttribute(parameter.getName() + "Error") != null) {
+  				style = "";
+  				break;
+  			}
+  		}
+  		result = "<span name='" + spanName + "' ID='" + spanId + "' style = '" + style + "'><table cellpadding='4' cellspacing='0'  width='100%'>";
+  		i = parameters.iterator();
+  		while (i.hasNext()) {
+  			Parameter parameter = (Parameter) i.next();
+  			result += "<tr>";
+  			result += "<td class='formLabel'>" + StringUtils.toHtml(parameter.getDisplayName(systemStatus));
+  			result += "</td><td>";
+  			result += parameter.getHtml(systemStatus, request, this);
+  			if (parameter.getRequired()) {
+          result += "<font color=\"red\">*</font>";
+          result += "<font color='#006699'>" + StringUtils.toHtml((String)request.getAttribute(parameter.getName() + "Error"))+ "</font>";
+  			}
+  			result += "</td></tr>";
+  		}
+  		result += "</table></span>";
+  	}
+  	return result;
   }
 }

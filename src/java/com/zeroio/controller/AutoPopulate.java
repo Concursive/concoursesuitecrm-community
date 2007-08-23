@@ -41,15 +41,15 @@ import java.util.*;
  */
 public class AutoPopulate {
 
+  private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(com.zeroio.controller.AutoPopulate.class);
+
   private HttpServletRequest request = null;
   private ArrayList timeParams = null;
   private ArrayList numberParams = null;
   private ArrayList userIdParams = null;
   private User user = null;
-  private Calendar cal = null;
   private NumberFormat nf = null;
   private String name = null;
-
 
   /**
    * Constructor for the AutoPopulate object
@@ -80,7 +80,6 @@ public class AutoPopulate {
 							"AutoPopulate-> User has timezone: " + user.getTimeZone());
 				}
       }
-      cal = Calendar.getInstance();
     }
     numberParams = (ArrayList) ObjectUtils.getObject(bean, "NumberParams");
     if (numberParams != null && user != null) {
@@ -149,6 +148,7 @@ public class AutoPopulate {
           try {
             Timestamp timestamp = DatabaseUtils.parseDateToTimestamp(
                 value, user.getLocale());
+            Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(timestamp.getTime());
             int hour = Integer.parseInt(hourValue);
             int minute = Integer.parseInt(
@@ -175,8 +175,9 @@ public class AutoPopulate {
             }
             modified = ObjectUtils.setParam(
                 bean, param, new Timestamp(cal.getTimeInMillis()));
+            log.debug("Param " + param + "(" + (new Timestamp(cal.getTimeInMillis())).toString() +") was set for " + bean.getClass().getName());
           } catch (Exception dateE) {
-            //e.printStackTrace(System.out);
+            log.warn("Date param '" + param + "' hasn't been set for " + bean.getClass().getName());
           }
         }
         if (!modified && value != null && !"".equals(value)) {

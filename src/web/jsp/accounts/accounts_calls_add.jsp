@@ -13,7 +13,7 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
-  - Version: $Id: accounts_contacts_calls_add.jsp 12404 2005-08-05 17:37:07Z mrajkowski $
+  - Version: $Id: accounts_calls_add.jsp 12404 2005-08-05 17:37:07Z mrajkowski $
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -26,6 +26,8 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <jsp:useBean id="actionSource" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Completed" class="java.lang.String" scope="request"/>
+<jsp:useBean id="Log" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%
   String trailSource = request.getParameter("trailSource");
@@ -56,8 +58,12 @@
     <a href="AccountsCalls.do?command=Details&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "view|trailSource") %>"><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></a> >
   <% } %>
   <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
-<% }else{ %>
- <dhv:label name="accounts.accounts_contacts_calls_add.LogAnActivity">Log an Activity</dhv:label>
+<% }else{ 
+     if("schedule".equals(request.getAttribute("action"))){ %>
+       <dhv:label name="accounts.accounts_contacts_calls_add.ScheduleAnActivity">Schedule an Activity</dhv:label>
+     <% }else{ %>
+       <dhv:label name="accounts.accounts_contacts_calls_add.LogAnActivity">Log an Activity</dhv:label>
+     <% } %>
 <% } %>
 </td>
 </tr>
@@ -66,22 +72,36 @@
 </dhv:evaluate>
 <dhv:container name="accounts" selected="activities" object="OrgDetails" param='<%= "orgId=" + OrgDetails.getOrgId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
     <%-- include call add form --%>
-    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+    <% if ("Log".equals(Log)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else if ("cancel".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
     <% if ("list".equals(request.getParameter("return"))) {%>
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsCalls.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountsCalls.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|view|popupType") %>';this.form.dosubmit.value='false';">
     <% }else{ %>
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType|trailSource") %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType|trailSource") %>';this.form.dosubmit.value='false';">
     <%}%>
     <br />
     <dhv:formMessage />
     <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     <%@ include file="../contacts/call_include.jsp" %>
     <br>
-   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+   <% if ("Log".equals(Log)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
+  <% if ("completed".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } else if ("cancel".equals(Completed)) { %>
+  	<input type="submit" value="<dhv:label name="global.button.cancelActivity">Cancel Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% } %>
     <% if ("list".equals(request.getParameter("return"))) {%>
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsCalls.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|view|popupType|trailSource") %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountsCalls.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= addLinkParams(request, "popup|view|popupType|trailSource") %>';this.form.dosubmit.value='false';">
     <% }else{ %>
-    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType|trailSource") %>';this.form.dosubmit.value='false';">
+    <input type="button" value="<dhv:label name="global.button.closeWindow">Close Window</dhv:label>" onClick="window.location.href='AccountCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|view|popupType|trailSource") %>';this.form.dosubmit.value='false';">
     <%}%>
     <input type="hidden" name="dosubmit" value="true">
     <input type="hidden" name="oppHeaderId" value="<%= CallDetails.getOppHeaderId() %>">

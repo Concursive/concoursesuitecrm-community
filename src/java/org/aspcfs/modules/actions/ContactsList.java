@@ -56,6 +56,16 @@ public final class ContactsList extends CFSModule {
     Connection db = null;
     ContactList contactList = null;
     boolean listDone = false;
+    String isEmail = null;
+
+    String commandName =  context.getRequest().getParameter("commandName");
+    if(commandName != null && !"".equals(commandName) && commandName.equals("executeCommandPrepareQuickMessage")) {
+         isEmail = "false";
+         context.getRequest().setAttribute("isEmail", isEmail);
+    } else if(context.getRequest().getParameter("isEmail") != null && !"".equals(context.getRequest().getParameter("isEmail"))) {
+        context.getRequest().setAttribute("isEmail", (String)context.getRequest().getParameter("isEmail"));      
+    }
+
     String selectedIds = context.getRequest().getParameter("selectedIds");
     String listType = context.getRequest().getParameter("listType");
     String type = context.getRequest().getParameter("type");
@@ -186,6 +196,14 @@ public final class ContactsList extends CFSModule {
               "hiddenname" + rowCount);
           int contactId = Integer.parseInt(
               context.getRequest().getParameter("hiddencontactid" + rowCount));
+          if(context.getRequest().getParameter("isEmail") != null && context.getRequest().getParameter("isEmail").equals("false")) {
+            Contact thisContact = new Contact(db, contactId);
+                if(thisContact != null) {
+                  context.getRequest().setAttribute("contactPrimaryEmail", thisContact.getPrimaryEmailAddress());
+                  isEmail = "true";
+                  context.getRequest().setAttribute("isEmail", isEmail);
+                }
+          }
           selectedList.clear();
           selectedList.put(new Integer(contactId), emailAddress);
         }
@@ -210,7 +228,9 @@ public final class ContactsList extends CFSModule {
           "Campaign", (String) context.getRequest().getParameter("campaign"));
     }
 
+    context.getRequest().setAttribute("displayType", displayType);
     context.getSession().setAttribute("selectedContacts", selectedList);
+    
     if (listDone) {
       context.getSession().setAttribute("finalContacts", finalContactList);
     }
@@ -318,11 +338,7 @@ public final class ContactsList extends CFSModule {
     if (!isSiteAccessPermitted(context, String.valueOf(siteId))) {
       throw new SQLException("PermissionError");
     }
-/*
-    if (user.getSiteId() != -1 && user.getSiteId() != siteId) {
-      throw new SQLException("PermissionError");
-    }
-*/
+
     //add filters
     FilterList filters = new FilterList(thisSystem, context.getRequest());
     context.getRequest().setAttribute("Filters", filters);

@@ -52,7 +52,11 @@
   function modify() {
     window.location.href='Sites.do?command=Modify&siteId='+ thisWebsiteId + '&popup=true';
   }
-
+  
+  function copy() {
+    window.location.href='Sites.do?command=Copy&siteId='+ thisWebsiteId + '&popup=true';
+  }
+  
   function activate(flag) {
     if (flag) {
       if (confirm(label('','Are you sure you want to Activate this website?'))) {
@@ -133,6 +137,16 @@
         </th>
         <td width="100%">
           <dhv:label name="">Export</dhv:label>
+        </td>
+      </tr>
+    </dhv:permission>
+    <dhv:permission name="site-editor-add">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="copy();">
+        <th>
+          <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="button.copy">Copy</dhv:label>
         </td>
       </tr>
     </dhv:permission>

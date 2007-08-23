@@ -77,8 +77,7 @@
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
 <%--  include basic contact form --%>
-<%@ include file="../import_include.jsp" %>
-<br />
+<%@ include file="../import_include.jsp" %><br />
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="upload" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='SalesImports.do?command=View';this.form.dosubmit.value='false';">
 <input type="hidden" name="dosubmit" value="true">

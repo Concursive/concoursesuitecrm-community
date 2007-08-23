@@ -544,6 +544,12 @@
 .details th a:link, .details th a:visited {
   color: #FFF;
 }
+table.details td.clean{
+  background-image: none;
+  border-right: 0px;
+  padding: 0px;
+}
+
 .formLabel { 
   text-align: right !important;
   width: 100px !important;

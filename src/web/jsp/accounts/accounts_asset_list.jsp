@@ -65,11 +65,11 @@
       Asset parentAsset = (Asset) iter.next(); 
       String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
 %>
-    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"  appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'/>
+<dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"  appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'/>
 <% }} %>
   <dhv:evaluate if="<%= !OrgDetails.isTrashed() %>">
     <dhv:permission name="accounts-assets-add">
-      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null?parent.getId():-1) %><%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
+      <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null?parent.getId():-1) %>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
     </dhv:permission>
   </dhv:evaluate>
   <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="AssetListInfo"/>

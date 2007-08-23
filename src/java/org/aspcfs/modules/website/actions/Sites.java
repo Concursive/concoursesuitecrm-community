@@ -30,6 +30,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Actions for the Sites module
@@ -128,6 +129,138 @@ public final class Sites extends CFSModule {
 //        return executeCommandTemplateList(context);
     }
     return getReturn(context, "List");
+  }
+  
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandCopy(ActionContext context) {
+    if (!(hasPermission(context, "site-editor-add"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    String oldSiteId = context.getRequest().getParameter("siteId");
+    try {
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      db = this.getConnection(context);
+      Site site = new Site(db, Integer.parseInt(oldSiteId));
+      site.buildTabList(db);
+      site.setId(-1);
+      String copy =systemStatus.getLabel("global.button.Copy");
+      site.setName(site.getName() + "("+copy+ ")");
+      site.setEnabled(false);
+      site.insert(db);
+
+      Iterator tabIterator = site.getTabList().iterator();
+      while (tabIterator.hasNext()) {
+        Tab tab = (Tab) tabIterator.next();
+        tab.buildTabBanner(db);
+        tab.setMode(Site.EDIT_MODE);
+        tab.buildPageGroupList(db);
+        
+        TabBannerList tabBannerList = new TabBannerList();
+        tabBannerList.setTabId(tab.getId());
+        tabBannerList.buildList(db);
+
+        
+        tab.setSiteId(site.getId());
+        tab.setId(-1);
+        tab.insert(db);
+        Iterator tabBannerListIterator = tabBannerList.iterator();
+        int tabBannerId = -1;
+        while (tabBannerListIterator.hasNext()) {
+        	TabBanner tabBanner = (TabBanner) tabBannerListIterator.next();
+        	tabBanner.setId(-1);
+        	tabBanner.setTabId(tab.getId());
+        	tabBanner.insert(db);
+          tabBannerId = tabBanner.getId();
+        }
+        Iterator pageGroupIterator = tab.getPageGroupList().iterator();
+        while (pageGroupIterator.hasNext()) {
+          PageGroup pageGroup = (PageGroup) pageGroupIterator.next();
+          pageGroup.setMode(Site.EDIT_MODE);
+          pageGroup.buildPageList(db);
+          
+          pageGroup.setId(-1);
+          pageGroup.setTabId(tab.getId());
+          pageGroup.insert(db);
+          Iterator pageIterator = pageGroup.getPageList().iterator();
+          while (pageIterator.hasNext()) {
+            Page page = (Page) pageIterator.next();
+            //page.buildTabBanner(db);
+            page.buildPageVersionList(db);
+            page.setPageGroupId(pageGroup.getId());
+            page.setId(-1);
+            page.insert(db);
+            
+            int pageVersionId  = -1;
+            Iterator pageVersionIterator = page.getPageVersionList().iterator();
+            while (pageVersionIterator.hasNext()) {
+              PageVersion pageVersion = (PageVersion) pageVersionIterator.next();
+              pageVersion.setMode(Site.EDIT_MODE);
+              pageVersion.buildPageRowList(db);
+              
+              pageVersion.setPageId(page.getId());
+              pageVersion.setId(-1);
+              pageVersion.insert(db);
+              pageVersionId = pageVersion.getId(); 
+              Iterator pageRowIterator = pageVersion.getPageRowList().iterator();
+              while (pageRowIterator.hasNext()) {
+                PageRow pageRow = (PageRow) pageRowIterator.next();
+                pageRow.buildRowColumnList(db);
+                
+                pageRow.setPageVersionId(pageVersion.getId());
+                pageRow.setId(-1);
+                pageRow.insert(db);
+
+                Iterator rowColumnIterator = pageRow.getRowColumnList().iterator();
+                while (rowColumnIterator.hasNext()) {
+                  RowColumn rowColumn = (RowColumn) rowColumnIterator.next();
+                  rowColumn.setPageRowId(pageRow.getId());
+                  rowColumn.buildIceletPropertyMap(db);
+                  rowColumn.setId(-1);
+                  rowColumn.insert(db);
+                  
+                  IceletPropertyMap iceletPropertyMap = rowColumn.getIceletPropertyMap();
+                  if (iceletPropertyMap!=null){
+                  iceletPropertyMap.setIceletRowColumnId(rowColumn.getId());
+   
+                  Iterator iceletPropertyIterator = iceletPropertyMap.keySet().iterator();
+                  while (iceletPropertyIterator.hasNext()) {
+                      Integer name = (Integer) iceletPropertyIterator.next();
+                      IceletProperty tmpIceletProperty = (IceletProperty) iceletPropertyMap.get(name);
+                      tmpIceletProperty.setRowColumnId(rowColumn.getId());
+                      tmpIceletProperty.setId(-1);
+                      tmpIceletProperty.insert(db);
+                    }
+                  }
+                  if  (rowColumn.getBuildSubRows()) {
+                    Site newSite = new Site();
+                    newSite.copyRowColumn(db, rowColumn.getSubRows(),rowColumn.getId());
+                  }
+                }
+              }
+            }
+            Page newpage = new Page(db,page.getId());
+            newpage.setActivePageVersionId(pageVersionId);
+            newpage.setConstructionPageVersionId(pageVersionId );
+            newpage.setTabBannerId(tabBannerId);
+            newpage.update(db);
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return getReturn(context, "Copy");
   }
 
 
@@ -306,7 +439,6 @@ public final class Sites extends CFSModule {
     Site site = null;
     String siteId = context.getRequest().getParameter("siteId");
     String flag = context.getRequest().getParameter("enable");
-    int recordCount = -1;
     try {
       db = this.getConnection(context);
       site = new Site(db, Integer.parseInt(siteId));
@@ -315,7 +447,7 @@ public final class Sites extends CFSModule {
         if (site.getEnabled()) {
           SiteList.disableOtherSites(db);
         }
-        recordCount = site.update(db);
+        site.update(db);
       }
     } catch (Exception e) {
       e.printStackTrace();

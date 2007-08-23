@@ -43,7 +43,9 @@ CREATE TABLE access (
   hidden BOOLEAN DEFAULT false,
   site_id INT REFERENCES lookup_site_id(code),
   allow_webdav_access BOOLEAN DEFAULT true NOT NULL,
-  allow_httpapi_access BOOLEAN DEFAULT true NOT NULL
+  allow_httpapi_access BOOLEAN DEFAULT true NOT NULL,
+  temp_password VARCHAR(80),
+  temp_webdav_password VARCHAR(80)
 );
 
 CREATE TABLE lookup_sic_codes(

@@ -29,9 +29,11 @@
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="assetStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
+<jsp:useBean id="orgId" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
 	function init() {
 	<% 
@@ -81,6 +83,9 @@
 		</tr>
 	</table>
 &nbsp;<br>
+  <dhv:permission name="accounts-assets-add">
+    <a href="javascript:popURL('AccountsAssets.do?command=Add&orgId=<%=orgId%>&parentId=-1&popup=true','addassets','790','500','yes','yes');"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
+  </dhv:permission>
 <input type="hidden" name="letter">
   <table width="100%" border="0">
     <tr>

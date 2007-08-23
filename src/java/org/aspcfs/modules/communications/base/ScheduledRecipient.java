@@ -633,9 +633,9 @@ public class ScheduledRecipient extends GenericBean{
     int records = -1;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE scheduled_recipient " +
-        "SET run_id = ?, status_id = ?, status = ?, status_date = ?, scheduled_date = ?, " +
-        "sent_date = ?, reply_date = ?, bounce_date = ?, modified =  " + DatabaseUtils.getCurrentTimestamp(db) +
-        "WHERE id = ? ");
+        " SET run_id = ?, status_id = ?, status = ?, status_date = ?, scheduled_date = ?, " +
+        " sent_date = ?, reply_date = ?, bounce_date = ?, modified =  " + DatabaseUtils.getCurrentTimestamp(db) +
+        " WHERE id = ? ");
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, runId);
     pst.setInt(++i, this.getStatusId());

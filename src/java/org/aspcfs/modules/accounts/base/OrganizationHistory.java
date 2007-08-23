@@ -48,6 +48,7 @@ public class OrganizationHistory extends GenericBean {
   public final static int CFSNOTE = 14;
   public final static int CAMPAIGN = 15;
   public final static int TASK = 16;
+  public final static int USER_NOTE = 17;
 
   private int id = -1;
   private int contactId = -1;
@@ -735,6 +736,10 @@ public class OrganizationHistory extends GenericBean {
       case OrganizationHistory.NOTE:
         result = "note";
         break;
+      case OrganizationHistory.USER_NOTE:
+        result = "notes";
+        break;
+
       default:
         result = "ticket";
         break;
@@ -782,7 +787,7 @@ public class OrganizationHistory extends GenericBean {
     }
     DatabaseUtils.setInt(pst, ++i, contactId);
     DatabaseUtils.setInt(pst, ++i, orgId);
-    DatabaseUtils.setInt(pst, ++i, linkObjectId);
+    pst.setInt(++i, linkObjectId);
     DatabaseUtils.setInt(pst, ++i, linkItemId);
     pst.setInt(++i, level);
     pst.setString(++i, status);

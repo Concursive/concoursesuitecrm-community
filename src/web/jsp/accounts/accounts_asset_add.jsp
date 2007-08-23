@@ -68,7 +68,7 @@
       Asset parentAsset = (Asset) iter.next(); 
       String param1 = "id=" + parentAsset.getId() + "|parentId="+parentAsset.getId()+"|orgId="+OrgDetails.getOrgId();
 %>
-    <dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"/>
+<dhv:container name="accountsassets" selected="billofmaterials" object="parentAsset" item="<%= parentAsset %>" param="<%= param1 %>"/>
 <% }} %>
   <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>&parentId=<%= (parent != null && parent.getId() != -1 ? String.valueOf(parent.getId()):"") %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';" />

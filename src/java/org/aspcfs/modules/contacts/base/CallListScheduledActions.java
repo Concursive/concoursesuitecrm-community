@@ -143,18 +143,21 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       //add all pending activities
       this.setOnlyPending(true);
       this.setOwner(userId);
+      this.setEnteredBy(-1);
       this.buildShortList(db);
       Iterator m = this.iterator();
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
-        String alertDate = DateUtils.getServerToUserDateString(
-            timeZone, DateFormat.SHORT, thisCall.getAlertDate());
-        CallEventList thisList = (CallEventList) companyCalendar.getEventList(
-            alertDate, CalendarEventList.EVENT_TYPES[1]);
-        thisList.getPendingCalls().add(thisCall);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println(
-              "CallListScheduledActions-> Pending Call: " + thisCall.getAlertText() + " added on " + alertDate);
+        if(thisCall.getAlertDate() != null){
+          String alertDate = DateUtils.getServerToUserDateString(
+              timeZone, DateFormat.SHORT, thisCall.getAlertDate());
+          CallEventList thisList = (CallEventList) companyCalendar.getEventList(
+              alertDate, CalendarEventList.EVENT_TYPES[1]);
+          thisList.getPendingCalls().add(thisCall);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println(
+                "CallListScheduledActions-> Pending Call: " + thisCall.getAlertText() + " added on " + alertDate);
+          }
         }
       }
 
@@ -168,14 +171,16 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       m = this.iterator();
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
-        String alertDate = DateUtils.getServerToUserDateString(
-            timeZone, DateFormat.SHORT, thisCall.getEntered());
-        CallEventList thisList = (CallEventList) companyCalendar.getEventList(
-            alertDate, CalendarEventList.EVENT_TYPES[1]);
-        thisList.getCompletedCalls().add(thisCall);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println(
-              "CallListScheduledActions-> Complete Call: " + thisCall.getSubject() + " added on " + alertDate);
+        if(thisCall.getCallStartDate() != null){
+          String alertDate = DateUtils.getServerToUserDateString(
+              timeZone, DateFormat.SHORT, thisCall.getCallStartDate());
+          CallEventList thisList = (CallEventList) companyCalendar.getEventList(
+              alertDate, CalendarEventList.EVENT_TYPES[1]);
+          thisList.getCompletedCalls().add(thisCall);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println(
+                "CallListScheduledActions-> Complete Call: " + thisCall.getSubject() + " added on " + alertDate);
+          }
         }
       }
     } catch (SQLException e) {
