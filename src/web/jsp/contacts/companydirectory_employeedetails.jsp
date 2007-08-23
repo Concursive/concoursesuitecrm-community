@@ -440,6 +440,16 @@ function reopenContact(id) {
       <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getImportName()) %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="contact.importName">Import Name</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getImportName()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
 </table>
 <dhv:evaluate if="<%= ContactDetails.getEnabled()  && !ContactDetails.isTrashed() %>">
   <dhv:permission name="contacts-internal_contacts-view,contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>

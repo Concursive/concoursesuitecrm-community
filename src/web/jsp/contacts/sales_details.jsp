@@ -296,6 +296,16 @@
     </td>
   </tr>
   </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getImportName()) %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="contact.importName">Import Name</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getImportName()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
   <dhv:evaluate if="<%= ContactDetails.getIndustryTempCode() > -1 %>">
   <tr class="containerBody">
     <td class="formLabel">

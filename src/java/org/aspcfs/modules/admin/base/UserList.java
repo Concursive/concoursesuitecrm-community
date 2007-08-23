@@ -1533,7 +1533,8 @@ public class UserList extends Vector implements SyncableList {
             "d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
             "lind.description AS industry_name, " +
             "lcs.description AS source_name, " +
-            "lcr.description AS rating_name " +
+            "lcr.description AS rating_name, " +
+            "i.name AS import_name " +
             "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
             "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
             "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
@@ -1545,6 +1546,7 @@ public class UserList extends Vector implements SyncableList {
             "LEFT JOIN " + DatabaseUtils.addQuotes(db, "access") + " m_usr ON (a.manager_id = m_usr.user_id) " +
             "LEFT JOIN " + DatabaseUtils.addQuotes(db, "role") + " r ON (a.role_id = r.role_id) " +
             "LEFT JOIN lookup_site_id b ON (a.site_id = b.code) " +
+            "LEFT JOIN import i ON (c.import_id = i.import_id) " +
             "WHERE a.user_id > -1 ");
     PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

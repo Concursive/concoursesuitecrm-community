@@ -142,6 +142,7 @@ public class Contact extends GenericBean {
   private String postalcode = null;
   private int siteId = -1;
   private String siteName = null;
+  private String importName = null;
 
   private ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
   private ContactPhoneNumberList phoneNumberList = new ContactPhoneNumberList();
@@ -247,6 +248,16 @@ public class Contact extends GenericBean {
    */
   public String getRatingName() {
     return ratingName;
+  }
+
+
+  /**
+   * Gets the importName attribute of the Contact object
+   *
+   * @return The importName value
+   */
+  public String getImportName() {
+	  return importName;
   }
 
 
@@ -435,7 +446,8 @@ public class Contact extends GenericBean {
             " lsi.description AS site_id_name, " +
             " lind.description AS industry_name, " +
             " lcs.description AS source_name, " +
-            " lcr.description AS rating_name " +
+            " lcr.description AS rating_name, " +
+            " i.name AS import_name " +
             "FROM contact c " +
             "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
             "LEFT JOIN lookup_department d ON (c.department = d.code) " +
@@ -444,6 +456,7 @@ public class Contact extends GenericBean {
             "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
             "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
             "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
+            "LEFT JOIN import i ON (c.import_id = i.import_id) " +
             "WHERE c.contact_id = ? " +
             "AND (ca.address_id IS NULL OR ca.address_id IN ( " +
             "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
@@ -4667,6 +4680,9 @@ public class Contact extends GenericBean {
     industryName = rs.getString("industry_name");
     sourceName = rs.getString("source_name");
     ratingName = rs.getString("rating_name");
+
+    // Get the import name
+    importName = rs.getString("import_name");
   }
 
 

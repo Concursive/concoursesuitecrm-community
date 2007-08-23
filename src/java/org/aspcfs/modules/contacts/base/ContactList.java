@@ -3178,7 +3178,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + " lsi.description AS site_id_name, "
             + " lind.description AS industry_name, "
             + " lcs.description AS source_name, "
-            + " lcr.description AS rating_name "
+            + " lcr.description AS rating_name, "
+            + " i.name AS import_name "
             + "FROM contact c "
             + "LEFT JOIN organization o ON (c.org_id = o.org_id) "
             + "LEFT JOIN lookup_department d ON (c.department = d.code) "
@@ -3187,6 +3188,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
+            + "LEFT JOIN import i ON (c.import_id = i.import_id) "
             + "WHERE ");
     PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString()
         + sqlOrder.toString());

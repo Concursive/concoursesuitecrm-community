@@ -106,7 +106,7 @@ function reopen() {
     <td>
       <%= toHtml(ContactDetails.getNickname()) %>
     </td>
-  </tr>
+  </tr>                                     
   </dhv:evaluate>
   <dhv:evaluate if="<%= ContactDetails.getBirthDate() != null %>">
   <tr class="containerBody">
@@ -458,6 +458,16 @@ function reopen() {
       <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getImportName()) %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="contact.importName">Import Name</dhv:label>
+     </td>
+     <td>
+       <%= toHtml(ContactDetails.getImportName()) %>
+     </td>
+    </tr>
+  </dhv:evaluate>      
 </table>
   <dhv:evaluate if="<%= (OrgDetails.getEnabled() && !OrgDetails.isTrashed()) && (ContactDetails.getEnabled() && !ContactDetails.isTrashed()) %>">
     <dhv:permission name="accounts-accounts-contacts-view,accounts-accounts-contacts-add,accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>

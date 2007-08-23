@@ -86,4 +86,6 @@
 2007-06-20-script01-holub.sql
 # TODO: Fix the following script
 2007-08-22-script01-mr.sql
+# Import JOIN
+2007-08-23-script01-mr.sql
 
