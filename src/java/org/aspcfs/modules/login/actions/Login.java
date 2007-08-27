@@ -125,7 +125,8 @@ public final class Login extends CFSModule {
     ConnectionElement ce = null;
     //Connect to the gatekeeper, validate this host and get new connection info
     try {
-      if ("true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE"))) {
+      if ("true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE")))
+      {
         //Scan for the virtual host
         db = sqlDriver.getConnection(gk);
         SiteList siteList = new SiteList();
@@ -244,33 +245,33 @@ public final class Login extends CFSModule {
           } else {
             // Validate against Centric CRM for PortalRole users
             if ((pw == null || pw.trim().equals("") ||
-                (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password)))) {
+               (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password)))){
               PreparedStatement ps = db.prepareStatement(
-                  "SELECT  a.temp_password " +
-                      "FROM " + DatabaseUtils.addQuotes(db, "access") + " a, " + DatabaseUtils.addQuotes(db, "role") + " r " +
-                      "WHERE a.role_id = r.role_id " +
-                      "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
-                      "AND a.enabled = ? ");
+                	"SELECT  a.temp_password " +
+                	      "FROM " + DatabaseUtils.addQuotes(db, "access") + " a, " + DatabaseUtils.addQuotes(db, "role") + " r " +
+                	       "WHERE a.role_id = r.role_id " +
+                	       "AND " + DatabaseUtils.toLowerCase(db) + "(a.username) = ? " +
+                	       "AND a.enabled = ? ");
               ps.setString(1, username.toLowerCase());
               ps.setBoolean(2, true);
               ResultSet r = ps.executeQuery();
               if (r.next()) {
-                tpw = r.getString("temp_password");
+              	tpw = r.getString("temp_password");
               }
               r.close();
-              ps.close();
-              if ((tpw == null || tpw.trim().equals("") ||
-                  (!tpw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password)))) {
-                loginBean.setMessage("* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
-              } else {
-                if (tpw != null) {
-                  User user = new User();
-                  user.overwritePassword(db, password, username, id);
-                }
-                userId = tmpUserId;
-              }
+              ps.close();            
+            	if ((tpw == null || tpw.trim().equals("") ||
+            	(!tpw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password)))) {
+            	   loginBean.setMessage("* " + thisSystem.getLabel("login.msg.invalidLoginInfo"));
+            	} else {
+            		if (tpw != null){
+            		   User user = new User();
+            		   user.overwritePassword(db, password, username, id);
+            		}
+            		userId = tmpUserId;
+            	}
             } else {
-              userId = tmpUserId;
+            	userId = tmpUserId;
             }
           }
         }
@@ -296,7 +297,7 @@ public final class Login extends CFSModule {
             //anymore due to the single-session manager below
             userRecord.setIp(context.getIpAddress());
             userRecord.updateLogin(db);
-            if (!CFSModule.isOfflineMode(context)) {
+            if(!CFSModule.isOfflineMode(context)){
               userRecord.checkWebdavAccess(
                   db, context.getRequest().getParameter("password"));
             }
@@ -326,11 +327,11 @@ public final class Login extends CFSModule {
       }
     }
 
-    try {
-      if (SyncUtils.isOfflineMode(applicationPrefs)) {
+    try{
+      if (SyncUtils.isOfflineMode(applicationPrefs)){
         //Check state of Offline application
         SyncUtils.checkOfflineState(context.getServletContext());
-        if (SyncUtils.isSyncConflict(applicationPrefs)) {
+        if(SyncUtils.isSyncConflict(applicationPrefs)){
           RolePermission.setReadOnlyOfflinePermissionsForAll(db, (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl()));
         }
       }
@@ -430,7 +431,8 @@ public final class Login extends CFSModule {
       if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
         ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
         if (applicationPrefs.isUpgradeable()) {
-          if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
+          if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole()))
+          {
             return "PerformUpgradeOK";
           } else {
             return "UpgradeCheck";
@@ -477,43 +479,43 @@ public final class Login extends CFSModule {
   }
 
   public String executeCommandForgotPassword(ActionContext context) {
-    ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
-    if (applicationPrefs.isUpgradeable()) {
-      String forg = "No";
+	  ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+	  if (applicationPrefs.isUpgradeable()){
+		  String forg = "No";
+	      context.getRequest().setAttribute("forgo", forg);
+		  return"ForgotPasswordOK";
+	  }
+	  String forg = "Yes";
       context.getRequest().setAttribute("forgo", forg);
-      return "ForgotPasswordOK";
-    }
-    String forg = "Yes";
-    context.getRequest().setAttribute("forgo", forg);
-    return "ForgotPasswordOK";
+	  return "ForgotPasswordOK";
   }
-
+  
   public String executeCommandGenerateTemporaryPassword(ActionContext context) {
-    Connection db = null;
+	Connection db = null;
     int k = 0;
-    try {
-      db = this.getConnection(context);
-      String username = (String) context.getRequest().getParameter("username");
-      UserList userList = new UserList();
-      userList.buildList(db);
-      Iterator iter = userList.iterator();
-      while (iter.hasNext()) {
-        User pers = (User) iter.next();
-        if (username.equals(pers.getUsername())) {
+	try {
+	db = this.getConnection(context);
+	String username = (String) context.getRequest().getParameter("username");
+	UserList userList = new  UserList();
+	userList.buildList(db);
+	Iterator iter = userList.iterator();
+    while (iter.hasNext()){
+      User pers = (User)iter.next();
+        if (username.equals(pers.getUsername())){
           ContactList contactList = new ContactList();
           contactList.buildList(db);
           k = 1;
           Iterator ite = contactList.iterator();
-          while (ite.hasNext()) {
-            Contact per = (Contact) ite.next();
-            if (pers.getId() == per.getUserId()) {
-              per.getId();
-              ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
+          while (ite.hasNext()){
+        	Contact per = (Contact) ite.next();
+        	if (pers.getId() == per.getUserId()){
+        	  per.getId();
+        	  ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
               contactEmailAddressList.buildList(db);
               Iterator it = contactEmailAddressList.iterator();
-              while (it.hasNext()) {
+              while (it.hasNext()){
                 ContactEmailAddress pe = (ContactEmailAddress) it.next();
-                if (pe.getContactId() == per.getId()) {
+                if (pe.getContactId() == per.getId()){
                   String newPassword = null;
                   newPassword = String.valueOf(StringUtils.rand(100000, 999999));
                   String templateFile = "";
@@ -535,16 +537,16 @@ public final class Login extends CFSModule {
                 }
               }
             }
-
-          }
+                
+           }
         }
-      }
+     }
     } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");
     } finally {
       freeConnection(context, db);
-    }
+  }
     if (k == 0) {
       context.getRequest().setAttribute("retu", "No");
       return executeCommandForgotPassword(context);

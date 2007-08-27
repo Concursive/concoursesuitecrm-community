@@ -36,7 +36,8 @@
       count++;
       ActionItemWork thisItem = (ActionItemWork) steps.next();
       if (thisItem.hasAttachment() || (thisItem.getActionId() == ActionStep.UPDATE_RATING &&
-                                                      actionPlanWork.getOrganization().getRating() != -1)) {
+      ((actionPlanWork.getOrganization()!=null && actionPlanWork.getOrganization().getRating() != -1)
+      ||(actionPlanWork.getLead()!=null && actionPlanWork.getLead().getRating() != -1)))) {
   %>
         stepsWithAttachments[<%= count %>] = '<%= thisItem.getId() %>';
     <%}
@@ -46,7 +47,8 @@
       count++;
       ActionItemWork thisItem = (ActionItemWork) steps.next();
       if (thisItem.hasAttachment() || (thisItem.getActionId() == ActionStep.UPDATE_RATING &&
-                                                      actionPlanWork.getOrganization().getRating() != -1)) {
+      ((actionPlanWork.getOrganization()!=null && actionPlanWork.getOrganization().getRating() != -1)
+      ||(actionPlanWork.getLead()!=null && actionPlanWork.getLead().getRating() != -1)))) {
   %>
         stepsWithAttachments[<%= count %>] = '<%= thisItem.getId() %>';
   <%

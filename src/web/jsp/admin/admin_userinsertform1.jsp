@@ -35,7 +35,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript"
         SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript"
-        SRC="javascript/popContacts.js"></SCRIPT>
+        src="javascript/popContacts.js?v=20070827"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript"
         SRC="javascript/submit.js"></SCRIPT>
 <script type="text/javascript">

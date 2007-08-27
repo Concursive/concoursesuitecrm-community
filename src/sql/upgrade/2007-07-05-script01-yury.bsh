@@ -1,0 +1,12 @@
+import java.sql.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.actionplans.base.*;
+
+PlanEditor planEditor = new PlanEditor();
+planEditor.setCategoryId(Constants.LEADS);
+planEditor.setModuleId(Constants.LEADS);
+planEditor.setDescription("Action Plans related to Leads");
+planEditor.setConstantId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.LEADS));
+planEditor.setLevel(10);
+planEditor.insert(db);
+

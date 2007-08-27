@@ -45,7 +45,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript">
 <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select-arrow');

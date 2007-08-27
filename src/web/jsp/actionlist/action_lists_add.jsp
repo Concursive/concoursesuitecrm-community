@@ -25,7 +25,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
-<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <%-- <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script> --%>
 <SCRIPT LANGUAGE="JavaScript">
 function checkForm(form) {

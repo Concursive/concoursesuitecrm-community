@@ -821,6 +821,7 @@ public final class Users extends CFSModule {
               //find out if other null users exist
               UserList nullSiteUserList = new UserList();
               nullSiteUserList.setIncludeUsersWithAccessToAllSites(true);
+              nullSiteUserList.setFilterUsers(String.valueOf(thisUser.getId()));
               nullSiteUserList.buildList(db);
               //Change is diassallowed if other null site users do not exist
               //as this change has the potential to lock out an administrator

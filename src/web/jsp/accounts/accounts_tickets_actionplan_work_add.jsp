@@ -27,7 +27,7 @@
 <jsp:useBean id="defectSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="defectCheck" class="java.lang.String" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">

@@ -38,6 +38,7 @@ import org.aspcfs.utils.PrivateString;
 import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -225,7 +226,7 @@ public final class ActionPlans extends CFSModule {
             assignedContact,
             managerContact,
             previousContact,
-            planWork.getOrganization().getName(),
+            planWork.getLinkItemName(),
             templateFile);
       } catch (Exception e) {
         e.printStackTrace(System.out);
@@ -527,11 +528,7 @@ public final class ActionPlans extends CFSModule {
       db = this.getConnection(context);
 
       String itemId = context.getRequest().getParameter("actionStepWork");
-      String orgId = context.getRequest().getParameter("orgId");
-      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
-        thisOrg = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("orgDetails", thisOrg);
-      }
+
       ActionItemWorkNote thisNote = new ActionItemWorkNote();
       thisNote.setSubmitted(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
       context.getRequest().setAttribute("actionItemWorkNote", thisNote);
@@ -540,6 +537,14 @@ public final class ActionPlans extends CFSModule {
       itemWork.setBuildLinkedObject(true);
       itemWork.queryRecord(db, Integer.parseInt(itemId));
       context.getRequest().setAttribute("actionItemWork", itemWork);
+      
+      ActionPhaseWork phaseWork = new ActionPhaseWork(db, itemWork.getPhaseWorkId());
+      ActionPlanWork planWork = new ActionPlanWork(db, phaseWork.getPlanWorkId());
+      planWork.setBuildLinkedObject(true);
+      planWork.buildLinkedObject(db);
+      
+      setObjects(context, db, planWork);
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -568,12 +573,6 @@ public final class ActionPlans extends CFSModule {
       db = this.getConnection(context);
 
       String itemId = context.getRequest().getParameter("actionStepWork");
-      String orgId = context.getRequest().getParameter("orgId");
-
-      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
-        thisOrg = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("orgDetails", thisOrg);
-      }
 
       ActionItemWork itemWork = new ActionItemWork();
       itemWork.setBuildLinkedObject(true);
@@ -588,6 +587,14 @@ public final class ActionPlans extends CFSModule {
       ActionItemWorkSelectionList selectionList = new ActionItemWorkSelectionList();
       selectionList.setItemWorkId(itemWork.getId());
       selectionList.buildList(db);
+      
+      ActionPhaseWork phaseWork = new ActionPhaseWork(db, itemWork.getPhaseWorkId());
+      ActionPlanWork planWork = new ActionPlanWork(db, phaseWork.getPlanWorkId());
+      planWork.setBuildLinkedObject(true);
+      planWork.buildLinkedObject(db);
+      
+      setObjects(context, db, planWork);
+      
       context.getRequest().setAttribute("selectionList", selectionList);
     } catch (Exception e) {
       errorMessage = e;
@@ -904,14 +911,8 @@ public final class ActionPlans extends CFSModule {
       db = this.getConnection(context);
 
       String itemId = context.getRequest().getParameter("itemWorkId");
-      String orgId = context.getRequest().getParameter("orgId");
       String actionId = context.getRequest().getParameter("actionId");
       int count = Integer.parseInt(context.getRequest().getParameter("count"));
-
-      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
-        thisOrg = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("orgDetails", thisOrg);
-      }
 
       ActionItemWork itemWork = new ActionItemWork();
       itemWork.setBuildLinkedObject(true);
@@ -939,6 +940,15 @@ public final class ActionPlans extends CFSModule {
 
       context.getRequest().setAttribute("actionItemWork", itemWork);
       context.getRequest().setAttribute("actionItemWorkNote", thisNote);
+      
+      
+      ActionPhaseWork phaseWork = new ActionPhaseWork(db, itemWork.getPhaseWorkId());
+      ActionPlanWork planWork = new ActionPlanWork(db, phaseWork.getPlanWorkId());
+      planWork.setBuildLinkedObject(true);
+      planWork.buildLinkedObject(db);
+      
+      setObjects(context, db, planWork);
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -963,17 +973,10 @@ public final class ActionPlans extends CFSModule {
   public String executeCommandAttachSelection(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-    Organization thisOrg = null;
     try {
       db = this.getConnection(context);
 
       String itemId = context.getRequest().getParameter("itemWorkId");
-      String orgId = context.getRequest().getParameter("orgId");
-
-      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
-        thisOrg = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("orgDetails", thisOrg);
-      }
 
       ArrayList newList = new ArrayList();
       ArrayList displayList = new ArrayList();
@@ -1019,6 +1022,14 @@ public final class ActionPlans extends CFSModule {
       }
 
       ActionItemWork itemWork = new ActionItemWork(db, Integer.parseInt(itemId));
+      
+      ActionPhaseWork phaseWork = new ActionPhaseWork(db, itemWork.getPhaseWorkId());
+      ActionPlanWork planWork = new ActionPlanWork(db, phaseWork.getPlanWorkId());
+      planWork.setBuildLinkedObject(true);
+      planWork.buildLinkedObject(db);
+      
+      setObjects(context, db, planWork);
+      
       context.getRequest().setAttribute("actionItemWork", itemWork);
       context.getRequest().setAttribute("status", "true");
       context.getRequest().setAttribute("display", StringUtils.getLineSeparated(displayList));
@@ -1047,7 +1058,6 @@ public final class ActionPlans extends CFSModule {
   public String executeCommandViewNotes(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-    Organization thisOrg = null;
     try {
       db = this.getConnection(context);
 
@@ -1057,16 +1067,7 @@ public final class ActionPlans extends CFSModule {
       planWork.buildLinkedObject(db);
       context.getRequest().setAttribute("actionPlanWork", planWork);
 
-      String orgId = context.getRequest().getParameter("orgId");
-      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
-        thisOrg = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("orgDetails", thisOrg);
-      } else if (planWork.getOrganization() != null && planWork.getOrganization().getOrgId() != -1) {
-        context.getRequest().setAttribute("orgDetails", planWork.getOrganization());
-      }
-      if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
-        context.getRequest().setAttribute("ticket", planWork.getTicket());
-      }
+      setObjects(context, db, planWork);
 
       ActionPlanWorkNoteList noteList = new ActionPlanWorkNoteList();
       noteList.setPlanWorkId(planWorkId);
@@ -1099,16 +1100,17 @@ public final class ActionPlans extends CFSModule {
     Organization thisOrg = null;
     try {
       db = this.getConnection(context);
-
-      String orgId = context.getRequest().getParameter("orgId");
-      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
-        thisOrg = new Organization(db, Integer.parseInt(orgId));
-        context.getRequest().setAttribute("orgDetails", thisOrg);
-      }
-
+  
       String planWorkId = context.getRequest().getParameter("planWorkId");
+      if (planWorkId == null){
+    	  planWorkId = (String)context.getRequest().getAttribute("planWorkId");
+      }
       ActionPlanWork planWork = new ActionPlanWork(db, Integer.parseInt(planWorkId));
+      planWork.setBuildLinkedObject(true);
+      planWork.buildLinkedObject(db);
       context.getRequest().setAttribute("actionPlanWork", planWork);
+      
+      setObjects(context, db, planWork);
 
       ActionPlanWorkNote thisNote = (ActionPlanWorkNote) context.getFormBean();
       thisNote.setSubmittedBy(getUserId(context));
@@ -1193,6 +1195,23 @@ public final class ActionPlans extends CFSModule {
       this.freeConnection(context, db);
     }
     return "AttachRecipientOK";
+  }
+  
+  private void setObjects(ActionContext context, Connection db, ActionPlanWork planWork) throws NumberFormatException, SQLException{
+      String orgId = context.getRequest().getParameter("orgId");
+      Organization thisOrg = null;
+      if (orgId != null && !"".equals(orgId) && !"-1".equals(orgId)) {
+        thisOrg = new Organization(db, Integer.parseInt(orgId));
+        context.getRequest().setAttribute("orgDetails", thisOrg);
+      } else if (planWork.getOrganization() != null && planWork.getOrganization().getOrgId() != -1) {
+        context.getRequest().setAttribute("orgDetails", planWork.getOrganization());
+      }
+      if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
+        context.getRequest().setAttribute("ticket", planWork.getTicket());
+      }
+      if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.LEADS)) {
+          context.getRequest().setAttribute("lead", planWork.getLead());
+      }
   }
 }
 

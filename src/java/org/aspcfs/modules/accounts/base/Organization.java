@@ -75,6 +75,7 @@ public class Organization extends GenericBean {
   private String url = "";
   private String lastModified = "";
   private String notes = "";
+  private String comments = "";
   private int industry = 0;
   private int accountSize = -1;
   private boolean directBill = false;
@@ -1010,6 +1011,16 @@ public class Organization extends GenericBean {
     this.notes = tmp;
   }
 
+  
+  /**
+   *  Sets the Comments attribute of the Organization object
+   *
+   * @param  tmp  The new Comments value
+   */
+  public void setComments(String tmp) {
+    this.comments = tmp;
+  }
+  
 
   /**
    *  Sets the Industry attribute of the Organization object
@@ -1988,6 +1999,16 @@ public class Organization extends GenericBean {
    */
   public String getNotes() {
     return notes;
+  }
+  
+  
+  /**
+   *  Gets the Comments attribute of the Organization object
+   *
+   * @return    The Comments value
+   */
+  public String getComments() {
+    return comments;
   }
 
 
@@ -3014,7 +3035,7 @@ public class Organization extends GenericBean {
       orgId = DatabaseUtils.getNextSeq(db, "organization_org_id_seq");
       sql.append(
           "INSERT INTO organization (name, industry_temp_code, url, " +
-          "miner_only, owner, duplicate_id, notes, employees, revenue, " +
+          "miner_only, owner, duplicate_id, notes, comments, employees, revenue, " +
           "ticker_symbol, account_number, namesalutation, namefirst, namelast, " +
           "namemiddle, trashed_date, segment_id,  direct_bill, account_size,  " +
           "sub_segment_id, site_id, source, rating, potential, " +
@@ -3034,7 +3055,7 @@ public class Organization extends GenericBean {
       }
       sql.append("modified, ");
       sql.append("enteredBy, modifiedBy) ");
-      sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,");
+      sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,");
       sql.append("?,?,?,?,?,?,");
       if (orgId > -1) {
         sql.append("?,");
@@ -3068,6 +3089,7 @@ public class Organization extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setInt(++i, this.getDuplicateId());
       pst.setString(++i, this.getNotes());
+      pst.setString(++i, this.getComments());
       DatabaseUtils.setInt(pst, ++i, this.getEmployees());
       pst.setDouble(++i, this.getRevenue());
       pst.setString(++i, this.getTicker());
@@ -3350,7 +3372,7 @@ public class Organization extends GenericBean {
     sql.append(
         "UPDATE organization " +
         "SET name = ?, industry_temp_code = ?, " +
-        "url = ?, notes= ?, ");
+        "url = ?, notes = ?, comments = ?, ");
 
     if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
@@ -3383,6 +3405,7 @@ public class Organization extends GenericBean {
     pst.setInt(++i, industry);
     pst.setString(++i, url);
     pst.setString(++i, notes);
+    pst.setString(++i, comments);
     pst.setInt(++i, this.getModifiedBy());
     DatabaseUtils.setInt(pst, ++i, employees);
     pst.setDouble(++i, revenue);
@@ -4035,6 +4058,7 @@ public class Organization extends GenericBean {
     revenue = rs.getDouble("revenue");
     employees = DatabaseUtils.getInt(rs, "employees");
     notes = rs.getString("notes");
+    comments = rs.getString("comments");
     ticker = rs.getString("ticker_symbol");
     //taxId = rs.getString("taxid");
     minerOnly = rs.getBoolean("miner_only");

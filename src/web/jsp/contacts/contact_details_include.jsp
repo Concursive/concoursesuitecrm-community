@@ -78,7 +78,7 @@ function reopenContact(id) {
         <input type="button" value="<dhv:label name="button.restore">Restore</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=Restore&id=<%= ContactDetails.getId() %>';submit();"><br>&nbsp;
       </dhv:permission>
   </dhv:evaluate> --%>
-<dhv:evaluate if='<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role") %>'>
+<dhv:evaluate if='<%= hasText(ContactDetails, "additionalNames,nickname,birthDate,title,role,comments") %>'>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -132,6 +132,16 @@ function reopenContact(id) {
     </td>
     <td>
       <%= toHtml(ContactDetails.getRole()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if='<%= ContactDetails.getComments() != null && !"".equals(ContactDetails.getComments().trim()) %>'>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="campaign.comments">Comments</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getComments()) %>
     </td>
   </tr>
   </dhv:evaluate>

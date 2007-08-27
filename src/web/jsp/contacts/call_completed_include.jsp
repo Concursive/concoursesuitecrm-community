@@ -1,4 +1,4 @@
-<%--    
+<%-- 
   - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
   - rights reserved. This material cannot be distributed without written
   - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
@@ -18,7 +18,7 @@
   --%>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect,org.aspcfs.utils.StringUtils,java.util.Iterator,org.aspcfs.utils.web.LookupList,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:directive.page import="org.aspcfs.modules.contacts.base.CallParticipant"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 
@@ -243,7 +243,7 @@
    </td>
   </tr>
  <%} else {  %>
-   <tr class="containerBody">
+   <tr>
     <td class="formLabel">
       <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>

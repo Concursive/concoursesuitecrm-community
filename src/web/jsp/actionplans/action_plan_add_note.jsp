@@ -23,13 +23,34 @@
 <jsp:useBean id="actionPlanWork" class="org.aspcfs.modules.actionplans.base.ActionPlanWork" scope="request"/>
 <jsp:useBean id="orgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ticket" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="lead" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="actionPlanWorkNote" class="org.aspcfs.modules.actionplans.base.ActionPlanWorkNote" scope="request"/>
 <jsp:useBean id="actionPlanWorkNoteList" class="org.aspcfs.modules.actionplans.base.ActionPlanWorkNoteList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <body onLoad="document.actionPlan.description.focus();">
-<dhv:container name='<%= (ticket != null && ticket.getId() != -1 ?"tickets":"accounts") %>' selected="documents" object='<%= (ticket != null && ticket.getId() != -1 ?"ticket":"orgDetails") %>' param='<%= (ticket != null && ticket.getId() != -1 ?"id=" + ticket.getId():"orgId=" + orgDetails.getOrgId()) %>' hideContainer="true">
+<%
+String containerName = "";
+String containerObject = "";
+String containerParam = "";
+if (ticket != null && ticket.getId() != -1){
+  containerName = "tickets";
+  containerObject = "ticket";
+  containerParam = "id=" + ticket.getId();
+}else 
+ if (lead != null && lead.getId() != -1){
+    containerName = "leads";
+    containerObject = "lead";
+    containerParam = "id=" + lead.getId();
+ }else 
+  {
+    containerName = "accounts";
+    containerObject = "orgDetails";
+    containerParam = "orgId=" + orgDetails.getOrgId();
+  }
+%>
+<dhv:container name='<%= containerName %>' selected="documents" object='<%= containerObject %>' param='<%= containerParam %>' hideContainer="true">
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList"> 
   <tr>
     <th align="center"><strong><dhv:label name="documents.documents.submitted">Submitted</dhv:label></strong></th>
@@ -90,7 +111,9 @@
 &nbsp;<br />
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save"/>
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="self.close();" />
-<input type="hidden" name="orgId" value="<%= orgDetails.getOrgId() %>" />
+<dhv:evaluate if="<%= orgDetails!=null %>">
+  <input type="hidden" name="orgId" value="<%= orgDetails.getOrgId() %>" />
+</dhv:evaluate>
 <input type="hidden" name="planWorkId" value="<%= actionPlanWork.getId() %>" />
 <input type="hidden" name="id" value="<%= actionPlanWorkNote.getId() %>" />
 </form>

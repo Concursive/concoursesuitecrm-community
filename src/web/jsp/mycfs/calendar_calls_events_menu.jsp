@@ -114,7 +114,7 @@
     if(thisView == 'pending'){
       url += '&view=pending';
     }
-    popURL(url, 'CONFIRM_DELETE','630','425','yes','yes');
+    popURL(url, 'CONFIRM_DELETE','630','425','yes','no');
   }
   
   function showContactCall() {

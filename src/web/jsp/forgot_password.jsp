@@ -98,7 +98,7 @@
                 <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
                 <tr><td align="center">
                   <font size="2"><strong>
-                    <dhv:label name="login.forgot">Forgot Password?</dhv:label>
+                      <dhv:label name="login.forgot">Forgot Password?</dhv:label>
                   </font>
                 </td></tr>
                 </table>

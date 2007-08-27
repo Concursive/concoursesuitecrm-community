@@ -503,18 +503,18 @@ public class CallParticipant extends GenericBean {
    * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    participantId = DatabaseUtils.getInt(rs, "participant_id");
-    callId = DatabaseUtils.getInt(rs, "call_id");
-    contactId = DatabaseUtils.getInt(rs, "contact_id");
-    isAvailable = rs.getInt("is_available");
-    entered = rs.getTimestamp("entered");
-    modified = rs.getTimestamp("modified");
-    enteredBy = rs.getInt("enteredby");
-    modifiedBy = rs.getInt("modifiedby");
-    isFollowup = rs.getInt("is_followup");
-    lastName = rs.getString("namelast");
-    firstName = rs.getString("namefirst");
-    eMail = rs.getString("email");
+	participantId = DatabaseUtils.getInt(rs, "participant_id");
+	callId = DatabaseUtils.getInt(rs, "call_id");
+	contactId = DatabaseUtils.getInt(rs, "contact_id");
+	isAvailable = rs.getInt("is_available");
+	entered = rs.getTimestamp("entered");
+	modified = rs.getTimestamp("modified");
+	enteredBy = rs.getInt("enteredby");
+	modifiedBy = rs.getInt("modifiedby");
+  isFollowup = rs.getInt("is_followup");
+	lastName = rs.getString("namelast");
+	firstName = rs.getString("namefirst");
+	eMail = rs.getString("email");
   }
 
   /**

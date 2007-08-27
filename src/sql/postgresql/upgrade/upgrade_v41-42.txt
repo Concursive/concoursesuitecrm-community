@@ -88,4 +88,24 @@
 2007-08-22-script01-mr.sql
 # Import JOIN
 2007-08-23-script01-mr.sql
-
+# TODO: Add translation to the following script
+2007-06-28-script01-zhenya.sql
+2007-06-27-script01-zhenya.bsh
+2007-07-04-script01-yury.bsh
+2007-07-04-script01-zhenya.sql
+2007-07-04-vitalii-script01.bsh
+2007-07-05-vitalii-script02.bsh
+2007-07-13-script01-yury.bsh
+2007-07-13-script02-yury.bsh
+2007-07-13-script03-yury.bsh
+2007-07-16-script01-yury.bsh
+2007-07-16-script02-yury.bsh
+2007-07-24-script-vitalii.bsh
+2007-07-24-script-vitalii.sql
+2007-07-24-script01-ananth.bsh
+# TODO: Needs translation?
+2007-07-24-script02-ananth.bsh
+# TODO: Needs translation?
+2007-08-01-script01-ananth.bsh
+2007-07-05-script01-yury.bsh
+2007-08-24-script01-mr.bsh

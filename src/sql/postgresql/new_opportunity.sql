@@ -235,7 +235,7 @@ CREATE INDEX "call_org_id_idx" ON "call_log" (org_id);
 CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
 CREATE INDEX call_fcontact_id_idx  ON call_log (followup_contact_id);
 
-ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id); 
+ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id);
 
 CREATE TABLE opportunity_component_log(
   id serial NOT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE opportunity_component_log(
   guessvalue FLOAT,
   highvalue FLOAT,
   stage INT REFERENCES lookup_stage(code),
-  owner INT NOT NULL REFERENCES access(user_id),    
+  owner INT NOT NULL REFERENCES access(user_id),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   closedate_timezone VARCHAR(255),
@@ -269,5 +269,5 @@ CREATE TABLE call_log_participant(
   enteredby INT NOT NULL REFERENCES "access" (user_id),
   modifiedby INT NOT NULL REFERENCES "access" (user_id),
   is_followup INT DEFAULT 0
-); 
+);
 

@@ -21,6 +21,7 @@
 <%@ page import="java.util.*,java.text.NumberFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*, org.aspcfs.modules.admin.base.AccessType" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -33,8 +34,9 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/setSalutation.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function getSiteId() {
     var site = document.getElementById('siteId');
@@ -128,6 +130,11 @@
     }
   }
   
+  function setCategoryPopContactType(selectedId, contactId){
+    var category = 'leads';
+    popContactTypeSelectMultiple(selectedId, category, contactId);
+  }
+  
 </script>
 <dhv:evaluate if="<%= User.getSiteId() == -1 %>" > 
   <body onLoad="javascript:try{document.addLead.siteId.focus();}catch(oException){}">
@@ -152,16 +159,14 @@
   <input type="submit" value="<dhv:label name="global.button.saveAndReturnDashboard">Save and Return to Dashboard</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndAddAnotherLead">Save and Add another Lead</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="submit" value="<dhv:label name="global.button.saveAndViewDetails">Save and View Details</dhv:label>" onClick="this.form.saveAndClone.value='true';this.form.dosubmit.value='true';">
-<br />
 </dhv:evaluate>
- <br />
 <dhv:evaluate if="<%= isPopup(request) %>">
     <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick='<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href=\"ExternalContacts.do?command=SearchContacts\";this.form.dosubmit.value=\"false\";" %>'>
     <input type="hidden" name="dosubmit" value="true">
 </dhv:evaluate>
-<br />
-<dhv:formMessage />
+<br/><br/>
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -213,6 +218,33 @@
       </table>
     </td>
   </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="leads.LeadTypes">Lead Type(s)</dhv:label>
+    </td>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="0" class="empty">
+        <tr>
+          <td>
+            <select multiple name="selectedList" id="selectedList" size="5">
+               <dhv:lookupHtml listName="TypeList" lookupName="ContactTypeList"/>
+            </select>
+            <input type="hidden" name="previousSelection" value="">
+            <input type="hidden" name="category" value="<%= request.getParameter("category") %>">
+          </td>
+          <td valign="top">
+            <%-- Check for cloned contact in case of Contacts --%>
+            <% if(request.getParameter("id") == null) {%>
+              [<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            <%}else{%>
+                [<a href="javascript:setCategoryPopContactType('selectedList', <%= request.getParameter("id") %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            <% } %>
+              <%= showAttribute(request, "personalContactError") %>
+          </td>
+        </tr>
+      </table>
+     </td>
+  </tr>
   <dhv:include name="contact-salutation" none="true">
      <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -250,6 +282,37 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
+  <dhv:include name="contact.additionalNames" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
+    </td>
+  </tr>
+  </dhv:include>
+  <dhv:include name="contact.nickname" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
+    </td>
+  </tr>
+  </dhv:include>
+  <dhv:include name="contact.birthday" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
+    </td>
+    <td>
+      <zeroio:dateSelect form="addLead" field="birthDate" timestamp="<%= ContactDetails.getBirthDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false"/>
+      <%= showAttribute(request, "birthDateError") %>
+    </td>
+  </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
       <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
@@ -257,7 +320,6 @@
     <td>
       <input type="text" size="35" maxlength="255" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
       <font color="red">-</font> <%= showAttribute(request, "companyError") %>
-      &nbsp;&nbsp;<font color="red"><dhv:label name="contacts.add.LastNameOrCompanyIsRequired">Last Name or Company is a required field</dhv:label></font>
     </td>
   </tr>
   <tr class="containerBody">
@@ -266,6 +328,24 @@
     </td>
     <td>
       <input type="text" size="35" maxlength="80" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
+    </td>
+  </tr>
+  <dhv:include name="contact.role" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="contact.stage">Stage</dhv:label>
+    </td>
+    <td>
+      <%= StageList.getHtmlSelect("stage",ContactDetails.getStage()) %>
     </td>
   </tr>
   <tr class="containerBody">

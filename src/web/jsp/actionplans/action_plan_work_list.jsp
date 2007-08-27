@@ -24,7 +24,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="actionPlanWorkListView" class="java.lang.String" scope="session"/>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -133,9 +133,12 @@
     <td nowrap>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
      <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
-       <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= thisWork.getId() %>','<%= thisWork.getOrganization().getOrgId() %>','<%= thisWork.getManagerId() %>','<%= thisWork.getEnabled() ? 1 : 0 %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= thisWork.getId() %>','<%= thisWork.getOrganization().getOrgId()%>','<%= thisWork.getManagerId() %>','<%= thisWork.getEnabled() ? 1 : 0 %>', <%= thisWork.getPlanSiteId() %>);" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
      </dhv:evaluate>
-     <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+     <dhv:evaluate if="<%= thisWork.getLead() != null %>">
+       <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= thisWork.getId() %>','-1','<%= thisWork.getManagerId() %>','<%= thisWork.getEnabled() ? 1 : 0 %>', <%= thisWork.getPlanSiteId() %>);" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+     </dhv:evaluate>
+     <dhv:evaluate if="<%= thisWork.getOrganization() == null && thisWork.getLead() == null%>">
        &nbsp;
      </dhv:evaluate>
     </td>
@@ -157,23 +160,27 @@
     </td>
     <dhv:include name="actionPlan.weeklyPotential" none="true">
       <td nowrap>
-        <dhv:evaluate if="<%= thisWork.getOrganization() != null && hasText(thisWork.getOrganization().getName()) %>">
-          <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getOrganization().getName()) %></a>
+        <dhv:evaluate if="<%= hasText(thisWork.getLinkItemName()) %>">
+          <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getLinkItemName()) %></a>
         </dhv:evaluate>
-        <dhv:evaluate if="<%= thisWork.getOrganization() == null && thisWork.getContact() != null && hasText(thisWork.getContact().getNameFirstLast()) %>">
-          <a href="MyActionPlans.do?command=Details&actionPlanId=<%= thisWork.getId() %>"><%= toHtml(thisWork.getContact().getNameFirstLast()) %></a>
-        </dhv:evaluate>
-        <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+        <dhv:evaluate if="<%= !hasText(thisWork.getLinkItemName()) %>">
           &nbsp;
         </dhv:evaluate>
       </td>
     </dhv:include>
     <td align="center">
       <dhv:evaluate if="<%= thisWork.getOrganization() != null %>">
-        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        <zeroio:currency value="<%= thisWork.getOrganization().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= thisWork.getContact() != null %>">
-        <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+        <dhv:evaluate if="<%= thisWork.getContact() != null %>">
+          <zeroio:currency value="<%= thisWork.getContact().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        </dhv:evaluate>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= thisWork.getOrganization() == null %>">
+        <dhv:evaluate if="<%= thisWork.getLead() != null %>">
+          <zeroio:currency value="<%= thisWork.getLead().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        </dhv:evaluate>
       </dhv:evaluate>
     </td>
     <td align="center">

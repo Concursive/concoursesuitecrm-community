@@ -19,7 +19,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <%@ include file="../initPage.jsp" %>
-<jsp:useBean id="PermissionCategoryList" class="org.aspcfs.modules.admin.base.PermissionCategoryList" scope="request"/>
+<jsp:useBean id="permissionCategoryList" class="org.aspcfs.modules.admin.base.PermissionCategoryList" scope="request"/>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -43,14 +43,14 @@
   </tr>
 <%
   int column = 0;
-  Iterator i = PermissionCategoryList.iterator();
+  Iterator i = permissionCategoryList.iterator();
   while (i.hasNext()) {
     column = (column != 1 ? 1 : 2);
     PermissionCategory thisPermissionCat = (PermissionCategory) i.next();
 %>
   <tr class="row<%= column %>">
     <td>
-      <dhv:label name="<%= "" + thisPermissionCat.getConstant() %>"><a href="Admin.do?command=ConfigDetails&moduleId=<%= thisPermissionCat.getId() %>"><%= toHtml(thisPermissionCat.getCategory()) %></a></dhv:label>
+      <a href="Admin.do?command=ConfigDetails&moduleId=<%= thisPermissionCat.getId() %>"><dhv:label name="<%= String.valueOf(thisPermissionCat.getConstant()) %>"><%= thisPermissionCat.getCategory() %></dhv:label></a>
     </td>
   </tr>
 <%}%>

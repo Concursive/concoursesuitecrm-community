@@ -199,6 +199,17 @@ CREATE TABLE lookup_contact_rating (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE lookup_contact_stage_code_seq;
+CREATE TABLE lookup_contact_stage (
+  code INTEGER DEFAULT nextval('lookup_contact_stage_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE SEQUENCE lookup_textmessage_typ_code_seq;
 CREATE TABLE lookup_textmessage_types (
   code INTEGER DEFAULT nextval('lookup_textmessage_typ_code_seq') NOT NULL PRIMARY KEY,
@@ -384,7 +395,8 @@ CREATE TABLE organization (
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
   sic_description VARCHAR(300),
-  stage_id INTEGER REFERENCES lookup_account_stage(code)
+  stage_id INTEGER REFERENCES lookup_account_stage(code),
+  comments TEXT
 );
 
 CREATE INDEX orglist_name ON organization(name);
@@ -464,7 +476,8 @@ CREATE TABLE contact (
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
-  sic_description VARCHAR(300)
+  sic_description VARCHAR(300),
+  stage INT REFERENCES lookup_contact_stage(code)
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
@@ -488,6 +501,7 @@ create index contact_super on contact  (super);
 create index contact_user_id on contact  (user_id);
 create index contact_employee_id on contact (employee_id);
 create index contact_entered on contact (entered);
+CREATE INDEX contact_stage_idx ON contact(stage);
 
 CREATE TABLE contact_lead_skipped_map (
   map_id SERIAL PRIMARY KEY,

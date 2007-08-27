@@ -35,7 +35,7 @@
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="action_plan_work_list_menu.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
 <%-- Preload image rollovers for drop-down menu --%>
@@ -268,7 +268,11 @@
        <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= actionPlanWork.getId() %>','<%= actionPlanWork.getOrganization().getOrgId() %>','<%= actionPlanWork.getManagerId() %>','<%= actionPlanWork.getEnabled() ? 1 : 0 %>', <%= actionPlanWork.getPlanSiteId() %>);"
           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
      </dhv:evaluate>
-     <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
+     <dhv:evaluate if="<%= actionPlanWork.getLead() != null %>">
+       <a href="javascript:displayMenu('select<%= i %>','menuActionPlan','<%= actionPlanWork.getId() %>','-1','<%= actionPlanWork.getManagerId() %>','<%= actionPlanWork.getEnabled() ? 1 : 0 %>', <%= actionPlanWork.getPlanSiteId() %>);"
+          onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuActionPlan');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+     </dhv:evaluate>
+     <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null && actionPlanWork.getLead() == null %>">
        &nbsp;
      </dhv:evaluate>
     </td>
@@ -290,13 +294,10 @@
       <dhv:username id="<%= actionPlanWork.getAssignedTo() %>"/>
     </td>
     <td valign="top">
-      <dhv:evaluate if="<%= actionPlanWork.getOrganization() != null && hasText(actionPlanWork.getOrganization().getName()) %>">
-        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>"><%= toHtml(actionPlanWork.getOrganization().getName()) %></a>
+      <dhv:evaluate if="<%= hasText(actionPlanWork.getLinkItemName()) %>">
+        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>"><%= toHtml(actionPlanWork.getLinkItemName()) %></a>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null && actionPlanWork.getContact() != null && hasText(actionPlanWork.getContact().getNameFirstLast()) %>">
-        <a href="MyActionPlans.do?command=Details&actionPlanId=<%= actionPlanWork.getId() %>"><%= toHtml(actionPlanWork.getContact().getNameFirstLast()) %></a>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
+      <dhv:evaluate if="<%= !hasText(actionPlanWork.getLinkItemName()) %>">
         &nbsp;
       </dhv:evaluate>
     </td>
@@ -308,6 +309,11 @@
       <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
         <dhv:evaluate if="<%= actionPlanWork.getContact() != null %>">
           <zeroio:currency value="<%= actionPlanWork.getContact().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        </dhv:evaluate>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= actionPlanWork.getOrganization() == null %>">
+        <dhv:evaluate if="<%= actionPlanWork.getLead() != null %>">
+          <zeroio:currency value="<%= actionPlanWork.getLead().getPotential() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>

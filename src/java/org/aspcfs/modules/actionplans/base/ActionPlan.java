@@ -45,6 +45,7 @@ public class ActionPlan extends GenericBean {
   public final static int PIPELINE = 3;
   public final static int PROJECTS = 912051330;
   public final static int COMMUNICATIONS = 912051331;
+  public final static int LEADS = 711071244;
   public final static int ADMIN = 912051332;
   public final static int CONTACTS_CALLS = 912051333;
   public final static int CFSNOTE = 912051334;

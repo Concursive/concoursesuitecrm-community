@@ -32,6 +32,7 @@
 <jsp:useBean id="SiteCriteriaList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="owner" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="source" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
@@ -207,7 +208,7 @@ function checkForm(form) {
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/searchForm.js"></script>
-<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
@@ -217,12 +218,53 @@ searchField = new Array();
 	int fieldArrayID = -1;
  	if (f.hasNext()){
 		while (f.hasNext()){
-			fieldArrayID ++;
 			SearchField thisSearchField = (SearchField)f.next();
-%> 
-searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%= StringUtils.jsStringEscape(thisSearchField.getDescription()) %>", <%= thisSearchField.getFieldTypeId() %>);
-<% } } %>
+			if (("sales".equals(source))||("employees".equals(source))){
+				if ((!"typeId".equals(thisSearchField.getFieldName()))&&(!"accountTypeId".equals(thisSearchField.getFieldName()))) {
+				fieldArrayID ++;
+				if ("namefirst".equals(thisSearchField.getFieldName())){
+					%> 
+					searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%=StringUtils.jsStringEscape("First Name")%>" , <%= thisSearchField.getFieldTypeId() %>);
+					<% 										
+				}	
+				if ("namelast".equals(thisSearchField.getFieldName())){
+					%> 
+					searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>,  "<%=StringUtils.jsStringEscape("Last Name")%>" , <%= thisSearchField.getFieldTypeId() %>);
+					<% 										
+				}			
+				if (!("namefirst".equals(thisSearchField.getFieldName()))&&(!"namelast".equals(thisSearchField.getFieldName()))){
+					if ((("employees".equals(source))&&!("importName".equals(thisSearchField.getFieldName())))||("sales".equals(source))){
+						%> 
+						searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%=StringUtils.jsStringEscape(thisSearchField.getDescription())%>" , <%= thisSearchField.getFieldTypeId() %>);
+						<%
+					}	 										
+				}
+				}
+			}
+			if ("contacts".equals(source)){
+				fieldArrayID ++;
+				if ("namefirst".equals(thisSearchField.getFieldName())){
+					%> 
+					searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>,  "<%=StringUtils.jsStringEscape("First Name")%>" , <%= thisSearchField.getFieldTypeId() %>);
+					<% 										
+				}	
+				if ("namelast".equals(thisSearchField.getFieldName())){
+					%> 
+					searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, " <%=StringUtils.jsStringEscape("Last Name") %>", <%= thisSearchField.getFieldTypeId() %>);
+					<% 										
+				}			
+				if (!("namefirst".equals(thisSearchField.getFieldName()))&&(!"namelast".equals(thisSearchField.getFieldName()))){
+					%> 
+					searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%=StringUtils.jsStringEscape(thisSearchField.getDescription())%>" , <%= thisSearchField.getFieldTypeId() %>);
+					<% 										
+				}
+			}
+} }
+ %>
 stringOperators = new Array();
+
+
+
 <%
 	Iterator s = StringOperatorList.iterator();
 	int stringArrayID = -1;
@@ -260,7 +302,7 @@ listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
-<form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Update&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="return checkForm(this);" >
+<form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Update&source=<%=source%>&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="return checkForm(this);" >
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -289,7 +331,7 @@ listOfOperators[2] = numberOperators
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <dhv:label name="campaign.updateContactGroupDetails">Update contact group details</dhv:label>
+      <dhv:label name="campaign.updateGroupDetails">Update group details</dhv:label>
     </th>
   </tr>
   <tr>
@@ -305,9 +347,29 @@ listOfOperators[2] = numberOperators
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <dhv:label name="campaign.updateContactCriteria.text">Update contact criteria for this group</dhv:label>
+      <dhv:label name="campaign.updateCriteria.text">Update criteria for this group</dhv:label>
     </th>
   </tr>
+	<tr style="text-center: center;">
+  	<td colspan="2" style="text-align: center;">
+  	<% if ("contacts".equals(source)) { %>
+			<INPUT TYPE="radio" NAME="source" value="contacts" id="1" onClick="javascript:selectEmployees();" CHECKED disabled="disabled"><dhv:label name="campaign.contacts">Contacts</dhv:label>
+			<INPUT TYPE="radio" NAME="source" value="sales" id="2" onClick="javascript:selectEmployees();" disabled="disabled"><dhv:label name="campaign.leads">Leads</dhv:label>
+			<INPUT TYPE="radio" NAME="source" value="employees" id="3" onClick="javascript:selectEmployees();"disabled="disabled"><dhv:label name="campaign.employees">Employees</dhv:label>
+		<% } %>
+		<% if ("sales".equals(source)) { %>
+			<INPUT TYPE="radio" NAME="source" value="contacts" id="1" onClick="javascript:selectEmployees();"disabled="disabled"><dhv:label name="campaign.contacts">Contacts</dhv:label>
+			<INPUT TYPE="radio" NAME="source" value="sales" id="2" onClick="javascript:selectEmployees();" CHECKED disabled="disabled"><dhv:label name="campaign.leads">Leads</dhv:label>
+			<INPUT TYPE="radio" NAME="source" value="employees" id="3" onClick="javascript:selectEmployees();"disabled="disabled"><dhv:label name="campaign.emploees">Employees</dhv:label>
+		<% } %>
+		<% if ("employees".equals(source)) { %>
+			<INPUT TYPE="radio" NAME="source" value="contacts" id="1" onClick="javascript:selectEmployees();"disabled="disabled"><dhv:label name="campaign.contacts">Contacts</dhv:label>
+			<INPUT TYPE="radio" NAME="source" value="sales" id="2" onClick="javascript:selectEmployees();"disabled="disabled"><dhv:label name="campaign.leads">Leads</dhv:label>
+			<INPUT TYPE="radio" NAME="source" value="employees" id="3" onClick="javascript:selectEmployees();" CHECKED disabled="disabled"><dhv:label name="campaign.emploees">Employees</dhv:label>
+		<% } %>
+  	</td> 
+ 	</tr>
+
 	<tr>
     <td style="text-align: center;" valign="center" width="50%">
       <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
@@ -318,7 +380,15 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1','<%=User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>');"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
+          	<% if ("contacts".equals(source)){ %>
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1','<%=User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>&sources=<%=source%>');"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
+            <% } else if ("sales".equals(source)) { %>
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1','<%=User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>&sources=<%=source%>');"><dhv:label name="contacts.addRemoveLeads">Add/Remove Leads</dhv:label></a>]
+            <% } else if ("employees".equals(source)) { %>
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1','<%=User.getUserRecord().getSiteId() == -1?"includeAllSites=true&siteId=-1":"mySiteOnly=true&siteId="+User.getUserRecord().getSiteId() %><%= request.getParameter("params") != null ?  "&" + request.getParameter("params") + "" : ""%>&sources=<%=source%>');"><dhv:label name="contacts.addRemoveEmployees">Add/Remove Employees</dhv:label></a>]
+            <% } %>
+            
+
           </td>
         </tr>
         <tr>
@@ -412,6 +482,7 @@ listOfOperators[2] = numberOperators
           </span>
           </td>
         </tr>
+        <dhv:evaluate if="<%="contacts".equals(source)%>">
         <tr>
           <td style="text-align: right;" nowrap>
             <dhv:label name="campaign.from">From</dhv:label>
@@ -420,6 +491,24 @@ listOfOperators[2] = numberOperators
             <%= ContactSource.getHtml("contactSource", -1) %>
           </td>
         </tr>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%="sales".equals(source)%>">
+        <td style="text-align: right;" nowrap>
+            <dhv:label name="campaign.from">From</dhv:label>
+          </td>
+          <td width="100%" valign="center">
+            <%= ContactSource.getHtml("contactSource", 5) %>
+          </td>
+        </dhv:evaluate>
+        <dhv:evaluate if="<%="employees".equals(source)%>">
+        <td style="text-align: right;" nowrap>
+            <dhv:label name="campaign.from">From</dhv:label>
+          </td>
+          <td width="100%" valign="center">
+            <%= ContactSource.getHtml("contactSource", 4) %>
+          </td>
+        </dhv:evaluate>
+
         <tr>
           <td style="text-align: right;" nowrap>
             <span name="searchSite2a" ID="searchSite2a">

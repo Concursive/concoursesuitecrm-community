@@ -1155,6 +1155,8 @@ public final class ActionPlanEditor extends CFSModule {
         mappedStepActions = ActionStep.parseRequiredActionLookupList(db, stepActionSelect, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS));
       } else if (permissionCategory.getConstant() == PermissionCategory.PERMISSION_CAT_ACCOUNTS) {
         mappedStepActions = ActionStep.parseRequiredActionLookupList(db, stepActionSelect, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
+      } else if (permissionCategory.getConstant() == PermissionCategory.PERMISSION_CAT_SALES) {
+      	mappedStepActions = ActionStep.parseRequiredActionLookupList(db, stepActionSelect, ActionPlan.getMapIdGivenConstantId(db, ActionPlan.LEADS));
       }
       mappedStepActions.addItem(-1,systemStatus.getLabel("admin.actionPlan.noAdditionalActionRequired.text","-- No additional action required --"));
       context.getRequest().setAttribute("stepActionSelect", mappedStepActions);

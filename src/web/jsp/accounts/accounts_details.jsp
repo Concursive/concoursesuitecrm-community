@@ -363,6 +363,18 @@ parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("act
   </tr>
 </dhv:evaluate>
 </dhv:include>
+<dhv:include name="organization.comments" none="true">
+  <dhv:evaluate if="<%= (OrgDetails.getComments() != null) && !"".equals(OrgDetails.getComments().trim()) %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Comments
+      </td>
+      <td>
+         <%= toHtml(OrgDetails.getComments()) %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+</dhv:include>
 </table>
 <br />
 <dhv:include name="organization.phoneNumbers" none="true">

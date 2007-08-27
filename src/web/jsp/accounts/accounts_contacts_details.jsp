@@ -148,6 +148,16 @@ function reopen() {
     </td>
   </tr>
   </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getComments()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="campaign.comments">Comments</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getComments()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
 </table>
 &nbsp;<br />
 </dhv:evaluate>

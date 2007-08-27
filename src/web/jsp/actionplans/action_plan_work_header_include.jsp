@@ -87,6 +87,40 @@
            </td>
         </tr>
         </dhv:evaluate>
+        <dhv:evaluate if="<%= actionPlanWork.getLead() != null %>">
+          <dhv:evaluate if="<%= hasText(actionPlanWork.getLead().getAccountNumber()) %>">
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                <dhv:label name="actionPlan.prospect">Prospect</dhv:label> #:
+              </td>
+              <td>
+                <%= toHtml(actionPlanWork.getLead().getAccountNumber()) %>
+              </td>
+            </tr>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= actionPlanWork.getLead().getPrimaryAddress() != null %>">
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                <dhv:label name="accounts.accounts_add.City">City</dhv:label>, <dhv:label name="accounts.accounts_add.Zip">Zip</dhv:label>:
+              </td>
+              <td>
+                <%= toHtml(actionPlanWork.getLead().getPrimaryAddress().getCity()) %>
+                <%= toHtml(actionPlanWork.getLead().getPrimaryAddress().getZip()) %>
+              </td>
+            </tr>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= actionPlanWork.getLead().getPotential() > 0 %>">
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                <dhv:label name="actionPlan.totalWkPotential">Total Wk. Potential</dhv:label>:
+              </td>
+              <td>
+                <zeroio:currency value="<%= actionPlanWork.getLead().getPotential() %>" code='<%= applicationPrefs.get("SYSTEM.CURRENCY") %>' locale="<%= User.getLocale() %>" default="&nbsp;"/>
+              </td>
+            </tr>
+          </dhv:evaluate>
+        </dhv:evaluate>
+        
         <dhv:evaluate if="<%= actionPlanWork.getContact() != null %>">
           <dhv:evaluate if="<%= hasText(actionPlanWork.getContact().getAccountNumber()) %>">
             <tr class="containerBody">

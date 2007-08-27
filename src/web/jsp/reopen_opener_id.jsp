@@ -5,10 +5,13 @@
 <%@ include file="initPage.jsp" %>
 <script type="text/javascript">
   function forwardLink(){
-    if ('<%= (id != null && !"".equals(id)) %>' == 'true') {
-      var link = opener.reopenId('<%= id %>');
-    } else {
-      var link = opener.reopen();
+    try {
+      if ('<%= (id != null && !"".equals(id)) %>' == 'true') {
+        var link = opener.reopenId('<%= id %>');
+      } else {
+        var link = opener.reopen();
+      }
+    }catch(ex) {
     }
     self.close();
   }

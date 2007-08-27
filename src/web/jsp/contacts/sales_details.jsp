@@ -20,10 +20,11 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ include file="../initPage.jsp" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
-<%@ page import="org.aspcfs.modules.base.*, org.aspcfs.modules.actionplans.base.*" %>
+<%@ page import="org.aspcfs.modules.base.*, org.aspcfs.modules.actionplans.base.*,org.aspcfs.utils.web.LookupElement" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%--<jsp:useBean id="SalesListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session" /> --%>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="actionPlanSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
@@ -41,7 +42,7 @@
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script type="text/javascript">
@@ -218,6 +219,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
+<dhv:container name="leads" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId|from|listForm") %>'>
 <dhv:evaluate if='<%= (readStatus != null && !readStatus.equals("-1") && !readStatus.equals(""+User.getUserRecord().getId())) %>'>
   <br />
   <img src="images/error.gif" border="0" align="absmiddle"/>
@@ -286,6 +288,16 @@
     </td>
   </tr>
   </dhv:evaluate>
+  <dhv:evaluate if="<%= ContactDetails.getStage() > -1 %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="contact.stage">Stage</dhv:label>
+    </td>
+    <td>
+      <%= toHtml(StageList.getValueFromId(ContactDetails.getStage())) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
   <dhv:evaluate if="<%= ContactDetails.getSource() > -1 %>">
   <tr class="containerBody">
     <td class="formLabel">
@@ -324,6 +336,29 @@
 	    <strong><dhv:label name="sales.contactInformation">Contact Information</dhv:label></strong>
 	  </th>
   </tr>
+  <dhv:evaluate if="<%= !(ContactDetails.getTypes().isEmpty()) %>">
+  <tr class="containerBody">
+    
+      <td nowrap class="formLabel">
+        <dhv:label name="leads.LeadTypes">Lead Type(s)</dhv:label>
+      </td>
+      <td>
+     	 
+         <%
+              Iterator i = ContactDetails.getTypes().iterator();
+                  while (i.hasNext()) {
+                    LookupElement thisElt = (LookupElement)i.next(); 
+                %>
+                    <%= thisElt.getDescription() %><%  if (i.hasNext()) { %>,<% } %>
+
+                <% } %>
+         
+                
+      </td>
+      
+    </tr>
+    </dhv:evaluate>
+    
   <dhv:evaluate if='<%= hasText(ContactDetails.getNameLast()) %>'>
   <tr class="containerBody">
     <td class="formLabel">
@@ -551,36 +586,38 @@
 </table>
 <br />
 <br />
-
-<span name="worklead" id="worklead" style="">
-<dhv:evaluate if="<%= ContactDetails.canWorkAsContact() %>">
-  <dhv:include name="sales.details.workContact" none="true">
-  <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.convertToContact">Convert to Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
+<dhv:evaluate if="<%= ContactDetails.getIsLead() %>">
+  <span name="worklead" id="worklead" style="">
+  <dhv:evaluate if="<%= ContactDetails.canWorkAsContact() %>">
+    <dhv:include name="sales.details.workContact" none="true">
+    <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="button.convertToContact">Convert to Contact</dhv:label>" onClick="javascript:workLead();" /></dhv:permission>
+    </dhv:include>
+    <dhv:include name="sales.details.workAccount" none="true">
+      <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.convertToAccount">Convert to Account</dhv:label>" onClick="javascript:workAsAccount();" /></dhv:permission>
+    </dhv:include>
+  <dhv:include name="sales.details.assignLead" none="true">
+    <dhv:permission name="sales-leads-edit">
+      <dhv:evaluate if="<%= ContactDetails.getOwner() > -1 %>">
+        <input type="button" value="<dhv:label name="button.reassignLeadR">Reassign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
+      </dhv:evaluate><dhv:evaluate if="<%= ContactDetails.getOwner() <= -1 %>">
+        <input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
+      </dhv:evaluate>
+    </dhv:permission>
   </dhv:include>
-  <dhv:include name="sales.details.workAccount" none="true">
-    <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.convertToAccount">Convert to Account</dhv:label>" onClick="javascript:workAsAccount();" /></dhv:permission>
-  </dhv:include>
-<dhv:include name="sales.details.assignLead" none="true">
-  <dhv:permission name="sales-leads-edit">
-    <dhv:evaluate if="<%= ContactDetails.getOwner() > -1 %>">
-      <input type="button" value="<dhv:label name="button.reassignLeadR">Reassign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
-    </dhv:evaluate><dhv:evaluate if="<%= ContactDetails.getOwner() <= -1 %>">
-      <input type="button" value="<dhv:label name="button.assignLeadR">Assign Lead ></dhv:label>" onClick="javascript:reassignLead();" />
-    </dhv:evaluate>
-  </dhv:permission>
-</dhv:include>
-  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.archiveLead">Archive Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
-</dhv:evaluate>
-<dhv:include name="sales.details.skipThisLeadR" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission></dhv:include>
-<dhv:include name="sales.details.modifyLead" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:modifyLead();" /></dhv:permission></dhv:include>
-<dhv:permission name="sales-leads-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:deleteLead();" /></dhv:permission><br />
-<% if ((listForm != null && !"".equals(listForm)) || (from != null && "list".equals(from) && !"dashboard".equals(from))) { %>
-  <input type="checkbox" id="toNextLead" name="toNextLead" value="true" /> <dhv:label name="sales.continueToNextLead.text">Continue to next lead after assigning, trashing or skipping lead</dhv:label>
-<% } %>
-</span>
-<span name="nextlead" id="nextlead" style="display:none">
-<dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>" onClick="javascript:contactDetails();" /></dhv:permission>
-<dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.nextR">Next ></dhv:label>" onClick="javascript:nextLead();" /></dhv:permission>
-</span>
+    <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.archiveLead">Archive Lead ></dhv:label>" onClick="javascript:trashLead();" /></dhv:permission>
+  </dhv:evaluate>
+  <dhv:include name="sales.details.skipThisLeadR" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.skipThisLeadR">Skip this Lead ></dhv:label>" onClick="javascript:skipLead();" /></dhv:permission></dhv:include>
+  <dhv:include name="sales.details.modifyLead" none="true"><dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:modifyLead();" /></dhv:permission></dhv:include>
+  <dhv:permission name="sales-leads-delete"><input type="button" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:deleteLead();" /></dhv:permission><br />
+  <% if ((listForm != null && !"".equals(listForm)) || (from != null && "list".equals(from) && !"dashboard".equals(from))) { %>
+    <input type="checkbox" id="toNextLead" name="toNextLead" value="true" /> <dhv:label name="sales.continueToNextLead.text">Continue to next lead after assigning, trashing or skipping lead</dhv:label>
+  <% } %>
+  </span>
+  <span name="nextlead" id="nextlead" style="display:none">
+  <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>" onClick="javascript:contactDetails();" /></dhv:permission>
+  <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.nextR">Next ></dhv:label>" onClick="javascript:nextLead();" /></dhv:permission>
+  </span>
+</dhv:evaluate>  
+</dhv:container>
 </form>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

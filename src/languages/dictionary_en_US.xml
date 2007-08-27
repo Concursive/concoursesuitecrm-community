@@ -208,6 +208,9 @@
     <param name="accounts.allSites">
       <value><![CDATA[All Sites]]></value>
     </param>
+    <param name="leads.LeadTypes">
+      <value><![CDATA[Lead Type(s)]]></value>
+    </param>
     <param name="leads.contact.rating">
       <value><![CDATA[Contact Rating]]></value>
     </param>
@@ -4104,6 +4107,10 @@
     <param name="products.long_import_name.text">
       <value><![CDATA[Import name is too long]]></value>
     </param>
+    <param name="products.import_name">
+      <value><![CDATA[Import Name]]></value>
+    </param>
+
     <param name="products.product_catalog_listimports.noImportsFound.text">
       <value><![CDATA[No imports found.]]></value>
     </param>
@@ -6501,6 +6508,22 @@ while a Guest has very limited functionality.]]></value>
     <param name="batch.disable.userlogin">
       <value><![CDATA[Disable User Login]]></value>
     </param>
+    <param name="batch.delete.leads">
+      <value><![CDATA[Delete Leads]]></value>
+    </param>
+    <param name="batch.assign.leads">
+      <value><![CDATA[Assign Leads]]></value>
+    </param>
+    <param name="batch.reassign.leads">
+      <value><![CDATA[Re-assign Leads]]></value>
+    </param>
+    <param name="batch.convert.to.contact">
+      <value><![CDATA[Convert to Contact]]></value>
+    </param>
+    <param name="batch.convert.to.account">
+      <value><![CDATA[Convert to Account]]></value>
+    </param>
+
     <param name="user.allow.webdavAccess">
       <value><![CDATA[Allow Webdav Access]]></value>
     </param>
@@ -7563,6 +7586,15 @@ reflect those changes.]]></value>
     <param name="campaign.count">
       <value><![CDATA[Count]]></value>
     </param>
+    <param name="campaign.contacts">
+      <value><![CDATA[Contacts]]></value>
+    </param>
+    <param name="campaign.leads">
+      <value><![CDATA[Leads]]></value>
+    </param>
+    <param name="campaign.employees">
+      <value><![CDATA[Employees]]></value>
+    </param>
     <param name="campaign.included">
       <value><![CDATA[Included]]></value>
     </param>
@@ -7645,7 +7677,7 @@ reflect those changes.]]></value>
       <value><![CDATA[View Groups]]></value>
     </param>
     <param name="campaign.enterNewContactGroup.text">
-      <value><![CDATA[Begin by entering a name for the new contact group]]></value>
+      <value><![CDATA[Begin by entering a name for the new group]]></value>
     </param>
     <param name="campaign.groupDetails">
       <value><![CDATA[Group Details]]></value>
@@ -7659,9 +7691,16 @@ reflect those changes.]]></value>
     <param name="campaign.updateContactGroupDetails">
       <value><![CDATA[Update contact group details]]></value>
     </param>
+    <param name="campaign.updateGroupDetails">
+      <value><![CDATA[Update group details]]></value>
+    </param>
     <param name="campaign.updateContactCriteria.text">
       <value><![CDATA[Update contact criteria for this group]]></value>
     </param>
+    <param name="campaign.updateCriteria.text">
+      <value><![CDATA[Update criteria for this group]]></value>
+    </param>
+
     <param name="campaign.chooseSpecificContacts.colon">
       <value><![CDATA[Choose specific contacts:]]></value>
     </param>
@@ -8138,6 +8177,9 @@ reflect those changes.]]></value>
     </param>
     <param name="contact.source">
       <value><![CDATA[Source]]></value>
+    </param>
+    <param name="contact.stage">
+      <value><![CDATA[Stage]]></value>
     </param>
     <param name="contact.archivedContacts">
       <value><![CDATA[Archived Contacts]]></value>

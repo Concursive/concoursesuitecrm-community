@@ -96,6 +96,15 @@ public class UserList extends Vector implements SyncableList {
   private int siteId = -1;
   private boolean includeUsersWithAccessToAllSites = false;
   private boolean includeDHVAdmin = false;
+  private String filterUsers = "";
+
+  public void setFilterUsers(String tmp) {
+    this.filterUsers = tmp;
+  }
+
+  public String getFilterUsers() {
+    return filterUsers;
+  }
   
 
   /**
@@ -1456,6 +1465,7 @@ public class UserList extends Vector implements SyncableList {
             "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
             "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
             "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+            "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) " +
             "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
             "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
             "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
@@ -1533,12 +1543,14 @@ public class UserList extends Vector implements SyncableList {
             "d.description AS departmentname, ca.city AS city, ca.postalcode AS postalcode, " +
             "lind.description AS industry_name, " +
             "lcs.description AS source_name, " +
+            "lcst.description AS stage_name, " +
             "lcr.description AS rating_name, " +
             "i.name AS import_name " +
             "FROM " + DatabaseUtils.addQuotes(db, "access") + " a " +
             "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
             "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
             "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+            "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) " +
             "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
             "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
             "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
@@ -1598,6 +1610,9 @@ public class UserList extends Vector implements SyncableList {
             "SELECT cta.address_id FROM contact_address cta WHERE cta.contact_id = c.contact_id AND cta.primary_address = ?) " +
             "OR ca.address_id IN (SELECT MIN(ctadd.address_id) FROM contact_address ctadd WHERE ctadd.contact_id = c.contact_id AND " +
             " ctadd.contact_id NOT IN (SELECT contact_id FROM contact_address WHERE contact_address.primary_address = ?))) ");
+    if (StringUtils.hasText(filterUsers)) {
+      sqlFilter.append("AND a.user_id NOT IN (" + filterUsers + ")");
+    }
     if (includeAliases == Constants.TRUE) {
       sqlFilter.append("AND a.alias > -1 ");
     }

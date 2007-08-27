@@ -297,9 +297,9 @@
     <forward name="ModifyIceletPropertiesPopupOK" resource="/website/website_icelet_properties.jsp" layout="style"/>
     <forward name="ReplaceIceletPopupOK" resource="/website/website_icelet_add.jsp" layout="style"/>
     <forward name="SaveIceletPopupOK" resource="/reopen_parent_or_opener.jsp"/>
+    <forward name="ShowFolderFields" resource="/website/field_select.jsp" layout="style"/>
     <forward name="ShowFolderFieldsOK" resource="/website/field_select.jsp" layout="style"/>
     <forward name="SpreadSheetFieldsOK" resource="/website/spreadsheet_fields.jsp" layout="style"/>
-
   </action>
 
   <!-- End of the Website Module -->
@@ -440,18 +440,18 @@
     <forward name="ResetFolderAttachmentOK"
              resource="/ActionPlans.do?command=ResetFolderAttachment"/>
     <forward name="ReassignOK"
-             resource="/ActionPlans.do?command=Reassign&amp;actionSource=AccountActionPlans"/>
+             resource="/ActionPlans.do?command=Reassign&amp;actionSource=SalesActionPlans"/>
     <forward name="ReassignListOK"
-             resource="/AccountActionPlans.do?command=View"/>
+             resource="/SalesActionPlans.do?command=View"/>
     <forward name="ReassignDetailsOK"
-             resource="/AccountActionPlans.do?command=Details"/>
+             resource="/SalesActionPlans.do?command=Details"/>
     <forward name="EnableOK"
-             resource="/ActionPlans.do?command=Enable&amp;actionSource=AccountActionPlans"/>
+             resource="/ActionPlans.do?command=Enable&amp;actionSource=SalesActionPlans"/>
     <forward name="GoConfirmRevertOK"
-             resource="/ActionPlans.do?command=ConfirmRevert&amp;actionSource=AccountActionPlans"/>
+             resource="/ActionPlans.do?command=ConfirmRevert&amp;actionSource=SalesActionPlans"/>
     <forward name="ConfirmRevertOK" resource="/dialog.jsp"/>
     <forward name="GoRevertToLeadOK"
-             resource="/ActionPlans.do?command=RevertToLead&amp;actionSource=AccountActionPlans"/>
+             resource="/ActionPlans.do?command=RevertToLead&amp;actionSource=SalesActionPlans"/>
     <forward name="RevertToLeadOK"
              resource="accounts/accounts_reopen_reverted_lead.jsp"
              layout="style"/>
@@ -1334,11 +1334,11 @@
     <forward name="FieldAndTypeListPopupOK"
              resource="/website/field_displaytype_list.jsp"
              layout="style"/>
-
+             
     <forward name="FieldRangeStartPopupOK"
              resource="/website/range_select_start.jsp"
              layout="style"/>
-
+             
     <forward name="FieldRangeEndPopupOK"
              resource="/website/range_select_end.jsp"
              layout="style"/>
@@ -1898,7 +1898,6 @@
     <forward name="ModifyPopupOK"
              resource="/contacts/companydirectory_modifycall.jsp"
              layout="style"/>
-
   </action>
   <action name="ExternalContactsCallsForward"
           class="org.aspcfs.modules.contacts.actions.ExternalContactsCalls">
@@ -2064,6 +2063,8 @@
   <action name="Sales" class="org.aspcfs.modules.contacts.actions.Sales">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact"
           scope="request"/>
+    <forward name="ToAccountsOk" resource="/contacts/close.jsp"
+             layout="style"/>
     <forward name="DashboardOK" resource="/contacts/sales_dashboard.jsp"
              layout="nav"/>
     <forward name="SearchOK" resource="/contacts/sales_search.jsp"
@@ -2097,6 +2098,8 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp"
              layout="style"/>
+		<forward name="ProcessBatchOK" resource="/dialogcloseandreload.jsp"
+             layout="style"/>             
     <forward name="ReassignOK" resource="/coming-soon.jsp" layout="nav"/>
     <forward name="CheckAssignStatusOK"
              resource="/contacts/sales_reassign_lead.jsp" layout="style"/>
@@ -2107,7 +2110,181 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/Sales.do?command=Reports"/>
   </action>
-
+  
+  <action name="SalesHistory" class="org.aspcfs.modules.contacts.actions.SalesHistory">
+    <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.ContactHistory"
+          scope="request"/>
+  	<forward name="ListOK" resource="/contacts/sales_history.jsp"
+             layout="nav"/>
+    <forward name="ListPopupOK"
+             resource="/contacts/sales_history.jsp" layout="style"/>
+    <forward name="AddNoteOK"
+             resource="/contacts/companydirectory_history_add_note_form.jsp"
+             layout="style"/>
+    <forward name="SaveNoteOK" resource="/reopen_opener_id.jsp" layout="style"/>
+  </action>
+  
+  <action name="SalesFolders" class="org.aspcfs.modules.contacts.actions.SalesFolders">
+  	<bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact"
+          scope="request"/>
+   	<forward name="FolderListOK" resource="/contacts/sales_folders_list.jsp" layout="nav"/>
+   	<forward name="FieldsEmptyOK" resource="/contacts/companydirectory_nofields.jsp" layout="nav"/>
+    <forward name="FieldsOK" resource="/contacts/sales_fields.jsp" layout="nav"/>
+    <forward name="FieldRecordListOK" resource="/contacts/sales_fields_list.jsp" layout="nav"/>
+		<forward name="ModifyFieldsOK" resource="/contacts/sales_fields_modify.jsp" layout="nav"/>
+    <forward name="UpdateFieldsOK" resource="/contacts/sales_fields.jsp" layout="nav"/>
+    <forward name="AddFolderRecordOK" resource="/contacts/sales_fields_add.jsp" layout="nav"/>
+    <forward name="DeleteFieldsOK" resource="/SalesFolders.do?command=Fields"/>
+  </action>
+  <action name="SalesActionPlans" class="org.aspcfs.modules.contacts.actions.SalesActionPlans">
+    <bean name="ActionPlanWork"
+          class="org.aspcfs.modules.actionplans.base.ActionPlanWork"
+          scope="request"/>
+   	<forward name="ViewOK"
+             resource="/contacts/sales_action_plan.jsp"
+             layout="nav"/>
+    <forward name="ViewPopupOK"
+             resource="/contacts/sales_action_plan.jsp"
+             layout="style"/>
+    <forward name="AddOK" resource="/contacts/sales_action_plans_add.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK" resource="/contacts/sales_action_plans_add.jsp"
+             layout="style"/>
+    <forward name="DetailsOK"
+             resource="/contacts/sales_action_plan_details.jsp"
+             layout="nav"/>
+    <forward name="DetailsPopupOK"
+             resource="/accounts/accounts_action_plan_work_details.jsp"
+             layout="style"/>
+    <forward name="ModifyStatusOK"
+             resource="/actionplans/action_item_modify.jsp" layout="style"/>
+    <forward name="AttachOK" resource="/ActionPlans.do?command=Attach"/>
+    <forward name="ResetFolderAttachmentOK"
+             resource="/ActionPlans.do?command=ResetFolderAttachment"/>
+    <forward name="ReassignOK"
+             resource="/ActionPlans.do?command=Reassign&amp;actionSource=SalesActionPlans"/>
+    <forward name="ReassignListOK"
+             resource="/SalesActionPlans.do?command=View"/>
+    <forward name="ReassignDetailsOK"
+             resource="/SalesActionPlans.do?command=Details"/>
+    <forward name="EnableOK"
+             resource="/ActionPlans.do?command=Enable&amp;actionSource=SalesActionPlans"/>
+    <forward name="GoConfirmRevertOK"
+             resource="/ActionPlans.do?command=ConfirmRevert&amp;actionSource=SalesActionPlans"/>
+    <forward name="ConfirmRevertOK" resource="/dialog.jsp"/>
+    <forward name="GoRevertToLeadOK"
+             resource="/ActionPlans.do?command=RevertToLead&amp;actionSource=SalesActionPlans"/>
+    <forward name="RevertToLeadOK"
+             resource="accounts/accounts_reopen_reverted_lead.jsp"
+             layout="style"/>
+    <forward name="EnableListOK"
+             resource="/SalesActionPlans.do?command=View"/>
+    <forward name="RevertStatusOK"
+             resource="/ActionPlans.do?command=RevertStatus&amp;actionSource=SalesActionPlans"/>
+    <forward name="RevertStatusDetailsOK"
+             resource="/SalesActionPlans.do?command=Details"/>
+    <forward name="UpdateGlobalStatusOK"
+             resource="/ActionPlans.do?command=UpdateGlobalStatus&amp;actionSource=SalesActionPlans"/>
+    <forward name="UpdateGlobalStatusDetailsOK"
+             resource="/SalesActionPlans.do?command=Details"/>
+    <forward name="ViewNotesOK"
+             resource="/ActionPlanNotes.do?command=ViewNotes"/>
+    <forward name="RestartOK"
+             resource="/ActionPlans.do?command=Restart&amp;actionSource=SalesActionPlans"/>
+    <forward name="RestartDetailsOK"
+             resource="/SalesActionPlans.do?command=Details"/>
+  </action>
+  
+  <action name="SalesCalls"
+          class="org.aspcfs.modules.contacts.actions.SalesCalls">
+    <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call"
+          scope="request"/>
+    <forward name="ViewOK" resource="/contacts/sales_listcalls.jsp"
+             layout="nav"/>
+    <forward name="DetailsOK"
+             resource="/contacts/sales_detailscall.jsp"
+             layout="nav"/>
+    <forward name="LogOK" resource="/contacts/sales_addcall.jsp"
+             layout="nav"/>
+    <forward name="InsertOK" resource="/SalesCalls.do?command=View"/>
+    <forward name="InsertRetryOK"
+             resource="/SalesCalls.do?command=Log"/>
+    <forward name="ModifyOK"
+             resource="/contacts/sales_modifycall.jsp" layout="nav"/>
+    <forward name="UpdateOK"
+             resource="/SalesCalls.do?command=Details"/>
+    <forward name="ModifyPopupOK"
+             resource="/contacts/sales_modifycall.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/SalesCalls.do?command=View"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp"
+             layout="style"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="ViewPopupOK"
+             resource="/contacts/sales_listcalls.jsp"
+             layout="style"/>
+    <forward name="DetailsPopupOK"
+             resource="/contacts/sales_detailscall.jsp"
+             layout="style"/>
+    <forward name="LogPopupOK" resource="/contacts/sales_addcall.jsp"
+             layout="style"/>
+    <forward name="InsertPopupOK"
+             resource="/SalesCalls.do?command=View"/>
+    <forward name="InsertRetryPopupOK"
+             resource="/SalesCalls.do?command=Log"/>
+    <forward name="ModifyPopupOK"
+             resource="/contacts/sales_modifycall.jsp"
+             layout="style"/>
+    <forward name="ForwardCallOK"
+             resource="/contacts/sales_forwardcall.jsp"
+             layout="nav"/>
+    <forward name="ForwardCallPopupOK"
+             resource="/contacts/sales_forwardcall.jsp"
+             layout="style"/>
+    <forward name="SendCallOK"
+             resource="/MyCFS.do?command=SendMessage&amp;actionSource=SalesCalls"/>
+    <forward name="SendCallPopupOK"
+             resource="/MyCFS.do?command=SendMessage&amp;actionSource=SalesCalls"/>
+    <forward name="SendMessageOK"
+             resource="/contacts/sales_confirmsend.jsp"
+             layout="nav"/>
+    <forward name="SendMessagePopupOK"
+             resource="/contacts/sales_confirmsend.jsp"
+             layout="style"/>
+  </action>
+  
+  <action name="SalesMessages"
+          class="org.aspcfs.modules.contacts.actions.SalesMessages">
+    <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact"
+          scope="request"/>
+    <forward name="ViewMessagesOK"
+             resource="/contacts/sales_view_messages.jsp"
+             layout="nav"/>
+    <forward name="CreateMessageOK"
+             resource="/SalesMessages.do?command=PrepareMessage&amp;actionSource=SalesLeadsMessages"/>
+    <forward name="SendMessageOK" resource="/contacts/sales_view_messages_confirmation.jsp" layout="nav"/>
+    <forward name="MessageDetailsOK"
+             resource="/contacts/sales_message_details.jsp"
+             layout="nav"/>
+  </action>
+  
+    <action name="SalesLeadsMessages"
+          class="org.aspcfs.modules.contacts.actions.SalesMessages">
+    		<bean name="Message" class="org.aspcfs.modules.communications.base.Message"
+          scope="request"/>
+    		<forward name="CreateMessageOK"
+             resource="/SalesLeadsMessages.do?command=PrepareMessage&amp;actionSource=SalesLeadsMessages"/>
+    		<forward name="PrepareMessageOK"
+             resource="/CampaignManager.do?command=MessageJSList&amp;actionSource=SalesLeadsMessages"/>
+    		<forward name="MessageJSListOK"
+             resource="/contacts/sales_send_message_form.jsp"
+             layout="nav"/>
+        <forward name="SendMessageOK"
+             resource="/contacts/sales_message_confirmation.jsp"
+             layout="nav"/>
+    </action>
   <action name="SalesImports"
           class="org.aspcfs.modules.contacts.actions.SalesImports">
     <bean name="ImportDetails"
@@ -2143,6 +2320,157 @@
     <forward name="DeleteContactFailedDetailsOK"
              resource="/contacts/sales_importcontact_details.jsp" layout="nav"/>
   </action>
+  
+  <action name="SalesOpportunities"
+          class="org.aspcfs.modules.contacts.actions.SalesOpportunities">
+    <bean name="OppDetails"
+          class="org.aspcfs.modules.pipeline.beans.OpportunityBean"
+          scope="request"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp"
+             layout="style"/>
+    <forward name="ListOppsOK"
+             resource="/contacts/sales_listopps.jsp" layout="nav"/>
+    <forward name="ContactDisabledError"
+             resource="/Leads.do?command=DetailsOpp"/>
+    <forward name="PrepareOppOK"
+             resource="/OpportunityForm.do?command=Prepare&amp;actionSource=SalesOpportunities&amp;entity=contact"/>
+    <forward name="PrepareAddOppOK"
+             resource="/contacts/sales_addopp.jsp" layout="nav"/>
+    <forward name="PrepareAddOppPopupOK"    
+             resource="/contacts/sales_addopp.jsp" layout="style"/>
+    <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp"
+             layout="style"/>
+    <forward name="ModifyOppOK"
+             resource="/contacts/sales_modifyopp.jsp" layout="nav"/>
+    <forward name="PrepareModifyOppPopupOK"
+             resource="/contacts/sales_modifyopp.jsp" layout="style"/>
+    <forward name="DetailsOppOK"
+             resource="/contacts/sales_detailsopp.jsp" layout="nav"/>
+    <forward name="DetailsComponentOK"
+             resource="/contacts/sales_detailsoppcomponent.jsp"
+             layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="OppDeletePopupOK" resource="/dialogcloseandreopenOpener.jsp"
+             layout="style"/>
+    <forward name="ListOppsPopupOK"
+             resource="/contacts/sales_listopps.jsp" layout="style"/>
+    <forward name="PrepareAddOppPopupOK"
+             resource="/contacts/sales_addopp.jsp" layout="style"/>
+    <forward name="ModifyOppPopupOK"
+             resource="/contacts/sales_modifyopp.jsp"
+             layout="style"/>
+    <forward name="DetailsOppPopupOK"
+             resource="/contacts/sales_detailsopp.jsp"
+             layout="style"/>
+    <forward name="CloseAddPopup"
+             resource="/accounts/accounts_closepopup_addopp.jsp"/>
+  </action>
+  
+  <action name="SalesOpportunitiesComponents"
+          class="org.aspcfs.modules.contacts.actions.SalesOpportunities">
+    <bean name="ComponentDetails"
+          class="org.aspcfs.modules.pipeline.base.OpportunityComponent"
+          scope="request"/>
+    <forward name="PrepareOppOK"
+             resource="/OpportunityForm.do?command=Prepare&amp;actionSource=SalesOpportunitiesComponents&amp;entity=contact"/>
+    <forward name="PrepareAddOppOK"
+             resource="/contacts/sales_addoppcomponent.jsp"
+             layout="nav"/>
+    <forward name="PrepareModifyOppOK"
+             resource="/contacts/sales_modifycomponent.jsp"
+             layout="nav"/>
+    <forward name="DetailsOppOK"
+             resource="/contacts/sales_detailsopp.jsp" layout="nav"/>
+    <forward name="DetailsComponentOK"
+             resource="/contacts/sales_detailsoppcomponent.jsp"
+             layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp"
+             layout="style"/>
+    <forward name="ComponentHistoryOK" resource="/contacts/sales_opp_components_history.jsp" layout="nav"/>
+    <forward name="ComponentHistoryDetailsOK" resource="/contacts/sales_opp_component_details.jsp" layout="nav"/>
+    <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="OppDeletePopupOK" resource="/dialogcloseandreopenOpener.jsp"
+             layout="style"/>
+    <forward name="PrepareAddOppPopupOK"
+             resource="/contacts/sales_addoppcomponent.jsp"
+             layout="style"/>
+    <forward name="PrepareModifyOppPopupOK"
+             resource="/contacts/sales_modifycomponent.jsp"
+             layout="style"/>
+    <forward name="DetailsOppPopupOK"
+             resource="/contacts/sales_detailsopp.jsp"
+             layout="style"/>
+    <forward name="DetailsComponentPopupOK"
+             resource="/contacts/sales_detailsoppcomponent.jsp"
+             layout="style"/>
+    <forward name="ComponentHistoryPopupOK"
+             resource="/contacts/sales_opp_components_history.jsp" layout="style"/>
+    <forward name="ComponentHistoryDetailsPopupOK"
+             resource="/contacts/sales_opp_component_details.jsp" layout="style"/>
+  </action>
+  <action name="SalesDocuments"
+          class="org.aspcfs.modules.contacts.actions.SalesDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem"
+          scope="request"/>
+    <forward name="ViewOK" resource="/contacts/sales_documents_list.jsp"
+             layout="nav"/>
+    <forward name="ViewContactFolderPopupOK"
+             resource="/contacts/contacts_documents_popup_list.jsp"
+             layout="style"/>
+    <forward name="ViewPopupOK" resource="/contacts/sales_documents_list.jsp"
+             layout="style"/>
+    <forward name="AddOK" resource="/contacts/sales_documents_upload.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK" resource="/contacts/sales_documents_upload.jsp"
+             layout="style"/>
+    <forward name="UploadOK" resource="/SalesDocuments.do?command=View"/>
+    <forward name="AddVersionOK"
+             resource="/contacts/sales_documents_upload_version.jsp"
+             layout="nav"/>
+    <forward name="AddVersionPopupOK"
+             resource="/contacts/sales_documents_upload_version.jsp"
+             layout="style"/>
+    <forward name="DetailsOK"
+             resource="/contacts/sales_documents_details.jsp" layout="nav"/>
+    <forward name="DetailsPopupOK"
+             resource="/contacts/sales_documents_details.jsp" layout="style"/>
+    <forward name="ModifyOK" resource="/contacts/sales_documents_modify.jsp"
+             layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/contacts/sales_documents_modify.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/SalesDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/SalesDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/SalesDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/contacts/sales_documents_file_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/documents/documents_folders_popclose.jsp"/>
+  </action>
+  
+  <action name="SalesDocumentsFolders"
+          class="org.aspcfs.modules.contacts.actions.SalesDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder"
+          scope="request"/>
+    <forward name="AddOK"
+             resource="/contacts/sales_documents_folders_add.jsp"
+             layout="nav"/>
+    <forward name="AddPopupOK"
+             resource="/contacts/sales_documents_folders_add.jsp"
+             layout="style"/>
+    <forward name="UpdateOK" resource="/SalesDocuments.do?command=View"/>
+    <forward name="InsertOK" resource="/SalesDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/SalesDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/SalesDocuments.do?command=View"/>
+    <forward name="MoveOK"
+             resource="/contacts/sales_documents_folders_move.jsp"
+             layout="style"/>
+    <forward name="PopupCloseOK"
+             resource="/documents/documents_folders_popclose.jsp"/>
+  </action>
+
 
   <!-- End Contacts & Resources Module -->
 
@@ -5884,7 +6212,7 @@
   <action name="RequestSyncUpdates" class="org.aspcfs.modules.offline.actions.RequestSyncUpdates">
     <forward name="UpdateOK" resource="/MyCFS.do?command=Home"/>
   </action>
-
+  
   <action name="About" class="org.aspcfs.modules.about.actions.About">
     <forward name="AboutOK" resource="/about/about.jsp" layout="style"/>
   </action>

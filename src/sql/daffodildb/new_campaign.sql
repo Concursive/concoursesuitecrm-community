@@ -8,8 +8,8 @@ CREATE TABLE saved_criterialist (
   modifiedby INTEGER  REFERENCES access(user_id) NOT NULL,
   owner INTEGER  REFERENCES access(user_id) NOT NULL,
   name VARCHAR(80) NOT NULL,
-  contact_source INTEGER DEFAULT -1,
-  enabled boolean  DEFAULT true NOT NULL
+  enabled boolean  DEFAULT true NOT NULL,
+  source INTEGER DEFAULT -1
 );
 
 

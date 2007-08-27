@@ -130,6 +130,7 @@ public class Contact extends GenericBean {
   private int leadStatus = -1;
   private int source = -1;
   private int rating = -1;
+  private int stage = -1;
   private String comments = null;
   private java.sql.Timestamp conversionDate = null;
   private java.sql.Timestamp assignedDate = null;
@@ -156,6 +157,7 @@ public class Contact extends GenericBean {
   private String industryName = "";
   private String sourceName = "";
   private String ratingName = "";
+  private String stageName = "";
 
   private boolean orgEnabled = true;
   private java.sql.Timestamp orgTrashedDate = null;
@@ -197,15 +199,15 @@ public class Contact extends GenericBean {
 
   //filter used by xml api to retrieve the contact info for a particular user
   private String username = null;
-
+  
   public void setUsername(String tmp) {
     this.username = tmp;
   }
-
+  
   public String getUsername() {
     return username;
   }
-
+  
   /**
    * Gets the permission attribute of the Contact object
    *
@@ -250,7 +252,7 @@ public class Contact extends GenericBean {
     return ratingName;
   }
 
-
+  
   /**
    * Gets the importName attribute of the Contact object
    *
@@ -260,6 +262,16 @@ public class Contact extends GenericBean {
 	  return importName;
   }
 
+
+  /**
+   * Gets the stageName attribute of the Contact object
+   *
+   * @return The stageName value
+   */
+  public String getStageName() {
+    return stageName;
+  }
+  
 
   /**
    * Gets the instantMessageAddressList attribute of the Contact object
@@ -370,7 +382,7 @@ public class Contact extends GenericBean {
   public Contact(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-
+   
 
 
   /**
@@ -446,6 +458,7 @@ public class Contact extends GenericBean {
             " lsi.description AS site_id_name, " +
             " lind.description AS industry_name, " +
             " lcs.description AS source_name, " +
+            " lcst.description AS stage_name, " +
             " lcr.description AS rating_name, " +
             " i.name AS import_name " +
             "FROM contact c " +
@@ -453,6 +466,7 @@ public class Contact extends GenericBean {
             "LEFT JOIN lookup_department d ON (c.department = d.code) " +
             "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) " +
             "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) " +
+            "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) " +
             "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) " +
             "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) " +
             "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) " +
@@ -3294,6 +3308,36 @@ public class Contact extends GenericBean {
     this.source = Integer.parseInt(tmp);
   }
 
+  
+  /**
+   * Gets the stage attribute of the Contact object
+   *
+   * @return The stage value
+   */
+  public int getStage() {
+    return stage;
+  }
+
+
+  /**
+   * Sets the stage attribute of the Contact object
+   *
+   * @param tmp The new stage value
+   */
+  public void setStage(int tmp) {
+    this.stage = tmp;
+  }
+
+
+  /**
+   * Sets the stage attribute of the Contact object
+   *
+   * @param tmp The new stage value
+   */
+  public void setStage(String tmp) {
+    this.stage = Integer.parseInt(tmp);
+  }
+  
 
   /**
    * Gets the rating attribute of the Contact object
@@ -3557,7 +3601,7 @@ public class Contact extends GenericBean {
           "INSERT INTO contact " +
               "(user_id, namefirst, namelast, owner, primary_contact, org_name, account_number, ");
       sql.append(
-          "access_type, source, rating, comments, assigned_date, conversion_date, lead_trashed_date, trashed_date, ");
+          "access_type, source, stage, rating, comments, assigned_date, conversion_date, lead_trashed_date, trashed_date, ");
       if (id > -1) {
         sql.append("contact_id, ");
       }
@@ -3583,7 +3627,7 @@ public class Contact extends GenericBean {
         sql.append("secret_word, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
         sql.append("?, ");
       }
@@ -3630,6 +3674,7 @@ public class Contact extends GenericBean {
       pst.setString(++i, accountNumber);
       pst.setInt(++i, accessType);
       DatabaseUtils.setInt(pst, ++i, this.getSource());
+      DatabaseUtils.setInt(pst, ++i, this.getStage());
       DatabaseUtils.setInt(pst, ++i, this.getRating());
       pst.setString(++i, this.getComments());
       DatabaseUtils.setTimestamp(pst, ++i, this.getAssignedDate());
@@ -4385,7 +4430,7 @@ public class Contact extends GenericBean {
             "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
             "org_id = ?, primary_contact = ?, org_name = ?, access_type = ?,");
     sql.append(
-        "source = ?, rating = ?, comments = ?, assigned_date = ?, conversion_date = ?, lead_trashed_date = ?, lead = ?, lead_status = ?, industry_temp_code = ?, potential = ?, ");
+        "source = ?, stage=?, rating = ?, comments = ?, assigned_date = ?, conversion_date = ?, lead_trashed_date = ?, lead = ?, lead_status = ?, industry_temp_code = ?, potential = ?, ");
     sql.append(
         "no_email = ?, " +
             "no_mail = ?, " +
@@ -4447,6 +4492,7 @@ public class Contact extends GenericBean {
     }
     pst.setInt(++i, accessType);
     DatabaseUtils.setInt(pst, ++i, this.getSource());
+    DatabaseUtils.setInt(pst, ++i, this.getStage());
     DatabaseUtils.setInt(pst, ++i, this.getRating());
     pst.setString(++i, this.getComments());
     DatabaseUtils.setTimestamp(pst, ++i, this.getAssignedDate());
@@ -4566,14 +4612,14 @@ public class Contact extends GenericBean {
 
  /**
   * Populates this object from a shortened result set
-  *
+  * 
   * @param rs
   * @throws SQLException
   */
   protected void buildShortRecord(ResultSet rs) throws SQLException{
 	  // c.user_id, c.contact_id, c.namelast, c.namefirst, o.name, c.owner, c.status_id, c.entered
 	  this.setId(rs.getInt("contact_id"));
-	    userId = DatabaseUtils.getInt(rs, "user_id");
+	    userId = DatabaseUtils.getInt(rs, "user_id");      
 	    nameLast = rs.getString("namelast");
 	    nameFirst = rs.getString("namefirst");
 	    company = rs.getString("company");
@@ -4586,7 +4632,7 @@ public class Contact extends GenericBean {
       orgId = DatabaseUtils.getInt(rs, "org_id");
       siteId = DatabaseUtils.getInt(rs, "site_id");
   }
-
+  
   /**
    * Populates this object from a result set
    *
@@ -4633,6 +4679,7 @@ public class Contact extends GenericBean {
     isLead = rs.getBoolean("lead");
     leadStatus = DatabaseUtils.getInt(rs, "lead_status");
     source = DatabaseUtils.getInt(rs, "source");
+    stage = DatabaseUtils.getInt(rs, "stage");
     rating = DatabaseUtils.getInt(rs, "rating");
     comments = rs.getString("comments");
     conversionDate = rs.getTimestamp("conversion_date");
@@ -4679,6 +4726,7 @@ public class Contact extends GenericBean {
     //lead descriptions
     industryName = rs.getString("industry_name");
     sourceName = rs.getString("source_name");
+    stageName = rs.getString("stage_name");
     ratingName = rs.getString("rating_name");
 
     // Get the import name
@@ -4920,11 +4968,11 @@ public class Contact extends GenericBean {
 		if (title != null && !"".equals(title)) {
 			return Contact.getNameLastFirst(nameLast, nameFirst) + " - " + title;
 		}
-
+		
 		return Contact.getNameLastFirst(nameLast, nameFirst);
 	}
-
-
+	
+	
   /**
    * Gets the nameFirstLast attribute of the Contact class
    *
@@ -5726,10 +5774,10 @@ public class Contact extends GenericBean {
     }
     return result;
   }
-
+  
   public void select(Connection db) throws SQLException {
     int contactId = -1;
-
+    
     if (username != null) {
       PreparedStatement pst = db.prepareStatement(
         "SELECT c.contact_id " +
@@ -5743,7 +5791,7 @@ public class Contact extends GenericBean {
       }
       rs.close();
       pst.close();
-
+      
       if (contactId > -1) {
         queryRecord(db, contactId);
       }

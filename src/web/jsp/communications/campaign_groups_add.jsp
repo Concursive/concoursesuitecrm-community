@@ -19,6 +19,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="name" class="java.lang.String" scope="request"/>
+<jsp:useBean id="source" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
@@ -42,7 +44,7 @@ function checkForm(form) {
 }
 </SCRIPT>
 <body onLoad="javascript:document.searchForm.groupName.focus();javascript:updateOperators()">
-<form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&source=<%=source%>&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -62,7 +64,7 @@ function checkForm(form) {
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <dhv:label name="campaign.enterNewContactGroup.text">Begin by entering a name for the new contact group</dhv:label>
+      <dhv:label name="campaign.enterNewContactGroup.text">Begin by entering a name for the new group</dhv:label>
     </th>
   </tr>
   <tr>
@@ -70,7 +72,11 @@ function checkForm(form) {
       <dhv:label name="admin.groupName">Group Name</dhv:label>
     </td>
     <td>
+    <% if ((name == null) || ("".equals(name))) { %>
       <input type="text" size="40" maxlength="80" name="groupName" value="<%= toHtmlValue(SCL.getGroupName()) %>"><font color="red">*</font> <%= showAttribute(request, "groupNameError") %>
+    <% } else { %>
+    	<input type="text" size="40" maxlength="80" name="groupName" value="<%= name %>"><font color="red">*</font> <%= showAttribute(request, "groupNameError") %>
+    <% } %>
     </td>
   </tr>
 </table>

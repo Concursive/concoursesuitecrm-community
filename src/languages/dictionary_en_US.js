@@ -260,7 +260,7 @@ if (!FrameworkI18N) {
       "confirm.restart.campaign":       "Are you sure you want to restart this campaign?",
       "check.campaign.selection":       "- Please select a valid active campaign.\r\n",
       "check.material.quantity.one":    "- Please enter a valid Number for ",
-      "check.products.import.name.long":"- Import name is too long\r\n",
+      "check.products.import.name.long":  "- Import name is too long\r\n",
       "label.sending":                  "Sending...",
       "check.companylastname.blanks":	  "- Please enter a valid company name or last name.\r\n",
       "folderselcted.range.notzero":    "- Range should not be zero or not entered\r\n"

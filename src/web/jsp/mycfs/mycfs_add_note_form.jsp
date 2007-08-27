@@ -23,7 +23,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -43,7 +43,7 @@
     return true;
   }
 </script>
-<body >
+<body onload="document.forms.addNote12.description.focus()">
 <form name="addNote12" action="MyCFS.do?command=SaveNote&auto-populate=true" method="post" onSubmit="return checkForm(this);">
   <dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">

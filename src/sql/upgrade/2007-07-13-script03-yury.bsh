@@ -1,0 +1,33 @@
+import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.web.LookupList;
+
+int moduleConstantId = -1;
+
+// Leads mapping
+moduleConstantId = ActionStepMap.retrieveActionPlanMapIdFromConstantId(db, 711071244);
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061030);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061031);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061035);
+  actionStepMap.insert(db);
+}
+if (1 == 1) {
+  ActionStepMap actionStepMap = new ActionStepMap();
+  actionStepMap.setConstantId(moduleConstantId);
+  actionStepMap.setActionConstantId(110061036);
+  actionStepMap.insert(db);
+}
+print("mappings added for leads");

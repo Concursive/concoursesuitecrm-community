@@ -30,6 +30,10 @@
 <jsp:useBean id="GraphFileName" class="java.lang.String" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
+<jsp:useBean id="systemStatus" class="org.aspcfs.controller.SystemStatus" scope="request"/>
+<jsp:useBean id="leadListBatchInfo" class="org.aspcfs.utils.web.BatchInfo" scope="request"/>
+<jsp:useBean id="action" class="java.lang.String" scope="request" />
+
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -42,7 +46,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript">
 <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select-arrow');
@@ -58,9 +62,55 @@
   function reopen() {
     window.location.href='Sales.do?command=Dashboard';
   }
+  function selectedIds() {
+    var frm = document.forms['listViewForm'];
+    var len = document.forms['listViewForm'].elements.length;
+    var i=0;
+    var s = "";
+    for( i=0 ; i<len ; i++) {
+      if (frm.elements[i].name.indexOf('listView')!=-1) {
+        if (frm.elements[i].checked) {
+          if (s != "") {
+            s += "," + frm.elements[i].value;
+          } else {
+            s = frm.elements[i].value;
+          }
+        }
+      }
+    }
+    return s;
+  }
+  function assignLeads() {
+    var listForms = '<%= (listForm!=null?listForm:"") %>';
+    var s = selectedIds();
+    popURL('ContactsList.do?command=ContactList&action=assign&listView=employees&listType=single&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true&source=leads&flushtemplist=true&usersOnly=true&leads=true&from='+ from() + '&listForm='+ listForms, 'ReassignLead','650','200','yes','yes');
+  }
+  function reassignLeads() {
+    var listForms = '<%= (listForm!=null?listForm:"") %>';
+    var s = selectedIds();
+    popURL('ContactsList.do?command=ContactList&action=reassign&listView=employees&listType=single&searchcodePermission=sales-leads-edit,myhomepage-action-plans-view&reset=true&source=leads&flushtemplist=true&usersOnly=true&leads=true&from='+ from() + '&listForm='+ listForms, 'ReassignLead','650','200','yes','yes');
+  }
+
+  function workContact() {
+    var s = selectedIds();
+		popURL('Sales.do?command=AssignLead&action=toContact&ids='+ s + '&from='+ from() + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>&popup=true','Details','650','200','yes','yes');
+  }
+  function workAccount() {
+    var s = selectedIds();
+		popURL('Sales.do?command=AssignLead&action=toAccount&ids='+ s + '&from='+ from() + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>&popup=true','Details','650','200','yes','yes');
+  }
+  function deleteLeads() {
+    var s = selectedIds();
+		window.location.href='Sales.do?command=ProcessBatch&action=delete&ids='+ s + '&from='+ from() + '&listForm=<%= (listForm!=null?listForm:"")  %>';
+  }
+
+  function from() {
+    return "dashboard";
+  }
+
 </script>
 <%--Graph related code --%>
-<form name="listView" method="post" action="Sales.do?command=Dashboard">
+<form name="listViewForm" method="post" action="Sales.do?command=Dashboard">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -159,7 +209,7 @@
     <td valign="top" width="100%">
       <table width="100%" class="empty">
       <tr><td valign="top">
-      <select name="myLeads" onChange="javascript:document.listView.submit();" size="1">
+      <select name="myLeads" onChange="javascript:document.listViewForm.submit();" size="1">
         <option value="false" <%= myLeads.equals("true")?"":"SELECTED" %>><dhv:label name="sales.allLeads">All Leads</dhv:label></option>
         <option value="true" <%= myLeads.equals("true")?"SELECTED":"" %>><dhv:label name="sales.ownedOrReadLeads">Owned/Read Leads</dhv:label></option>
       </select>
@@ -167,6 +217,7 @@
       <%-- TODO: Dropdown lists--%>
       <dhv:pagedListStatus title='<%= showError(request, "actionError") %>' object="SalesDashboardListInfo"/></td></tr></table>
       <%-- Leads List --%>
+      <dhv:batch object="leadListBatchInfo">
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th>&nbsp;</th>
@@ -186,7 +237,9 @@
       Contact thisLead = (Contact) iterator.next();
 %>
 				<tr class="row<%= rowid %>">
-         <td valign="top">
+         <td valign="top" nowrap> 
+            <dhv:batchInput object="leadListBatchInfo" value="<%= thisLead.getId() %>" hiddenParams="contactId" 
+                    hiddenValues='<%= String.valueOf(thisLead.getId()) %>'/>
             <a href="javascript:displayMenu('select-arrow<%= menuCount %>','menuContact','<%= thisLead.getId() %>','dashboard','<%= thisLead.getIsLead() %>', '<%= thisLead.getOrgId() %>', '<%= thisLead.getOwner() != -1 %>',<%= thisLead.getSiteId() %>,'<%= thisLead.getLeadStatus() %>');" 
             onMouseOver="over(0, <%= menuCount %>);" 
             onmouseout="out(0, <%= menuCount %>);hideMenu('menuContact');"><img
@@ -216,7 +269,7 @@
             </dhv:evaluate>
           </td>
           <td valign="top">
-              <dhv:username id="<%= thisLead.getOwner() %>" />
+            <dhv:username id="<%= thisLead.getOwner() %>" />
           </td>
           <td valign="top">
             <zeroio:tz timestamp="<%= thisLead.getEntered() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
@@ -231,10 +284,25 @@
         </tr>
 <%}%>
       </table>
+      </dhv:batch>
+      <br />
       <table width="100%" border="0" cellpadding="3">
         <tr>
           <td style="text-align: center;">
-            <dhv:pagedListControl object="SalesDashboardListInfo" tdClass="row1"/>
+            <dhv:pagedListControl object="SalesDashboardListInfo" tdClass="row1">
+              <dhv:batchList object="leadListBatchInfo" returnURL="Sales.do?command=Dashboard">
+                <dhv:batchItem display='<%= systemStatus.getLabel("", "Delete Leads") %>' 
+                        link="javascript:deleteLeads();" />
+                <dhv:batchItem display='<%= systemStatus.getLabel("", "Assign Leads") %>' 
+                        link="javascript:assignLeads();" />
+                <dhv:batchItem display='<%= systemStatus.getLabel("", "Re-assign Leads") %>' 
+                        link="javascript:reassignLeads();" />
+                <dhv:batchItem display='<%= systemStatus.getLabel("", "Convert to Contact") %>' 
+                        link="javascript:workContact();" />
+                <dhv:batchItem display='<%= systemStatus.getLabel("", "Convert to Account") %>' 
+                         link="javascript:workAccount();" />
+              </dhv:batchList>
+            </dhv:pagedListControl>
           </td>
         </tr>
       </table>
@@ -242,5 +310,6 @@
   </tr>
 </table>
 <input type="hidden" name="reset" value="false">
+<input type="hidden" name="ownerId" id="ownerId" value="-1">
 </form>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

@@ -112,7 +112,12 @@ public final class CampaignManagerGroup extends CFSModule {
     Exception errorMessage = null;
     String passedId = null;
     Connection db = null;
+    String source = context.getRequest().getParameter("source");
+    	if ((source == null) || ("".equals(source))){
+    		source = "contacts";    		
+    	}
     passedId = context.getRequest().getParameter("id");
+    String name = context.getRequest().getParameter("name");
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
@@ -135,8 +140,10 @@ public final class CampaignManagerGroup extends CFSModule {
       submenu = "ManageGroups";
     }
     context.getRequest().setAttribute("submenu", submenu);
+    context.getRequest().setAttribute("source", source);
+    context.getRequest().setAttribute("name", name);
     addModuleBean(context, submenu, "Build New Group");
-
+    
     if (errorMessage == null) {
       return ("AddOK");
     } else {
@@ -282,6 +289,7 @@ public final class CampaignManagerGroup extends CFSModule {
     boolean isValid = false;
     SearchFormBean thisSearchForm = (SearchFormBean) context.getFormBean();
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
+    String source = context.getRequest().getParameter("source");
     try {
       db = this.getConnection(context);
 
@@ -296,8 +304,18 @@ public final class CampaignManagerGroup extends CFSModule {
         SearchCriteriaElement thisElement = new SearchCriteriaElement(tmpCriteria);
         isValid = this.validateObject(context, db, thisElement) && isValid;
       }
+      
       thisSCL.setGroupName(thisSearchForm.getGroupName());
-      thisSCL.setContactSource(thisSearchForm.getContactSource());
+      if ("sales".equals(source)) {
+        thisSCL.setSource(2);
+      }else{
+        if ("contacts".equals(source)) {
+          thisSCL.setSource(1);
+        }else{
+          thisSCL.setSource(3);
+        }
+      }
+      
       thisSCL.setEnteredBy(getUserId(context));
       thisSCL.setModifiedBy(getUserId(context));
       thisSCL.setOwner(getUserId(context));
@@ -342,9 +360,20 @@ public final class CampaignManagerGroup extends CFSModule {
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
-      buildFormElements(context, db);
       if (passedId != null) {
         scl = new SearchCriteriaList(db, passedId);
+        String source = null;  
+        if (scl.getContactSource() == 1){
+          source = "contacts";
+        }
+        if (scl.getContactSource() == 2 ){
+          source = "sales";
+        }
+        if (scl.getContactSource() == 3 ){
+          source = "employees";
+        }
+        context.getRequest().setAttribute("source", source);
+        buildFormElements(context, db);
         LookupList siteList = new LookupList(db, "lookup_site_id");
         siteList.addItem(-1, this.getSystemStatus(context).getLabel("calendar.none.4dashes"));
         scl.setSiteList(siteList);
@@ -409,7 +438,16 @@ public final class CampaignManagerGroup extends CFSModule {
       }
       thisSCL.setId(Integer.parseInt(context.getRequest().getParameter("id")));
       thisSCL.setGroupName(thisSearchForm.getGroupName());
-      thisSCL.setContactSource(thisSearchForm.getContactSource());
+      String source = context.getRequest().getParameter("source");
+      if ("sales".equals(source)) {
+        thisSCL.setSource(2);
+      }else{
+        if ("contacts".equals(source)) {
+          thisSCL.setSource(1);
+        }else{
+          thisSCL.setSource(3);
+        }
+      }
       thisSCL.setOwner(thisSearchForm.getOwner());
       thisSCL.setModifiedBy(getUserId(context));
       if (!hasAuthority(context, thisSCL.getOwner())) {
@@ -529,7 +567,17 @@ public final class CampaignManagerGroup extends CFSModule {
           thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setBuildDetails(true);
-      contacts.setLeadsOnly(Constants.FALSE);
+      if (thisSCL.getContactSource()==2) {
+        contacts.setLeadsOnly(Constants.TRUE);
+        contacts.setEmployeesOnly(Constants.FALSE);
+      }else{
+        if (thisSCL.getContactSource()==1) {
+          contacts.setLeadsOnly(Constants.FALSE);
+          contacts.setEmployeesOnly(Constants.FALSE);
+        }else{
+          contacts.setEmployeesOnly(Constants.TRUE);
+        }
+      }
       if (contacts.getSiteId() == Constants.INVALID_SITE) {
         contacts.setSiteId(user.getSiteId());
         contacts.setIncludeAllSites(true);
@@ -538,6 +586,7 @@ public final class CampaignManagerGroup extends CFSModule {
         contacts.setIncludeAllSites(false);
       }
       contacts.setBuildTypes(false);
+      
       AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
       contacts.setGeneralContactAccessTypes(accessTypeList);
       contacts.buildList(db);
@@ -570,10 +619,11 @@ public final class CampaignManagerGroup extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-groups-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
+    Exception errorMessage = null; 
     Connection db = null;
     SearchCriteriaList thisSCL = null;
     User user = this.getUser(context, this.getUserId(context));
+    String source = context.getRequest().getParameter("source");
     boolean isValid = false;
     try {
       String criteria = context.getRequest().getParameter("criteria");
@@ -608,7 +658,17 @@ public final class CampaignManagerGroup extends CFSModule {
         contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setBuildDetails(true);
-      contacts.setLeadsOnly(Constants.FALSE);
+      if ("sales".equals(source)) {
+        contacts.setLeadsOnly(Constants.TRUE);
+        contacts.setEmployeesOnly(Constants.FALSE);
+      }else{
+        if ("contacts".equals(source)) {
+          contacts.setLeadsOnly(Constants.FALSE);
+          contacts.setEmployeesOnly(Constants.FALSE);
+        }else{
+          contacts.setEmployeesOnly(Constants.TRUE);
+        }
+      }
       if (contacts.getSiteId() == Constants.INVALID_SITE) {
         contacts.setIncludeAllSites(true);
         contacts.setSiteId(user.getSiteId());
@@ -659,18 +719,36 @@ public final class CampaignManagerGroup extends CFSModule {
 
     SystemStatus thisSystem = this.getSystemStatus(context);
     HtmlSelect contactSource = new HtmlSelect();
-    contactSource.addItem(
-        SearchCriteriaList.SOURCE_MY_CONTACTS, thisSystem.getLabel(
-            "contact.myContacts"));
-    contactSource.addItem(
-        SearchCriteriaList.SOURCE_ALL_CONTACTS, thisSystem.getLabel(
-            "actionList.allContacts"));
-    contactSource.addItem(
-        SearchCriteriaList.SOURCE_ALL_ACCOUNTS, thisSystem.getLabel(
-            "actionList.allAccountContacts"));
-    contactSource.addItem(
-        SearchCriteriaList.SOURCE_EMPLOYEES, thisSystem.getLabel(
-            "employees.employees"));
+    String source = context.getRequest().getParameter("source");
+    if ((source == null) || ("".equals(source))){
+      source = (String) context.getRequest().getAttribute("source");        
+    }
+    if ((source == null) || ("".equals(source))){
+      source = "contacts";        
+    }
+
+    if ("contacts".equals(source)) {
+      contactSource.addItem(
+          SearchCriteriaList.SOURCE_MY_CONTACTS, thisSystem.getLabel(
+              "contact.myContacts"));
+      contactSource.addItem(
+          SearchCriteriaList.SOURCE_ALL_CONTACTS, thisSystem.getLabel(
+              "actionList.allContacts"));
+      contactSource.addItem(
+          SearchCriteriaList.SOURCE_ALL_ACCOUNTS, thisSystem.getLabel(
+              "actionList.allAccountContacts"));
+    }
+    if ("sales".equals(source)) {
+      contactSource.addItem(
+          SearchCriteriaList.SOURCE_LEADS, thisSystem.getLabel(
+              "sales.leads"));
+    }
+    if ("employees".equals(source)) {
+      contactSource.addItem(
+          SearchCriteriaList.SOURCE_EMPLOYEES, thisSystem.getLabel(
+              "employees.employees"));
+    }
+    
     context.getRequest().setAttribute("ContactSource", contactSource);
 
     ContactTypeList typeList = new ContactTypeList();

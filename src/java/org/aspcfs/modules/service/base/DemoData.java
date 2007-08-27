@@ -803,7 +803,7 @@ public class DemoData {
     int group1Id = -1;
     SearchCriteriaList campaignGroup = new SearchCriteriaList();
     campaignGroup.setGroupName("\"Executives\" in Accounts in Zipcode 23510 and 06006");
-    campaignGroup.setContactSource(2);
+    campaignGroup.setSource(2);
     campaignGroup.setEnteredBy(user1Id);
     campaignGroup.setModifiedBy(user1Id);
     campaignGroup.setOwner(user1Id);

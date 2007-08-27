@@ -36,30 +36,24 @@ rs.close();
 pst.close();
 
 Iterator c = idList.iterator();
- while (c.hasNext()) {
+while (c.hasNext()) {
   Call call = new Call(db,((Integer)c.next()).intValue());
-  //print("updating Call: " + call.getId());
+  print("updating Call: " + call.getId());
   User user = new User();
   user.buildRecord(db, (call.getOwner()==-1)?call.getEnteredBy():call.getOwner());
   if(call.getCallStartDateTimeZone() == null || "".equals(call.getCallStartDateTimeZone().trim())){
-    //print("setting callStartDateTimeZone to " + user.getTimeZone());
     call.setCallStartDateTimeZone(user.getTimeZone());
   }
   if(call.getCallEndDateTimeZone() == null || "".equals(call.getCallEndDateTimeZone().trim())){
-    //print("setting callStartDateTimeZone to " + user.getTimeZone());
     call.setCallEndDateTimeZone(user.getTimeZone());
   }
   if(call.getAlertDateTimeZone() == null || "".equals(call.getAlertDateTimeZone().trim())){
-    //print("setting alertDateTimeZone to " + user.getTimeZone());
     call.setAlertDateTimeZone(user.getTimeZone());
   }
-  
   if(call.getAlertDate() != null){
    if(call.getCallStartDate() == null || call.getCallEndDate() == null){
     call.setCallStartDate(call.getEntered());
-    //print("setting call_start_date to " + call.getEntered());
     call.setCallEndDate(call.getEntered());
-    //print("setting call_end_date to " + call.getEntered());
    }
  }
 
@@ -69,21 +63,27 @@ Iterator c = idList.iterator();
   if(call.getCallLengthDuration() < 0){
     call.setCallLengthDuration(base_value);
   }
-  
+
   if(call.getFollowupEndDate() == null){
+    if(call.getFollowupLength() > 0){
+      if(call.getAlertDate() != null){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(call.getAlertDate().getTime());
+        cal.add(Calendar.MINUTE, getFollowupLength());
+        call.setFollowupEndDate(new Timestamp(cal.getTimeInMillis()));
+        call.setFollowupEndDateTimeZone(call.getAlertDateTimeZone());
+      }
+    }else{
       if(call.getAlertDate() != null){
         call.setFollowupEndDate(call.getAlertDate());
-        //print("setting followupEndDate to " + call.getAlertDate());
       }
       if(call.getAlertDateTimeZone() != null){
         call.setFollowupEndDateTimeZone(call.getAlertDateTimeZone());
-        //print("setting followupEndDateTimeZone to " + call.getAlertDateTimeZone());
       }
+    }
   }
   if(call.getFollowupEndDateTimeZone() == null || "".equals(call.getFollowupEndDateTimeZone().trim())){
     call.setFollowupEndDateTimeZone(user.getTimeZone());
-    //print("setting followupEndDateTimeZone to " + user.getTimeZone());
   }
-  
   call.update(db);
 }

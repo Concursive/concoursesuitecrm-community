@@ -1,0 +1,16 @@
+
+import java.sql.*;
+import org.aspcfs.modules.communications.base.SearchField;
+import org.aspcfs.modules.communications.base.SearchFieldList;
+
+print("Checking search field: siteId");
+
+if (SearchFieldList.queryField(db, "importName") == -1) {
+  SearchField field = new SearchField();
+  field.setFieldName("importName");
+  field.setDescription("Import Name");
+  field.setFieldTypeId(0);
+  field.setSearchable(true);
+  field.insert(db);
+  print("Field inserted");
+}

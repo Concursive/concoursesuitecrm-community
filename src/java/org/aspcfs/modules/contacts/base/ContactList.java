@@ -99,6 +99,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   private int hierarchialUsers = -1;
   private int leadStatus = -1;
   private int source = -1;
+  private int stage = -1;
   private int rating = -1;
   private int industry = -1;
   private String comments = null;
@@ -139,6 +140,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   private HashMap titleHash = null;
   private HashMap accountTypeIdHash = null;
   private HashMap siteIdHash = null;
+  private HashMap importNameHash = null;
   boolean firstCriteria = true;
   private String contactIdRange = null;
   private SearchCriteriaList scl = null;
@@ -272,7 +274,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   public void setSyncType(String syncType) {
     this.syncType = Integer.parseInt(syncType);
   }
-
+  
   /**
    * Gets the contactUserId attribute of the ContactList object
    *
@@ -466,6 +468,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     this.siteIdHash = tmp;
   }
 
+
   /**
    * Gets the siteIdHash attribute of the ContactList object
    *
@@ -473,6 +476,23 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    */
   public HashMap getSiteIdHash() {
     return siteIdHash;
+  }
+
+  /**
+   * Sets the importNameHash attribute of the ContactList object
+   *
+   * @param tmp The new mportNameHash value
+   */
+  public void setImportNameHash(HashMap tmp) {
+    this.importNameHash = tmp;
+  }
+  /**
+   * Gets the importNameHash attribute of the ContactList object
+   *
+   * @return The importNameHash value
+   */
+  public HashMap getImportNameHash() {
+    return importNameHash;
   }
 
   /**
@@ -1570,6 +1590,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     this.titleHash = outerHash[9];
     this.accountTypeIdHash = outerHash[10];
     this.siteIdHash = outerHash[11];
+    this.importNameHash = outerHash[12];
   }
 
   /**
@@ -2093,6 +2114,35 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     this.source = Integer.parseInt(tmp);
   }
 
+  
+  /**
+   * Gets the stage attribute of the ContactList object
+   *
+   * @return The stage value
+   */
+  public int getStage() {
+    return stage;
+  }
+
+  /**
+   * Sets the stage attribute of the ContactList object
+   *
+   * @param tmp The new stage value
+   */
+  public void setStage(int tmp) {
+    this.stage = tmp;
+  }
+
+  /**
+   * Sets the stage attribute of the ContactList object
+   *
+   * @param tmp The new stage value
+   */
+  public void setStage(String tmp) {
+    this.stage = Integer.parseInt(tmp);
+  }
+  
+  
   /**
    * Gets the rating attribute of the ContactList object
    *
@@ -2926,10 +2976,11 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     HashMap title = new HashMap();
     HashMap accountTypeId = new HashMap();
     HashMap siteId = new HashMap();
+    HashMap importName = new HashMap();
 
     // THIS CORRESPONDS TO THE FIELD LIST
     outerHash = new HashMap[]{company, namefirst, namelast, entered, zip,
-        areacode, city, typeId, contactId, title, accountTypeId, siteId};
+        areacode, city, typeId, contactId, title, accountTypeId, siteId, importName};
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ContactList-> SCL Size: "
           + this.getScl().size() + " name: "
@@ -2946,7 +2997,6 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       while (j.hasNext()) {
         SearchCriteriaElement thisElement = (SearchCriteriaElement) j
             .next();
-
         readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
         //String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
         HashMap tempHash = (HashMap) outerHash[(thisElement.getFieldId() - 1)].get(
@@ -3047,7 +3097,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    * @since 1.1
    */
   public PreparedStatement prepareList(Connection db) throws SQLException {
-
+  
     ResultSet rs = null;
     int items = -1;
 
@@ -3064,6 +3114,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_department d ON (c.department = d.code) "
             + "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) "
             + "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) "
+            + "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) "
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
@@ -3178,6 +3229,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + " lsi.description AS site_id_name, "
             + " lind.description AS industry_name, "
             + " lcs.description AS source_name, "
+            + " lcst.description AS stage_name, "
             + " lcr.description AS rating_name, "
             + " i.name AS import_name "
             + "FROM contact c "
@@ -3185,6 +3237,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_department d ON (c.department = d.code) "
             + "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) "
             + "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) "
+            + "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) "
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
@@ -3195,8 +3248,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     items = prepareFilter(pst);
     return pst;
   }
-
-
+  
+  
   /**
    * Builds a list of contacts based on several parameters. The parameters are
    * set after this object is constructed, then the buildList method is called
@@ -3788,7 +3841,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     if (source > -1) {
       sqlFilter.append("AND c.source = ? ");
     }
-
+    if (stage > -1) {
+      sqlFilter.append("AND c.stage = ? ");
+    }
     if (rating > -1) {
       sqlFilter.append("AND c.rating = ? ");
     }
@@ -4611,12 +4666,70 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
           sqlFilter.append(")");
         }
       }
+      // import
+      if (importNameHash != null && importNameHash.size() > 0) {
+        Iterator outer = importNameHash.keySet().iterator();
+        termsProcessed = 0;
+        String previousKey = null;
+
+        while (outer.hasNext()) {
+          String key1 = (String) outer.next();
+          HashMap innerHash = (HashMap) importNameHash.get(key1);
+          Iterator inner = innerHash.keySet().iterator();
+
+          while (inner.hasNext()) {
+            String key2 = (String) inner.next();
+            String elementTypeString = ((String) innerHash
+                .get(key2)).toString();
+            int elementType = processType(elementTypeString);
+            String site = processSite(elementTypeString);
+
+            // equals and != are the only operators supported right
+            // now
+            if (elementType == y
+                && (key1.equals("=") || key1.equals("!="))) {
+              if (termsProcessed > 0
+                  && !(previousKey.equals(key1))) {
+                newTerm = processElementHeader(sqlFilter,
+                    newTerm, 0);
+              } else {
+                if (termsProcessed > 0 && key1.equals("!=")
+                    && previousKey.equals(key1)) {
+                  // if you're doing multiple != terms in a
+                  // row, what you really want is an AND not
+                  // an OR
+                  newTerm = processElementHeader(sqlFilter,
+                      newTerm, 0);
+                } else {
+                  newTerm = processElementHeader(sqlFilter,
+                      newTerm, termsProcessed);
+                }
+              }
+
+              if (termsProcessed == 0) {
+                sqlFilter.append("(");
+              }
+              sqlFilter
+                  .append(" (c.import_id IN (SELECT distinct  I.import_id FROM import I WHERE I.name "
+                      
+                      + key1 + " '" + key2 + "' )) ");
+              previousKey = key1;
+              processElementType(db, sqlFilter, elementType);
+              processSite(sqlFilter, elementType, site);
+              termsProcessed++;
+            }
+          }
+        }
+        if (termsProcessed > 0) {
+          sqlFilter.append(")");
+        }
+      }
 
       if (!newTerm) {
         sqlFilter.append(") ");
       }
     }
-
+    
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND c.entered > ? ");
@@ -4627,7 +4740,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       sqlFilter.append("AND c.modified > ? ");
       sqlFilter.append("AND c.entered < ? ");
       sqlFilter.append("AND c.modified < ? ");
-    }
+    }    
   }
 
   /**
@@ -4839,6 +4952,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     }
     if (source > -1) {
       pst.setInt(++i, source);
+    }
+    if (stage > -1) {
+      pst.setInt(++i, stage);
     }
     if (rating > -1) {
       pst.setInt(++i, rating);
@@ -5133,6 +5249,24 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
           }
         }
       }
+      // import
+      if (importNameHash != null && importNameHash.size() > 0) {
+        Iterator outer = importNameHash.keySet().iterator();
+        while (outer.hasNext()) {
+          String key1 = (String) outer.next();
+          HashMap innerHash = (HashMap) importNameHash.get(key1);
+          Iterator inner = innerHash.keySet().iterator();
+          while (inner.hasNext()) {
+            String key2 = (String) inner.next();
+            String elementTypeString = ((String) innerHash.get(key2)).toString();
+            int elementType = processType(elementTypeString);
+            //equals and != are the only operators supported right now
+            if (elementType == y && (key1.equals("=") || key1.equals("!="))) {
+              i = processElementTypeParam(pst, i, elementType);
+            }
+          }
+        }
+      }
     }
 
     if (syncType == Constants.SYNC_INSERTS) {
@@ -5230,6 +5364,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       case SearchCriteriaList.SOURCE_EMPLOYEES:
         sqlFilter.append("AND c.employee = ? ");
         break;
+      case SearchCriteriaList.SOURCE_LEADS:
+        sqlFilter.append("AND c.employee = ? ");
+        break;
       default:
         break;
     }
@@ -5259,6 +5396,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         break;
       case SearchCriteriaList.SOURCE_EMPLOYEES:
         pst.setBoolean(++i, true);
+        break;
+      case SearchCriteriaList.SOURCE_LEADS:
+        pst.setBoolean(++i, false);
         break;
       default:
         break;
@@ -5508,6 +5648,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_department d ON (c.department = d.code) "
             + "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) "
             + "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) "
+            + "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) "
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "
@@ -5623,6 +5764,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "LEFT JOIN lookup_department d ON (c.department = d.code) "
             + "LEFT JOIN lookup_industry lind ON (c.industry_temp_code = lind.code) "
             + "LEFT JOIN lookup_contact_source lcs ON (c.source = lcs.code) "
+            + "LEFT JOIN lookup_contact_stage lcst ON (c.stage = lcst.code) "
             + "LEFT JOIN lookup_contact_rating lcr ON (c.rating = lcr.code) "
             + "LEFT JOIN contact_address ca ON (c.contact_id = ca.contact_id) "
             + "LEFT JOIN lookup_site_id lsi ON (c.site_id = lsi.code) "

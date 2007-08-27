@@ -412,11 +412,11 @@ public final class Admin extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      thisPermCatList.setEnabledState(1);
+      thisPermCatList.setEnabledState(Constants.TRUE);
       thisPermCatList.setCustomizableModulesOnly(true);
       thisPermCatList.buildList(db);
       context.getRequest().setAttribute(
-          "PermissionCategoryList", thisPermCatList);
+          "permissionCategoryList", thisPermCatList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

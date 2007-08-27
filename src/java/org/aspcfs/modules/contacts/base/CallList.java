@@ -863,8 +863,8 @@ public class CallList extends ArrayList implements SyncableList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-    		"c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, " +
-    		"c." + DatabaseUtils.addQuotes(db, "length") + ", " +
+        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, " +
+        "c." + DatabaseUtils.addQuotes(db, "length") + ", " +
         "c.subject, c.notes, c.alertdate, c.followup_notes, c.entered as entered_date, c.enteredby, c.modified as modified_date, c.modifiedby, " +
         "c.alert, c.alert_call_type_id, c.parent_id, c.owner, " +
         "c.assignedby, c.assign_date, " +
@@ -882,7 +882,7 @@ public class CallList extends ArrayList implements SyncableList {
         "c.call_length_duration, " +
         "c.email_participants, " +
         "c.email_followup_participants, " +
-        "t.*, talert.description AS alertdescription," +
+        "t.code, talert.description AS alertdescription," +
         "ct.namelast AS ctlast, ct.namefirst AS ctfirst, ct.org_name AS ctcompany, " +
         "fct.namelast AS fctlast, fct.namefirst AS fctfirst, fct.org_name AS fctcompany, " +
         "o.name AS orgname, " +

@@ -31,7 +31,7 @@
 <body onLoad="javascript:init_page();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script type="text/javascript">
   function init_page() {
     if ('<%= assignStatus %>' == 'skipped') {

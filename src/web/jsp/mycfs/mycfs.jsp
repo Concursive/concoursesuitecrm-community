@@ -161,7 +161,7 @@
         </tr>
         <tr>
           <td width="100%" valign="top" height="380">
-            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="350" src="empty.html">
+            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="380" src="empty.html">
             </iframe>
           </td>
         </tr>

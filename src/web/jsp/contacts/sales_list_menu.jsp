@@ -67,7 +67,6 @@
       hideSpan('menuLeadAssign');
       hideSpan('menuLeadReassign');
       hideSpan('menuLeadWorkAccount');
-      hideSpan('menuLeadDetails');
       hideSpan('menuLeadTrash');
       hideSpan('menuLeadDelete');
       showSpan('menuContact');
@@ -107,7 +106,7 @@
   }
 
   function contactDetails() {
-    popURL('ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '&popup=true&viewOnly=true','Details','650','500','yes','yes');
+    window.location.href='ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '&viewOnly=true';
   }
 
   function orgDetails() {
@@ -118,8 +117,13 @@
     popURL('Sales.do?command=AssignLead&contactId=' + thisContactId + '&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>&popup=true','Details','650','200','yes','yes');
   }
 
-  function continueReassign(assignTo) {
-    window.location.href = 'Sales.do?command=Update&contactId='+thisContactId+'&next=&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>&owner='+assignTo;
+  function continueReassign(assignTo,action) {
+    var ids = selectedIds();
+    if (thisContactId != -1) {
+      window.location.href = 'Sales.do?command=Update&contactId='+thisContactId+'&next=&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>&owner='+assignTo;
+    } else if (ids != "") {
+      window.location.href = 'Sales.do?command=Update&action='+ action +'&leadIds='+ids+'&next=&from=' + from() + '&listForm=<%= (listForm!=null?listForm:"") %>&owner='+assignTo;
+    }
   }
 
   function reassign() {
@@ -129,7 +133,7 @@
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
-    <table id="menuContactTable" class="pulldown" width="170" cellspacing="0">
+    <table id="menuContactTable" class="pulldown" width="190" cellspacing="0">
       <dhv:permission name="sales-leads-view">
       <tr id="menuLeadDetails" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details();">
         <th>

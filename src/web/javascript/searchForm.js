@@ -24,7 +24,17 @@ function popPreview() {
     alert('Please add contacts or criteria then try again.\r\n'+
       'A group without any criteria will return all contacts');
   } else {
-    var newwin=window.open('CampaignManagerGroup.do?command=PopPreview&criteria='+escape(document.searchForm.searchCriteriaText.value)+'&popup=true&reset=true', title, params);
+    var sources = document.getElementsByName('source');
+  	var source = null;
+  	  if (sources != null){
+  	  for (var i = 0; i < sources.length; i++) { 
+    		if(sources[i].checked){
+  			source = sources[i];
+  			break; 
+  		}
+  		}
+  	}
+    var newwin=window.open('CampaignManagerGroup.do?command=PopPreview&criteria='+escape(document.searchForm.searchCriteriaText.value)+'&popup=true&reset=true'+'&source='+source.value, title, params);
     if (newwin != null) {
       if (newwin.opener == null)
         newwin.opener = self;
@@ -60,6 +70,16 @@ function addValues() {
   }
 	var count = 0;
   var fieldType = "select";
+  var sources = document.getElementsByName('source');
+  var source = null;
+  	  if (sources != null){
+  	  for (var i = 0; i < sources.length; i++) { 
+    		if(sources[i].checked){
+  			source = sources[i];
+  			break; 
+  		}
+  		}
+  	}
   if (document.searchForm.fieldSelect.selectedIndex != 7 && 
       document.searchForm.fieldSelect.selectedIndex != 8 &&
       document.searchForm.fieldSelect.selectedIndex != 9) {
@@ -72,7 +92,6 @@ function addValues() {
       return;
     }
   }
-  
   if (fieldType == "text" && document.searchForm.searchValue.value.length == 0) {
     alert("You must specify search text in order to add criteria.");
     return false;
@@ -122,9 +141,21 @@ function addValues() {
 		var newCriteria = fieldID  + "|" + operatorID + "|" + searchText + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
 	} else {
     if (document.searchForm.fieldSelect.selectedIndex != 9){
-      var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
+    	if (document.searchForm.fieldSelect.selectedIndex == 8){
+      	if (source.value == "sales" ){
+  	    	var newCriteria = fieldID  + "|" + operatorID + "|" + searchText + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
+      	}else{
+      	var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
+      	}
+      }else{
+      	var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
+      }
     } else {
-      var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|-1";
+      if (source.value == "sales" ){
+  	    var newCriteria = fieldID  + "|" + operatorID + "|" + searchText + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|" + siteID;
+      }else{
+	      var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value + "|-1";
+      }
     }
 	}
   

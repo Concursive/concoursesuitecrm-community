@@ -20,12 +20,14 @@
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.base.Filter,org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="selectedContacts" class="java.util.HashMap" scope="session"/>
+<jsp:useBean id="action" class="java.lang.String" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="sources" class="java.lang.String" scope="request"/>
 <jsp:useBean id="contactPrimaryEmail" class="java.lang.String" scope="request"/>
 <jsp:useBean id="isEmail" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js?v=20070827"></script>
 <SCRIPT LANGUAGE="JavaScript">
 	function init() {
 	<% 
@@ -53,7 +55,7 @@
          %>
         window.close();
   }
-  /**
+	/**
     The Search fields' default values displayed to the user are translated. "Last Name" and "First Name"
     literals must be translated in both the xml and javascript dictionary files for the 'Search' feature to 
     work correctly.
@@ -80,7 +82,7 @@
 %>
 <%-- Navigating the contact list, not the final submit --%>
 <body onLoad="init()">
-<form name="contactListView" method="post" action="ContactsList.do?command=ContactList">
+<form name="contactListView" method="post" action="ContactsList.do?command=ContactList&sources=<%=sources%>&action=<%=action%>">
   <table cellpadding="6" cellspacing="0" width="100%" border="0">
 		<tr>
 			<td align="center" valign="center" bgcolor="#d3d1d1">
@@ -125,7 +127,6 @@
 </body>
 <%} else {%>
 <%-- The final submit --%>
-<% System.out.println("JSP:: the value of tasks is "+ (String) request.getAttribute("tasks")); %>
   <% if ("true".equals((String) request.getParameter("campaign"))) {%>
   <body onLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%=User.getBrowserId()%>');window.close()">
   <%} else if ("true".equals((String) request.getAttribute("recipient"))) {%>
@@ -136,7 +137,7 @@
 <% System.out.println("JSP:: just before opening the setParentListTask() the value of tasks is "+ (String) request.getAttribute("tasks")); %>
   <body onLoad="javascript:setParentListTask(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("hiddensource") %>','<%=User.getBrowserId()%>');window.close();">
   <%} else if ("true".equals((String) request.getAttribute("leads"))) {%>
-  <body onLoad="javascript:setParentListLead(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("source") %>','<%= request.getParameter("from") %>','<%= request.getParameter("last") %>','<%=User.getBrowserId()%>');window.close();">
+  <body onLoad="javascript:setParentListLead(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= request.getParameter("source") %>','<%= request.getParameter("from") %>','<%= request.getParameter("last") %>','<%=User.getBrowserId()%>','<%=action%>');window.close();">
   <%} else {%>
   <body onLoad="javascript:doClose()">
   <%}%>

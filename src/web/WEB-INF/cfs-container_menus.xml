@@ -769,6 +769,55 @@
       <link value="ProductHistory.do?command=History&amp;adId=${adId}"/>
     </submenu>
   </container>
+  
+  
+  <!-- Submenu used in the Leads module -->
+  <container name="leads">
+    <properties>
+    	<icon>images/icons/stock_bcard-16.gif</icon>
+      <label>${nameFull} ${orgName}</label>
+    </properties>
+    <submenu name="details">
+			<long_html value="Details"/>
+			<permission value="sales-leads-view"/>
+			<link value="Sales.do?command=Details&amp;contactId=${id}"/>
+		</submenu>
+    <submenu name="history">
+			<long_html value="History"/>
+			<permission value="sales-leads-history-view"/>
+			<link value="SalesHistory.do?command=List&amp;contactId=${id}"/>
+		</submenu>
+		<submenu name="folders">
+			<long_html value="Folders"/>
+			<permission value="sales-leads-folders-view"/>
+			<link value="SalesFolders.do?command=FolderList&amp;contactId=${id}"/>
+		</submenu>
+		<submenu name="actionPlans">
+			<long_html value="Action Plans"/>
+			<permission value="sales-leads-action-plans-view"/>
+			<link value="SalesActionPlans.do?command=View&amp;contactId=${id}"/>
+		</submenu>
+		<submenu name="activities">
+			<long_html value="Activities"/>
+			<permission value="sales-leads-calls-view"/>
+			<link value="SalesCalls.do?command=View&amp;contactId=${id}"/>
+		</submenu>
+		<submenu name="messages">
+			<long_html value="Messages"/>
+			<permission value="sales-leads-messages-view"/>
+			<link value="SalesMessages.do?command=ViewMessages&amp;contactId=${id}"/>
+		</submenu>
+		<submenu name="documents">
+			<long_html value="Documents"/>
+			<permission value="sales-leads-documents-view"/>
+			<link value="SalesDocuments.do?command=View&amp;contactId=${id}"/>
+		</submenu>
+		<submenu name="opportunities">
+			<long_html value="Opportunities"/>
+			<permission value="sales-leads-opportunities-view"/>
+			<link value="SalesOpportunities.do?command=ViewOpps&amp;contactId=${id}"/>
+		</submenu>
+  </container>
   <container name="communicationitemdetails">
   <properties>
     <label>${description}</label>

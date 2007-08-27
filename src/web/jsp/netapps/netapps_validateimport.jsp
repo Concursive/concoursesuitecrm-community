@@ -24,7 +24,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
-<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/tasks.js"></script>
 <script language="JavaScript">

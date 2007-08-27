@@ -48,6 +48,9 @@
     if ("AccountsContactsDocuments".equals(returnPage)) {
       location = "AccountsContactsDocuments.do?command=View&contactId="+ param;
     }
+		if ("SalesDocuments".equals(returnPage)) {
+      location = "SalesDocuments.do?command=View&contactId="+ param;
+    }
   }
   if (location == null) {
 %>

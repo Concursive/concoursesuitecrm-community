@@ -113,52 +113,52 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     if (!systemStatus.hasField("global.quickactions")) {
       if (systemStatus.hasPermission(userId, "globalitems-search-view" + om)) {
         items.append(
-                "<!-- Quick Action -->" +
-                        "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
-                        "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'></script>" +
-                        "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
-                        "<tr><th>" + systemStatus.getLabel("quickactions.header") + "</th></tr>" +
-                        "<tr>" +
-                        "<td nowrap>");
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add" + om)) {
-          items.append("<img src=\"images/alertcall.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                  "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Log&contactId=-1&actionSource=GlobalItem&popup=true','Activity','600','425','yes','yes');\">" +
-                  systemStatus.getLabel("quickactions.logActivity") +
-                  "</a> </br>");
-        }
+            "<!-- Quick Action -->" +
+            "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
+            "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'></script>" +
+            "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
+            "<tr><th>" + systemStatus.getLabel("quickactions.header") + "</th></tr>" +
+            "<tr>" +
+            "<td nowrap>");
+      if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add" + om)) {
+        items.append("<img src=\"images/alertcall.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Log&contactId=-1&actionSource=GlobalItem&popup=true','Activity','630','425','yes','yes');\">"+
+            systemStatus.getLabel("quickactions.logActivity") +
+            "</a> </br>");
+      }
 
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add" + om)) {
-          items.append("<img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                  "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Schedule&contactId=-1&actionSource=GlobalItem&popup=true','Activity','600','425','yes','yes');\">" +
-                  systemStatus.getLabel("quickactions.scheduleActivity") +
-                  "</a> </br>");
-        }
+      if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add" + om)) {
+        items.append("<img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Schedule&contactId=-1&actionSource=GlobalItem&popup=true','Activity','630','425','yes','yes');\">"+
+            systemStatus.getLabel("quickactions.scheduleActivity") +
+            "</a> </br>");
+      }
 
-        if (systemStatus.hasPermission(userId, "contacts-external_contacts-add" + om)) {
-          items.append("<img src=\"images/icons/stock_bcard-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                  "<a href=\"javascript:popURL('ExternalContacts.do?command=Prepare&actionSource=GlobalItem&popup=true','contact','600','425','yes','yes');\">" +
-                  systemStatus.getLabel("quickactions.addContact") +
-                  "</a> </br>");
-        }
+      if (systemStatus.hasPermission(userId, "contacts-external_contacts-add" + om)) {
+        items.append("<img src=\"images/icons/stock_bcard-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<a href=\"javascript:popURL('ExternalContacts.do?command=Prepare&actionSource=GlobalItem&popup=true','contact','630','425','yes','yes');\">"+
+            systemStatus.getLabel("quickactions.addContact") +
+           "</a> </br>");
+      }
 
-        if (systemStatus.hasPermission(userId, "accounts-accounts-add" + om)) {
-          items.append("<img src=\"images/icons/stock_account-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                  "<a href=\"javascript:popURL('Accounts.do?command=Add&actionSource=GlobalItem&popup=true','Account','600','425','yes','yes');\">" +
-                  systemStatus.getLabel("quickactions.addAccount") +
-                  "</a> </br>");
-        }
+      if (systemStatus.hasPermission(userId, "accounts-accounts-add" + om)) {
+        items.append("<img src=\"images/icons/stock_account-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<a href=\"javascript:popURL('Accounts.do?command=Add&actionSource=GlobalItem&popup=true','Account','630','425','yes','yes');\">" +
+            systemStatus.getLabel("quickactions.addAccount") +
+            "</a> </br>");
+      }
 
-        if (systemStatus.hasPermission(userId, "myhomepage-tasks-add" + om)) {
-          items.append("<img src=\"images/box.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                  "<a href=\"javascript:popURL('MyTasks.do?command=New&actionSource=GlobalItem&popup=true&moreFields=false','Task','600','425','yes','yes');\">" +
-                  systemStatus.getLabel("quickactions.addTask") +
-                  "</a> </br>");
-        }
+      if (systemStatus.hasPermission(userId, "myhomepage-tasks-add" + om)) {
+        items.append("<img src=\"images/box.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<a href=\"javascript:popURL('MyTasks.do?command=New&actionSource=GlobalItem&popup=true&moreFields=false','Task','600','425','yes','yes');\">"+
+            systemStatus.getLabel("quickactions.addTask") +
+           "</a> </br>");
+      }
 
         items.append("<img src=\"images/icons/stock_data-edit-table-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                "<a href=\"javascript:popURL('MyCFS.do?command=AddNote&actionSource=GlobalItem&popup=true','Note','600','500','yes','yes');\">" +
-                systemStatus.getLabel("quickactions.addNote") +
-                "</a> </br>");
+                    "<a href=\"javascript:popURL('MyCFS.do?command=AddNote&actionSource=GlobalItem&popup=true','Note','600','500','yes','yes');\">"+
+                    systemStatus.getLabel("quickactions.addNote") +
+                   "</a> </br>");
 
         if (systemStatus.hasPermission(userId, "contacts-external_contacts-messages-add" + om) || systemStatus.hasPermission(userId, "contacts-external_contacts-messages-view" + om))
         {
@@ -168,41 +168,41 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
                   "</a> </br>");
         }
 
-        items.append("<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-                "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
+        items.append( "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
 
         items.append(
-                "<option value='0'>" + systemStatus.getLabel(
-                        "quickactions.more") + "</option>");
-        if (systemStatus.hasPermission(userId, "sales-leads-add" + om)) {
-          items.append(
-                  "<option value='lead'>" + systemStatus.getLabel(
-                          "quickactions.addLead") + "</option>");
-        }
-
-        if (systemStatus.hasPermission(userId, "quotes-quotes-add" + om)) {
-          items.append(
-                  "<option value='quote'>" + systemStatus.getLabel(
-                          "quickactions.addQuote") + "</option>");
-        }
-
-        if (systemStatus.hasPermission(userId, "tickets-tickets-add" + om)) {
-          items.append(
-                  "<option value='ticket'>" + systemStatus.getLabel(
-                          "quickactions.addTicket") + "</option>");
-        }
-
-        if (systemStatus.hasPermission(userId, "pipeline-opportunities-add" + om)) {
-          items.append(
-                  "<option value='opportunity'>" + systemStatus.getLabel(
-                          "quickactions.addOpportunity") + "</option>");
-        }
+            "<option value='0'>" + systemStatus.getLabel(
+            "quickactions.more") + "</option>");
+      if (systemStatus.hasPermission(userId, "sales-leads-add" + om)) {
         items.append(
-                "</select>" +
-                        "</td>" +
-                        "</tr>" +
-                        "</form>" +
-                        "</table>");
+            "<option value='lead'>" + systemStatus.getLabel(
+            "quickactions.addLead") + "</option>");
+      }
+
+      if (systemStatus.hasPermission(userId, "quotes-quotes-add" + om)) {
+        items.append(
+            "<option value='quote'>" + systemStatus.getLabel(
+            "quickactions.addQuote") + "</option>");
+      }
+
+      if (systemStatus.hasPermission(userId, "tickets-tickets-add" + om)) {
+        items.append(
+            "<option value='ticket'>" + systemStatus.getLabel(
+            "quickactions.addTicket") + "</option>");
+      }
+
+      if (systemStatus.hasPermission(userId, "pipeline-opportunities-add" + om)) {
+        items.append(
+            "<option value='opportunity'>" + systemStatus.getLabel(
+            "quickactions.addOpportunity") + "</option>");
+      }
+        items.append(
+            "</select>" +
+            "</td>" +
+            "</tr>" +
+            "</form>" +
+            "</table>");
       }
     }
 

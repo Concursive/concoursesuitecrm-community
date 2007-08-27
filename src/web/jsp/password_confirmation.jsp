@@ -125,7 +125,7 @@
                   <strong><%= toHtml(request.getParameter("username")) %></strong><br /><br />
                 </td>
               </tr>
-			        <tr>
+			  <tr>
                 <td align="center">
                   <input type="button" value="<dhv:label name="login.proceedToLogin">Proceed to Login</dhv:label>" onClick="returntologin()">
                 </td>

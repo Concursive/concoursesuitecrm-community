@@ -74,6 +74,7 @@ public class ActionPlanWork extends GenericBean {
   private int buildGlobalPhases = Constants.UNDEFINED;
   private ActionPhaseWorkList phaseWorkList = null;
   private Contact contact = null;
+  private Contact lead = null;
   private Organization organization = null;
   private Ticket ticket = null;
   private boolean buildCurrentPhaseWork = false;
@@ -288,7 +289,15 @@ public class ActionPlanWork extends GenericBean {
   public Contact getContact() {
     return contact;
   }
-
+  
+  /**
+   *  Gets the lead attribute of the ActionPlanWork object
+   *
+   * @return    The contact value
+   */
+  public Contact getLead() {
+    return lead;
+  }
 
   /**
    *  Sets the contact attribute of the ActionPlanWork object
@@ -297,6 +306,15 @@ public class ActionPlanWork extends GenericBean {
    */
   public void setContact(Contact tmp) {
     this.contact = tmp;
+  }
+  
+  /**
+   *  Sets the lead attribute of the ActionPlanWork object
+   *
+   * @param  tmp  The new contact value
+   */
+  public void setLead(Contact tmp) {
+    this.lead = tmp;
   }
 
 
@@ -967,14 +985,20 @@ public class ActionPlanWork extends GenericBean {
         contact = new Contact(db, linkItemId);
         linkItemName = contact.getNameFirstLast();
       }
-    } else
-        if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
+    }
+    if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.LEADS)) {
+        if (lead == null || lead.getId() == -1) {
+          lead = new Contact(db, linkItemId);
+          linkItemName = lead.getNameFirstLast();
+        }
+      }
+    if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS)) {
       if (organization == null || organization.getOrgId() == -1) {
         organization = new Organization(db, linkItemId);
         linkItemName = organization.getName();
       }
-    } else
-        if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
+    } 
+    if (linkModuleId == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS)) {
       if (ticket == null || ticket.getId() == -1) {
         ticket = new Ticket(db, linkItemId);
 

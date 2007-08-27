@@ -7,14 +7,103 @@
 <%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="troubletickets_actionplan_work_details_menu.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popOpportunities.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popDocuments.js?1"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popActionPlans.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCustomFieldCategory.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript">
+
+function popOpportunityForm(hiddenFieldId, displayFieldId, oppId, componentId, params) {
+  title  = 'Opportunities';
+  width  =  '700'; 
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  if (componentId == -1) {
+    componentId = document.getElementById(hiddenFieldId).value;
+  }
+  if (componentId != -1 || oppId != -1) {
+    <% if (actionPlanWork.getLinkModuleIdConstant()==ActionPlan.LEADS){%>
+      params = params + '&contactId=<%= (actionPlanWork.getLead() != null ? actionPlanWork.getLead().getId() : -1) %>';
+      var newwin=window.open('SalesOpportunitiesComponents.do?command=ModifyComponent&popup=true&id='+componentId+'&headerId='+oppId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+    <%}else{%>
+        params = params + '&orgId=<%= (actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1) %>';
+        var newwin=window.open('OpportunitiesComponents.do?command=ModifyComponent&popup=true&id='+componentId+'&headerId='+oppId+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+      <%}%>
+  } else {
+  <% if (actionPlanWork.getLinkModuleIdConstant()==ActionPlan.LEADS){%>
+    params = params + '&contactId=<%= (actionPlanWork.getLead() != null ? actionPlanWork.getLead().getId() : -1) %>';
+    var newwin=window.open('SalesOpportunities.do?command=Prepare&popup=true&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  <%}else{%>
+      params = params + '&orgId=<%= (actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1) %>';
+      var newwin=window.open('Opportunities.do?command=Add&popup=true&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  <%}%>
+  }
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+function popFileItemList(hiddenFieldId, displayFieldId, params) {
+  title  = 'Documents';
+  width  =  '700';
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  <% if (actionPlanWork.getLinkModuleIdConstant()==ActionPlan.LEADS){%>
+    params = params + '&contactId=<%= (actionPlanWork.getLead() != null ? actionPlanWork.getLead().getId() : -1) %>';
+      var newwin=window.open('SalesDocuments.do?command=View&popup=true&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  <%}else{%>
+      params = params + '&orgId=<%= (actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1) %>';
+      var newwin=window.open('AccountsDocuments.do?command=View&popup=true&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  <%}%>
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+function popFolderForm(hiddenFieldId, displayFieldId, categoryId, recordId, params) {
+  title  = 'Folders';
+  width  =  '700'; 
+  height =  '425';
+  resize =  'yes';
+  bars   =  'yes';
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  if(params != null && params != ""){
+    params = '&' + params;
+  }
+  <% if (actionPlanWork.getLinkModuleIdConstant()==ActionPlan.LEADS){%>
+    params = params + '&contactId=<%= (actionPlanWork.getLead() != null ? actionPlanWork.getLead().getId() : -1) %>';
+      var newwin=window.open('Accounts.do?command=CheckFields&catId='+categoryId+'&recId='+recordId+'&popup=true&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  <%}else{%>
+      params = params + '&orgId=<%= (actionPlanWork.getOrganization() != null ? actionPlanWork.getOrganization().getOrgId() : -1) %>';
+      var newwin=window.open('Accounts.do?command=CheckFields&catId='+categoryId+'&recId='+recordId+'&popup=true&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+  <%}%>
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
   function displayMsg() {
     alert(label("actionstep.update.alert", "You cannot update the status of this step at this time"));
   }
@@ -28,38 +117,32 @@
       } else if ((actionId != '<%= ActionStep.ATTACH_NOTHING %>') && (actionId != '<%= ActionStep.UPDATE_RATING %>') && (actionId != '<%= ActionStep.VIEW_ACCOUNT %>') && !hasAttachment(itemId)) {
         alert(label("actionstep.attachment.alert", "This step requires an attachment before it can be completed"));
       } else { 
-        <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-          <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
-            popURLReturn('AccountTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
-          </dhv:evaluate>
-          <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
-            popURLReturn('TroubleTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
-          </dhv:evaluate>
-        </dhv:evaluate>
-        <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.MYHOMEPAGE)))) %>">
-          popURLReturn('MyActionPlans.do?command=ModifyStatus&planId=' + planId + '&itemId=' + itemId,'MyActionPlans.do?command=Details&actionPlanId=' + planId,'Action_Plan',550,200);
-        </dhv:evaluate>
-        <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
-          popURLReturn('AccountActionPlans.do?command=ModifyStatus&orgId=<%= orgDetails.getOrgId() %>&planId=' + planId + '&itemId=' + itemId,'AccountActionPlans.do?command=Details&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
-        </dhv:evaluate>
+        checkPopURLReturnURL();
       }
     } else {
-      <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
-        <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
-          popURLReturn('AccountTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
-        </dhv:evaluate>
-        <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
-          popURLReturn('TroubleTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
-        </dhv:evaluate>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.MYHOMEPAGE)))) %>">
-        popURLReturn('MyActionPlans.do?command=ModifyStatus&planId=' + planId + '&itemId=' + itemId,'MyActionPlans.do?command=Details&actionPlanId=' + planId,'Action_Plan',550,200);
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
-        popURLReturn('AccountActionPlans.do?command=ModifyStatus&orgId=<%= orgDetails.getOrgId() %>&planId=' + planId + '&itemId=' + itemId,'AccountActionPlans.do?command=Details&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
-      </dhv:evaluate>
+       checkPopURLReturnURL();
     }
   }
+  
+  function checkPopURLReturnURL(){
+   <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
+     <dhv:evaluate if='<%= moduleName != null && moduleName.equals("accountticket") %>'>
+       popURLReturn('AccountTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
+     </dhv:evaluate>
+     <dhv:evaluate if='<%= moduleName == null || "".equals(moduleName) %>'>
+       popURLReturn('TroubleTicketActionPlans.do?command=ModifyStatus&ticketId=<%= ticket.getId() %>&planId=' + planId + '&itemId=' + itemId,'TroubleTicketActionPlans.do?command=Details&ticketId=<%= ticket.getId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
+     </dhv:evaluate>
+     </dhv:evaluate>
+   <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.MYHOMEPAGE)))) %>">
+     popURLReturn('MyActionPlans.do?command=ModifyStatus&planId=' + planId + '&itemId=' + itemId,'MyActionPlans.do?command=Details&actionPlanId=' + planId,'Action_Plan',550,200);
+   </dhv:evaluate>
+   <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
+     popURLReturn('AccountActionPlans.do?command=ModifyStatus&orgId=<%= orgDetails.getOrgId() %>&planId=' + planId + '&itemId=' + itemId,'AccountActionPlans.do?command=Details&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=' + planId,'Action_Plan',550,200);
+   </dhv:evaluate>
+   <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.LEADS)))) %>">
+     popURLReturn('SalesActionPlans.do?command=ModifyStatus&contactId=<%= actionPlanWork.getLead().getId() %>&planId=' + planId + '&itemId=' + itemId,'SalesActionPlans.do?command=Details&contactId<%= actionPlanWork.getLead() %>&actionPlanId=' + planId,'Action_Plan',550,200);
+   </dhv:evaluate>
+  } 
   
   function reviewNotes() {
     <dhv:evaluate if="<%= objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.TICKETS))) %>">
@@ -75,6 +158,9 @@
     </dhv:evaluate>
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
       popURL('AccountActionPlans.do?command=ViewNotes&orgId=<%= orgDetails.getOrgId() %>&planWorkId=<%= actionPlanWork.getId() %>','Action_Plan',700,425,'yes','yes');
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.LEADS)))) %>">
+      popURLReturn('SalesActionPlans.do?command=ViewNotes&contactId=<%= actionPlanWork.getLead().getId() %>&planWorkId=' + planId ,'Action_Plan',700,425,'yes','yes');
     </dhv:evaluate>
   }
   
@@ -97,6 +183,9 @@
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
       confirmForward('AccountActionPlans.do?command=Restart&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
     </dhv:evaluate>
+    <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.LEADS)))) %>">
+      confirmForward('SalesActionPlans.do?command=Restart&contactId=<%= actionPlanWork.getLead().getId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
+    </dhv:evaluate>
   }
   
   function deletePlan() {
@@ -113,6 +202,9 @@
     </dhv:evaluate>
     <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
       confirmDelete('AccountActionPlans.do?command=Delete&orgId=<%= orgDetails.getOrgId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.LEADS)))) %>">
+      confirmDelete('SalesActionPlans.do?command=Delete&contactId=<%= actionPlanWork.getLead().getId() %>&actionPlanId=<%= actionPlanWork.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');
     </dhv:evaluate>
   }
   
@@ -138,27 +230,11 @@
 <%-- Plan Header --%>
 <dhv:evaluate if="<%= (objectName != null && objectName.equals((String)constants.get(new Integer(ActionPlan.ACCOUNTS)))) %>">
 <table width="100%" border="0">
-  <%-- Contact --%>
-  <dhv:evaluate if="<%= actionPlanWork.getContact() != null %>">
-    <dhv:evaluate if="<%= hasText(actionPlanWork.getContact().getCompany()) %>">
+    <dhv:evaluate if="<%= hasText(actionPlanWork.getLinkItemName()) %>">
       <tr>
-        <td><%= toHtml(actionPlanWork.getContact().getCompany()) %></td>
+        <td><%= toHtml(actionPlanWork.getLinkItemName()) %></td>
       </tr>
     </dhv:evaluate>
-    <dhv:evaluate if="<%= hasText(actionPlanWork.getContact().getNameFirstLast()) %>">
-      <tr>
-        <td><%= toHtml(actionPlanWork.getContact().getNameFirstLast()) %></td>
-      </tr>
-    </dhv:evaluate>
-  </dhv:evaluate>
-  <%-- Account --%>
-  <dhv:evaluate if="<%= actionPlanWork.getOrganization() != null %>">
-    <dhv:evaluate if="<%= hasText(actionPlanWork.getOrganization().getName()) %>">
-      <tr>
-        <td><%= toHtml(actionPlanWork.getOrganization().getName()) %></td>
-      </tr>
-    </dhv:evaluate>
-  </dhv:evaluate>
 </table>
 </dhv:evaluate>
 <%@ include file="../actionplans/action_plan_work_header_include.jsp" %>

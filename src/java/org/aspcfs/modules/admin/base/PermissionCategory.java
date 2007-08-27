@@ -77,6 +77,7 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_OPPORTUNITY_COMPELLING_EVENT = 707050231;
   public final static int LOOKUP_OPPORTUNITY_BUDGET = 707050232;
   public final static int LOOKUP_CALL_TYPES = 206061500;
+  public final static int LOOKUP_CONTACT_STAGE = 626071723;
 
   //Accounts
   public final static int PERMISSION_CAT_ACCOUNTS = 1;

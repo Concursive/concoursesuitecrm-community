@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.text.DateFormat,org.aspcfs.utils.DatabaseUtils,java.util.Iterator,org.aspcfs.modules.contacts.base.Contact" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -96,7 +96,7 @@
    </td>
   </tr>
   <%} else {  %>
-    <tr class="containerBody">
+    <tr>
     <td class="formLabel">
       <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>

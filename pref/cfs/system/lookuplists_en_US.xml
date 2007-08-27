@@ -926,6 +926,7 @@
       <record field="title" searchable="false" field_typeid="0"><![CDATA[Contact Title]]></record>
       <record field="accountTypeId" searchable="true" field_typeid="0"><![CDATA[Account Type]]></record>
       <record field="siteId" searchable="true" field_typeid="0"><![CDATA[Site]]></record>
+      <record field="importName" searchable="true" field_typeid="0"><![CDATA[Import Name]]></record>
     </lookup>
     <lookup table="survey" key="survey_id">
       <attribute name="type" type="integer" />
@@ -1017,6 +1018,7 @@
       <record LUID="2005101914" constant_id="831200520"><![CDATA[selection]]></record>
       <record LUID="2005101915" constant_id="1011200517"><![CDATA[pipeline_component]]></record>
       <record LUID="2005101916" constant_id="110061020"><![CDATA[relationship]]></record>
+      <record LUID="2005101917" constant_id="711071244"><![CDATA[leads]]></record>
     </lookup>
     <lookup table="step_action_map" key="map_id">
       <attribute name="constant_id" type="action_plan_constants.LUID"/>
@@ -1144,4 +1146,8 @@
       <record><![CDATA[Line]]></record>
       <record><![CDATA[Bar]]></record>
     </lookup>
+    <lookup table="lookup_contact_stage">
+      <record><![CDATA[Unqualified]]></record>
+      <record><![CDATA[Qualified]]></record>
+    </lookup>
 </lookupLists>

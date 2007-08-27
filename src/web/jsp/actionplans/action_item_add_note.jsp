@@ -22,6 +22,8 @@
 <%@ page import="org.aspcfs.modules.admin.base.*" %>
 <jsp:useBean id="actionItemWork" class="org.aspcfs.modules.actionplans.base.ActionItemWork" scope="request"/>
 <jsp:useBean id="orgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="ticket" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="lead" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="actionItemWorkNote" class="org.aspcfs.modules.actionplans.base.ActionItemWorkNote" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="status" class="java.lang.String" scope="request"/>
@@ -39,13 +41,33 @@
     </dhv:evaluate>
   }
 </script>
+<%
+String containerName = "";
+String containerObject = "";
+String containerParam = "";
+if (ticket != null && ticket.getId() != -1){
+  containerName = "tickets";
+  containerObject = "ticket";
+  containerParam = "id=" + ticket.getId();
+}else 
+ if (lead != null && lead.getId() != -1){
+    containerName = "leads";
+    containerObject = "lead";
+    containerParam = "id=" + lead.getId();
+ }else 
+  {
+    containerName = "accounts";
+    containerObject = "orgDetails";
+    containerParam = "orgId=" + orgDetails.getOrgId();
+  }
+%>
 <dhv:evaluate if='<%= status != null && "true".equals(status) %>'>
   <body onLoad="javascript:setActionPlanDetails();document.actionStep.description.focus();">
 </dhv:evaluate>
 <dhv:evaluate if='<%= status != null && !"true".equals(status) %>'>
   <body onLoad="document.actionStep.description.focus();">
 </dhv:evaluate>
-<dhv:container name="accounts" selected="documents" object="orgDetails" param='<%= "orgId=" + orgDetails.getOrgId() %>' hideContainer="true" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
+<dhv:container name='<%= containerName %>' selected="documents" object='<%= containerObject %>' param='<%= containerParam %>' hideContainer="true" appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
 <dhv:evaluate if="<%= actionItemWork.getActionId() == ActionStep.ATTACH_NOTE_SINGLE %>">
   <%-- Single Note Allowed --%>
   <table class="note" cellspacing="0">
@@ -188,7 +210,9 @@
 &nbsp;<br />
 <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save"/>
 <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="self.close();" />
-<input type="hidden" name="orgId" value="<%= orgDetails.getOrgId() %>" />
+<dhv:evaluate if="<%= orgDetails!=null %>">
+  <input type="hidden" name="orgId" value="<%= orgDetails.getOrgId() %>" />
+</dhv:evaluate>
 <input type="hidden" name="itemWorkId" value="<%= actionItemWork.getId() %>" />
 <input type="hidden" name="actionId" value="<%= actionItemWork.getActionId() %>" />
 <dhv:evaluate if="<%= actionItemWork.getNote() != null %>">

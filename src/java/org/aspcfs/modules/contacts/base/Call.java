@@ -106,7 +106,6 @@ public class Call extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp assignDate = null;
   private java.sql.Timestamp completeDate = null;
-  private int followupStatusId = -1;
 
   private int followupLength = 0;
   private int followupLengthDuration = -1;
@@ -193,7 +192,7 @@ public class Call extends GenericBean {
             "c.result_id, c.priority_id, c.status_id, " +
             "c.reminder_value, c.reminder_type_id, " +
             "c.alertdate_timezone, c.trashed_date, " +
-            "c.followup_contact_Id, " +
+            "c.followup_contact_id, " +
             "c.followup_end_date, c.followup_end_date_timezone, " +
             "c.followup_location, " +
             "c.followup_length, c.followup_length_duration, " +
@@ -2025,7 +2024,6 @@ public class Call extends GenericBean {
    * Description of the Method
    *
    * @param db      Description of Parameter
-   * @param context Description of Parameter
    * @return Description of the Returned Value
    * @throws SQLException Description of Exception
    */
@@ -2101,7 +2099,7 @@ public class Call extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getCallLengthDuration());
     pst.setBoolean(++i, this.getEmailParticipants());
     pst.setBoolean(++i, this.getEmailFollowupParticipants());
-    
+
     pst.setInt(++i, this.getId());
     if (this.getModified() != null) {
       pst.setTimestamp(++i, this.getModified());
@@ -2608,7 +2606,7 @@ public class Call extends GenericBean {
 
 
 	/**
-	 * @param reminder the reminder to set
+	 * @param tmp the reminder to set
 	 */
 	public void setReminder(String tmp) {
 		this.reminder = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));

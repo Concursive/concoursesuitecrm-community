@@ -1,0 +1,10 @@
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+
+HashMap map = ActionPlan.buildConstants(db);
+// ActionPlan.LEADS = 711071244;
+if (map.get(new Integer(711071244)) == null) {
+  ActionPlan.insertConstant(db, 711071244, "leads");
+  print("The constant for leads has been inserted into the table action_plan_constants");
+} else {
+  print("The constant for leads already exists in the action_plan_constants table");
+}

@@ -21,6 +21,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.admin.base.AccessType,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SalutationList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -35,8 +36,9 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/setSalutation.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function getSiteId() {
     var site = document.getElementById('siteId');
@@ -138,6 +140,11 @@
       popContactsListSingle(hiddenFieldId, displayFieldId, params);
     }
   }
+  
+  function setCategoryPopContactType(selectedId, contactId){
+    var category = 'leads';
+    popContactTypeSelectMultiple(selectedId, category, contactId);
+  }
 </script>
 <body onLoad="javascript:document.addLead.nameFirst.focus();">
 <%
@@ -166,6 +173,7 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
+<dhv:container name="leads" selected="details" object="ContactDetails" param='<%= "id=" + ContactDetails.getId() %>' appendToUrl='<%= addLinkParams(request, "popup|popupType|actionId") %>'>
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save"/>
   <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>';"/>
   <br />
@@ -222,6 +230,43 @@
       </table>
     </td>
   </tr>
+  <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="leads.LeadTypes">Lead Type(s)</dhv:label>
+      </td>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0" class="empty">
+          <tr>
+            <td>
+              <select multiple name="selectedList" id="selectedList" size="5">
+            <%if(request.getAttribute("TypeList") != null){ %>
+              <dhv:lookupHtml listName="TypeList" lookupName="ContactTypeList"/>
+            <% }else{ %>
+                 <dhv:evaluate if="<%= ContactDetails.getTypes().isEmpty() %>">
+                    <option value="-1"><dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label></option>
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= !ContactDetails.getTypes().isEmpty() %>">
+                <%
+                  Iterator i = ContactDetails.getTypes().iterator();
+                  while (i.hasNext()) {
+                  LookupElement thisElt = (LookupElement)i.next();
+                %>
+                  <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
+                <% } %>
+                </dhv:evaluate>
+             <% } %>
+          </select>
+              <input type="hidden" name="previousSelection" value="">
+              <input type="hidden" name="category" value="<%= request.getParameter("category") %>">
+            </td>
+            <td valign="top">
+              [<a href="javascript:popContactTypeSelectMultiple('selectedList', 'leads', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+              <%= showAttribute(request, "personalContactError") %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
   <dhv:include name="contact-salutation" none="true">
      <tr class="containerBody">
       <td nowrap class="formLabel">
@@ -259,6 +304,37 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
+  <dhv:include name="contact.additionalNames" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.additionalNames">Additional Names</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="35" name="additionalNames" value="<%= toHtmlValue(ContactDetails.getAdditionalNames()) %>">
+    </td>
+  </tr>
+  </dhv:include>
+  <dhv:include name="contact.nickname" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.nickname">Nickname</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="35" name="nickname" value="<%= toHtmlValue(ContactDetails.getNickname()) %>">
+    </td>
+  </tr>
+  </dhv:include>
+  <dhv:include name="contact.birthday" none="true">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.dateOfBirth">Birthday</dhv:label>
+    </td>
+    <td>
+      <zeroio:dateSelect form="addLead" field="birthDate" timestamp="<%= ContactDetails.getBirthDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="false"/>
+      <%= showAttribute(request, "birthDateError") %>
+    </td>
+  </tr>
+  </dhv:include>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
       <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
@@ -275,6 +351,24 @@
     </td>
     <td>
       <input type="text" size="35" maxlength="80" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
+    </td>
+  </tr>
+  <dhv:include name="contact.role" none="true">
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_add.Role">Role</dhv:label>
+      </td>
+      <td>
+        <input type="text" size="35" name="role" value="<%= toHtmlValue(ContactDetails.getRole()) %>">
+      </td>
+    </tr>
+  </dhv:include>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="contact.stage">Stage</dhv:label>
+    </td>
+    <td>
+      <%= StageList.getHtmlSelect("stage",ContactDetails.getStage()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -304,7 +398,7 @@
     </td>
   </tr>
   <dhv:include name="organization.dunsType" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.duns_type">DUNS Type</dhv:label>
       </td>
@@ -314,7 +408,7 @@
     </tr>
   </dhv:include>
   <dhv:include name="organization.yearStarted" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.year_started">Year Started</dhv:label>
       </td>
@@ -325,7 +419,7 @@
     </tr>
   </dhv:include>
   <dhv:include name="organization.employees" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="organization.employees">No. of Employees</dhv:label>
       </td>
@@ -335,7 +429,7 @@
     </tr>
   </dhv:include>
   <dhv:include name="organization.revenue" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
       </td>
@@ -356,7 +450,7 @@
     </td>
   </tr>
   <dhv:include name="organization.dunsNumber" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.duns_number">DUNS Number</dhv:label>
       </td>
@@ -366,7 +460,7 @@
     </tr>
   </dhv:include>
   <dhv:include name="organization.businessNameTwo" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.business_name_two">Business Name 2</dhv:label>
       </td>
@@ -376,7 +470,7 @@
     </tr>
   </dhv:include>
   <dhv:include name="organization.sicDescription" none="true">
-    <tr>
+    <tr class="containerBody">
       <td nowrap class="formLabel">
         <dhv:label name="accounts.accounts_add.sicDescription">SIC Description</dhv:label>
       </td>
@@ -409,5 +503,6 @@
   <input type="hidden" name="enteredBy" value="<%= ContactDetails.getEnteredBy() %>"/>
   <input type="hidden" name="reset" value="true"/>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+</dhv:container>
 </form>
 </body>

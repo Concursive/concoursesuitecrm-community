@@ -34,7 +34,7 @@ import java.util.StringTokenizer;
  */
 public class FilterList extends ArrayList {
 
-  private final static String[] CONTACT_FILTERS = {"all", "employees", "mycontacts", "accountcontacts", "myprojects"};
+  private final static String[] CONTACT_FILTERS = {"all", "employees", "mycontacts", "accountcontacts", "myprojects","leads"};
   private final static String[] ACCOUNT_FILTERS = {"all", "my", "disabled"};
   private final static String[] ASSET_FILTERS = {"allassets", "undercontract"};
   private int source = Constants.CONTACTS;
@@ -96,7 +96,10 @@ public class FilterList extends ArrayList {
           return thisSystem.getLabel("documents.team.accountContacts"); //Account Contacts
         } else if (name.equals("myprojects")) {
           return thisSystem.getLabel("contacts.myProjects"); //My Projects
+        } else if (name.equals("leads")) {
+          return thisSystem.getLabel("sales.leads"); //My Projects
         }
+
       case Constants.ACCOUNTS:
         if (name.equals("all")) {
           return thisSystem.getLabel("accounts.all.accounts"); //All Accounts

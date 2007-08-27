@@ -37,14 +37,22 @@
       <permission name="website-portfolio"                               attributes="vaed" offline="vaed" description="Portfolio Editor" enabled="true"/>
       <permission name="site-editor"                                     attributes="vaed" offline="va-d" description="Site Editor" enabled="true"/>
     </category>
-    <category id="228051100" name="Leads" folders="false" lookups="true" reports="true" dashboards="true" customtabs="true">
+    <category id="228051100" name="Leads" folders="false" lookups="true" reports="true" dashboards="true" customtabs="true" actionPlans="true">
       <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Contact Rating"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Contact Source"/>
+      <lookup constantId="626071723" class="lookupList" table="lookup_contact_stage" description="Contact Stage"/>
       <permission name="sales"                                           attributes="v---" offline="v---" description="Access to the Leads Module"/>
       <permission name="sales-leads"                                     attributes="vaed" offline="vaed" description="Lead Records"/>
+      <permission name="sales-leads-opportunities"                       attributes="vaed" offline="vaed" description="Leads Opportunities"/>
+      <permission name="sales-leads-documents"                           attributes="vaed" offline="vaed" description="Leads Documents"/>
       <permission name="sales-import"                                    attributes="v---" offline="----" description="Access to Import Leads"/>
       <permission name="sales-dashboard"                                 attributes="v---" offline="----" description="Leads Dashboard"/>
       <permission name="sales-reports"                                   attributes="va-d" offline="va-d" description="Export Leads Data"/>
+      <permission name="sales-leads-history"                             attributes="vaed" offline="vaed" description="Leads History"/>
+      <permission name="sales-leads-messages"                            attributes="vaed" offline="vaed" description="Leads Messages"/>
+      <permission name="sales-leads-action-plans"                        attributes="vaed" offline="vaed" description="Leads Action Plans"/>
+      <permission name="sales-leads-folders"                              attributes="vaed" offline="vaed" description="Leads Folders" enabled="false"/>
+      <permission name="sales-leads-calls"                               attributes="vaed" offline="vaed" description="Leads Calls"/>
       <report file="leads_user.xml" type="user" permission="sales-leads" title="User Leads" description="Who are the leads owned by a specific user?"/>
       <!--
       <report file="leads_to_accounts.xml" type="user" permission="sales-leads" title="Leads To Accounts Summary" description="How many leads have been converted into accounts?"/>

@@ -84,7 +84,7 @@ function reopenContact(id) {
   <%}%>
   <br />
   <dhv:formMessage />
-  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <%@ include file="call_include.jsp" %>
   <br>
   <% if ("Log".equals(Log)) { %>

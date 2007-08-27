@@ -54,7 +54,7 @@ public class SearchCriteriaList extends HashMap {
   protected HashMap warnings = new HashMap();
   private int id = -1;
   private String groupName = "";
-  private int contactSource = -1;
+  private int source = -1;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;
@@ -69,7 +69,8 @@ public class SearchCriteriaList extends HashMap {
   public final static int SOURCE_ALL_CONTACTS = 2;
   public final static int SOURCE_ALL_ACCOUNTS = 3;
   public final static int SOURCE_EMPLOYEES = 4;
-  public final static int CONTACT_SOURCE_ELEMENTS = 4;
+  public final static int SOURCE_LEADS = 5;
+  public final static int CONTACT_SOURCE_ELEMENTS = 5;
   private int inactiveCount = -1;
   private LookupList siteList = new LookupList();
 
@@ -369,8 +370,8 @@ public class SearchCriteriaList extends HashMap {
    *
    * @param tmp The new contactSource value
    */
-  public void setContactSource(int tmp) {
-    this.contactSource = tmp;
+  public void setSource(int tmp) {
+    this.source = tmp;
   }
 
 
@@ -379,8 +380,8 @@ public class SearchCriteriaList extends HashMap {
    *
    * @param tmp The new contactSource value
    */
-  public void setContactSource(String tmp) {
-    this.contactSource = Integer.parseInt(tmp);
+  public void setSource(String tmp) {
+    this.source = Integer.parseInt(tmp);
   }
 
 
@@ -628,7 +629,7 @@ public class SearchCriteriaList extends HashMap {
    * @return The contactSource value
    */
   public int getContactSource() {
-    return contactSource;
+    return source;
   }
 
 
@@ -695,6 +696,9 @@ public class SearchCriteriaList extends HashMap {
             break;
           case SearchCriteriaList.SOURCE_EMPLOYEES:
             fromString = "Employees";
+            break;
+          case SearchCriteriaList.SOURCE_LEADS:
+            fromString = "Leads";
             break;
           default:
             break;
@@ -844,7 +848,7 @@ public class SearchCriteriaList extends HashMap {
       }
       id = DatabaseUtils.getNextSeq(db, "saved_criterialist_id_seq");
       sql.append(
-          "INSERT INTO saved_criterialist ( owner, name, contact_source, ");
+          "INSERT INTO saved_criterialist ( owner, name, source, ");
       if (id > -1) {
         sql.append("id, ");
       }
@@ -949,12 +953,12 @@ public class SearchCriteriaList extends HashMap {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append(
-        "name = ?, contact_source = ?, owner = ? " +
+        "name = ?, source = ?, owner = ? " +
             "WHERE id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getGroupName());
-    pst.setInt(++i, contactSource);
+    pst.setInt(++i, source);
     pst.setInt(++i, this.getOwner());
     pst.setInt(++i, id);
     resultCount = pst.executeUpdate();
@@ -1171,7 +1175,8 @@ public class SearchCriteriaList extends HashMap {
     modifiedBy = rs.getInt("modifiedby");
     owner = rs.getInt("owner");
     groupName = rs.getString("name");
-    contactSource = DatabaseUtils.getInt(rs, "contact_source");
+    enabled = rs.getBoolean("enabled");
+    source = DatabaseUtils.getInt(rs, "source");
   }
 }
 

@@ -211,10 +211,10 @@ function setParentListRecipients(recipientEmails,recipientIds,listType,displayFi
   }
 }
   
-function setParentListLead(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId,source,from,leadId) {
+function setParentListLead(recipientEmails,recipientIds,listType,displayFieldId,hiddenFieldId,source,from,leadId,action,actionS) {
   var i = 0 ;
   if (source == "leads") {
-    opener.continueReassign(recipientIds[i]);
+    opener.continueReassign(recipientIds[i], actionS);
   }
 }
   

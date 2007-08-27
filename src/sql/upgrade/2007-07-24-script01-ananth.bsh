@@ -1,0 +1,30 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String module = "Leads";
+boolean hasFolders = true;
+
+int moduleId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = '" + module + "'");
+if (rs.next()) {
+  moduleId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+//Insert the category if needed
+if (moduleId != -1) {
+  print("Category found, Setting 'Folders=true'...");
+  PermissionCategory.updateFoldersAttribute(db, moduleId, true);
+}
+
+print("Finished");

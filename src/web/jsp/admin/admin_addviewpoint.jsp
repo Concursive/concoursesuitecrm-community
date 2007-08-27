@@ -23,7 +23,7 @@
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
 <jsp:useBean id="vpUserId" class="java.lang.String" scope="request" />
-<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/submit.js"></script>
 <form name="viewpointForm" action="Viewpoints.do?command=InsertViewpoint&auto-populate=true" method="post">
 <%-- Trails --%>

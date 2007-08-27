@@ -1,0 +1,20 @@
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+
+print("Inserting new lookup table data...");
+
+int level = 0;
+
+void insertElement(String tableName, String description) {
+  level += 10;
+  LookupElement element = new LookupElement();
+  element.setTableName(tableName);
+  element.setDescription(description);
+  element.setLevel(level);
+  element.insert(db);
+}
+level = LookupElement.retrieveMaxLevel(db, "lookup_contact_stage");
+insertElement("lookup_contact_stage", "Unqualified");
+insertElement("lookup_contact_stage", "Qualified");
+
+print("lookup_contact_stage elements added");

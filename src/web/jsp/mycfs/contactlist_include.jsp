@@ -31,16 +31,36 @@
         Iterator filters = Filters.iterator();
         while(filters.hasNext()){
         Filter thisFilter = (Filter) filters.next();
+         if ((!"".equals(sources))&&((sources != null))){
+      		if (("sales".equals(sources))&&("leads".equals(thisFilter.getValue()))) {
+						%>
+          	<option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>      			
+      			<%
+      		}
+      		if (("employees".equals(sources))&&("employees".equals(thisFilter.getValue()))) {
+      			%>
+          	<option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>      			
+      			<%
+      		}
+      		if ("contacts".equals(sources)) {
+      			if ((!"employees".equals(thisFilter.getValue()))&&(!"leads".equals(thisFilter.getValue()))){
+      			%>
+          	<option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>      			
+      			<%
+      			}
+      		}
+      	}else{
+      	
       %>
           <option <%= ContactListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>
-      <%}%>
+      <%}}%>
        </select>
 <% 
   if (ContactListInfo.getListView().equals("employees")) {
     DepartmentList.setSelectSize(1); 
     DepartmentList.setJsEvent("onchange=\"javascript:document.contactListView.submit();\"");
     if (request.getAttribute("departmentId") == null || "".equals((String) request.getAttribute("departmentId"))) {
-%>
+%>	
         <%= DepartmentList.getHtmlSelect("listFilter1",ContactListInfo.getFilterKey("listFilter1")) %>
 <%} } else if (ContactListInfo.getListView().equals("myprojects")) {
     ProjectListSelect.setSelectSize(1);  

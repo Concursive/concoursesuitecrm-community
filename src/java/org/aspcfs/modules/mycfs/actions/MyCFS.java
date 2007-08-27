@@ -850,7 +850,7 @@ public final class MyCFS extends CFSModule {
     }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
-
+    
     //this is how we get the multiple-level heirarchy...recursive function.
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(
@@ -865,10 +865,10 @@ public final class MyCFS extends CFSModule {
         "userId", getUserId(context));
     userListSelect.addAttribute("id", "userId");
     context.getRequest().setAttribute("NewUserList", userListSelect);
-    Connection db = null;
+    Connection db = null;    
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute(
     		"CalendarInfo");
-    if (isOfflineMode(context)) {
+    if (isOfflineMode(context)) {      
       try {
         db = this.getConnection(context);
         SyncClient syncClient = new SyncClient(db, 0);
@@ -883,7 +883,7 @@ public final class MyCFS extends CFSModule {
     try {
     	if (calendarInfo == null) {
         calendarInfo = new CalendarBean(thisRec.getLocale());
-    	}
+    	}    	
 	    db = this.getConnection(context);
 	    Contact newContact = null;
 	    newContact = new Contact();
@@ -898,14 +898,14 @@ public final class MyCFS extends CFSModule {
 	    historyList.setPagedListInfo(contactHistoryListInfo);
 	    contactHistoryListInfo.setSearchCriteria(historyList, context);
 	    historyList.buildList(db);
-	    context.getRequest().setAttribute("historyList", historyList);
+	    context.getRequest().setAttribute("historyList", historyList);	    
     } catch (Exception errorMessage) {
 	      context.getRequest().setAttribute("Error", errorMessage);
 	      return "SystemError";
     } finally {
       	this.freeConnection(context, db);
-    }
-    SystemStatus systemStatus = this.getSystemStatus(context);
+    }    
+    SystemStatus systemStatus = this.getSystemStatus(context);    
     if (calendarInfo.getAlertTypes().size() == 0) {
       if (hasPermission(context, "myhomepage-tasks-view")) {
         calendarInfo.addAlertType(
@@ -950,7 +950,7 @@ public final class MyCFS extends CFSModule {
         calendarInfo.addAlertType(
             "Project Ticket", "org.aspcfs.modules.troubletickets.base.ProjectTicketListScheduledActions", systemStatus.getLabel(
                 "calendar.projectTickets"));
-      }
+      }      
     } else {
     	calendarInfo.setSelectedUserId(-1);
     }
@@ -986,7 +986,7 @@ public final class MyCFS extends CFSModule {
       companyCalendar = new CalendarView(calendarInfo, thisUser.getLocale());
       companyCalendar.setSystemStatus(this.getSystemStatus(context));
       companyCalendar.addHolidays();
-
+      
       //check if the user's account is expiring
       if (context.getRequest().getParameter("userId") != null) {
         userId = Integer.parseInt(context.getRequest().getParameter("userId"));
@@ -1137,7 +1137,7 @@ public final class MyCFS extends CFSModule {
       selectedUser.setBuildContact(true);
       selectedUser.buildRecord(db, userId);
       context.getRequest().setAttribute("SelectedUser", selectedUser);
-
+      
       //Use reflection to invoke methods on scheduler classes
       String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";
@@ -1562,10 +1562,10 @@ public final class MyCFS extends CFSModule {
         db, "lookup_contactaddress_types");
     context.getRequest().setAttribute(
         "ContactAddressTypeList", addressTypeList);
-
-    //Make the StateSelect and CountrySelect drop down menus available in the request.
+    
+    //Make the StateSelect and CountrySelect drop down menus available in the request. 
     //This needs to be done here to provide the SystemStatus to the constructors, otherwise translation is not possible
-
+    
     StateSelect stateSelect = (StateSelect) context.getRequest().getAttribute("StateSelect");
     if (stateSelect == null) {
       stateSelect = new StateSelect(systemStatus);
@@ -1574,4 +1574,72 @@ public final class MyCFS extends CFSModule {
     CountrySelect countrySelect = new CountrySelect(systemStatus);
     context.getRequest().setAttribute("CountrySelect", countrySelect);
   }
-}
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandAddNote(ActionContext context) {
+    addModuleBean(context, "Account History", "View History");
+    String source = (String) context.getRequest().getParameter("source");
+    OrganizationHistory history = null;
+    history = new OrganizationHistory();
+    context.getRequest().setAttribute("history", history);
+    if (context.getRequest().getParameter("actionSource") != null) {
+      return getReturn(context, "AddNotes");
+    }
+    return ("AddNote");
+  }
+
+ /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandSaveNote(ActionContext context) {
+    String source = (String) context.getRequest().getParameter("source");
+    OrganizationHistory thisHistory = new OrganizationHistory();
+    String id = context.getRequest().getParameter("id");
+    boolean isValid = false;
+    boolean recordInserted = false;
+    int resultCount = -1;
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      if(id != null && !id.equalsIgnoreCase("-1")) {
+          thisHistory = new OrganizationHistory(db, Integer.parseInt(id));
+      }
+      thisHistory.setEnteredBy(this.getUserId(context));
+      thisHistory.setModifiedBy(this.getUserId(context));
+      isValid = this.validateObject(context, db, thisHistory);
+      if (isValid) {
+        if (thisHistory.getId() != -1) {
+          thisHistory.setDescription(context.getRequest().getParameter("description"));
+          resultCount = thisHistory.update(db);   
+        } else {
+            thisHistory.setLinkObjectId(OrganizationHistory.USER_NOTE);
+            thisHistory.setStatus(context.getRequest().getParameter("status"));
+            thisHistory.setDescription(context.getRequest().getParameter("description"));
+            thisHistory.setType(context.getRequest().getParameter("type"));
+            thisHistory.setEnabled(true);
+            recordInserted = thisHistory.insert(db);
+        }
+      }
+      if (!recordInserted && resultCount == -1) {
+        context.getRequest().setAttribute("history", thisHistory);
+        return "AddNote";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "SaveNotesOK";
+  }
+ }
+

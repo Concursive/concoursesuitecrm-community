@@ -39,6 +39,7 @@ import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.contacts.utils.QualifiedLeadsCount;
 import org.aspcfs.modules.contacts.utils.QualifiedLeadsCounter;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.jfree.chart.ChartFactory;
@@ -157,6 +158,7 @@ public final class Sales extends CFSModule {
     Locale locale = getUser(context, getUserId(context)).getLocale();
 
     SystemStatus systemStatus = this.getSystemStatus(context);
+    context.getRequest().setAttribute("systemStatus", systemStatus);
 
     try {
       db = getConnection(context);
@@ -256,6 +258,12 @@ public final class Sales extends CFSModule {
         realFullLeadList.setBuildDetails(false);
         realFullLeadList.buildList(db);
       }
+      
+      BatchInfo batchInfo = new BatchInfo("listView");
+      batchInfo.setAction("Sales.do?command=ProcessBatch");
+      batchInfo.setSize(leads.size());
+      context.getRequest().setAttribute(
+          "leadListBatchInfo", batchInfo);
 
       // Lookup Lists in the dashboard
       LookupList sources = new LookupList(db, "lookup_contact_source");
@@ -475,6 +483,9 @@ public final class Sales extends CFSModule {
       userList.setExcludeDisabledIfUnselected(true);
       userList.setExcludeExpiredIfUnselected(true);
 
+      LookupList stageList = systemStatus.getLookupList(db, "lookup_contact_stage");
+      stageList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("StageList", stageList);
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       // siteList.addItem(Constants.INVALID_SITE,
@@ -487,6 +498,9 @@ public final class Sales extends CFSModule {
       if (thisContact != null) {
         context.getRequest().setAttribute("ContactDetails", thisContact);
       }
+   if (context.getRequest().getParameter("actionSource") != null) {
+       return getReturn(context, "AddLeads");
+    }
    if (context.getRequest().getParameter("actionSource") != null) {
        return getReturn(context, "AddLeads");
     }
@@ -546,6 +560,9 @@ public final class Sales extends CFSModule {
       userList.setExcludeDisabledIfUnselected(true);
       userList.setExcludeExpiredIfUnselected(true);
 
+      LookupList stageList = new LookupList(db, "lookup_contact_stage");
+      stageList.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
+      context.getRequest().setAttribute("StageList", stageList);
       LookupList siteList = new LookupList(db, "lookup_site_id");
       siteList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SiteIdList", siteList);
@@ -578,6 +595,8 @@ public final class Sales extends CFSModule {
     if (thisContact.getId() == -1) {
       thisContact.setEnteredBy(getUserId(context));
     }
+    thisContact.setTypeList(
+        context.getRequest().getParameterValues("selectedList"));
     thisContact.setModifiedBy(getUserId(context));
     thisContact.setIsLead(true);
     thisContact.setLeadStatus(Contact.LEAD_UNPROCESSED);
@@ -744,6 +763,11 @@ public final class Sales extends CFSModule {
         processErrors(context, contacts.getErrors());
         return executeCommandSearchForm(context,db);
       }
+      BatchInfo batchInfo = new BatchInfo("batchLeads");
+      batchInfo.setAction("Sales.do?command=ProcessBatch");
+      batchInfo.setSize(contacts.size());
+      context.getRequest().setAttribute(
+          "leadListBatchInfo", batchInfo);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
@@ -818,6 +842,10 @@ public final class Sales extends CFSModule {
       }
       // context.getRequest().setAttribute("nextValue", ""+true);
 
+      LookupList stages = new LookupList(db, "lookup_contact_stage");
+      stages.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
+      context.getRequest().setAttribute("StageList", stages);
+      
       LookupList sources = new LookupList(db, "lookup_contact_source");
       sources.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
       context.getRequest().setAttribute("SourceList", sources);
@@ -923,6 +951,7 @@ public final class Sales extends CFSModule {
     context.getRequest().setAttribute("from", from);
     String type = context.getRequest().getParameter("type");
     String nextValue = (String) context.getRequest().getAttribute("nextValue");
+    String action = (String) context.getRequest().getParameter("action");
     if (nextValue == null || "".equals(nextValue)) {
       nextValue = (String) context.getRequest().getParameter("nextValue");
     }
@@ -931,20 +960,64 @@ public final class Sales extends CFSModule {
       context.getRequest().setAttribute("listForm", listForm);
     }
     String readStatusString = (String) context.getRequest().getAttribute("readStatus");
-    String contactId = (String) context.getRequest().getAttribute("contactId");
-    if (contactId == null || "".equals(contactId)) {
-      contactId = (String) context.getRequest().getParameter("contactId");
+    String contactId = null;
+    String[] id = null;
+    String[] leadId  = null;
+    String leadIdsCopy  = "";
+    if (action!= null && !"".equals(action)){
+      context.getRequest().setAttribute("action",action);
+      String ids = (String) context.getRequest().getParameter("ids");
+      leadId = ids.split(",");
+      Connection db = null;
+      Contact thisContact = null;
+      for (int i = 0; i < leadId.length; i++) {
+        try {
+          db = getConnection(context);
+          thisContact = new Contact(db, leadId[i]);
+          if (thisContact.getIsLead()){
+            if ("".equals(leadIdsCopy)){
+              leadIdsCopy = leadId[i];
+            }else{
+              leadIdsCopy = leadIdsCopy +","+ leadId[i];
+            }
+          }
+        } catch (Exception e) {
+          context.getRequest().setAttribute("Error", e);
+          e.printStackTrace();
+          return ("SystemError");
+        } finally {
+          this.freeConnection(context, db);
+        }  
+      }
+      if ("".equals(leadIdsCopy)||(leadIdsCopy == null)){
+        if (from != null && !"list".equals(from)) {
+          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+        } else {
+          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+        }
+
+        return "ToAccountsOk";
+      }
+      ids = leadIdsCopy;
+      context.getRequest().setAttribute("ids",ids);
+      id = ids.split(",");
+    }else{
+      contactId = (String) context.getRequest().getAttribute("contactId");
+      if (contactId == null || "".equals(contactId)) {
+        contactId = (String) context.getRequest().getParameter("contactId");
+      }
     }
     ContactList contacts = new ContactList();
     Contact contact = null;
     Connection db = null;
     try {
       db = getConnection(context);
-
-      if (nextValue != null && !"".equals(nextValue.trim())) {
-        contactId = "" + LeadUtils.getNextLead(db, Integer.parseInt(contactId), contacts, this.getUserSiteId(context), true);
+      if (action!= null && !"".equals(action)){
+      }else{
+        if (nextValue != null && !"".equals(nextValue.trim())) {
+          contactId = "" + LeadUtils.getNextLead(db, Integer.parseInt(contactId), contacts, this.getUserSiteId(context), true);
+        }
       }
-
       LookupList ratings = new LookupList(db, "lookup_contact_rating");
       ratings.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ratingList", ratings);
@@ -957,8 +1030,16 @@ public final class Sales extends CFSModule {
 
       if (readStatusString == null || "".equals(readStatusString.trim())) {
         if (hasPermission(context, "sales-leads-edit")) {
+          if (action!= null && !"".equals(action)){
+            int i = -1;
+            while (i < id.length -1 ) {
+              i = i + 1;
+              int user = readStatus = LeadUtils.setReadStatus(db, Integer.parseInt(id[i]), this.getUserId(context));          
+            }
+          }else{
           readStatus = LeadUtils.setReadStatus(db, Integer.parseInt(contactId), this.getUserId(context));
         }
+        }  
       } else {
         try {
           readStatus = Integer.parseInt(readStatusString);
@@ -966,7 +1047,8 @@ public final class Sales extends CFSModule {
         }
       }
       context.getRequest().setAttribute("readStatus", "" + readStatus);
-
+      if (action!= null && !"".equals(action)){
+      }else{
       if (contactId != null && !"".equals(contactId) && Integer.parseInt(contactId) != -1) {
         contact = new Contact(db, contactId);
         context.getRequest().setAttribute("contactDetails", contact);
@@ -982,6 +1064,7 @@ public final class Sales extends CFSModule {
         actionPlanSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes", "-- None --"));
         actionPlanSelect.addItems(actionPlanList.getHtmlSelectObj());
         context.getRequest().setAttribute("actionPlanSelect", actionPlanSelect);
+      }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -1110,6 +1193,7 @@ public final class Sales extends CFSModule {
     return "WorkLeadOK";
   }
 
+  
   /**
    * Description of the Method
    *
@@ -1123,9 +1207,16 @@ public final class Sales extends CFSModule {
     Connection db = null;
     addModuleBean(context, "Add Account", "Add Account");
     String contactId = (String) context.getRequest().getParameter("id");
+    if (contactId == null || "".equals(contactId)||"-1".equals(contactId)){
+      contactId = (String) context.getRequest().getAttribute("id");
+    }
     String rating = (String) context.getRequest().getParameter("rating");
     String comments = (String) context.getRequest().getParameter("comments");
+    String orgName = (String) context.getRequest().getParameter("orgName");
     int orgId = -1;
+    if (context.getRequest().getParameter("orgId") != null) {
+      orgId = Integer.parseInt((String) context.getRequest().getParameter("orgId"));
+    }
     User assigned = null;
     User manager = null;
     ActionPlanWork actionPlanWork = new ActionPlanWork();
@@ -1144,159 +1235,144 @@ public final class Sales extends CFSModule {
       if (contact.getLeadStatus() != Contact.LEAD_ASSIGNED) {
         contact.setLeadStatus(Contact.LEAD_ASSIGNED);
       }
-
-      if (contact.getCompany() != null && !"".equals(contact.getCompany().trim())) {
-        orgId = Organization.lookupAccount(db, contact.getCompany(), -1, contact.getSiteId());
-      } else {
-        orgId = Organization.lookupAccount(db, contact.getNameFirst(), contact.getNameMiddle(), contact.getNameLast(), -1, contact.getSiteId());
+      if (orgId > 0) {
+        thisOrg = new Organization(db, orgId);
       }
-      {
-        if (orgId > 0) {
-          thisOrg = new Organization(db, orgId);
-        }
-        if (orgId < 0) {
-          thisOrg = new Organization();
-          thisOrg.setEnteredBy(this.getUserId(context));
-          if (contact.getCompany() == null || "".equals(contact.getCompany().trim())) {
-            contact.setPrimaryContact(true);
-            thisOrg.setNameFirst(contact.getNameFirst());
-            thisOrg.setNameLast(contact.getNameLast());
-            thisOrg.setNameMiddle(contact.getNameMiddle());
-            thisOrg.setName(thisOrg.getNameLastFirstMiddle());
-            thisOrg.setInsertPrimaryContact(false);
+      if (orgId < 0) {
+        thisOrg = new Organization();
+        thisOrg.setEnteredBy(this.getUserId(context));
+        thisOrg.setName(orgName);
+      }
+      thisOrg.setNotes(contact.getNotes());
+      thisOrg.setComments(contact.getComments());
+      thisOrg.setSiteId(contact.getSiteId());
+      thisOrg.setModifiedBy(this.getUserId(context));
+      if ((thisOrg.getId() > 0 && thisOrg.getAccountNumber() != null && contact.getAccountNumber() != null && !contact.getAccountNumber().equals(
+          thisOrg.getAccountNumber()))
+          || thisOrg.getOrgId() == -1) {
+        thisOrg.setAccountNumber(contact.getAccountNumber());
+      }
+      if ((thisOrg.getId() > 0 && contact.getOwner() != thisOrg.getOwner()) || thisOrg.getOrgId() == -1) {
+        thisOrg.setOwner(contact.getOwner());
+      }
+      if ((thisOrg.getId() > 0 && contact.getPotential() != thisOrg.getPotential()) || thisOrg.getOrgId() == -1) {
+        thisOrg.setPotential(contact.getPotential());
+      }
+      if ((thisOrg.getId() > 0 && contact.getIndustryTempCode() != thisOrg.getIndustry()) || thisOrg.getOrgId() == -1) {
+        thisOrg.setIndustry(contact.getIndustryTempCode());
+      }
+      if ((thisOrg.getId() > 0 && contact.getSource() != thisOrg.getSource()) || thisOrg.getOrgId() == -1) {
+        thisOrg.setSource(contact.getSource());
+      }
+      if ((thisOrg.getId() > 0 && contact.getRating() != thisOrg.getRating()) || thisOrg.getOrgId() == -1) {
+        thisOrg.setRating(contact.getRating());
+      }
+      copyPropertiesFromContactToOrganization(contact, thisOrg);
+
+      // Copy postal address from contact to organization
+      ContactAddressList contactAddressList = new ContactAddressList();
+      contactAddressList.setContactId(contact.getId());
+      contactAddressList.buildList(db);
+      Iterator addressIterator = contactAddressList.iterator();
+      while (addressIterator.hasNext()) {
+        // DEVELOPER NOTE: probably needs to be in the
+        // OrganizationEmailAddress Constructor
+        ContactAddress contactAddress = (ContactAddress) addressIterator.next();
+        OrganizationAddress organizationAddress = new OrganizationAddress();
+        organizationAddress.setStreetAddressLine1(contactAddress.getStreetAddressLine1());
+        organizationAddress.setStreetAddressLine2(contactAddress.getStreetAddressLine2());
+        organizationAddress.setStreetAddressLine3(contactAddress.getStreetAddressLine3());
+        organizationAddress.setCity(contactAddress.getCity());
+        organizationAddress.setState(contactAddress.getState());
+        organizationAddress.setZip(contactAddress.getZip());
+        organizationAddress.setCountry(contactAddress.getCountry());
+
+        LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
+        LookupList orgAddressTypeList = null;
+        String contactAddressType = contactAddressTypeList.getValueFromId(contactAddress.getType());
+        int orgAddressType = -1;
+        if (contactAddress.getType() != -1) {
+          if (contactAddressType.indexOf("Business") > -1) {
+            orgAddressTypeList = new LookupList(db, "lookup_orgaddress_types");
+            orgAddressType = orgAddressTypeList.getIdFromValue("Primary");
           } else {
-            thisOrg.setName(contact.getCompany());
+            orgAddressTypeList = new LookupList(db, "lookup_orgaddress_types");
+            orgAddressType = orgAddressTypeList.getIdFromValue("Auxiliary");
           }
+          organizationAddress.setType(orgAddressType);
         }
-        thisOrg.setSiteId(contact.getSiteId());
-        thisOrg.setModifiedBy(this.getUserId(context));
-        if ((thisOrg.getId() > 0 && thisOrg.getAccountNumber() != null && contact.getAccountNumber() != null && !contact.getAccountNumber().equals(
-            thisOrg.getAccountNumber()))
-            || thisOrg.getOrgId() == -1) {
-          thisOrg.setAccountNumber(contact.getAccountNumber());
-        }
-        if ((thisOrg.getId() > 0 && contact.getOwner() != thisOrg.getOwner()) || thisOrg.getOrgId() == -1) {
-          thisOrg.setOwner(contact.getOwner());
-        }
-        if ((thisOrg.getId() > 0 && contact.getPotential() != thisOrg.getPotential()) || thisOrg.getOrgId() == -1) {
-          thisOrg.setPotential(contact.getPotential());
-        }
-        if ((thisOrg.getId() > 0 && contact.getIndustryTempCode() != thisOrg.getIndustry()) || thisOrg.getOrgId() == -1) {
-          thisOrg.setIndustry(contact.getIndustryTempCode());
-        }
-        if ((thisOrg.getId() > 0 && contact.getSource() != thisOrg.getSource()) || thisOrg.getOrgId() == -1) {
-          thisOrg.setSource(contact.getSource());
-        }
-        if ((thisOrg.getId() > 0 && contact.getRating() != thisOrg.getRating()) || thisOrg.getOrgId() == -1) {
-          thisOrg.setRating(contact.getRating());
-        }
-        copyPropertiesFromContactToOrganization(contact, thisOrg);
+        organizationAddress.setPrimaryAddress(contactAddress.getPrimaryAddress());
+        thisOrg.getAddressList().add(organizationAddress);
+      }
+      // Copy email address from contact to organization
+      ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
+      contactEmailAddressList.setContactId(contact.getId());
+      contactEmailAddressList.buildList(db);
+      Iterator emailAddressIterator = contactEmailAddressList.iterator();
+      while (emailAddressIterator.hasNext()) {
+        // DEVELOPER NOTE: probably needs to be in the
+        // OrganizationEmailAddress Constructor
+        ContactEmailAddress contactEmailAddress = (ContactEmailAddress) emailAddressIterator.next();
+        OrganizationEmailAddress organizationEmailAddress = new OrganizationEmailAddress();
+        organizationEmailAddress.setEmail(contactEmailAddress.getEmail());
 
-        // Copy postal address from contact to organization
-        ContactAddressList contactAddressList = new ContactAddressList();
-        contactAddressList.setContactId(contact.getId());
-        contactAddressList.buildList(db);
-        Iterator addressIterator = contactAddressList.iterator();
-        while (addressIterator.hasNext()) {
-          // DEVELOPER NOTE: probably needs to be in the
-          // OrganizationEmailAddress Constructor
-          ContactAddress contactAddress = (ContactAddress) addressIterator.next();
-          OrganizationAddress organizationAddress = new OrganizationAddress();
-          organizationAddress.setStreetAddressLine1(contactAddress.getStreetAddressLine1());
-          organizationAddress.setStreetAddressLine2(contactAddress.getStreetAddressLine2());
-          organizationAddress.setStreetAddressLine3(contactAddress.getStreetAddressLine3());
-          organizationAddress.setCity(contactAddress.getCity());
-          organizationAddress.setState(contactAddress.getState());
-          organizationAddress.setZip(contactAddress.getZip());
-          organizationAddress.setCountry(contactAddress.getCountry());
-
-          LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
-          LookupList orgAddressTypeList = null;
-          String contactAddressType = contactAddressTypeList.getValueFromId(contactAddress.getType());
-          int orgAddressType = -1;
-          if (contactAddress.getType() != -1) {
-            if (contactAddressType.indexOf("Business") > -1) {
-              orgAddressTypeList = new LookupList(db, "lookup_orgaddress_types");
-              orgAddressType = orgAddressTypeList.getIdFromValue("Primary");
-            } else {
-              orgAddressTypeList = new LookupList(db, "lookup_orgaddress_types");
-              orgAddressType = orgAddressTypeList.getIdFromValue("Auxiliary");
-            }
-            organizationAddress.setType(orgAddressType);
-          }
-          organizationAddress.setPrimaryAddress(contactAddress.getPrimaryAddress());
-          thisOrg.getAddressList().add(organizationAddress);
-        }
-        // Copy email address from contact to organization
-        ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
-        contactEmailAddressList.setContactId(contact.getId());
-        contactEmailAddressList.buildList(db);
-        Iterator emailAddressIterator = contactEmailAddressList.iterator();
-        while (emailAddressIterator.hasNext()) {
-          // DEVELOPER NOTE: probably needs to be in the
-          // OrganizationEmailAddress Constructor
-          ContactEmailAddress contactEmailAddress = (ContactEmailAddress) emailAddressIterator.next();
-          OrganizationEmailAddress organizationEmailAddress = new OrganizationEmailAddress();
-          organizationEmailAddress.setEmail(contactEmailAddress.getEmail());
-
-          LookupList contactEmailAddressTypeList = new LookupList(db, "lookup_contactemail_types");
-          LookupList orgEmailAddressTypeList = null;
-          String contactEmailAddressType = contactEmailAddressTypeList.getValueFromId(contactEmailAddress.getType());
-          int orgEmailAddressType = -1;
-          if (contactEmailAddressType.indexOf("Business") > -1) {
-            orgEmailAddressTypeList = new LookupList(db, "lookup_orgemail_types");
-            orgEmailAddressType = orgEmailAddressTypeList.getIdFromValue("Primary");
-          } else {
-            orgEmailAddressTypeList = new LookupList(db, "lookup_orgemail_types");
-            orgEmailAddressType = orgEmailAddressTypeList.getIdFromValue("Auxiliary");
-          }
-
-          organizationEmailAddress.setType(orgEmailAddressType);
-          organizationEmailAddress.setPrimaryEmail(contactEmailAddress.getPrimaryEmail());
-          thisOrg.getEmailAddressList().add(organizationEmailAddress);
-        }
-        // Copy phone numbers from contact to organization
-        ContactPhoneNumberList contactPhoneNumberList = new ContactPhoneNumberList();
-        contactPhoneNumberList.setContactId(contact.getId());
-        contactPhoneNumberList.buildList(db);
-        Iterator phoneNumberIterator = contactPhoneNumberList.iterator();
-        while (phoneNumberIterator.hasNext()) {
-          // DEVELOPER NOTE: probably needs to be in the OrganizationPhoneNumber
-          // Constructor
-          ContactPhoneNumber contactPhoneNumber = (ContactPhoneNumber) phoneNumberIterator.next();
-          OrganizationPhoneNumber organizationPhoneNumber = new OrganizationPhoneNumber();
-          organizationPhoneNumber.setNumber(contactPhoneNumber.getNumber());
-          organizationPhoneNumber.setExtension(contactPhoneNumber.getExtension());
-
-          LookupList contactPhoneNumberTypeList = new LookupList(db, "lookup_contactphone_types");
-          LookupList orgPhoneNumberTypeList = null;
-          String contactPhoneNumberType = contactPhoneNumberTypeList.getValueFromId(contactPhoneNumber.getType());
-          int orgPhoneNumberType = -1;
-          if (contactPhoneNumberType.indexOf("Fax") > -1) {
-            orgPhoneNumberTypeList = new LookupList(db, "lookup_orgphone_types");
-            orgPhoneNumberType = orgPhoneNumberTypeList.getIdFromValue("Fax");
-          } else {
-            orgPhoneNumberTypeList = new LookupList(db, "lookup_orgphone_types");
-            orgPhoneNumberType = orgPhoneNumberTypeList.getIdFromValue("Main");
-          }
-
-          organizationPhoneNumber.setType(orgPhoneNumberType);
-          organizationPhoneNumber.setPrimaryNumber(contactPhoneNumber.getPrimaryNumber());
-          thisOrg.getPhoneNumberList().add(organizationPhoneNumber);
-        }
-
-        if (thisOrg.getOrgId() > 0) {
-          status = (thisOrg.update(db) == 1);
+        LookupList contactEmailAddressTypeList = new LookupList(db, "lookup_contactemail_types");
+        LookupList orgEmailAddressTypeList = null;
+        String contactEmailAddressType = contactEmailAddressTypeList.getValueFromId(contactEmailAddress.getType());
+        int orgEmailAddressType = -1;
+        if (contactEmailAddressType.indexOf("Business") > -1) {
+          orgEmailAddressTypeList = new LookupList(db, "lookup_orgemail_types");
+          orgEmailAddressType = orgEmailAddressTypeList.getIdFromValue("Primary");
         } else {
-          status = thisOrg.insert(db);
+          orgEmailAddressTypeList = new LookupList(db, "lookup_orgemail_types");
+          orgEmailAddressType = orgEmailAddressTypeList.getIdFromValue("Auxiliary");
         }
-        if (status) {
-          this.addRecentItem(context, thisOrg);
-          context.getRequest().setAttribute("orgId", String.valueOf(thisOrg.getOrgId()));
-        }
-        contact.setOrgId(thisOrg.getOrgId());
-        contact.setOrgName(thisOrg.getName());
+
+        organizationEmailAddress.setType(orgEmailAddressType);
+        organizationEmailAddress.setPrimaryEmail(contactEmailAddress.getPrimaryEmail());
+        thisOrg.getEmailAddressList().add(organizationEmailAddress);
       }
+      // Copy phone numbers from contact to organization
+      ContactPhoneNumberList contactPhoneNumberList = new ContactPhoneNumberList();
+      contactPhoneNumberList.setContactId(contact.getId());
+      contactPhoneNumberList.buildList(db);
+      Iterator phoneNumberIterator = contactPhoneNumberList.iterator();
+      while (phoneNumberIterator.hasNext()) {
+        // DEVELOPER NOTE: probably needs to be in the OrganizationPhoneNumber
+        // Constructor
+        ContactPhoneNumber contactPhoneNumber = (ContactPhoneNumber) phoneNumberIterator.next();
+        OrganizationPhoneNumber organizationPhoneNumber = new OrganizationPhoneNumber();
+        organizationPhoneNumber.setNumber(contactPhoneNumber.getNumber());
+        organizationPhoneNumber.setExtension(contactPhoneNumber.getExtension());
+
+        LookupList contactPhoneNumberTypeList = new LookupList(db, "lookup_contactphone_types");
+        LookupList orgPhoneNumberTypeList = null;
+        String contactPhoneNumberType = contactPhoneNumberTypeList.getValueFromId(contactPhoneNumber.getType());
+        int orgPhoneNumberType = -1;
+        if (contactPhoneNumberType.indexOf("Fax") > -1) {
+          orgPhoneNumberTypeList = new LookupList(db, "lookup_orgphone_types");
+          orgPhoneNumberType = orgPhoneNumberTypeList.getIdFromValue("Fax");
+        } else {
+          orgPhoneNumberTypeList = new LookupList(db, "lookup_orgphone_types");
+          orgPhoneNumberType = orgPhoneNumberTypeList.getIdFromValue("Main");
+        }
+
+        organizationPhoneNumber.setType(orgPhoneNumberType);
+        organizationPhoneNumber.setPrimaryNumber(contactPhoneNumber.getPrimaryNumber());
+        thisOrg.getPhoneNumberList().add(organizationPhoneNumber);
+      }
+
+      if (thisOrg.getOrgId() > 0) {
+        status = (thisOrg.update(db) == 1);
+      } else {
+        status = thisOrg.insert(db);
+      }
+      if (status) {
+        this.addRecentItem(context, thisOrg);
+        context.getRequest().setAttribute("orgId", String.valueOf(thisOrg.getOrgId()));
+      }
+      contact.setOrgId(thisOrg.getOrgId());
+      contact.setOrgName(thisOrg.getName());
       if (status) {
         contact.setIsLead(false);
         contact.setConversionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -1378,6 +1454,7 @@ public final class Sales extends CFSModule {
       return ("PermissionError");
     }
     int resultCount = 0;
+    String contactId = null;
     boolean isValid = false;
     String from = (String) context.getRequest().getAttribute("from");
     if (from == null || "".equals(from)) {
@@ -1393,88 +1470,252 @@ public final class Sales extends CFSModule {
       nextValue = (String) context.getRequest().getParameter("nextValue");
     }
     context.getRequest().setAttribute("nextValue", nextValue != null ? nextValue : "");
-    String contactId = context.getRequest().getParameter("contactId");
-    String owner = (String) context.getRequest().getParameter("owner");
-    String leadStatus = (String) context.getRequest().getParameter("leadStatus");
-    String comments = (String) context.getRequest().getParameter("comments");
-    String rating = (String) context.getRequest().getParameter("rating");
-    Contact thisContact = null;
-    Connection db = null;
-    try {
-      db = getConnection(context);
-      thisContact = new Contact(db, contactId);
-      if (!isRecordAccessPermitted(context, thisContact)) {
-        return ("PermissionError");
+    String ids = context.getRequest().getParameter("ids");
+    if ((ids!=null) && (!"".equals(ids))){
+      String[] id = ids.split(",");
+      
+      int orgId = -1;
+      if (context.getRequest().getParameter("orgId") != null) {
+        orgId = Integer.parseInt((String) context.getRequest().getParameter("orgId"));
       }
-      Contact oldContact = new Contact(db, contactId);
-      thisContact.setModifiedBy(getUserId(context));
-      thisContact.setIsLead(true);
-      if (owner != null && !"".equals(owner)) {
-        thisContact.setOwner(Integer.parseInt(owner));
-      }
-      if (leadStatus != null && !"".equals(leadStatus)) {
-        thisContact.setLeadStatus(Integer.parseInt(leadStatus));
-        if (Integer.parseInt(leadStatus) == Contact.LEAD_ASSIGNED) {
-          thisContact.setAssignedDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
-        } else if (Integer.parseInt(leadStatus) == Contact.LEAD_TRASHED) {
-          thisContact.setLeadTrashedDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+      String owner = (String) context.getRequest().getParameter("owner");
+      String leadStatus = (String) context.getRequest().getParameter("leadStatus");
+      String comments = (String) context.getRequest().getParameter("comments");
+      String rating = (String) context.getRequest().getParameter("rating");
+      String orgName = (String) context.getRequest().getParameter("orgName");
+      Contact thisContact = null;
+      Connection db = null;
+      try {
+        db = getConnection(context);
+        if ((orgId==-1)&&(orgName != null)) {
+          User assigned = null;
+          User manager = null;
+          ActionPlanWork actionPlanWork = new ActionPlanWork();
+          Organization thisOrg = new Organization();
+          thisOrg.setEnteredBy(this.getUserId(context));
+          thisOrg.setName(orgName);
+          thisOrg.setModifiedBy(this.getUserId(context));
+          thisOrg.setOwner(owner);
+          boolean status = thisOrg.insert(db);
+          orgId = thisOrg.getId();
+          if (status) {
+            String actionPlanId = context.getRequest().getParameter("actionPlan");
+            String managerId = context.getRequest().getParameter("manager");
+            if (actionPlanId != null && !"".equals(actionPlanId.trim()) && !"-1".equals(actionPlanId)) {
+              ActionPlan actionPlan = new ActionPlan();
+              actionPlan.setBuildPhases(true);
+              actionPlan.setBuildSteps(true);
+              actionPlan.queryRecord(db, Integer.parseInt(actionPlanId));
+
+              actionPlanWork.setActionPlanId(actionPlanId);
+              actionPlanWork.setManagerId(managerId);
+              actionPlanWork.setAssignedTo(owner);
+              actionPlanWork.setLinkModuleId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
+              actionPlanWork.setLinkItemId(thisOrg.getOrgId());
+              actionPlanWork.setEnteredBy(this.getUserId(context));
+              actionPlanWork.setModifiedBy(this.getUserId(context));
+              actionPlanWork.insert(db, actionPlan);
+              this.processInsertHook(context, actionPlanWork);
+
+              assigned = this.getUser(context, actionPlanWork.getAssignedTo());
+              assigned.setBuildContact(true);
+              assigned.setBuildContactDetails(true);
+              assigned.buildResources(db);
+              manager = this.getUser(context, actionPlanWork.getManagerId());
+              manager.setBuildContact(true);
+              manager.setBuildContactDetails(true);
+              manager.buildResources(db);
+            }
+          }
         }
+        
+        int i = -1;
+        while (i < id.length -1 ) {
+          i = i + 1;
+          Contact contact = new Contact(db, id[i]);
+          Contact oldContact = new Contact(db, id[i]);
+          if (contact.getOwner() == -1) {
+            contact.setOwner(this.getUserId(context));
+          }
+          if (contact.getLeadStatus() != Contact.LEAD_ASSIGNED) {
+            contact.setLeadStatus(Contact.LEAD_ASSIGNED);
+          }
+          contact.setIsLead(false);
+          contact.setConversionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+          contact.setOrgId(orgId);
+          contact.update(db, context);
+          processUpdateHook(context, oldContact, contact);
+          int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));
+          this.sendEmail(context, db, contact, contact.getOwner(), (String) null);
+        }
+      } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        e.printStackTrace();
+        return ("SystemError");
+      } finally {
+        this.freeConnection(context, db);
       }
-      if (comments != null && !"".equals(comments)) {
-        thisContact.setComments(comments);
+    }else{
+      contactId = context.getRequest().getParameter("contactId");
+      String owner = (String) context.getRequest().getParameter("owner");
+      String leadStatus = (String) context.getRequest().getParameter("leadStatus");
+      String comments = (String) context.getRequest().getParameter("comments");
+      String rating = (String) context.getRequest().getParameter("rating");
+      String leadIds = (String) context.getRequest().getParameter("leadIds");
+      String action = (String) context.getRequest().getParameter("action");
+      Contact thisContact = null;
+      Connection db = null;
+    
+      String[] leadId = null;
+      String leadIdsCopy = "";
+      if (contactId == null || "-1".equals(contactId)) {
+        if (leadIds != null && !"".equals(leadIds)) {
+          if ("assign".equals(action)){
+            leadId = leadIds.split(",");
+            for (int i = 0; i < leadId.length; i++) {
+              try {
+                db = getConnection(context);
+                thisContact = new Contact(db, leadId[i]);
+                if (thisContact.getOwner()==-1){
+                  if ("".equals(leadIdsCopy)){
+                    leadIdsCopy = leadId[i];
+                  }else{
+                    leadIdsCopy = leadIdsCopy +","+ leadId[i];
+                  }
+                }
+              } catch (Exception e) {
+                context.getRequest().setAttribute("Error", e);
+                e.printStackTrace();
+                return ("SystemError");
+              } finally {
+                this.freeConnection(context, db);
+              }  
+            }
+          }
+          if ("reassign".equals(action)){
+            leadId = leadIds.split(",");
+            for (int i = 0; i < leadId.length; i++) {
+              try {
+                db = getConnection(context);
+                thisContact = new Contact(db, leadId[i]);
+                if (thisContact.getOwner()!=-1){
+                  if ("".equals(leadIdsCopy)){
+                    leadIdsCopy = leadId[i];
+                  }else{
+                    leadIdsCopy = leadIdsCopy +","+ leadId[i];
+                  }
+                }
+              } catch (Exception e) {
+                context.getRequest().setAttribute("Error", e);
+                e.printStackTrace();
+                return ("SystemError");
+              } finally {
+                this.freeConnection(context, db);
+              }  
+            }
+          }
+          if ("".equals(leadIdsCopy)||(leadIdsCopy == null)){
+            if (from != null && "dashboard".equals(from)) {
+              return executeCommandDashboard(context);
+            } else {
+              return executeCommandList(context);
+            }
+          }
+          leadId = leadIdsCopy.split(",");
+        }
+      } else {
+        leadId = contactId.split(",");
       }
-      if (rating != null && !"".equals(rating)) {
-        thisContact.setRating(Integer.parseInt(rating));
-      }
-      isValid = validateObject(context, db, thisContact);
-      if (isValid) {
-        resultCount = thisContact.update(db, context);
+      for (int i = 0; i < leadId.length; i++) {
+        contactId = leadId[i];
+        
+        try {
+          db = getConnection(context);
+          thisContact = new Contact(db, contactId);
+          if (!isRecordAccessPermitted(context, thisContact)) {
+            return ("PermissionError");
+          }
+          Contact oldContact = new Contact(db, contactId);
+          thisContact.setModifiedBy(getUserId(context));
+          thisContact.setIsLead(true);
+          if (owner != null && !"".equals(owner)) {
+            thisContact.setOwner(Integer.parseInt(owner));
+          }
+          if (leadStatus != null && !"".equals(leadStatus)) {
+            thisContact.setLeadStatus(Integer.parseInt(leadStatus));
+            if (Integer.parseInt(leadStatus) == Contact.LEAD_ASSIGNED) {
+              thisContact.setAssignedDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+            } else if (Integer.parseInt(leadStatus) == Contact.LEAD_TRASHED) {
+              thisContact.setLeadTrashedDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+            }
+          }
+          if (comments != null && !"".equals(comments)) {
+            thisContact.setComments(comments);
+          }
+          if (rating != null && !"".equals(rating)) {
+            thisContact.setRating(Integer.parseInt(rating));
+          }
+          isValid = validateObject(context, db, thisContact);
+          if (isValid) {
+            resultCount = thisContact.update(db, context);
+          }
+          if (isValid && resultCount == 1) {
+          if (oldContact.getOwner() != thisContact.getOwner()) {
+            this.sendEmail(context, db, thisContact, thisContact.getOwner(), "leads.assigned");
+          }
+          processUpdateHook(context, oldContact, thisContact);
+          thisContact = new Contact(db, thisContact.getId());
+          context.getRequest().setAttribute("ContactDetails", thisContact);
+          context.getRequest().setAttribute("contactId", "" + thisContact.getId());
+  
+        }
+      } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        e.printStackTrace();
+        return ("SystemError");
+      } finally {
+        this.freeConnection(context, db);
       }
       if (isValid && resultCount == 1) {
-        if (oldContact.getOwner() != thisContact.getOwner()) {
-          this.sendEmail(context, db, thisContact, thisContact.getOwner(), "leads.assigned");
+        String next = context.getRequest().getParameter("next");
+        String leadAssignment = context.getRequest().getParameter("leadAssignment");
+        if (next != null && "assignaccount".equals(next)) {
+          // TODO: The following should not be executed in this Action because now
+          // this request is using an additional database connection without
+          // closing the first!
+          // it could be moved down below to fix this
+          if (from != null && !"list".equals(from)) {
+            context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+          } else {
+            context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+          }
+          if (leadAssignment == null || !"true".equals(leadAssignment)) {
+            executeCommandWorkAccount(context);
+          } else {
+            context.getRequest().setAttribute("id", contactId);
+            return "CloseOK";
+          }
+          return getReturn(context, "WorkAccount");
         }
-        processUpdateHook(context, oldContact, thisContact);
-        thisContact = new Contact(db, thisContact.getId());
-        context.getRequest().setAttribute("ContactDetails", thisContact);
-        context.getRequest().setAttribute("contactId", "" + thisContact.getId());
-
       }
-    } catch (Exception e) {
-      context.getRequest().setAttribute("Error", e);
-      e.printStackTrace();
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
     }
-    if (isValid && resultCount == 1) {
-      String next = context.getRequest().getParameter("next");
-      String leadAssignment = context.getRequest().getParameter("leadAssignment");
-      if (next != null && "assignaccount".equals(next)) {
-        // TODO: The following should not be executed in this Action because now
-        // this request is using an additional database connection without
-        // closing the first!
-        // it could be moved down below to fix this
-        if (from != null && !"list".equals(from)) {
-          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
-        } else {
-          context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
-        }
-        if (leadAssignment == null || !"true".equals(leadAssignment)) {
-          executeCommandWorkAccount(context);
-        } else {
-          context.getRequest().setAttribute("id", contactId);
-          return "CloseOK";
-        }
-        return getReturn(context, "WorkAccount");
-      }
     }
     addModuleBean(context, "Leads", "Update Lead");
     // decide what happend with the processing
+    if ((ids==null) || ("".equals(ids))){
     if (from != null && "dashboard".equals(from)) {
       return executeCommandDashboard(context);
     } else {
       return executeCommandList(context);
+    }
+    }else{
+      if (from != null && !"list".equals(from)) {
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+      } else {
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+      }
+      
+      return "ToAccountsOk";
     }
   }
 
@@ -1606,6 +1847,287 @@ public final class Sales extends CFSModule {
     }
     addModuleBean(context, "Leads", "Leads");
     return "DeleteOK";
+  }
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandProcessBatch(ActionContext context) {
+    if (!(hasPermission(context, "sales-leads-edit"))) {
+      return ("PermissionError");
+    }
+    boolean isValid = false;
+    Contact contact = null;
+    Connection db = null;
+    String from = (String) context.getRequest().getParameter("from");
+    try {
+      db = getConnection(context);
+
+      String action = (String) context.getRequest().getParameter("action");
+      String ids = context.getRequest().getParameter("ids");
+      String[] leadId = null;
+      if ((ids!=null) && (!"".equals(ids))){
+        leadId = ids.split(",");
+      }
+      
+    for (int i = 0; i < leadId.length; i++) {
+      int id = Integer.parseInt(leadId[i]);
+      contact = new Contact(db, id);
+      if (action != null) {
+        if ("delete".equals(action)) {
+          if (!(hasPermission(context, "sales-leads-delete"))) {
+            return ("PermissionError");
+          }
+          int userId =this.getUserId(context);
+          boolean assignStatus = false;
+          if (contact.getOwner()!= -1) {
+            assignStatus = LeadUtils.tryToAssignLead(db, id, userId, contact.getOwner());
+            contact.setOwner(userId);
+          } else {
+            assignStatus = LeadUtils.tryToAssignLead(db, id, userId);
+            contact.setOwner(userId);
+          }
+          int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));  
+          if (!hasAuthority(context, contact.getOwner())) {
+            return "PermissionError";
+          }
+          contact.updateStatus(db, context, true, this.getUserId(context));
+          String returnType = (String) context.getRequest().getParameter("from");
+          if (returnType != null && !"list".equals(returnType)) {
+            context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+          } else {
+            context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+          }
+        }
+        if (("toAccount".equals(action))&&(contact.getIsLead())) {
+          if (!isRecordAccessPermitted(context, contact)) {
+            return ("PermissionError");
+          }
+          int resultCount= -1;
+          Contact oldContact = new Contact(db, id);
+          contact.setModifiedBy(getUserId(context));
+          contact.setIsLead(true);
+          isValid = validateObject(context, db, contact);
+          if (isValid) {
+            resultCount = contact.update(db, context);
+          }
+          if (isValid && resultCount == 1) {
+            if (oldContact.getOwner() != contact.getOwner()) {
+              this.sendEmail(context, db, contact, contact.getOwner(), "leads.assigned");
+            }
+            processUpdateHook(context, oldContact, contact);
+            context.getRequest().setAttribute("ContactDetails", contact);
+            context.getRequest().setAttribute("id", "" + contact.getId());
+          }
+          Contact thisContact = new Contact(db, id);
+          User assigned = null;
+          User manager = null;
+          ActionPlanWork actionPlanWork = new ActionPlanWork();
+          Organization thisOrg = null;
+            // insert an account if company name exists
+            boolean status = false;
+            if (thisContact.getOwner() == -1) {
+              thisContact.setOwner(this.getUserId(context));
+            }
+            if (thisContact.getLeadStatus() != Contact.LEAD_ASSIGNED) {
+              thisContact.setLeadStatus(Contact.LEAD_ASSIGNED);
+            }
+              thisOrg = new Organization();
+              thisOrg.setEnteredBy(this.getUserId(context));
+              thisOrg.setName(thisContact.getNameLastFirst());
+            
+            thisOrg.setNotes(thisContact.getNotes());
+            thisOrg.setComments(thisContact.getComments());
+            thisOrg.setSiteId(thisContact.getSiteId());
+            thisOrg.setModifiedBy(this.getUserId(context));
+            if ((thisOrg.getId() > 0 && thisOrg.getAccountNumber() != null && thisContact.getAccountNumber() != null && !thisContact.getAccountNumber().equals(
+                thisOrg.getAccountNumber()))
+                || thisOrg.getOrgId() == -1) {
+              thisOrg.setAccountNumber(thisContact.getAccountNumber());
+            }
+            if ((thisOrg.getId() > 0 && thisContact.getOwner() != thisOrg.getOwner()) || thisOrg.getOrgId() == -1) {
+              thisOrg.setOwner(thisContact.getOwner());
+            }
+            if ((thisOrg.getId() > 0 && thisContact.getPotential() != thisOrg.getPotential()) || thisOrg.getOrgId() == -1) {
+              thisOrg.setPotential(thisContact.getPotential());
+            }
+            if ((thisOrg.getId() > 0 && thisContact.getIndustryTempCode() != thisOrg.getIndustry()) || thisOrg.getOrgId() == -1) {
+              thisOrg.setIndustry(thisContact.getIndustryTempCode());
+            }
+            if ((thisOrg.getId() > 0 && thisContact.getSource() != thisOrg.getSource()) || thisOrg.getOrgId() == -1) {
+              thisOrg.setSource(thisContact.getSource());
+            }
+            if ((thisOrg.getId() > 0 && thisContact.getRating() != thisOrg.getRating()) || thisOrg.getOrgId() == -1) {
+              thisOrg.setRating(thisContact.getRating());
+            }
+            copyPropertiesFromContactToOrganization(thisContact, thisOrg);
+
+            // Copy postal address from contact to organization
+            ContactAddressList contactAddressList = new ContactAddressList();
+            contactAddressList.setContactId(thisContact.getId());
+            contactAddressList.buildList(db);
+            Iterator addressIterator = contactAddressList.iterator();
+            while (addressIterator.hasNext()) {
+              // DEVELOPER NOTE: probably needs to be in the
+              // OrganizationEmailAddress Constructor
+              ContactAddress contactAddress = (ContactAddress) addressIterator.next();
+              OrganizationAddress organizationAddress = new OrganizationAddress();
+              organizationAddress.setStreetAddressLine1(contactAddress.getStreetAddressLine1());
+              organizationAddress.setStreetAddressLine2(contactAddress.getStreetAddressLine2());
+              organizationAddress.setStreetAddressLine3(contactAddress.getStreetAddressLine3());
+              organizationAddress.setCity(contactAddress.getCity());
+              organizationAddress.setState(contactAddress.getState());
+              organizationAddress.setZip(contactAddress.getZip());
+              organizationAddress.setCountry(contactAddress.getCountry());
+
+              LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
+              LookupList orgAddressTypeList = null;
+              String contactAddressType = contactAddressTypeList.getValueFromId(contactAddress.getType());
+              int orgAddressType = -1;
+              if (contactAddress.getType() != -1) {
+                if (contactAddressType.indexOf("Business") > -1) {
+                  orgAddressTypeList = new LookupList(db, "lookup_orgaddress_types");
+                  orgAddressType = orgAddressTypeList.getIdFromValue("Primary");
+                } else {
+                  orgAddressTypeList = new LookupList(db, "lookup_orgaddress_types");
+                  orgAddressType = orgAddressTypeList.getIdFromValue("Auxiliary");
+                }
+                organizationAddress.setType(orgAddressType);
+              }
+              organizationAddress.setPrimaryAddress(contactAddress.getPrimaryAddress());
+              thisOrg.getAddressList().add(organizationAddress);
+            }
+            // Copy email address from contact to organization
+            ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
+            contactEmailAddressList.setContactId(thisContact.getId());
+            contactEmailAddressList.buildList(db);
+            Iterator emailAddressIterator = contactEmailAddressList.iterator();
+            while (emailAddressIterator.hasNext()) {
+              // DEVELOPER NOTE: probably needs to be in the
+              // OrganizationEmailAddress Constructor
+              ContactEmailAddress contactEmailAddress = (ContactEmailAddress) emailAddressIterator.next();
+              OrganizationEmailAddress organizationEmailAddress = new OrganizationEmailAddress();
+              organizationEmailAddress.setEmail(contactEmailAddress.getEmail());
+
+              LookupList contactEmailAddressTypeList = new LookupList(db, "lookup_contactemail_types");
+              LookupList orgEmailAddressTypeList = null;
+              String contactEmailAddressType = contactEmailAddressTypeList.getValueFromId(contactEmailAddress.getType());
+              int orgEmailAddressType = -1;
+              if (contactEmailAddressType.indexOf("Business") > -1) {
+                orgEmailAddressTypeList = new LookupList(db, "lookup_orgemail_types");
+                orgEmailAddressType = orgEmailAddressTypeList.getIdFromValue("Primary");
+              } else {
+                orgEmailAddressTypeList = new LookupList(db, "lookup_orgemail_types");
+                orgEmailAddressType = orgEmailAddressTypeList.getIdFromValue("Auxiliary");
+              }
+
+              organizationEmailAddress.setType(orgEmailAddressType);
+              organizationEmailAddress.setPrimaryEmail(contactEmailAddress.getPrimaryEmail());
+              thisOrg.getEmailAddressList().add(organizationEmailAddress);
+            }
+            // Copy phone numbers from contact to organization
+            ContactPhoneNumberList contactPhoneNumberList = new ContactPhoneNumberList();
+            contactPhoneNumberList.setContactId(thisContact.getId());
+            contactPhoneNumberList.buildList(db);
+            Iterator phoneNumberIterator = contactPhoneNumberList.iterator();
+            while (phoneNumberIterator.hasNext()) {
+              // DEVELOPER NOTE: probably needs to be in the OrganizationPhoneNumber
+              // Constructor
+              ContactPhoneNumber contactPhoneNumber = (ContactPhoneNumber) phoneNumberIterator.next();
+              OrganizationPhoneNumber organizationPhoneNumber = new OrganizationPhoneNumber();
+              organizationPhoneNumber.setNumber(contactPhoneNumber.getNumber());
+              organizationPhoneNumber.setExtension(contactPhoneNumber.getExtension());
+
+              LookupList contactPhoneNumberTypeList = new LookupList(db, "lookup_contactphone_types");
+              LookupList orgPhoneNumberTypeList = null;
+              String contactPhoneNumberType = contactPhoneNumberTypeList.getValueFromId(contactPhoneNumber.getType());
+              int orgPhoneNumberType = -1;
+              if (contactPhoneNumberType.indexOf("Fax") > -1) {
+                orgPhoneNumberTypeList = new LookupList(db, "lookup_orgphone_types");
+                orgPhoneNumberType = orgPhoneNumberTypeList.getIdFromValue("Fax");
+              } else {
+                orgPhoneNumberTypeList = new LookupList(db, "lookup_orgphone_types");
+                orgPhoneNumberType = orgPhoneNumberTypeList.getIdFromValue("Main");
+              }
+
+              organizationPhoneNumber.setType(orgPhoneNumberType);
+              organizationPhoneNumber.setPrimaryNumber(contactPhoneNumber.getPrimaryNumber());
+              thisOrg.getPhoneNumberList().add(organizationPhoneNumber);
+            }
+              status = thisOrg.insert(db);
+            if (status) {
+              this.addRecentItem(context, thisOrg);
+              context.getRequest().setAttribute("orgId", String.valueOf(thisOrg.getOrgId()));
+            }
+            thisContact.setOrgId(thisOrg.getOrgId());
+            thisContact.setOrgName(thisOrg.getName());
+            
+            if (status) {
+              thisContact.setIsLead(false);
+              thisContact.setConversionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+              resultCount = thisContact.update(db, context);
+              if ((thisContact.getNameLast() == null) || "".equals(thisContact.getNameLast())) {
+                thisContact.disable(db);
+              }
+              processUpdateHook(context, oldContact, thisContact);
+              int size = LeadUtils.cleanUpContact(db, contact.getId(), this.getUserId(context));
+            }
+            // Record a corressponding Action Plan Work Item
+            if (status && resultCount > 0) {
+              String actionPlanId = context.getRequest().getParameter("actionPlan");
+              String managerId = context.getRequest().getParameter("manager");
+              String owner = (String) context.getRequest().getParameter("owner");
+              if (actionPlanId != null && !"".equals(actionPlanId.trim()) && !"-1".equals(actionPlanId)) {
+                ActionPlan actionPlan = new ActionPlan();
+                actionPlan.setBuildPhases(true);
+                actionPlan.setBuildSteps(true);
+                actionPlan.queryRecord(db, Integer.parseInt(actionPlanId));
+
+                actionPlanWork.setActionPlanId(actionPlanId);
+                actionPlanWork.setManagerId(managerId);
+                actionPlanWork.setAssignedTo(owner);
+                actionPlanWork.setLinkModuleId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.ACCOUNTS));
+                actionPlanWork.setLinkItemId(thisOrg.getOrgId());
+                actionPlanWork.setEnteredBy(this.getUserId(context));
+                actionPlanWork.setModifiedBy(this.getUserId(context));
+                actionPlanWork.insert(db, actionPlan);
+                this.processInsertHook(context, actionPlanWork);
+
+                assigned = this.getUser(context, actionPlanWork.getAssignedTo());
+                assigned.setBuildContact(true);
+                assigned.setBuildContactDetails(true);
+                assigned.buildResources(db);
+                manager = this.getUser(context, actionPlanWork.getManagerId());
+                manager.setBuildContact(true);
+                manager.setBuildContactDetails(true);
+                manager.buildResources(db);
+              }
+            }
+            if (from != null && !"list".equals(from)) {
+              context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
+            } else {
+              context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
+            }
+            return "ToAccountsOk";
+        }
+      }
+    } 
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      e.printStackTrace();
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "Leads", "Leads");
+    if ("list".equals(from)){
+      return executeCommandList(context);
+    } else{
+      return executeCommandDashboard(context);
+    }
+      
   }
 
   /**

@@ -31,7 +31,7 @@
   HashMap selectedCategories = (HashMap) request.getSession().getAttribute("selectedCategories" + categoryEditor.getConstantId());
 %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js?v=20070827"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></SCRIPT>
 <form name="draftCategories" action="AdminCategories.do?command=&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>">

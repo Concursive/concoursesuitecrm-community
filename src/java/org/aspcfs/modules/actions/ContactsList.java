@@ -72,6 +72,10 @@ public final class ContactsList extends CFSModule {
     if (type != null && !"".equals(type) && !"null".equals(type)) {
       context.getRequest().setAttribute("type", type);
     }
+    String action = context.getRequest().getParameter("action");
+    if (action!= null && !"".equals(action) && !"null".equals(action)) {
+      context.getRequest().setAttribute("action", action);
+    }
     String displayType = context.getRequest().getParameter("displayType");
     HashMap selectedList = new HashMap();
     //initialize from page, if list...
@@ -132,7 +136,7 @@ public final class ContactsList extends CFSModule {
        */
       int rowCount = 1;
       //list
-      if (listType.equalsIgnoreCase("list")) {
+      if (listType != null && listType.equalsIgnoreCase("list")) {
         while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null)
         {
           int contactId = 0;
@@ -344,7 +348,19 @@ public final class ContactsList extends CFSModule {
     context.getRequest().setAttribute("Filters", filters);
 
     //  set Filter for retrieving addresses depending on typeOfContact
+    String sources = null;
+    sources = context.getRequest().getParameter("sources");
+    context.getRequest().setAttribute("sources", sources);
     String firstFilter = filters.getFirstFilter(contactListInfo.getListView());
+    if ("sales".equals(sources)) {
+      firstFilter = "leads";
+    }
+    if ("employees".equals(sources)) {
+      firstFilter = "employees";
+    }
+    if (((firstFilter.equalsIgnoreCase("leads"))||(firstFilter.equalsIgnoreCase("employees")))&&"contacts".equals(sources)){
+      firstFilter = "all";
+    }
     if (firstFilter.equalsIgnoreCase("all")) {
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
@@ -374,6 +390,13 @@ public final class ContactsList extends CFSModule {
       contactList.setWithProjectsOnly(true);
       if (secondFilter != null && !"".equals(secondFilter)) {
         contactList.setProjectId(Integer.parseInt(secondFilter));
+      }
+      contactList.setSiteId(siteId);
+    }
+    if (firstFilter.equalsIgnoreCase("leads")) {
+      contactList.setLeadsOnly(Constants.TRUE);
+      if (secondFilter != null && !"".equals(secondFilter)) {
+        contactList.setDepartmentId(Integer.parseInt(secondFilter));
       }
       contactList.setSiteId(siteId);
     }

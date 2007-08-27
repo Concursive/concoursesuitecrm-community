@@ -46,7 +46,7 @@
   <br />
   <%-- include call add form --%>
   <% if ("Log".equals(Log)) { %>
-  	<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <% } %>
   <% if ("completed".equals(Completed)) { %>
   	<input type="submit" value="<dhv:label name="global.button.completeActivity">Complete Activity</dhv:label>" onClick="this.form.dosubmit.value='true';">
