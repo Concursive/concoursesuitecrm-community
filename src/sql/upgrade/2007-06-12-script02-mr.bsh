@@ -1,0 +1,23 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+import java.util.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.relationships.base.*;
+
+int newMaxLevel = (RelationshipTypeList.retrieveMaxLevel(db) + 10);
+
+RelationshipType relationshipType = new RelationshipType();
+relationshipType.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+relationshipType.setCategoryIdMapsTo(Constants.ACCOUNT_OBJECT);
+relationshipType.setReciprocalName1("Reseller of");
+relationshipType.setReciprocalName2("Client of");
+relationshipType.setLevel(newMaxLevel);
+relationshipType.setDefaultItem(false);
+relationshipType.setEnabled(true);
+relationshipType.insert(db);
+print("Relationship Type added: " + relationshipType.getReciprocalName1());
+

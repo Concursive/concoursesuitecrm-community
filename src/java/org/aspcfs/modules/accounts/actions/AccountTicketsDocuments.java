@@ -165,7 +165,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-documents-edit")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -760,7 +760,7 @@ public final class AccountTicketsDocuments extends CFSModule {
   }
 
   public String executeCommandMove(ActionContext context) {
-    if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-edit")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -798,7 +798,7 @@ public final class AccountTicketsDocuments extends CFSModule {
 
 
   public String executeCommandSaveMove(ActionContext context) {
-    if (!hasPermission(context, "pipeline-opportunities-documents-edit")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-edit")) {
       return ("PermissionError");
     }
     Connection db = null;

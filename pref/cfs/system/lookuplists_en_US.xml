@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 - we assume enabled=true
 
@@ -803,6 +803,10 @@
       <record category_id_maps_from="42420034" category_id_maps_to="42420034">
         <reciprocal_name_1><![CDATA[Financier of]]></reciprocal_name_1>
         <reciprocal_name_2><![CDATA[Financed by]]></reciprocal_name_2>
+      </record>
+      <record category_id_maps_from="42420034" category_id_maps_to="42420034">
+        <reciprocal_name_1><![CDATA[Reseller of]]></reciprocal_name_1>
+        <reciprocal_name_2><![CDATA[Client of]]></reciprocal_name_2>
       </record>
   <!--
     Parent of, Child of

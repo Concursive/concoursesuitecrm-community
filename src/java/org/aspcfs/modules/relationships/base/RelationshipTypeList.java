@@ -37,7 +37,7 @@ import java.util.Iterator;
  * @created August 11, 2004
  */
 public class RelationshipTypeList extends ArrayList implements SyncableList {
-  
+
   public final static String tableName = "lookup_relationship_types";
   public final static String uniqueField = "type_id";
   private java.sql.Timestamp lastAnchor = null;
@@ -49,6 +49,8 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
   private int defaultKey = -1;
   private int size = 1;
   private boolean showDisabled = true;
+  private String reciprocalName1 = null;
+  private String reciprocalName2 = null;
   protected PagedListInfo pagedListInfo = null;
   // other filters
   private int typeId = -1;
@@ -131,7 +133,7 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
   public void setSyncType(int syncType) {
     this.syncType = syncType;
   }
-  
+
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
   }
@@ -143,6 +145,26 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
    */
   public void setCategoryIdMapsFrom(int tmp) {
     this.categoryIdMapsFrom = tmp;
+  }
+
+
+  /**
+   * Sets the reciprocalName1 attribute of the RelationshipTypeList object
+   *
+   * @param tmp The new reciprocalName1 value
+   */
+  public void setReciprocalName1(String tmp) {
+    this.reciprocalName1 = tmp;
+  }
+
+
+  /**
+   * Sets the reciprocalName1 attribute of the RelationshipTypeList object
+   *
+   * @param tmp The new reciprocalName1 value
+   */
+  public void setReciprocalName2(String tmp) {
+    this.reciprocalName2 = tmp;
   }
 
 
@@ -334,7 +356,6 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
    * Description of the Method
    *
    * @param db
-   * @param pst
    * @return
    * @throws SQLException Description of the Returned Value
    */
@@ -346,7 +367,6 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
    * Description of the Method
    *
    * @param db
-   * @param pst
    * @param sqlFilter
    * @param sqlOrder
    * @return
@@ -476,6 +496,12 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
       sqlFilter.append("AND lrt.entered < ? ");
       sqlFilter.append("AND lrt.modified < ? ");
     }
+    if (reciprocalName1 != null) {
+        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db) + "(lrt.reciprocal_name_1) LIKE ? ");
+    }
+    if (reciprocalName2 != null) {
+        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db) + "(lrt.reciprocal_name_2) LIKE ? ");
+    }
   }
 
 
@@ -506,7 +532,27 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
     }
+    if (reciprocalName1 != null) {
+        pst.setString(++i, reciprocalName1.toLowerCase());
+    }
+    if (reciprocalName2 != null) {
+        pst.setString(++i, reciprocalName2.toLowerCase());
+    }
     return i;
   }
+
+  public static int retrieveMaxLevel(Connection db) throws SQLException {
+    int maxLevel = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") AS max_level " +
+        "FROM lookup_relationship_types ");
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      maxLevel = rs.getInt("max_level");
+    }
+    rs.close();
+    pst.close();
+    return maxLevel;
+  } 
 }
 

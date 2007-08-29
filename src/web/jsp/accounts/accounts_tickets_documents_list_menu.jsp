@@ -82,7 +82,7 @@
 <div id="menuFileContainer" class="menu">
   <div id="menuFileContent">
     <table id="menuFileTable" class="pulldown" width="170" cellspacing="0">
-      <dhv:permission name="tickets-tickets-view">
+      <dhv:permission name="accounts-accounts-tickets-documents-view">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="viewFileHistory()">
         <th>
@@ -93,7 +93,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="accounts-accounts-tickets-documents-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="download();">
         <th>
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -103,7 +103,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-view">
+      <dhv:permission name="accounts-accounts-tickets-documents-view">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="view();">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -113,7 +113,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="accounts-accounts-tickets-documents-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify();">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -123,7 +123,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="accounts-accounts-tickets-documents-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="addVersion()">
         <th>
@@ -134,7 +134,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="accounts-accounts-tickets-documents-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveFile()">
         <th>
@@ -145,7 +145,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-delete">
+      <dhv:permission name="accounts-accounts-tickets-documents-delete">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteFile();">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -161,7 +161,7 @@
 <div id="menuFolderContainer" class="menu">
   <div id="menuFolderContent">
     <table id="menuFolderTable" class="pulldown" width="170" cellspacing="0">
-      <dhv:permission name="tickets-tickets-view">
+      <dhv:permission name="accounts-accounts-tickets-documents-view">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="viewFolder();">
         <th valign="top">
@@ -172,7 +172,7 @@
         </td>
       </tr>
     </dhv:permission>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="accounts-accounts-tickets-documents-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="editFolder();">
         <th>
@@ -183,7 +183,7 @@
         </td>
       </tr>
     </dhv:permission>
-      <dhv:permission name="tickets-tickets-edit">
+      <dhv:permission name="accounts-accounts-tickets-documents-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="moveFolder();">
         <th>
@@ -194,7 +194,7 @@
         </td>
       </tr>
     </dhv:permission>
-      <dhv:permission name="tickets-tickets-delete">
+      <dhv:permission name="accounts-accounts-tickets-documents-delete">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteFolder();">
         <th valign="top">
