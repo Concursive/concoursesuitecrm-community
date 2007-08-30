@@ -74,10 +74,9 @@ public class ApplicationPrefs {
       Preferences prefs = Preferences.userNodeForPackage(
           org.aspcfs.modules.setup.utils.Prefs.class);
       // When prefs are saved, the MAX_KEY_LENGTH is used for long names
-      // TODO: this needs to be verified
-      // if (dir.length() > Preferences.MAX_KEY_LENGTH) {
-      //   dir = dir.substring(dir.length() - Preferences.MAX_KEY_LENGTH);
-      // }
+      if (dir.length() > Preferences.MAX_KEY_LENGTH) {
+        dir = dir.substring(dir.length() - Preferences.MAX_KEY_LENGTH);
+      }
       // Check "dir" prefs first, based on the installed directory of this webapp
       String fileLibrary = prefs.get(dir, null);
       if (fileLibrary == null) {
@@ -115,7 +114,7 @@ public class ApplicationPrefs {
             System.out.println("ApplicationPrefs-> Using systemOverrideFile EXCEPTION: " + e.getMessage());
           }
         } else {
-          // Check in the current dir of the webapp
+          // Check in the current dir of the webapp (for backwards compatibility)
           fileLibrary = context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs;
           File propertyFile = new File(fileLibrary + "build.properties");
           if (propertyFile.exists()) {
@@ -358,13 +357,13 @@ public class ApplicationPrefs {
       context.setAttribute("cfs.setup", "true");
     }
     // Verify the WEB-INF if set
-		if (this.has("WEB-INF")) {
+    if (this.has("WEB-INF")) {
       if (!this.get("WEB-INF").equals(
           context.getRealPath("/") + "WEB-INF" + fs)) {
         add("WEB-INF", context.getRealPath("/") + "WEB-INF" + fs);
-				save();
-			}
-		}
+        save();
+      }
+    }
     //Define the ConnectionPool, else defaults from the ContextListener will be used
     ConnectionPool cp = (ConnectionPool) context.getAttribute(
         "ConnectionPool");
@@ -522,7 +521,23 @@ public class ApplicationPrefs {
           try {
             scheduler.getContext().setAllowsTransientData(true);
             scheduler.getContext().put("ServletContext", context);
-            scheduler.getContext().put("ConnectionPool", context.getAttribute("ConnectionPool"));
+            // Give the scheduler its own connection pool... this can speed up the web-tier significantly
+            // because some jobs iterate through the SiteList databases
+            if (cp != null) {
+              if (!this.has("CONNECTION_POOL.MAX_CONNECTIONS.APPS")) {
+                scheduler.getContext().put("ConnectionPool", context.getAttribute("ConnectionPool"));
+              } else {
+                ConnectionPool commonCP = (ConnectionPool) context.getAttribute("ConnectionPool");
+                ConnectionPool schedulerCP = new ConnectionPool();
+                schedulerCP.setDebug(commonCP.getDebug());
+                schedulerCP.setTestConnections(commonCP.getTestConnections());
+                schedulerCP.setAllowShrinking(commonCP.getAllowShrinking());
+                schedulerCP.setMaxConnections(this.get("CONNECTION_POOL.MAX_CONNECTIONS.APPS"));
+                schedulerCP.setMaxIdleTime(commonCP.getMaxIdleTime());
+                schedulerCP.setMaxDeadTime(commonCP.getMaxDeadTime());
+                scheduler.getContext().put("ConnectionPool", schedulerCP);
+              }
+            }
             scheduler.getContext().put("ApplicationPrefs", this);
             scheduler.getContext().put("IndexArray", new Vector());
             scheduler.getContext().put("webPageAccessLog", new Vector());
@@ -646,17 +661,17 @@ public class ApplicationPrefs {
       System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
     } else {
       if (!dictionaries.containsKey(language)) {
-        String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "languages" + fs;
         if (System.getProperty("DEBUG") != null) {
           System.out.println(
               "ApplicationPrefs-> Loading dictionary: " + language);
         }
         try {
           //Create a dictionary with the default language
-          Dictionary dictionary = new Dictionary(languagePath, "en_US");
+          String languagePath = "/WEB-INF/languages/";
+          Dictionary dictionary = new Dictionary(context, languagePath, "en_US");
           if (!"en_US".equals(language)) {
             // Override the text with a selected language
-            dictionary.load(languagePath, language);
+            dictionary.load(context, languagePath, language);
           }
           dictionaries.put(language, dictionary);
         } catch (Exception e) {
@@ -692,21 +707,20 @@ public class ApplicationPrefs {
    */
   public synchronized void addIcelets(ServletContext context, String language) {
     if (language == null) {
-			System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
-		}
-		HashMap iceletMap = null;
-		if (!icelets.containsKey(language)) {
-      String languagePath = context.getRealPath("/") + "WEB-INF" + fs + "icelets" + fs;
+      System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
+    }
+    HashMap iceletMap = null;
+    if (!icelets.containsKey(language)) {
+      String iceletPath = "/WEB-INF/icelets/";
       try {
         if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
           // Override the text with a selected language
-          File configFile = new File(languagePath + "icelet_" + language + ".xml");
-          if (configFile.exists()) {
+          if (context.getResource(iceletPath + "icelet_" + language + ".xml") != null) {
             if (System.getProperty("DEBUG") != null) {
               System.out.println(
                   "ApplicationPrefs-> Loading icelets: " + language);
             }
-            iceletMap = IceletList.load(languagePath + "icelet_" + language + ".xml");
+            iceletMap = IceletList.load(context.getResource(iceletPath + "icelet_" + language + ".xml"));
             icelets.put(language, iceletMap);
           }
         }
@@ -717,7 +731,7 @@ public class ApplicationPrefs {
               System.out.println(
                   "ApplicationPrefs-> Loading icelets (default): en_US");
             }
-            iceletMap = IceletList.load(languagePath + "icelet_en_US.xml");
+            iceletMap = IceletList.load(context.getResource(iceletPath + "icelet_en_US.xml"));
             icelets.put("en_US", iceletMap); //TODO:en_US should be a constant
           }
         }
@@ -731,12 +745,12 @@ public class ApplicationPrefs {
 
 
   /**
-	 * Gets the label attribute of the ApplicationPrefs object
-	 *
+   * Gets the label attribute of the ApplicationPrefs object
+   *
    * @param section   Description of the Parameter
    * @param parameter Description of the Parameter
-	 * @return The label value
-	 */
+   * @return The label value
+   */
   public String getLabel(String section, String parameter, String language) {
     return getValue(section, parameter, "value", language);
   }
@@ -847,7 +861,7 @@ public class ApplicationPrefs {
     String dir = context.getRealPath("/");
     if (dir != null && !dir.endsWith(fs)) {
       dir += fs;
-		}
-		return dir;
+    }
+    return dir;
   }
 }

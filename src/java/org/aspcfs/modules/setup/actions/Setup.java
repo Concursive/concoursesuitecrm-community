@@ -51,7 +51,7 @@ import java.util.TimeZone;
 public class Setup extends CFSModule {
 
   static Logger log = Logger.getLogger(org.aspcfs.modules.setup.actions.Setup.class);
-  
+
   public final static String os = System.getProperty("os.name");
 
 
@@ -371,8 +371,6 @@ public class Setup extends CFSModule {
       //Create the db directory to store database specific files
       String dbPath = getPref(context, "FILELIBRARY") + bean.getName() + fs;
       File dbDirectory = new File(dbPath);
-      String setupPath =
-          context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
       //Create a connection
       try {
         Class.forName(bean.getDriver());
@@ -397,15 +395,10 @@ public class Setup extends CFSModule {
           fileLibrary + "conn.sgml", PrivateString.encrypt(key, dbInfo));
       dbDirectory.mkdirs();
       //Copy setup files
-      FileUtils.copyFile(
-          new File(setupPath + "init" + fs + "application.xml"), new File(
-          dbPath + "application.xml"), true);
-      FileUtils.copyFile(
-          new File(setupPath + "init" + fs + "system.xml"), new File(dbPath + "system.xml"), false);
-      FileUtils.copyFile(
-          new File(setupPath + "init" + fs + "workflow_*.xml"), new File(dbPath), true);
-      FileUtils.copyFile(
-          new File(setupPath + "init" + fs + "templates_*.xml"), new File(dbPath), true);
+      FileUtils.copyFile(context.getServletContext(), "/WEB-INF/setup/init/application.xml", new File(dbPath + "application.xml"), true);
+      FileUtils.copyFile(context.getServletContext(), "/WEB-INF/setup/init/system.xml", new File(dbPath + "system.xml"), false);
+      FileUtils.copyFile(context.getServletContext(), "/WEB-INF/setup/init/workflow_*.xml", new File(dbPath), true);
+      FileUtils.copyFile(context.getServletContext(), "/WEB-INF/setup/init/templates_*.xml", new File(dbPath), true);
       //See if the database has been created
       boolean databaseExists = isDatabaseInstalled(db);
       //Finished testing
@@ -454,7 +447,6 @@ public class Setup extends CFSModule {
     addModuleBean(context, null, "Database");
     ApplicationPrefs prefs = getApplicationPrefs(context);
     String locale = prefs.get("SYSTEM.LANGUAGE");
-    String setupPath = context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
     String dbFileLibraryPath = prefs.get("FILELIBRARY") + prefs.get(
         "GATEKEEPER.DATABASE") + fs;
     String backupFile = context.getRequest().getParameter("backupFile");
@@ -477,10 +469,9 @@ public class Setup extends CFSModule {
         try {
           // The database must already be created, this creates the schema and
           // inserts the default data
-          log.info("Creating Database schema...");
-          SetupUtils.createDatabaseSchema(db, setupPath);
-          log.info("Inserting default data...");
-          SetupUtils.insertDefaultData(db, dbFileLibraryPath, setupPath, locale, isRestoreFromBackup);
+          String setupPath = "/WEB-INF/setup/";
+          SetupUtils.createDatabaseSchema(db, context.getServletContext().getResource(setupPath));
+          SetupUtils.insertDefaultData(db, dbFileLibraryPath, context.getServletContext().getResource(setupPath), locale, isRestoreFromBackup);
           if (isRestoreFromBackup) {
             // Call the restore program
             dbLookup = getDbConnection(context);
@@ -1014,6 +1005,7 @@ public class Setup extends CFSModule {
     prefs.add("CONNECTION_POOL.TEST_CONNECTIONS", "false");
     prefs.add("CONNECTION_POOL.ALLOW_SHRINKING", "true");
     prefs.add("CONNECTION_POOL.MAX_CONNECTIONS", "10");
+    prefs.add("CONNECTION_POOL.MAX_CONNECTIONS.APPS", "5");
     prefs.add("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS", "60");
     prefs.add("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS", "300");
     prefs.add(

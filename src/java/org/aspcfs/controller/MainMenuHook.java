@@ -19,20 +19,15 @@ import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.servlets.ControllerMainMenuHook;
 import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -53,7 +48,7 @@ import java.util.Iterator;
 public class MainMenuHook implements ControllerMainMenuHook {
 
   private ArrayList menuItems;
-  private File file;
+  private URL url;
   private ServletContext context;
 
 
@@ -69,10 +64,17 @@ public class MainMenuHook implements ControllerMainMenuHook {
     context = config.getServletContext();
     menuItems = new ArrayList();
     if (config.getInitParameter("ModuleConfig") != null) {
-      file = new File(
-          context.getRealPath(
-              "/WEB-INF/" + config.getInitParameter("ModuleConfig")));
-      load();
+      try {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("MainMenuHook-> Loading menu configuration");
+        }
+        url = context.getResource("/WEB-INF/" + config.getInitParameter("ModuleConfig"));
+        load();
+      } catch (Exception e) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("MainMenuHook-> Error: " + e.getStackTrace());
+        }
+      }
     }
     return ("");
   }
@@ -98,12 +100,12 @@ public class MainMenuHook implements ControllerMainMenuHook {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("MainMenuHook-> Loading menu configuration");
     }
-    if (file == null) {
+    if (url == null) {
       return;
     }
     try {
-      Document document = parseDocument();
-      parseAllMenus(document);
+      XMLUtils xml = new XMLUtils(url);
+      parseAllMenus(xml.getDocument());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -282,25 +284,6 @@ public class MainMenuHook implements ControllerMainMenuHook {
     request.setAttribute("MainMenuSmall", theMenus[2]);
     request.setAttribute("MainMenuTableCells", theMenus[3]);
     request.setAttribute("MainMenuTops", theMenus[4]);
-  }
-
-
-  /**
-   * Reads an XML file into a Document object with nodes
-   *
-   * @return Description of the Returned Value
-   * @throws FactoryConfigurationError    Description of Exception
-   * @throws ParserConfigurationException Description of Exception
-   * @throws SAXException                 Description of Exception
-   * @throws IOException                  Description of Exception
-   * @since 1.17
-   */
-  private Document parseDocument()
-      throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document document = builder.parse(file);
-    return document;
   }
 
 

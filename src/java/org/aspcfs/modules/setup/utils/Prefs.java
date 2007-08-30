@@ -36,12 +36,12 @@ public class Prefs {
     try {
       // Some containers return null so use the specified instance
       if (dir == null) {
-        dir = ServletContextUtils.loadText(context, "WEB-INF/instance.property");
+        dir = ServletContextUtils.loadText(context, "/WEB-INF/instance.property");
       }
       // Apache Geronimo without a plan file uses a temporary store for a webapp
       // which would prevent a redeployed/upgraded Centric from finding itself
       if (dir != null && dir.indexOf("config-store") > -1) {
-        dir = ServletContextUtils.loadText(context, "WEB-INF/instance.property");
+        dir = ServletContextUtils.loadText(context, "/WEB-INF/instance.property");
       }
       // Apache Geronimo with a plan file and a module artifactId can use the
       // artifactId to differentiate

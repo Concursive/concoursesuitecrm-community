@@ -1268,7 +1268,7 @@
       <value><![CDATA[This is the text the user sees first when they click on the link to take a survey://lt;br//gt;]]></value>
     </param>
     <param name="dynamicForm.survey.thankYouText">
-      <value><![CDATA[Thank YouText]]></value>
+      <value><![CDATA[Thank You Text]]></value>
     </param>
     <param name="dynamicForm.survey.thankYouTextDisplay">
       <value><![CDATA[This is the text the user sees after they have submitted a survey://lt;br//gt;]]></value>

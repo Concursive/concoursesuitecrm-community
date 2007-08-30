@@ -506,16 +506,7 @@ public final class MyActionContacts extends CFSModule {
         }
         this.freeConnection(context, db);
         if (count != -1) {
-          String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
-          FileDownload fileDownload = new FileDownload();
-          fileDownload.setFullPath(filePath);
-          fileDownload.setDisplayName(fileName);
-          if (fileDownload.fileExists()) {
-            fileDownload.sendFile(context, "image/" + imageType);
-          } else {
-            System.err.println(
-                "Image-> Trying to send a file that does not exist");
-          }
+          FileDownload.sendFile(context, context.getServletContext().getResource("/images/" + fileName), "image/" + imageType, fileName);
         } else {
           processErrors(context, thisContact.getErrors());
         }

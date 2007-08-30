@@ -287,6 +287,7 @@ public final class RevenueManager extends CFSModule {
       int width = 275;
       int height = 200;
       try {
+        // TODO: Store these in the fileLibrary, update the maintenace Job and image tag to use stream servlet
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
         java.util.Date testDate = new java.util.Date();

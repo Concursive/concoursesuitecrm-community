@@ -27,7 +27,7 @@
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
   response.setHeader("Expires", "-1");
 %>
-<!-- (C) 2000-2006 Dark Horse Ventures, LLC -->
+<!-- Powered By Centric CRM, Inc. -->
 <html>
 <head>
   <title><%= toHtml(site.getName()) %>: <%= toHtml(site.getTabToDisplay().getDisplayText()) %></title>

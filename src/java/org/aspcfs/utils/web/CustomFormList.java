@@ -61,10 +61,9 @@ public class CustomFormList extends HashMap {
   private LinkedHashMap loadXML(ServletContext context, String file) {
     LinkedHashMap form = new LinkedHashMap();
     try {
-      XMLUtils xml = new XMLUtils(
-          new File(context.getRealPath("/WEB-INF/" + file)));
+      XMLUtils xml = new XMLUtils(context, "/WEB-INF/" + file);
       LinkedList formList = new LinkedList();
-      xml.getAllChildren(xml.getDocumentElement(), "form", formList);
+      XMLUtils.getAllChildren(xml.getDocumentElement(), "form", formList);
       Iterator list = formList.iterator();
       while (list.hasNext()) {
         Element f = (Element) list.next();

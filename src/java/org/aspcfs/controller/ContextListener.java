@@ -137,6 +137,8 @@ public class ContextListener implements ServletContextListener {
       Scheduler scheduler = (Scheduler) context.getAttribute("Scheduler");
       if (scheduler != null) {
         scheduler.shutdown(true);
+        // TODO: check to see if db connections need to be closed here if
+        // scheduler is using its own ConnectionPool
         context.removeAttribute("Scheduler");
         log.info("Scheduler stopped");
       }

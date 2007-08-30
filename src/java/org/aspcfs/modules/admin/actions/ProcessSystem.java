@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Perform system level maintenance, typically setup on a cron
@@ -112,8 +113,8 @@ public final class ProcessSystem extends CFSModule {
    * @return Description of the Return Value
    */
   public String executeCommandPrecompileJSPs(ActionContext context) {
-    File baseDir = new File(context.getServletContext().getRealPath("/"));
-    precompileDirectory(context, baseDir, "/");
+    Set fileListing = context.getServletContext().getResourcePaths("/");
+    precompileDirectory(context, fileListing);
     return "ProcessOK";
   }
 
@@ -123,16 +124,16 @@ public final class ProcessSystem extends CFSModule {
    *
    * @param context       Description of the Parameter
    * @param thisDirectory Description of the Parameter
-   * @param dir           Description of the Parameter
    */
-  private void precompileDirectory(ActionContext context, File thisDirectory, String dir) {
-    File[] listing = thisDirectory.listFiles();
-    for (int i = 0; i < listing.length; i++) {
-      File thisFile = listing[i];
-      if (thisFile.isDirectory()) {
-        precompileDirectory(context, thisFile, dir + thisFile.getName() + "/");
+  private void precompileDirectory(ActionContext context, Set thisDirectory) {
+    Iterator i = thisDirectory.iterator();
+    while (i.hasNext()) {
+      String thisFile = (String) i.next();
+      if (thisFile.endsWith("/")) {
+        Set newDir = context.getServletContext().getResourcePaths(thisFile);
+        precompileDirectory(context, newDir);
       } else {
-        precompileJSP(context, thisFile, dir);
+        precompileJSP(context, thisFile);
       }
     }
   }
@@ -143,15 +144,14 @@ public final class ProcessSystem extends CFSModule {
    *
    * @param context  Description of the Parameter
    * @param thisFile Description of the Parameter
-   * @param dir      Description of the Parameter
    */
-  private void precompileJSP(ActionContext context, File thisFile, String dir) {
-    if (thisFile.getName().endsWith(".jsp") &&
-        !thisFile.getName().endsWith("_include.jsp") &&
-        !thisFile.getName().endsWith("_menu.jsp")) {
+  private void precompileJSP(ActionContext context, String thisFile) {
+    if (thisFile.endsWith(".jsp") &&
+        !thisFile.endsWith("_include.jsp") &&
+        !thisFile.endsWith("_menu.jsp")) {
       String serverName = "http://" + RequestUtils.getServerUrl(
           context.getRequest());
-      String jsp = serverName + dir + thisFile.getName();
+      String jsp = serverName + thisFile;
       try {
         URL url = new URL(jsp);
         URLConnection conn = url.openConnection();

@@ -32,6 +32,7 @@ import org.aspcfs.modules.service.utils.BackupUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -49,6 +50,10 @@ public class SetupUtils {
   public final static String fs = System.getProperty("file.separator");
 
   public static void createDatabaseSchema(Connection db, String setupPath) throws Exception {
+    SetupUtils.createDatabaseSchema(db, new File(setupPath).toURL());
+  }
+
+  public static void createDatabaseSchema(Connection db, URL setupURL) throws Exception {
     String dbPath = null;
     switch (DatabaseUtils.getType(db)) {
       case DatabaseUtils.POSTGRESQL:
@@ -83,82 +88,107 @@ public class SetupUtils {
         }
         break;
     }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("SetupUtils-> Installing Schema: " + setupPath + dbPath);
-    }
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_cdb.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_opportunity.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_project.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_product.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_service_contract.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_tms.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_quote.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_order.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_custom_field.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_campaign.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_help.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_sync.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_autoguide.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_revenue.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_task.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_documents.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_workflow.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_tms_append_fields.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_quote_adjustment.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_history.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_actionplan.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_knowledgebase.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_netapp.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_website.sql");
-    DatabaseUtils.executeSQL(db, setupPath + dbPath + fs + "new_graph.sql");
+    System.out.println("SetupUtils-> Installing Schema: " + setupURL + dbPath);
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_cdb.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_opportunity.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_project.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_product.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_service_contract.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_tms.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_quote.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_order.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_custom_field.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_campaign.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_help.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_sync.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_autoguide.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_revenue.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_task.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_documents.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_workflow.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_tms_append_fields.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_quote_adjustment.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_history.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_actionplan.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_knowledgebase.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_netapp.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_website.sql"));
+    DatabaseUtils.executeSQL(db, new URL(setupURL + dbPath + "/new_graph.sql"));
   }
 
   public static boolean insertDefaultData(Connection db, String dbFileLibraryPath, String setupPath, String locale, boolean syncOnly) throws Exception, EvalError, IOException {
+    return SetupUtils.insertDefaultData(db, dbFileLibraryPath, (new File(setupPath)).toURL(), locale, syncOnly);
+  }
+
+  public static boolean insertDefaultData(Connection db, String dbFileLibraryPath, URL setupURL, String locale, boolean syncOnly) throws Exception, EvalError, IOException {
     // TODO: Use a separate interpreter for each script since the same scope is being used here
+    System.out.println("SetupUtils-> Using URL: " + setupURL);
     Interpreter script = new Interpreter();
     script.set("db", db);
     script.set("dbFileLibraryPath", dbFileLibraryPath);
     script.set("locale", locale);
-    script.set("prefsPath", setupPath.substring(0, setupPath.indexOf(fs + "WEB-INF" + fs)) + fs + "WEB-INF" + fs);
+    script.set("prefsURL", new URL(setupURL + "init/"));
+    script.set("libURL", new URL(setupURL + "../lib/"));
+    // TODO: Fix downstream
+    //script.set("prefsPath", setupPath + "init" + fs);
     // Default database inserts
-    script.source(setupPath + "init" + fs + "sync.bsh");
-    script.source(setupPath + "init" + fs + "sync-mappings.bsh");
+    evalScript(script, new URL(setupURL + "init/sync.bsh"));
+    // should reset the interpreter... script.clear();
+    evalScript(script, new URL(setupURL + "init/sync-mappings.bsh"));
     if (syncOnly) {
       // No more base data is needed, so return
       return true;
     }
     // Setup a default user and organization
-    script.source(setupPath + "init" + fs + "database.bsh");
+    evalScript(script, new URL(setupURL + "init/database.bsh"));
+
     // Lookup Lists
     String lookupFile = "lookuplists_en_US.xml";
-    File checkLookupFile = new File(
-        setupPath + "init" + fs + "lookuplists_" + locale + ".xml");
-    if (checkLookupFile.exists()) {
-      lookupFile = "lookuplists_" + locale + ".xml";
+    URL checkLookupURL = new URL(setupURL + "init/lookuplists_" + locale + ".xml");
+    if ("file".equals(checkLookupURL.getProtocol())) {
+      File file = new File(checkLookupURL.getPath());
+      if (file.exists()) {
+        lookupFile = "lookuplists_" + locale + ".xml";
+      }
+    } else {
+      System.out.println("SetupUtils-> URL protocol: " + checkLookupURL.getProtocol());
     }
     ImportLookupLists lookups = new ImportLookupLists();
-    lookups.importLookups(db, setupPath + "init" + fs + lookupFile);
+    lookups.importLookups(db, new URL(setupURL + "init/" + lookupFile));
+
     // Permissions
     String permissionsFile = "permissions_en_US.xml";
-    File checkPermissionFile = new File(
-        setupPath + "init" + fs + "permissions_" + locale + ".xml");
-    if (checkPermissionFile.exists()) {
-      permissionsFile = "permissions_" + locale + ".xml";
+    URL checkPermissionURL = new URL(setupURL + "init/permissions_" + locale + ".xml");
+    if ("file".equals(checkPermissionURL.getProtocol())) {
+      File file = new File(checkPermissionURL.getPath());
+      if (file.exists()) {
+        permissionsFile = "permissions_" + locale + ".xml";
+      }
     }
     InitPermissionsAndRoles permissionsReader = new InitPermissionsAndRoles();
-    permissionsReader.setProcessConfigFile(setupPath + "init" + fs + permissionsFile);
+    permissionsReader.setProcessConfigURL(new URL(setupURL + "init/" + permissionsFile));
     PermissionsAndRolesWriter permissionsWriter = new PermissionsAndRolesWriter();
     permissionsWriter.setDb(db);
     permissionsReader.execute(permissionsWriter);
+
     // Workflow
-    script.source(setupPath + "init" + fs + "workflow.bsh");
+    evalScript(script, new URL(setupURL + "init/workflow.bsh"));
+
     // Icelets
-    String filePath = setupPath + "../icelets/icelet_en_US.xml";
-    HashMap iceletMap = IceletList.load(filePath);
+    String iceletFile = "icelet_en_US.xml";
+    URL checkIceletURL = new URL(setupURL + "../icelets/icelet_" + locale + ".xml");
+    if ("file".equals(checkIceletURL.getProtocol())) {
+      File file = new File(checkIceletURL.getPath());
+      if (file.exists()) {
+        iceletFile = "icelet_" + locale + ".xml";
+      }
+    }
+    HashMap iceletMap = IceletList.load(new URL(setupURL + "../icelets/" + iceletFile));
     ImportIcelets.insertIceletList(db, iceletMap);
+
     // Help content
     ImportHelp help = new ImportHelp();
-    help.buildHelpInformation(setupPath + "init" + fs + "help.xml");
+    help.buildHelpInformation(new URL(setupURL + "init/help.xml"));
     help.buildExistingPermissionCategories(db);
     help.insertHelpRecords(db);
     help.buildTableOfContents();
@@ -235,6 +265,27 @@ public class SetupUtils {
       // Delete the temporary sync client
       thisClient.delete(db);
     }
+  }
+
+  public static void evalScript(Interpreter script, URL source) throws Exception {
+    System.out.println("SetupUtils-> evalScript: " + source);
+    // Using source (supposed to accept a URL, but doesn't)
+    //script.source(source);
+    //script.source(source.getPath());
+
+    //script.eval(
+    //    "addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
+
+    script.set("scriptURL", source);
+    script.eval("source(scriptURL);");
+
+    // Using eval
+    /*
+    BufferedReader executeReader = new BufferedReader(new InputStreamReader(source.openStream()));
+    script.eval(executeReader);
+    executeReader.close();
+    */
+
   }
 }
 

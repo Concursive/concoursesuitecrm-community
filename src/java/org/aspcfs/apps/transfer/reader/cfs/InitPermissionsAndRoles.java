@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 import java.util.*;
+import java.net.URL;
 
 /**
  * Processes the permissions.xml file, turns the data into objects and can be
@@ -41,6 +42,7 @@ public class InitPermissionsAndRoles implements DataReader {
 
   public final static String fs = System.getProperty("file.separator");
   private String processConfigFile = "InitPermissions.xml";
+  private URL processConfigURL = null;
 
 
   /**
@@ -62,6 +64,13 @@ public class InitPermissionsAndRoles implements DataReader {
     return processConfigFile;
   }
 
+  public URL getProcessConfigURL() {
+    return processConfigURL;
+  }
+
+  public void setProcessConfigURL(URL processConfigURL) {
+    this.processConfigURL = processConfigURL;
+  }
 
   /**
    * Gets the version attribute of the InitPermissionsAndRoles object
@@ -127,8 +136,13 @@ public class InitPermissionsAndRoles implements DataReader {
     boolean processOK = true;
 
     try {
-      File configFile = new File(processConfigFile);
-      XMLUtils xml = new XMLUtils(configFile);
+      XMLUtils xml = null;
+      if (processConfigURL != null) {
+        xml = new XMLUtils(processConfigURL);
+      } else {
+        File configFile = new File(processConfigFile);
+        xml = new XMLUtils(configFile);
+      }
 
       //Read in all of the permission categories (categories and permissions)
       ArrayList categoryList = new ArrayList();

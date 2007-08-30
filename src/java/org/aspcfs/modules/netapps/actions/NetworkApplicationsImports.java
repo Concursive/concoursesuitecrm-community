@@ -292,8 +292,7 @@ public final class NetworkApplicationsImports extends CFSModule {
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       //load the property map
-      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty("file.separator") + "cfs-import-properties.xml";
-      PropertyMap thisMap = new PropertyMap(propertyFile, "netAppContractExpiration");
+      PropertyMap thisMap = new PropertyMap(context.getServletContext(), "/WEB-INF/cfs-import-properties.xml", "netAppContractExpiration");
 
       //load the file item
       FileItem importFile = thisImport.getFile();
@@ -348,8 +347,7 @@ public final class NetworkApplicationsImports extends CFSModule {
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       //load the property map
-      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty("file.separator") + "cfs-import-properties.xml";
-      PropertyMap thisMap = new PropertyMap(propertyFile, "netAppContractExpiration");
+      PropertyMap thisMap = new PropertyMap(context.getServletContext(), "/WEB-INF/cfs-import-properties.xml", "netAppContractExpiration");
 
       //load the file item
       FileItem importFile = thisImport.getFile();

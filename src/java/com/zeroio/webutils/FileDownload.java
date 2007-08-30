@@ -22,6 +22,8 @@ import javax.servlet.ServletOutputStream;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Description of the Class
@@ -33,6 +35,7 @@ import java.util.zip.ZipFile;
 public class FileDownload {
 
   private String fullPath = null;
+  private URL url = null;
   private String displayName = null;
   private long fileTimestamp = 0;
 
@@ -46,6 +49,9 @@ public class FileDownload {
     this.fullPath = tmp;
   }
 
+  public void setUrl(URL url) {
+    this.url = url;
+  }
 
   /**
    * The filename that should be shown to the user's browser.
@@ -66,6 +72,9 @@ public class FileDownload {
     return fullPath;
   }
 
+  public URL getUrl() {
+    return url;
+  }
 
   /**
    * The filename that should be shown to the user's browser.
@@ -241,6 +250,29 @@ public class FileDownload {
   }
 
 
+  public static void sendFile(ActionContext context, URL url, String contentType, String displayName) throws Exception {
+    URLConnection urlConnection = url.openConnection();
+    InputStream in = urlConnection.getInputStream();
+    context.getResponse().setContentType(contentType);
+    if (contentType.startsWith("application")) {
+      context.getResponse().setHeader(
+          "Content-Disposition", "attachment; filename=\"" + displayName + "\";");
+      context.getResponse().setContentLength(urlConnection.getContentLength());
+    }
+    ServletOutputStream outputStream = context.getResponse().getOutputStream();
+    BufferedInputStream inputStream = new BufferedInputStream(in);
+    byte[] buf = new byte[4 * 1024];
+    // 4K buffer
+    int len;
+    while ((len = inputStream.read(buf, 0, buf.length)) != -1) {
+      outputStream.write(buf, 0, len);
+    }
+    outputStream.flush();
+    outputStream.close();
+    inputStream.close();
+  }
+
+
   /**
    * Description of the Method
    *
@@ -254,6 +286,7 @@ public class FileDownload {
     if (contentType.startsWith("application")) {
       context.getResponse().setHeader(
           "Content-Disposition", "attachment; filename=\"" + displayName + "\";");
+      context.getResponse().setContentLength(bytes.length);
     }
     ServletOutputStream ouputStream = context.getResponse().getOutputStream();
     ouputStream.write(bytes, 0, bytes.length);
@@ -289,7 +322,6 @@ public class FileDownload {
     ServletOutputStream outputStream = context.getResponse().getOutputStream();
     BufferedInputStream inputStream =
         new BufferedInputStream(new FileInputStream(fullPath));
-
     byte[] buf = new byte[4 * 1024];
     // 4K buffer
     int len;

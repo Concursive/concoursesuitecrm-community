@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <portlet-app
     xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-    version="1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="1.0">
   <portlet>
     <portlet-name>AboutPortlet</portlet-name>
     <portlet-class>org.aspcfs.modules.website.icelet.AboutPortlet</portlet-class>
@@ -113,9 +113,9 @@
        <portlet-info>
        <title>Spreadsheet</title>
        </portlet-info>
-    </portlet>    
-   <custom-portlet-mode>
+    </portlet>
+  <custom-portlet-mode>
       <description>Provides administration functions</description>
-      <name>config</name>
+      <portlet-mode>config</portlet-mode>
     </custom-portlet-mode>
 </portlet-app>

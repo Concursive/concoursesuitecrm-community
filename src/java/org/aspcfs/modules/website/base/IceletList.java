@@ -24,7 +24,7 @@ import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.w3c.dom.Element;
 
-import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -495,15 +495,15 @@ public boolean getForWebsite() { return forWebsite; }
   /**
    * Description of the Method
    *
-   * @param filePath Description of the Parameter
+   * @param iceletURL Description of the Parameter
    * @throws Exception Description of the Exception
+   * @return
    */
-  public static HashMap load(String filePath) throws Exception {
+  public static HashMap load(URL iceletURL) throws Exception {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("Reading from file:" + filePath);
+      System.out.println("Reading from url:" + iceletURL);
     }
-    File configFile = new File(filePath);
-    XMLUtils xml = new XMLUtils(configFile);
+    XMLUtils xml = new XMLUtils(iceletURL);
     HashMap iceletMap = new HashMap();
     ArrayList iceletElements = new ArrayList();
     // fetching data by table name

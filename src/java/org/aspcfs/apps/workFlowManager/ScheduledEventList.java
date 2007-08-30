@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.net.URL;
 
 /**
  * A collection of Scheduled Event objects.
@@ -119,6 +120,17 @@ public class ScheduledEventList extends ArrayList {
   public boolean buildList(File xmlFile) {
     try {
       XMLUtils xml = new XMLUtils(xmlFile);
+      return parse(xml.getDocumentElement());
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+  }
+
+
+  public boolean buildList(URL xmlFileURL) {
+    try {
+      XMLUtils xml = new XMLUtils(xmlFileURL);
       return parse(xml.getDocumentElement());
     } catch (Exception e) {
       e.printStackTrace(System.out);

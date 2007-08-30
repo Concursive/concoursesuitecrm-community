@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.net.URL;
 
 /**
  * Manages a list of hooks that are available for the given system
@@ -149,6 +150,17 @@ public class ObjectHookList extends HashMap {
   public boolean buildList(File xmlFile) {
     try {
       XMLUtils xml = new XMLUtils(xmlFile);
+      return parse(xml.getDocumentElement(), false);
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+  }
+
+
+  public boolean buildList(URL xmlFileURL) {
+    try {
+      XMLUtils xml = new XMLUtils(xmlFileURL);
       return parse(xml.getDocumentElement(), false);
     } catch (Exception e) {
       e.printStackTrace(System.out);

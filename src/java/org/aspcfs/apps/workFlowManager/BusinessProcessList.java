@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.net.URL;
 
 /**
  * Contains a list of BusinessProcess objects and can be used for initially
@@ -236,6 +237,17 @@ public class BusinessProcessList extends HashMap {
   public boolean buildList(File xmlFile) {
     try {
       XMLUtils xml = new XMLUtils(xmlFile);
+      return parse(xml.getDocumentElement(), false);
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    }
+  }
+
+
+  public boolean buildList(URL xmlFileURL) {
+    try {
+      XMLUtils xml = new XMLUtils(xmlFileURL);
       return parse(xml.getDocumentElement(), false);
     } catch (Exception e) {
       e.printStackTrace(System.out);

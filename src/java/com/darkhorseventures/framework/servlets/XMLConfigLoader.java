@@ -82,7 +82,7 @@ public class XMLConfigLoader
       throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
-    InputStream is = context.getResourceAsStream("WEB-INF/" + file);
+    InputStream is = context.getResourceAsStream("/WEB-INF/" + file);
     Document document = builder.parse(is);
     return document;
   }

@@ -23,6 +23,7 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -224,7 +225,7 @@ public class ImportHelp {
   public boolean buildExistingPermissionCategories(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM permission_category ");
+            "FROM permission_category ");
 
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -245,7 +246,6 @@ public class ImportHelp {
    * @param filePath Description of the Parameter
    */
   public void buildHelpInformation(String filePath) {
-
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
@@ -254,6 +254,22 @@ public class ImportHelp {
       Node root = d.getDocumentElement();
       processNode(root);
 
+    } catch (Exception e) {
+      System.err.println(e);
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param url Description of the Parameter
+   */
+  public void buildHelpInformation(URL url) {
+    try {
+      XMLUtils xml = new XMLUtils(url);
+      Node root = xml.getDocument().getDocumentElement();
+      processNode(root);
     } catch (Exception e) {
       System.err.println(e);
     }

@@ -18,25 +18,27 @@ package org.aspcfs.utils;
 import javax.servlet.ServletContext;
 import java.io.*;
 import java.text.NumberFormat;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- *  Helper methods for dealing with file operations
+ * Helper methods for dealing with file operations
  *
- *@author     matt rajkowski
- *@created    August 25, 2003
- *@version    $Id: FileUtils.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
- *      2005) mrajkowski $
+ * @author matt rajkowski
+ * @version $Id: FileUtils.java 12404 2005-08-05 13:37:07 -0400 (Fri, 05 Aug
+ *          2005) mrajkowski $
+ * @created August 25, 2003
  */
 public class FileUtils {
 
   /**
-   *  Copies the specified source file to the destination file
+   * Copies the specified source file to the destination file
    *
-   *@param  sourceFile       Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@return                  Description of the Return Value
+   * @param sourceFile      Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean copyFile(File sourceFile, File destinationFile) {
     return copyFile(sourceFile, destinationFile, true);
@@ -44,12 +46,12 @@ public class FileUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sourceFile       Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@param  overwrite        Description of the Parameter
-   *@return                  Description of the Return Value
+   * @param sourceFile      Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @param overwrite       Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean copyFile(File sourceFile, File destinationFile, boolean overwrite) {
     String fs = System.getProperty("file.separator");
@@ -72,7 +74,7 @@ public class FileUtils {
           File thisFile = fileNames[i];
           if (thisFile.getName().startsWith(part1) &&
               (part2 == null || (part2 != null && thisFile.getName().endsWith(
-              part2)))) {
+                  part2)))) {
             copyFile(fileNames[i], destinationFile, overwrite);
           }
         }
@@ -141,13 +143,13 @@ public class FileUtils {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  bytes            Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@param  overwrite        Description of the Parameter
-   *@return                  Description of the Return Value
-   *@exception  IOException  Description of the Exception
+   * @param bytes           Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @param overwrite       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   public static boolean copyBytesToFile(byte[] bytes, File destinationFile, boolean overwrite) throws IOException {
     //If destination is a directory then set it as a file
@@ -186,26 +188,62 @@ public class FileUtils {
 
 
   /**
-   *  Copies a file from servlet context stream to a file
+   * Copies a file from servlet context stream to a file
    *
-   *@param  context          Description of the Parameter
-   *@param  filename         Description of the Parameter
-   *@param  destinationFile  Description of the Parameter
-   *@param  overwrite        Description of the Parameter
-   *@return                  Description of the Return Value
-   *@throws  IOException     Description of the Exception
+   * @param context         Description of the Parameter
+   * @param filename        Description of the Parameter
+   * @param destinationFile Description of the Parameter
+   * @param overwrite       Description of the Parameter
+   * @return Description of the Return Value
+   * @throws IOException Description of the Exception
    */
   public static boolean copyFile(ServletContext context, String filename, File destinationFile, boolean overwrite) throws IOException {
-    //If destination is a directory then set it as a file
     String fs = System.getProperty("file.separator");
+    File sourceFile = new File(filename);
+    int wildcardPos = sourceFile.getName().indexOf("*");
+    if (wildcardPos > 0) {
+      // NOTE: this handles "/WEB-INF/setup/init/workflow_*.xml"
+      if (context.getResourcePaths(sourceFile.getParentFile().getPath()) == null) {
+        System.out.println(
+            "FileUtils-> Source resource does not exist: " + sourceFile.getParentFile());
+        return false;
+      }
+      Set fileNames = context.getResourcePaths(sourceFile.getParentFile().getPath());
+      if (!fileNames.isEmpty()) {
+        String part1 = sourceFile.getName().substring(0, wildcardPos);
+        String part2 = null;
+        if (wildcardPos < sourceFile.getName().length()) {
+          part2 = sourceFile.getName().substring(wildcardPos + 1);
+        }
+        Iterator i = fileNames.iterator();
+        while (i.hasNext()) {
+          String resource = (String) i.next();
+          File thisFile = new File(resource);
+          if (thisFile.getName().startsWith(part1) &&
+              (part2 == null || (thisFile.getName().endsWith(part2)))) {
+            copyFile(context, resource, destinationFile, overwrite);
+          }
+        }
+      } else {
+        System.out.println(
+            "FileUtils-> No parent files found in: " + sourceFile.getParentFile());
+      }
+      return true;
+    }
+    //Check to see if source resource exists
+    if (context.getResource(filename) == null) {
+      System.out.println("FileUtils-> Source file not found: " + filename);
+      return false;
+    }
+    //If destination is a directory then set it as a file
     if (destinationFile.isDirectory()) {
-      File sourceFile = new File(filename);
       destinationFile = new File(
           destinationFile.getPath() + fs + sourceFile.getName());
     }
     //Skip if overwrite is false
     if (!overwrite) {
       if (destinationFile.exists()) {
+        System.out.println("FileUtils-> Destination already exists");
         return true;
       }
     }
@@ -219,6 +257,10 @@ public class FileUtils {
       while ((read = source.read(buffer)) != -1) {
         destination.write(buffer, 0, read);
       }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(
+            "FileUtils-> Copied: " + sourceFile + " to " + destinationFile);
+      }
     } catch (Exception e) {
       e.printStackTrace(System.out);
       return false;
@@ -229,16 +271,22 @@ public class FileUtils {
         } catch (IOException io) {
         }
       }
+      if (source != null) {
+        try {
+          source.close();
+        } catch (IOException io) {
+        }
+      }
     }
     return true;
   }
 
 
   /**
-   *  Gets the bytes free on the system for the specified directory
+   * Gets the bytes free on the system for the specified directory
    *
-   *@param  dir  Description of the Parameter
-   *@return      The freeBytes value
+   * @param dir Description of the Parameter
+   * @return The freeBytes value
    */
   public static long getFreeBytes(String dir) {
     long free = -1;
@@ -306,16 +354,16 @@ public class FileUtils {
 
 
   /**
-   *  Deletes all files and subdirectories under dir. Returns true if all
-   *  deletions were successful. If a deletion fails, the method stops
-   *  attempting to delete and returns false.<p>
+   * Deletes all files and subdirectories under dir. Returns true if all
+   * deletions were successful. If a deletion fails, the method stops
+   * attempting to delete and returns false.<p>
    *
-   *  <p/>
+   * <p/>
    *
-   *  re: Java Developers Almanac 1.4
+   * re: Java Developers Almanac 1.4
    *
-   *@param  dir  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param dir Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean deleteDirectory(File dir) {
     if (dir.isDirectory()) {
@@ -333,10 +381,10 @@ public class FileUtils {
 
 
   /**
-   *  Checks to see if the file specified exists
+   * Checks to see if the file specified exists
    *
-   *@param  fullPath  Description of the Parameter
-   *@return           Description of the Return Value
+   * @param fullPath Description of the Parameter
+   * @return Description of the Return Value
    */
   public static boolean fileExists(String fullPath) {
     File thisFile = new File(fullPath);
@@ -345,11 +393,11 @@ public class FileUtils {
 
 
   /**
-   *  Gets the relativeSize attribute of the FileUtils class
+   * Gets the relativeSize attribute of the FileUtils class
    *
-   *@param  size    Description of the Parameter
-   *@param  locale  Description of the Parameter
-   *@return         The relativeSize value
+   * @param size   Description of the Parameter
+   * @param locale Description of the Parameter
+   * @return The relativeSize value
    */
   public static String getRelativeSize(float size, Locale locale) {
     if (size == -1) {
@@ -383,15 +431,15 @@ public class FileUtils {
 
 
   /**
-   *  Concats the directory and file names
+   * Concats the directory and file names
    *
-   * @param  dir                           Description of the Parameter
-   * @param  fileName                      Description of the Parameter
-   * @return                               The fileName value
-   * @exception  IllegalArgumentException  Description of the Exception
+   * @param dir      Description of the Parameter
+   * @param fileName Description of the Parameter
+   * @return The fileName value
+   * @throws IllegalArgumentException Description of the Exception
    */
   public static String getFileName(String dir, String fileName)
-       throws IllegalArgumentException {
+      throws IllegalArgumentException {
     String path = null;
     if (dir == null || fileName == null) {
       throw new IllegalArgumentException("dir or fileName is null");
@@ -417,11 +465,11 @@ public class FileUtils {
 
 
   /**
-   *  Gets the fileName attribute of the FileUtils class
+   * Gets the fileName attribute of the FileUtils class
    *
-   * @param  fileName                      Description of the Parameter
-   * @return                               The fileName value
-   * @exception  IllegalArgumentException  Description of the Exception
+   * @param fileName Description of the Parameter
+   * @return The fileName value
+   * @throws IllegalArgumentException Description of the Exception
    */
   public static String getFileName(String fileName) throws IllegalArgumentException {
     if (fileName == null) {

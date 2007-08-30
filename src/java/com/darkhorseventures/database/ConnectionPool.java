@@ -288,6 +288,17 @@ public class ConnectionPool implements Runnable {
     this.maxDeadTime = 1000 * tmp;
   }
 
+  public boolean getDebug() {
+    return debug;
+  }
+
+  public boolean getAllowShrinking() {
+    return allowShrinking;
+  }
+
+  public boolean getTestConnections() {
+    return testConnections;
+  }
 
   /**
    * Gets the username attribute of the ConnectionPool object

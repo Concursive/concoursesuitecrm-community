@@ -17,13 +17,12 @@ package org.aspcfs.utils;
 
 import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.actions.ActionContext;
-
-import javax.servlet.ServletContext;
-
 import org.apache.log4j.Logger;
 import org.aspcfs.utils.web.PagedListInfo;
 
+import javax.servlet.ServletContext;
 import java.io.*;
+import java.net.URL;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,7 @@ public class DatabaseUtils {
 
   //Possible time in milies for SQL query
   static final long POSSIBLE_QUERY_TIME = 3000;
-  
+
   // Quote symbols
   public final static String qsDefault = "\"";
   public final static String qsMySQL = "`";
@@ -99,7 +98,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DERBY:
         return "'1'";
       case DatabaseUtils.INTERBASE:
-    	return "true";
+    	  return "true";
       default:
         return "true";
     }
@@ -131,7 +130,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DERBY:
         return "'0'";
       case DatabaseUtils.INTERBASE:
-      	return "false";
+        return "false";
       default:
         return "false";
     }
@@ -163,7 +162,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DERBY:
         return "CURRENT_TIMESTAMP";
       case DatabaseUtils.INTERBASE:
-      	return "CURRENT_TIMESTAMP";
+        return "CURRENT_TIMESTAMP";
       default:
         return "CURRENT_TIMESTAMP";
     }
@@ -206,8 +205,8 @@ public class DatabaseUtils {
     } else if (databaseName.indexOf("mysql") > -1) {
       return MYSQL;
     } else if (databaseName.indexOf("derby") > -1) {
-      return DERBY; 
-    } else if ( "interbase.interclient.Connection".equals( databaseName ) ) {
+      return DERBY;
+    } else if ("interbase.interclient.Connection".equals(databaseName)) {
       return INTERBASE;
     } else {
       System.out.println("DatabaseUtils-> Unkown Connection Class: " + databaseName);
@@ -241,7 +240,7 @@ public class DatabaseUtils {
       case DERBY:
         return "derby";
       case INTERBASE:
-    	return "interbase";
+        return "interbase";
       default:
         return "unknown";
     }
@@ -278,7 +277,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DERBY:
         return ("DATE(" + date + ")");
       case DatabaseUtils.INTERBASE:
-    	return ("CAST(" + date + " AS DATE)");
+        return ("CAST(" + date + " AS DATE)");
       default:
         return "";
     }
@@ -519,8 +518,8 @@ public class DatabaseUtils {
     int typeId = DatabaseUtils.getType(db);
     switch (typeId) {
       case DatabaseUtils.FIREBIRD:
-      case DatabaseUtils.INTERBASE: 
-    	  // interbase actually allows 64 character names, but since we are using the same db scripts...
+      case DatabaseUtils.INTERBASE:
+        // interbase actually allows 64 character names, but since we are using the same db scripts...
         if (sequenceName.length() > 31) {
           String seqPart1 = sequenceName.substring(0, 13);
           String seqPart2 = sequenceName.substring(14);
@@ -654,7 +653,7 @@ public class DatabaseUtils {
         return "";
       case DatabaseUtils.INTERBASE:
         // ib does support temporary tables?
-    	  return "";
+        return "";
       default:
         return "";
     }
@@ -885,7 +884,7 @@ public class DatabaseUtils {
       case DatabaseUtils.DERBY:
         return "substr(" + field + "," + (first + 1) + (size < 0 ? "" : "," + size) + ") ";
       case DatabaseUtils.INTERBASE:
-    	return "substr(" + field + "," + (first+1) + (size < 0 ? ", 32767" : "," + size ) + " )";
+        return "substr(" + field + "," + (first + 1) + (size < 0 ? ", 32767" : "," + size) + " )";
       default:
         return "substr(" + field + "," + first + (size < 0 ? "" : "," + size) + ") ";
     }
@@ -1291,7 +1290,18 @@ public class DatabaseUtils {
    * @throws IOException  Description of the Exception
    */
   public static void executeSQL(Connection db, ServletContext context, String filename) throws SQLException, IOException {
-    InputStream source = context.getResourceAsStream(filename);
+    if (context == null) {
+      DatabaseUtils.executeSQL(db, filename);
+    } else {
+      InputStream source = context.getResourceAsStream(filename);
+      BufferedReader in = new BufferedReader(new InputStreamReader(source));
+      executeSQL(db, in);
+      in.close();
+    }
+  }
+
+  public static void executeSQL(Connection db, URL url) throws SQLException, IOException {
+    InputStream source = url.openStream();
     BufferedReader in = new BufferedReader(new InputStreamReader(source));
     executeSQL(db, in);
     in.close();
@@ -1365,9 +1375,7 @@ public class DatabaseUtils {
       }
     }
     st.close();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Executed " + tCount + " total statements");
-    }
+    System.out.println("Executed " + tCount + " total statements");
   }
 
 
@@ -1401,7 +1409,7 @@ public class DatabaseUtils {
     if (DatabaseUtils.getType(db) != FIREBIRD &&
         DatabaseUtils.getType(db) != ORACLE &&
         DatabaseUtils.getType(db) != DB2 &&
-        DatabaseUtils.getType(db) != INTERBASE ) {
+        DatabaseUtils.getType(db) != INTERBASE) {
       return tableName;
     }
     if (tableName.length() < 32) {
@@ -1732,13 +1740,13 @@ public class DatabaseUtils {
   public static int getMaxId(Connection db, String origTableName, String origSequenceName, String uniqueField) throws SQLException {
     //TODO: Verify the working of this method for all supported databases
     int typeId = DatabaseUtils.getType(db);
-    
+
     int id = -1;
     Statement st = db.createStatement();
     ResultSet rs = null;
     String sequenceName = getSequenceName(db, origSequenceName);
     String tableName = getTableName(db, origTableName);
-    
+
     switch (typeId) {
       case DatabaseUtils.POSTGRESQL:
         rs = st.executeQuery(
@@ -1785,7 +1793,7 @@ public class DatabaseUtils {
     return executeQuery(db, pst, null);
   }
 
-   /**
+  /**
    * Description of the Method
    *
    * @param db
@@ -1804,7 +1812,7 @@ public class DatabaseUtils {
     milies = System.currentTimeMillis() - milies;
     log.debug(pst);
     log.debug(milies + " ms.");
-    if(milies > POSSIBLE_QUERY_TIME){
+    if (milies > POSSIBLE_QUERY_TIME) {
       log.warn("To improve the speed of your application please send the following query to Centric CRM support:");
       log.warn("------------------------");
       log.warn(pst);

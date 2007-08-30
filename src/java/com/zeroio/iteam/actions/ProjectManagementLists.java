@@ -578,25 +578,14 @@ public final class ProjectManagementLists extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    FileDownload fileDownload = new FileDownload();
-    if ("on".equals(newState)) {
-      //"images/box-checked.gif"
-      fileDownload.setFullPath(
-          context.getServletContext().getRealPath("/") +
-          "images" + fs + "box-checked.gif");
-      fileDownload.setDisplayName("box-checked.gif");
-    } else {
-      //"images/box.gif"
-      fileDownload.setFullPath(
-          context.getServletContext().getRealPath("/") +
-          "images" + fs + "box.gif");
-      fileDownload.setDisplayName("box.gif");
-    }
-    if (fileDownload.fileExists()) {
-      try {
-        fileDownload.sendFile(context, "image/gif");
-      } catch (Exception error) {
+    try {
+      FileDownload fileDownload = new FileDownload();
+      if ("on".equals(newState)) {
+        FileDownload.sendFile(context, context.getServletContext().getResource("/images/box-checked.gif"), "image/gif", "box-checked.gif");
+      } else {
+        FileDownload.sendFile(context, context.getServletContext().getResource("/images/box.gif"), "image/gif", "box.gif");
       }
+    } catch (Exception error) {
     }
     return null;
   }

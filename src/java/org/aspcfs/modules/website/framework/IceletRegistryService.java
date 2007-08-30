@@ -43,15 +43,7 @@ public class IceletRegistryService implements PortletRegistryService, PortletReg
       }
       try {
         // Read the list of portlets from portlet.xml and add a single config for each one
-        InputStream in = context.getResourceAsStream("WEB-INF/portlet.xml");
-        StringBuffer text = new StringBuffer();
-        byte b[] = new byte[1];
-        while (in.read(b) != -1) {
-          text.append(new String(b));
-        }
-        in.close();
-        XMLUtils xml = new XMLUtils(text.toString());
-
+        XMLUtils xml = new XMLUtils(context, "/WEB-INF/portlet.xml");
         ArrayList portlets = new ArrayList();
         XMLUtils.getAllChildren(xml.getDocumentElement(), "portlet", portlets);
         Iterator i = portlets.iterator();

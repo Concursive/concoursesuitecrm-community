@@ -22,6 +22,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.*;
 
@@ -54,6 +55,17 @@ public class PropertyMap {
    */
   public PropertyMap(String mapFile, String mapName) {
     loadMap(mapFile, mapName);
+  }
+
+  /**
+   * Constructor for the PropertyMap object
+   *
+   * @param context Description of the Parameter
+   * @param mapFile Description of the Parameter
+   * @param mapName Description of the Parameter
+   */
+  public PropertyMap(ServletContext context, String mapFile, String mapName) {
+    loadMap(context, mapFile, mapName);
   }
 
 
@@ -173,6 +185,27 @@ public class PropertyMap {
     try {
       File configFile = new File(mapFile);
       XMLUtils xml = new XMLUtils(configFile);
+      readProperties(xml, mapName);
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("PropertyMap -> loadMap EXCEPTION " + e);
+      }
+    }
+  }
+
+  public void loadMap(ServletContext context, String mapFile, String mapName) {
+    try {
+      XMLUtils xml = new XMLUtils(context, mapFile);
+      readProperties(xml, mapName);
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("PropertyMap -> loadMap EXCEPTION " + e);
+      }
+    }
+  }
+
+  public void readProperties(XMLUtils xml, String mapName) {
+    try {
       ArrayList mapElements = new ArrayList();
 
       XMLUtils.getAllChildren(

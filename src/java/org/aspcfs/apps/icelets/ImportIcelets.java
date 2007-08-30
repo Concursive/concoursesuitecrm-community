@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.io.File;
 
 /**
  * Description of the Class
@@ -85,7 +86,7 @@ public class ImportIcelets {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Reading Icelets from XML...");
       }
-      HashMap iceletMap = IceletList.load(filePath);
+      HashMap iceletMap = IceletList.load(new File(filePath).toURL());
       insertIceletList(db, iceletMap);
       sqlDriver.free(db);
     } catch (Exception e) {

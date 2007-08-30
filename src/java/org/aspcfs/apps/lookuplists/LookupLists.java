@@ -21,6 +21,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,6 +71,7 @@ public class LookupLists {
    *
    * @param filePath                 Description of the Parameter
    * @param customLookupListHandlers Description of the Parameter
+   * @param lookupListsWithNoDescription Description of the Parameter
    * @return Description of the Return Value
    * @throws Exception Description of the Exception
    */
@@ -77,6 +79,15 @@ public class LookupLists {
     System.out.println("Reading from file:" + filePath);
     File configFile = new File(filePath);
     XMLUtils xml = new XMLUtils(configFile);
+    return buildLookupLists(xml, customLookupListHandlers, lookupListsWithNoDescription);
+  }
+
+  public ArrayList buildLookupLists(URL url, HashMap customLookupListHandlers, HashMap lookupListsWithNoDescription) throws Exception {
+    XMLUtils xml = new XMLUtils(url);
+    return buildLookupLists(xml, customLookupListHandlers, lookupListsWithNoDescription);
+  }
+
+  private ArrayList buildLookupLists(XMLUtils xml, HashMap customLookupListHandlers, HashMap lookupListsWithNoDescription) throws Exception {
     ArrayList lookupTables = new ArrayList();
 
     //fetching data by table name

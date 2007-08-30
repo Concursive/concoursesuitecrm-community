@@ -14,7 +14,7 @@
 <jsp:useBean id="viewType" class="java.lang.String" scope="request"/>
 <center>
 <%-- Login Link --%>
-<dhv:evaluate if="<%= "true".equals(portal)  %>">
+<dhv:evaluate if='<%= "true".equals(portal) %>'>
 <table width="768" border="0" cellpadding="0" cellspacing="0" class="portalLogin">
 	<tr>
     <td>
@@ -68,7 +68,7 @@
     <td colspan="<c:out value="${tabListCount}"/>" class="portalTabBackground" nowrap>
       <c:forEach items="${site.tabToDisplay.pageGroupList}" var="pageGroup">
         <c:set var="pageGroup" value="${pageGroup}"/>
-        <dhv:evaluate if="<%= site.getTabToDisplay().getPageGroupList().size() > 1 || (!"true".equals(portal) && org.aspcfs.modules.website.base.Site.CONFIGURE.equals(viewType))%>">
+        <dhv:evaluate if='<%= site.getTabToDisplay().getPageGroupList().size() > 1 || (!"true".equals(portal) && org.aspcfs.modules.website.base.Site.CONFIGURE.equals(viewType)) %>'>
           <dhv:portalPageGroupURL />:
         </dhv:evaluate>
         <jsp:useBean id="pageGroup" type="org.aspcfs.modules.website.base.PageGroup" />

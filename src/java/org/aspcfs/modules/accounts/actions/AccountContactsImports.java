@@ -322,9 +322,7 @@ public final class AccountContactsImports extends CFSModule {
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       //load the property map
-      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty(
-          "file.separator") + "cfs-import-properties.xml";
-      PropertyMap thisMap = new PropertyMap(propertyFile, "accountContact");
+      PropertyMap thisMap = new PropertyMap(context.getServletContext(), "/WEB-INF/cfs-import-properties.xml", "accountContact");
 
       //load the file item
       FileItem importFile = thisImport.getFile();
@@ -386,9 +384,7 @@ public final class AccountContactsImports extends CFSModule {
       context.getRequest().setAttribute("ImportDetails", thisImport);
 
       //load the property map
-      String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty(
-          "file.separator") + "cfs-import-properties.xml";
-      PropertyMap thisMap = new PropertyMap(propertyFile, "accountContact");
+      PropertyMap thisMap = new PropertyMap(context.getServletContext(), "/WEB-INF/cfs-import-properties.xml", "accountContact");
 
       //load the file item
       FileItem importFile = thisImport.getFile();

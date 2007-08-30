@@ -147,15 +147,17 @@ public class Crontab {
       this.iTimeTableGenerationFrec = Integer.parseInt(refreshFrequency);
     }
     
-    //Populate the dictionary
-    String fs = System.getProperty("file.separator");
-    String languagePath = getProperty("org.jcrontab.path.DefaultFilePath") + ".." + fs + "languages" + fs;
-    String systemLanguage = getProperty("org.jcrontab.data.SystemLanguage");
-    dictionary = new Dictionary(languagePath, "en_US");
-    if (systemLanguage != null) {
-      if (!"en_US".equals(systemLanguage)) {
-        //Override the text with a selected language
-        dictionary.load(languagePath, systemLanguage);
+    // Populate the dictionary
+    if (servletContext != null) {
+      String systemLanguage = getProperty("org.jcrontab.data.SystemLanguage");
+      dictionary = new Dictionary(servletContext, "/WEB-INF/languages", "en_US");
+      if (systemLanguage != null) {
+        if (!"en_US".equals(systemLanguage)) {
+          //Override the text with a selected language
+          dictionary.load(servletContext, "/WEB-INF/languages", systemLanguage);
+        }
+      } else {
+        System.out.println("Crontab-> Dictionary is unavailable to cron tasks");
       }
     }
         

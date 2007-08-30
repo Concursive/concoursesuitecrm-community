@@ -21,14 +21,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.URL;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,10 +69,15 @@ public class XMLUtils {
   /**
    * Description of the Method
    *
-   * @param name Description of the Parameter
    * @return Description of the Return Value
    * @throws Exception Description of the Exception
    */
+  public static Document createDocument() throws Exception {
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = dbf.newDocumentBuilder();
+    return builder.newDocument();
+  }
+
   public static Document createDocument(String name) throws Exception {
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -96,11 +102,77 @@ public class XMLUtils {
   /**
    * Constructor for the XMLUtils object
    *
+   * @param xmlData Description of the Parameter
+   * @throws Exception Description of the Exception
+   */
+  public XMLUtils(InputStream xmlData) throws Exception {
+    this.parseXML(xmlData);
+  }
+
+
+  /**
+   * Constructor for the XMLUtils object
+   *
+   * @param request Description of Parameter
+   * @throws Exception Description of Exception
+   */
+  public XMLUtils(HttpServletRequest request) throws Exception {
+    StringBuffer data = new StringBuffer();
+    BufferedReader br = request.getReader();
+    String line = null;
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("XMLUtils->Reading XML from request");
+    }
+    while ((line = br.readLine()) != null) {
+      data.append(line.trim() + System.getProperty("line.separator"));
+      if (cacheXML) {
+        if (XMLString == null) {
+          XMLString = new StringBuffer();
+        }
+        XMLString.append(line);
+      }
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("  XML: " + data.toString());
+    }
+    this.parseXML(data.toString());
+  }
+
+
+  /**
+   * Constructor for the XMLUtils object
+   *
    * @param xmlFile Description of Parameter
    * @throws Exception Description of Exception
    */
   public XMLUtils(File xmlFile) throws Exception {
     this.parseXML(xmlFile);
+  }
+
+  public XMLUtils(ServletContext context, String filename) throws Exception {
+    if (context.getResource(filename) != null) {
+      InputStream in = context.getResourceAsStream(filename);
+      StringBuffer text = new StringBuffer();
+      byte b[] = new byte[1];
+      while (in.read(b) != -1) {
+        text.append(new String(b));
+      }
+      in.close();
+      this.parseXML(text.toString());
+    } else {
+      System.out.println("XMLUtils-> Resource not found: " + filename);
+    }
+  }
+
+  public XMLUtils(URL url) throws Exception {
+    InputStream in = url.openStream();
+    StringBuffer text = new StringBuffer();
+    byte b[] = new byte[1];
+    while (in.read(b) != -1) {
+      text.append(new String(b));
+    }
+    in.close();
+    this.parseXML(text.toString());
   }
 
   /**
@@ -408,6 +480,15 @@ public class XMLUtils {
     }
   }
 
+  public static void saveXML(Document d, File f) throws TransformerException {
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    Result result = new StreamResult(f);
+    Source source = new DOMSource(d);
+    transformer.transform(source, result);
+  }
+
 
   /**
    * Output the XML to System.out
@@ -554,6 +635,19 @@ public class XMLUtils {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     this.document = builder.parse(xmlFileToParse);
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param xmlToParse Description of the Parameter
+   * @throws Exception Description of the Exception
+   */
+  private void parseXML(InputStream xmlToParse) throws Exception {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    this.document = builder.parse(xmlToParse);
   }
 }
 

@@ -5,6 +5,7 @@
  *@created    June 9, 2005
  *@version    $Id$
  */
+import java.net.URL;
 import java.sql.*;
 import java.io.File;
 import org.aspcfs.utils.DatabaseUtils;

@@ -332,16 +332,7 @@ public final class QA extends CFSModule {
       count = thisFeature.update(db);
       this.freeConnection(context, db);
       if (count != -1) {
-        String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
-        FileDownload fileDownload = new FileDownload();
-        fileDownload.setFullPath(filePath);
-        fileDownload.setDisplayName(fileName);
-        if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context, "image/" + imageType);
-        } else {
-          System.err.println(
-              "Image-> Trying to send a file that does not exist");
-        }
+        FileDownload.sendFile(context, context.getServletContext().getResource("/images/" + fileName), "image/" + imageType, fileName);
       } else {
         processErrors(context, thisFeature.getErrors());
       }
@@ -531,16 +522,7 @@ public final class QA extends CFSModule {
       count = thisRule.update(db);
       this.freeConnection(context, db);
       if (count != -1) {
-        String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
-        FileDownload fileDownload = new FileDownload();
-        fileDownload.setFullPath(filePath);
-        fileDownload.setDisplayName(fileName);
-        if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context, "image/" + imageType);
-        } else {
-          System.err.println(
-              "Image-> Trying to send a file that does not exist");
-        }
+        FileDownload.sendFile(context, context.getServletContext().getResource("/images/" + fileName), "image/" + imageType, fileName);
       } else {
         processErrors(context, thisRule.getErrors());
       }
@@ -869,16 +851,7 @@ public final class QA extends CFSModule {
       count = thisNote.update(db);
       this.freeConnection(context, db);
       if (count != -1) {
-        String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
-        FileDownload fileDownload = new FileDownload();
-        fileDownload.setFullPath(filePath);
-        fileDownload.setDisplayName(fileName);
-        if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context, "image/" + imageType);
-        } else {
-          System.err.println(
-              "Image-> Trying to send a file that does not exist");
-        }
+        FileDownload.sendFile(context, context.getServletContext().getResource("/images/" + fileName), "image/" + imageType, fileName);
       } else {
         processErrors(context, thisNote.getErrors());
       }

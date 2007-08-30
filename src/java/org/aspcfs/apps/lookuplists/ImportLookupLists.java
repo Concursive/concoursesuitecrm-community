@@ -22,6 +22,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.*;
+import java.net.URL;
 
 /**
  * Description of the Class
@@ -98,11 +99,15 @@ public class ImportLookupLists {
   }
 
   public void importLookups(Connection db, String filePath) throws Exception {
+    importLookups(db, new URL(filePath));
+  }
+
+  public void importLookups(Connection db, URL url) throws Exception {
     //fetch lookup lists that need custom handling
     initializeCustomHandlers();
     lookupLists = new LookupLists();
     completeLookupListList = lookupLists.buildLookupLists(
-        filePath, customLookupListHandlers, lookupListsWithNoDescription);
+        url, customLookupListHandlers, lookupListsWithNoDescription);
     globallyUniqueIds = lookupLists.getGloballyUniqueIds();
     insertLookupListList(db);
   }
@@ -111,6 +116,7 @@ public class ImportLookupLists {
    * Description of the Method
    *
    * @throws Exception Description of the Exception
+   * @param db
    */
   private void insertLookupListList(Connection db) throws Exception {
     Iterator lookupListListIterator = completeLookupListList.iterator();

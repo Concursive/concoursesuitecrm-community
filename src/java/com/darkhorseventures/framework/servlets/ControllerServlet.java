@@ -35,6 +35,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -134,8 +135,8 @@ public class ControllerServlet
    * @since 1.0
    */
   public StreamSource getXSLDocument(String xsl) {
-    File f = new File(getServletContext().getRealPath(xsl));
-    return new StreamSource(f);
+    InputStream inputStream = getServletContext().getResourceAsStream(xsl);
+    return new StreamSource(inputStream);
   }
 
 
@@ -336,13 +337,13 @@ public class ControllerServlet
 
               // first make sure its not already in the table.
               if (xslCache.get(resource.getXSL()) == null) {
-                File f = new File(getServletContext().getRealPath(resource.getXSL()));
-                StreamSource xslStream = new StreamSource(f);
-
+                InputStream inputStream = getServletContext().getResourceAsStream(resource.getXSL());
+                StreamSource xslStream = new StreamSource(inputStream);
                 try {
                   Templates templates = tFactory.newTemplates(xslStream);
                   xslCache.put(resource.getXSL(), templates);
                   // store the pre-compiled XSL
+                  inputStream.close();
                 } catch (TransformerConfigurationException tce) {
                 } catch (Exception e2) {
                 }

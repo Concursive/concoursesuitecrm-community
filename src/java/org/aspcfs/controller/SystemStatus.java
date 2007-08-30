@@ -344,13 +344,12 @@ public class SystemStatus {
    * @throws SQLException Description of the Exception
    */
   public CustomListViewEditor getCustomListViewEditor(ActionContext context, Connection db, int constantId) throws SQLException {
-    String webinfPath = context.getServletContext().getRealPath("/WEB-INF/");
     synchronized (this) {
       CustomListViewEditor listViewEditor = (CustomListViewEditor) customListViewEditors.get(
           new Integer(constantId));
       if (listViewEditor == null) {
         listViewEditor = new CustomListViewEditor(db, constantId);
-        listViewEditor.build(db, webinfPath);
+        listViewEditor.build(context.getServletContext(), db, "/WEB-INF/");
         customListViewEditors.put(new Integer(constantId), listViewEditor);
       }
       return listViewEditor;
@@ -1431,7 +1430,7 @@ public class SystemStatus {
     menu = menu == null ? new LinkedHashMap() : menu;
     properties = properties == null ? new HashMap() : properties;
     try {
-      XMLUtils xml = new XMLUtils(new File(context.getRealPath("/WEB-INF/" + (String) context.getAttribute("ContainerMenuConfig"))));
+      XMLUtils xml = new XMLUtils(context, "/WEB-INF/" + (String) context.getAttribute("ContainerMenuConfig"));
       LinkedList containerList = new LinkedList();
       XMLUtils.getAllChildren(xml.getDocumentElement(), "container", containerList);
       Iterator list = containerList.iterator();

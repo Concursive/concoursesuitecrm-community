@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.File;
+import javax.servlet.ServletContext;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,7 +32,6 @@ import java.util.Map;
 public class Dictionary {
   private String language = null;
   private String defaultLanguage = "en_US";  //default language
-  private String languageFilePath = null;
   private Map localizationPrefs = new LinkedHashMap();
 
 
@@ -77,26 +76,6 @@ public class Dictionary {
 
 
   /**
-   * Gets the languageFilePath attribute of the Dictionary object
-   *
-   * @return The languageFilePath value
-   */
-  public String getLanguageFilePath() {
-    return languageFilePath;
-  }
-
-
-  /**
-   * Sets the languageFilePath attribute of the Dictionary object
-   *
-   * @param tmp The new languageFilePath value
-   */
-  public void setLanguageFilePath(String tmp) {
-    this.languageFilePath = tmp;
-  }
-
-
-  /**
    * Gets the localizationPrefs attribute of the Dictionary object
    *
    * @return The localizationPrefs value
@@ -135,33 +114,26 @@ public class Dictionary {
   }
 
 
-  /**
-   * Constructor for the Dictionary object
-   *
-   * @param languageFilePath Description of the Parameter
-   * @param defaultLanguage  Description of the Parameter
-   * @throws Exception Description of the Exception
-   */
-  public Dictionary(String languageFilePath, String defaultLanguage) throws Exception {
-    this.languageFilePath = languageFilePath;
+  public Dictionary(ServletContext context, String languageFilePath, String defaultLanguage) throws Exception {
     this.defaultLanguage = defaultLanguage;
     // Load the default language
-    load(languageFilePath, defaultLanguage);
+    load(context, languageFilePath, defaultLanguage);
   }
 
 
   /**
    * Description of the Method
    *
+   * @param context Description of the Parameter
    * @param languageFilePath Description of the Parameter
    * @param language         Description of the Parameter
    * @throws Exception Description of the Exception
    */
-  public void load(String languageFilePath, String language) throws Exception {
+  public void load(ServletContext context, String languageFilePath, String language) throws Exception {
     if (languageFilePath == null) {
       throw new Exception("Dictionary file path not provided");
     }
-    if (!languageFilePath.endsWith(System.getProperty("file.separator"))) {
+    if (!languageFilePath.endsWith("/") && !languageFilePath.endsWith(System.getProperty("file.separator"))) {
       languageFilePath += System.getProperty("file.separator");
     }
     String languageFilename = "dictionary_" + language + ".xml";
@@ -169,9 +141,8 @@ public class Dictionary {
       System.out.println(
           "Dictionary-> Loading dictionary preferences: " + languageFilePath + languageFilename);
     }
-    File prefsFile = new File(languageFilePath + languageFilename);
-    if (prefsFile.exists()) {
-      XMLUtils xml = new XMLUtils(prefsFile);
+    XMLUtils xml = new XMLUtils(context, languageFilePath + languageFilename);
+    if (xml.getDocument() != null) {
       //Traverse the prefs and add the config nodes to the LinkedHashMap,
       //then for each config, add the param nodes into a child LinkedHashMap.
       //This will provide quick access to the values, and will allow an

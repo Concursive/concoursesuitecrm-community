@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.File;
+import javax.servlet.ServletContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -307,24 +307,23 @@ public class CustomListViewEditor {
   /**
    * Description of the Method
    *
+   * @param context         Description of the Parameter
    * @param db         Description of the Parameter
    * @param webinfPath Description of the Parameter
    * @throws SQLException Description of the Exception
    */
-  public void build(Connection db, String webinfPath) throws SQLException {
+  public void build(ServletContext context, Connection db, String webinfPath) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println(
-          "CustomListViewEditor-> Loading editor(" + this.getDescription() + ") fields: " + webinfPath + fs + "cfs-customlistview-fields.xml");
+          "CustomListViewEditor-> Loading editor(" + this.getDescription() + ") fields: " + webinfPath + "cfs-customlistview-fields.xml");
     }
     fields.clear();
     try {
       if (webinfPath != null) {
-        File prefsFile = new File(webinfPath + fs + "cfs-customlistview-fields.xml");
-        if (prefsFile.exists()) {
-          XMLUtils xml = new XMLUtils(prefsFile);
+        XMLUtils xml = new XMLUtils(context, webinfPath + "cfs-customlistview-fields.xml");
+        if (xml.getDocument() != null) {
           ArrayList viewElements = new ArrayList();
           //Traverse the file and add the fields under the required view to the LinkedHashMap
-
           XMLUtils.getAllChildren(
               xml.getFirstChild("views"), "view", viewElements);
           Iterator views = viewElements.iterator();
@@ -333,8 +332,7 @@ public class CustomListViewEditor {
           while (views.hasNext()) {
             //Get the map node
             Element view = (Element) views.next();
-            if (view.getAttribute("constantId").equals(String.valueOf(this.constantId)))
-            {
+            if (view.getAttribute("constantId").equals(String.valueOf(this.constantId))) {
               NodeList nl = view.getChildNodes();
               for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
