@@ -58,7 +58,7 @@ public class OrganizationList extends Vector implements SyncableList {
       log.setLevel(Level.DEBUG);
     }
   }
-  
+
   private static final long serialVersionUID = 2268314721560915731L;
   public final static int TRUE = 1;
   public final static int FALSE = 0;
@@ -105,7 +105,7 @@ public class OrganizationList extends Vector implements SyncableList {
   protected int typeId = 0;
   protected String types = null;
   protected String accountSegment = null;
-  
+
   protected int stageId = -1;
 
   //import filters
@@ -127,6 +127,17 @@ public class OrganizationList extends Vector implements SyncableList {
   private boolean includeAllSites = false;
   private boolean buildResources = true;
 
+  //Contact filters for multiple search
+  private ArrayList firstNameList = null;
+  private ArrayList lastNameList = null;
+  private ArrayList contactPhoneNumberList = null;
+  private ArrayList contactCityList = null;
+  private ArrayList contactStateList = null;
+
+  //Account filters for multiple search
+  protected ArrayList postalCodeList = null;
+  protected ArrayList assetSerialNumberList = null;
+  protected ArrayList accountTypeList = null;
 
   /**
    *  Gets the buildResources attribute of the OrganizationList object
@@ -1393,6 +1404,167 @@ public class OrganizationList extends Vector implements SyncableList {
     return name;
   }
 
+  /**
+   *  Sets the firstNameList attribute of the OrganizationList object
+   *
+   * @param  list The new firstNameList value
+   */
+  public void setFirstNameList(ArrayList list){
+   	this.firstNameList = list;
+  }
+
+  /**
+   *  Sets the lastNameList attribute of the OrganizationList object
+   *
+   * @param  list The new lastNameList value
+   */
+  public void setLastNameList (ArrayList list){
+    this.lastNameList  = list;
+  }
+  /**
+   *  Sets the contactPhoneNumberList attribute of the OrganizationList object
+   *
+   * @param  list The new contactPhoneNumberList value
+   */
+
+  public void setContactPhoneNumberList (ArrayList list){
+    this.contactPhoneNumberList  = list;
+  }
+  /**
+   *  Sets the contactCityList attribute of the OrganizationList object
+   *
+   * @param  list The new contactCityList value
+   */
+
+  public void setContactCityList (ArrayList list){
+    this.contactCityList  = list;
+  }
+  /**
+   *  Sets the contactStateList attribute of the OrganizationList object
+   *
+   * @param  list The new contactStateList value
+   */
+
+  public void setContactOtherStateList (ArrayList list){
+    this.contactStateList  = list;
+  }
+  /**
+   *  Sets the contactStateList attribute of the OrganizationList object
+   *
+   * @param  list The new contactStateList value
+   */
+
+  public void setContactStateList (ArrayList list){
+      this.contactStateList  = list;
+  }
+
+  /**
+   *  Sets the accountPostalCodeList attribute of the OrganizationList object
+   *
+   * @param  list The new accountPostalCodeList value
+   */
+  public void setAccountPostalCodeList(ArrayList list){
+    this.postalCodeList = list;
+  }
+
+  /**
+   *  Sets the assetSerialNumberList attribute of the OrganizationList object
+   *
+   * @param  list The new assetSerialNumberList value
+   */
+  public void setAssetSerialNumberList(ArrayList list){
+      this.assetSerialNumberList = list;
+  }
+
+  /**
+   *  Sets the accountTypeList attribute of the OrganizationList object
+   *
+   * @param  list The new accountTypeList value
+   */
+  public void setAccountTypeList(ArrayList list){
+      this.accountTypeList = list;
+  }
+
+  /**
+   *  Gets the firstNameList attribute of the OrganizationList object
+   *
+   * @return The firstNameList value
+   */
+  public ArrayList getFirstNameList(){
+	return firstNameList;
+  }
+
+  /**
+   *  Gets the lastNameListof the OrganizationList object
+   *
+   * @return    The lastNameList
+   */
+  public ArrayList getLastNameList(){
+    return this.lastNameList;
+  }
+
+  /**
+   *  Gets the contactPhoneNumberListthe OrganizationList object
+   *
+   * @return    The contactPhoneNumberList
+   */
+  public ArrayList getContactPhoneNumberList(){
+    return this.contactPhoneNumberList;
+  }
+
+  /**
+   *  Gets the contactCityListattribute of the OrganizationList object
+   *
+   * @return    The contactCityListvalue
+   */
+  public ArrayList getContactCityList(){
+    return this.contactCityList;
+  }
+
+  /**
+   *  Gets the contactOtherStateListof the OrganizationList object
+   *
+   * @return    The contactOtherStateList
+   */
+  public ArrayList getContactOtherStateList(){
+    return this.contactStateList;
+  }
+
+  /**
+   *  Gets the contactStateListthe OrganizationList object
+   *
+   * @return    The contactStateList
+   */
+  public ArrayList getContactStateList(){
+    return this.contactStateList;
+  }
+
+  /**
+   *  Gets the accountPostalCodeListOrganizationList object
+   *
+   * @return    The accountPostalCodeList
+   */
+  public ArrayList getAccountPostalCodeList(){
+      return this.postalCodeList;
+  }
+
+  /**
+   *  Gets the assetSerialNumberList object
+   *
+   * @return    The assetSerialNumberList
+   */
+  public ArrayList getAssetSerialNumberList(){
+      return this.assetSerialNumberList;
+  }
+
+  /**
+   *  Gets the accountTypeList object
+   *
+   * @return    The accountTypeList
+   */
+  public ArrayList getAccountTypeList(){
+      return this.accountTypeList;
+  }
 
   /**
    *  Gets the HtmlSelect attribute of the ContactList object
@@ -1749,7 +1921,7 @@ public class OrganizationList extends Vector implements SyncableList {
    * @param  db         Description of the Parameter
    * @since             1.2
    */
-  protected void createFilter(Connection db, StringBuffer sqlFilter) {
+  protected void createFilter(Connection db, StringBuffer sqlFilter) throws SQLException{
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -1896,12 +2068,23 @@ public class OrganizationList extends Vector implements SyncableList {
       }
     }
 
+    //--Multiple search for First Name
+    if (firstNameList!=null && firstNameList.size()!=0){
+    	sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.createParams(firstNameList," (c.nameFirst) ",db,"ANY",Constants.STRING) +" AND c.org_id = o.org_id) ");
+    }
+
+
     if (lastName != null) {
       if (lastName.indexOf("%") >= 0) {
         sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namelast) LIKE ? AND c.org_id = o.org_id) ");
       } else {
         sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.toLowerCase(db) + "(c.namelast) = ? AND c.org_id = o.org_id) ");
       }
+    }
+
+    //--Multiple search for Last Name
+    if (lastNameList!=null && lastNameList.size()!=0){
+    	sqlFilter.append("AND EXISTS (select contact_id from contact c where " + DatabaseUtils.createParams(lastNameList," (c.namelast) ",db,"ANY",Constants.STRING) +" AND c.org_id = o.org_id) ");
     }
 
     if (contactPhoneNumber != null) {
@@ -1912,6 +2095,11 @@ public class OrganizationList extends Vector implements SyncableList {
       }
     }
 
+    //--Multiple search for Contact Phone Number
+    if (contactPhoneNumberList !=null && contactPhoneNumberList.size()!=0){
+		sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select cp.contact_id from contact_phone cp where " + DatabaseUtils.createParams(contactPhoneNumberList," (cp.number) ",db,"ANY",Constants.STRING) + "))");
+	}
+
     if (contactCity != null && !"-1".equals(contactCity)) {
       if (contactCity.indexOf("%") >= 0) {
         sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.city) LIKE ?)) ");
@@ -1920,6 +2108,11 @@ public class OrganizationList extends Vector implements SyncableList {
       }
     }
 
+    //--Multiple search for Contact City
+    if (contactCityList!=null && contactCityList.size()!= 0) {
+	        sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.createParams(contactCityList," (ca.city) ",db,"ANY",Constants.STRING) + "))");
+      }
+
     if (contactState != null && !"-1".equals(contactState)) {
       if (contactState.indexOf("%") >= 0) {
         sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.state) LIKE ?)) ");
@@ -1927,6 +2120,12 @@ public class OrganizationList extends Vector implements SyncableList {
         sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.state) = ?)) ");
       }
     }
+
+    //--Multiple search for Contact State
+    if (contactStateList != null && contactStateList.size()!=0) {
+   		sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.createParams(contactStateList," (ca.state) ",db,"ANY",Constants.STRING) + "))");
+	}
+
     if (contactCountry != null && !"-1".equals(contactCountry)) {
       sqlFilter.append("AND EXISTS (select contact_id from contact c where c.org_id = o.org_id AND c.contact_id IN (select ca.contact_id from contact_address ca where " + DatabaseUtils.toLowerCase(db) + "(ca.country) = ?)) ");
     }
@@ -1965,6 +2164,15 @@ public class OrganizationList extends Vector implements SyncableList {
             "WHERE " + DatabaseUtils.toLowerCase(db, "postalcode") + " = ? " +
             "AND postalcode IS NOT NULL) ");
       }
+    }
+
+
+    //--Multiple search for Account Postal Code
+    if (postalCodeList!=null && postalCodeList.size()!= 0) {
+	        sqlFilter.append(
+	            "AND o.org_id IN (SELECT org_id FROM organization_address " +
+	            "WHERE " + DatabaseUtils.createParams(postalCodeList," (postalcode) ",db,"ANY",Constants.STRING) +
+	            "AND postalcode IS NOT NULL) ");
     }
 
     if (city != null && !"-1".equals(city)) {
@@ -2007,7 +2215,25 @@ public class OrganizationList extends Vector implements SyncableList {
           "AND o.org_id IN (SELECT a.account_id FROM asset a " +
           "WHERE a.serial_number = ? AND a.trashed_date IS NULL) ");
     }
-  }
+
+    //--Multiple search for Asset Serial Number
+    if (assetSerialNumberList != null && assetSerialNumberList.size()!=0) {
+      sqlFilter.append(
+        "AND o.org_id IN (SELECT a.account_id FROM asset a " +
+        "WHERE " + DatabaseUtils.createParams(assetSerialNumberList," (a.serial_number) ",db,"ANY",Constants.STRING) + "  AND a.trashed_date IS NULL) ");
+    }
+
+    //--Multiple search for Account Type
+    if (accountTypeList!= null && accountTypeList.size()!=0) {
+      if(pagedListInfo.getCriteriaValue("searchmultiplecodeaccountTypeListOption")!=null && Constants.ALL.equals(pagedListInfo.getCriteriaValue("searchmultiplecodeaccountTypeListOption"))){
+            sqlFilter.append("AND o.org_id IN " + DatabaseUtils.createParams(accountTypeList,"(select atl.org_id from account_type_levels atl where atl.type_id = ? )") );
+          }
+        else{
+           sqlFilter.append(
+            "AND o.org_id IN (select atl.org_id from account_type_levels atl where " + DatabaseUtils.createParams(accountTypeList,"atl.type_id",db,"ANY",Constants.INT) + ")" );
+          }
+    }
+}
 
 
   /**
@@ -2180,21 +2406,57 @@ public class OrganizationList extends Vector implements SyncableList {
       pst.setString(++i, firstName.toLowerCase());
     }
 
+    //--Multiple search for First Name
+    if (firstNameList !=null && firstNameList.size()!=0){
+		for(int count=0;count<firstNameList.size();count++){
+			pst.setString(++i,((String)firstNameList.get(count)).toLowerCase());
+    	}
+    }
+
     if (lastName != null) {
       pst.setString(++i, lastName.toLowerCase());
+    }
+
+    //--Multiple search Last Name
+	if (lastNameList !=null && lastNameList.size()!=0){
+		for(int count=0;count<lastNameList.size();count++){
+			pst.setString(++i,((String)lastNameList.get(count)).toLowerCase());
+    	}
     }
 
     if (contactPhoneNumber != null) {
       pst.setString(++i, contactPhoneNumber.toLowerCase());
     }
 
+    //--Multiple search Contact Phone Number
+	if (contactPhoneNumberList !=null && contactPhoneNumberList.size()!=0){
+		for(int count=0;count<contactPhoneNumberList.size();count++){
+			pst.setString(++i,((String)contactPhoneNumberList.get(count)).toLowerCase());
+    	}
+    }
+
     if (contactCity != null && !"-1".equals(contactCity)) {
       pst.setString(++i, contactCity.toLowerCase());
     }
 
+    //--Multiple search Contact City
+    if (contactCityList !=null && contactCityList.size()!=0){
+			for(int count=0;count<contactCityList.size();count++){
+				pst.setString(++i,((String)contactCityList.get(count)).toLowerCase());
+	    	}
+	    }
+
     if (contactState != null && !"-1".equals(contactState)) {
       pst.setString(++i, contactState.toLowerCase());
     }
+
+	//--Multiple search
+	if (contactStateList !=null && contactStateList.size()!=0){
+			for(int count=0;count<contactStateList.size();count++){
+				pst.setString(++i,((String)contactStateList.get(count)).toLowerCase());
+			}
+	}
+
     if (contactCountry != null && !"-1".equals(contactCountry)) {
       pst.setString(++i, contactCountry.toLowerCase());
     }
@@ -2222,6 +2484,14 @@ public class OrganizationList extends Vector implements SyncableList {
     if (postalCode != null) {
       pst.setString(++i, postalCode.toLowerCase());
     }
+
+  //--Multiple search Account Postal Code
+	if (postalCodeList !=null && postalCodeList.size()!=0){
+			for(int count=0;count<postalCodeList.size();count++){
+				pst.setString(++i,((String)postalCodeList.get(count)).toLowerCase());
+			}
+	}
+
     if (city != null && !"-1".equals(city)) {
       pst.setString(++i, city.toLowerCase());
     }
@@ -2234,6 +2504,20 @@ public class OrganizationList extends Vector implements SyncableList {
     if (assetSerialNumber != null) {
       pst.setString(++i, assetSerialNumber);
     }
+
+   //--Multiple search Asset Serial Number
+	if (assetSerialNumberList !=null && assetSerialNumberList.size()!=0){
+			for(int count=0;count<assetSerialNumberList.size();count++){
+				pst.setString(++i,((String)assetSerialNumberList.get(count)).toLowerCase());
+			}
+	}
+
+    //--Multiple search for Account Type
+	if (accountTypeList!=null && accountTypeList.size()!=0){
+			for(int count=0;count<accountTypeList.size();count++){
+				pst.setInt(++i,(Integer.parseInt(accountTypeList.get(count).toString())));
+			}
+	}
     return i;
   }
 

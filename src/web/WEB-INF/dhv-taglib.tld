@@ -310,7 +310,7 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
-  
+
   <tag>
     <name>pagedListAlphabeticalLinks</name>
     <tag-class>org.aspcfs.taglib.PagedListAlphabeticalLinksHandler</tag-class>
@@ -924,5 +924,57 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+  </tag>
+  <tag>
+  	<name>searchTextSelect</name>
+  	<tag-class>org.aspcfs.taglib.SearchTextSelectHandler</tag-class>
+  	<body-content>empty</body-content>
+  	<display-name>Constructs a Mulitple choice popup window</display-name>
+  	<attribute>
+  		<name>pagedListInfo</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  	<attribute>
+	  	<name>formName</name>
+	  	<required>true</required>
+	  	<rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  	<attribute>
+	  	<name>widgetName</name>
+	  	<required>true</required>
+	  	<rtexprvalue>true</rtexprvalue>
+  	</attribute>
+  </tag>
+  <tag>
+    	<name>searchListSelect</name>
+    	<tag-class>org.aspcfs.taglib.SearchListSelectHandler</tag-class>
+    	<body-content>empty</body-content>
+    	<display-name>Constructs a multi-select box</display-name>
+    	<attribute>
+    		<name>pagedListInfo</name>
+    		<required>true</required>
+    		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+  		<name>listName</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+  		<name>formName</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+  		<name>widgetName</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+  		<name>displayOption</name>
+  		<required>true</required>
+  		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
   </tag>
 </taglib>

@@ -9,8 +9,47 @@
 <jsp:useBean id="hiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Table" class="java.lang.String" scope="request"/>
 <jsp:useBean id="LookupSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?1"></script>
+<jsp:useBean id="stateSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?v=20070904"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+	var displayField = '<%=request.getParameter("displayFieldId")%>';
+
+	//-----------------------------------------------------
+  // This function initilizes the list box in parent form
+  //-----------------------------------------------------
+	function finalSubmit(){
+		var index = 0;
+		var count = 0;
+		var splitStr;
+		selectedValues = new Array();
+		selectedIds = new Array();
+		var checkParam = new String();
+
+		for(var count = 1 ; count <= <%=stateSelect.size()%> ; count++){
+			var checkElement = document.forms['elementListView'].elements['checkelement' + count];
+			if(checkElement.checked == true){
+				checkParam = checkParam.concat(checkElement.value,";");
+				splitStr = checkElement.value.split(",");
+				selectedIds[index] = splitStr[0];
+				selectedValues[index] = splitStr[1];
+				index++;
+			}
+		}
+		opener.document.getElementById(displayField.substring(5)).value = checkParam;
+    if (displayField=="multisearchmultiplecodeContactStateList") {
+      opener.document.getElementById('previousSelection1').value = checkParam;
+    }
+    if (displayField=="multisearchmultiplecodeAccountStateList") {
+      opener.document.getElementById('previousSelection2').value = checkParam;
+    }
+    setParentList(selectedIds,selectedValues,'list',displayField,'-1','<%= User.getBrowserId() %>');
+	}
+</script>
+
+<% if(!"multisearchmultiplecodeContactStateList".equalsIgnoreCase(request.getParameter("displayFieldId")) &&
+      !"multisearchmultiplecodeAccountStateList".equalsIgnoreCase(request.getParameter("displayFieldId"))){%>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <br>
@@ -45,8 +84,8 @@
 %>
   <tr class="row<%= rowid + ((selectedElements.get(new Integer(thisElt.getCode()))!= null)?"hl":"") %>">
     <td align="center" width="8">
-    <% 
-      if ("list".equals(request.getParameter("listType"))) { 
+    <%
+      if ("list".equals(request.getParameter("listType"))) {
     %>
       <input type="checkbox" name="checkelement<%= count %>" value=<%= thisElt.getCode() %><%= ((selectedElements.get(new Integer(thisElt.getCode()))!= null)?" checked":"") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
     <% } else { %>
@@ -93,7 +132,7 @@
 </form>
   <%} else {%>
 <body onLoad="javascript:setParentList(selectedIds,selectedValues,'<%= request.getParameter("listType") %>','<%= DisplayFieldId %>','<%= hiddenFieldId %>','<%= User.getBrowserId() %>');window.close();">
-<script>selectedValues = new Array();selectedIds = new Array();</script>
+<script>selectedValues = new Array();selectedIds = new Array();selectParams = new String();</script>
 <%
   Set s = selectedElements.keySet();
   Iterator i = s.iterator();
@@ -107,11 +146,68 @@
 <script>
   selectedValues[<%= count %>] = "<%= StringUtils.jsStringEscape(value) %>";
   selectedIds[<%= count %>] = '<%=id%>';
+  selectParams = selectParams.concat(selectedIds[<%= count %>] + "," + selectedValues[<%= count %>] + ";");
 </script>
 <%}%>
+<script>opener.document.getElementById('<%=DisplayFieldId.substring(5)%>').value = selectParams;</script>
 </body>
 <%
   session.removeAttribute("selectedElements");
   session.removeAttribute("finalElements");
   }
 %>
+<%}else{%>
+<!-----This form is used for displaying the States in the selected country.This does not suppotrs paging----->
+
+	<form name="elementListView" method="post" onSubmit="javascript:window.close();">
+
+	<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+	  <tr>
+	    <th align="center" nowrap width="8">
+	      &nbsp;
+	    </th>
+	    <th width="100%">
+	      <dhv:label name="contact.option">Option</dhv:label>
+	    </th>
+	  </tr>
+
+	<%
+
+	  Iterator iter = stateSelect.iterator();
+	  if ( iter.hasNext() ) {
+	    int rowid = 0;
+	    int count = 0;
+	    while (iter.hasNext()) {
+	      count++;
+	      rowid = (rowid != 1?1:2);
+	      HtmlOption thisOption = (HtmlOption)iter.next();
+	%>
+
+	<tr class="row<%=rowid + ((selectedElements.get(thisOption.getValue())!= null)?"hl":"") %>">
+	    <td align="center" width="8">
+	      <input type="checkbox" name="checkelement<%= count %>" value="<%=thisOption.getValue()%>,<%= toHtml(thisOption.getText()) %>"  <%= ((selectedElements.get(thisOption.getValue())!= null)?" checked":"") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
+	     </td>
+	    <td valign="center">
+	      <%= toHtml(thisOption.getText()) %>
+	    </td>
+	  </tr>
+	<%
+	    }
+	   }else{
+	%>
+	      <tr class="containerBody">
+		<td colspan="2">
+		  <dhv:label name="quotes.noOptionsMatchedQuery">No options matched query.</dhv:label>
+		</td>
+	      </tr>
+	<%
+	  }
+	%>
+	</table>
+	  <input type='button' value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:finalSubmit();window.close();">
+	  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+	  [<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>]
+	  [<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>]
+
+	</form>
+<%}%>

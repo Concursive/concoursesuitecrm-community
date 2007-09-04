@@ -181,4 +181,11 @@ public final class Constants {
   //invalid site id
   public final static int INVALID_SITE = -2;
 
+  //Multiple search
+  public final static String ALL = "ALL";
+  public final static String ANY = "ANY";
+
+  //Create Params Method
+  public final static String STRING = "string";
+  public final static String INT = "int";
 }

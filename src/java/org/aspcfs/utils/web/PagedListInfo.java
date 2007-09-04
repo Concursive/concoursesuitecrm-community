@@ -721,38 +721,69 @@ public class PagedListInfo implements Serializable {
               isValid = false;
               addError(obj, "getErrors", tempKey, systemStatus);
             }
-          } else if (tempKey.startsWith("searchtimestamp")) {
+          } else if(tempKey.startsWith("searchtimestamp")) {
             Timestamp tmpTimestamp =
-                DateUtils.getUserToServerDateTime(null,
-                    DateFormat.SHORT,
-                    DateFormat.LONG,
-                    this.getCriteriaValue(tempKey),
-                    locale);
-            if (tmpTimestamp != null) {
-              boolean modified = false;
-              modified = ObjectUtils.setParam(obj, tempKey.substring(15), tmpTimestamp);
-              if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey)))
-              {
-                isValid = false;
-                addError(obj, "getErrors", tempKey, systemStatus);
-              }
-            }
-            if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
-                this.getCriteriaValue(tempKey))) {
-              isValid = false;
-              addError(obj, "getErrors", tempKey, systemStatus);
-            }
+              DateUtils.getUserToServerDateTime(null,
+                                                DateFormat.SHORT,
+                                                DateFormat.LONG,
+                                                this.getCriteriaValue(tempKey),
+                                                locale);
+						if (tmpTimestamp != null) {
+							boolean modified = false;
+							modified = ObjectUtils.setParam( obj, tempKey.substring(15), tmpTimestamp);
+							if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
+								isValid = false;
+								addError(obj, "getErrors", tempKey, systemStatus);
+							}
+						}
+						if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(
+							this.getCriteriaValue(tempKey))) {
+							isValid = false;
+							addError(obj, "getErrors", tempKey, systemStatus);
+						}
           } else if (tempKey.startsWith("searchgroup")) {
             String[] words = this.getCriteriaValue(tempKey).split(",");
             for (int i = 0; i < words.length; i++) {
               words[i] = "%" + words[i] + "%";
             }
             ObjectUtils.setParam(obj, tempKey.substring(11), words);
-          } else {
-            ObjectUtils.setParam(obj,
-                tempKey.substring(6),
-                "%" + this.getCriteriaValue(tempKey) + "%");
-          }
+          } else if(tempKey.startsWith("searchmultiplecode")){
+           //searchmultiplecode - This is for attributes which has code as well as description.
+					 //example : States : AN,Andman and Nicobar
+					 //Creates an array of parameters to be passed.
+						if(this.getCriteriaValue(tempKey)!=null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
+							StringTokenizer stringTokenizer = new StringTokenizer(this.getCriteriaValue(tempKey),";");
+							String temp = null;
+							ArrayList arrayList = new ArrayList();
+							if(!tempKey.endsWith("Option") && !tempKey.endsWith("option")){
+								while(stringTokenizer.hasMoreTokens()){
+									temp = stringTokenizer.nextToken();
+										if(temp!=null && !temp.trim().equals("")){
+											arrayList.add(temp.substring(0,temp.indexOf(',')));
+										}
+									}
+							}
+							ObjectUtils.setParam(obj,tempKey.substring(18),arrayList);
+							}
+					} else if(tempKey.startsWith("searchmultiple")){
+						//searchmultiple - This is for attributes whose datatypes are string.
+						//Creates an array of parameters to be passed.
+						if(this.getCriteriaValue(tempKey)!=null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
+							StringTokenizer stringTokenizer = new StringTokenizer(this.getCriteriaValue(tempKey),";");
+							String temp = null;
+							ArrayList arrayList = new ArrayList();
+
+							while(stringTokenizer.hasMoreTokens()){
+								temp = "%" + stringTokenizer.nextToken() + "%";
+								arrayList.add(temp.trim());
+								}
+							ObjectUtils.setParam(obj,tempKey.substring(14),arrayList);
+							}
+					} else {
+						ObjectUtils.setParam(
+							obj, tempKey.substring(6), "%" + this.getCriteriaValue(
+							tempKey) + "%");
+					}
         }
       }
     }
@@ -1511,7 +1542,7 @@ public class PagedListInfo implements Serializable {
       sqlStatement.append("OFFSET " + this.getCurrentOffset() + " ");
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.INTERBASE &&
     		this.getItemsPerPage() > 0 ) {
-    	sqlStatement.append( " ROWS " + this.getCurrentOffset() + " TO " + 
+    	sqlStatement.append( " ROWS " + this.getCurrentOffset() + " TO " +
     			( this.getItemsPerPage() + this.getCurrentOffset() ) );
     } else if (DatabaseUtils.getType(db) == DatabaseUtils.ORACLE) {
       if (this.getItemsPerPage() > 0) {

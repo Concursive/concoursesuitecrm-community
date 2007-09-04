@@ -325,10 +325,10 @@
     <param name="tickets.enteredDateBetween">
       <value><![CDATA[Entered Date between]]></value>
     </param>
-	<param name="tickets.resolvable">
-		<value><![CDATA[Resolvable]]></value>
-	</param>
-	<param name="tickets.ticketState">
+    <param name="tickets.resolvable">
+	<value><![CDATA[Resolvable]]></value>
+    </param>
+    <param name="tickets.ticketState">
       <value><![CDATA[Ticket State]]></value>
     </param>
     <param name="tickets.ticketCategoryMappedActionPlans.colon">
@@ -2989,7 +2989,7 @@
     </param>
     <param name="website.tab.meta.keywords">
       <value><![CDATA[(This will become the tab's Meta-Keywords)]]></value>
-    </param>  
+    </param>
     <param name="website.portfolio.oneCategory">
       <value><![CDATA[1 Category]]></value>
     </param>
@@ -4524,6 +4524,9 @@
     </param>
     <param name="product.cloneProduct">
       <value><![CDATA[Clone Product]]></value>
+    </param>
+    <param name="product.moveProduct">
+      <value><![CDATA[Move Product]]></value>
     </param>
     <param name="product.manageCategoryAssociations">
       <value><![CDATA[Manage Category Associations]]></value>
@@ -7282,6 +7285,12 @@ reflect those changes.]]></value>
     </param>
     <param name="accounts.accountHistory.project">
       <value><![CDATA[Project]]></value>
+    </param>
+    <param name="accounts.MatchAllSpecified">
+       <value><![CDATA[Match all specified]]></value>
+    </param>
+    <param name="accounts.MatchAnySpecified">
+       <value><![CDATA[Match any specified]]></value>
     </param>
     <param name="accounts.accountHistory.serviceContract">
       <value><![CDATA[Service Contract]]></value>

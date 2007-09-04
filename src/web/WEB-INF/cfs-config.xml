@@ -1334,11 +1334,11 @@
     <forward name="FieldAndTypeListPopupOK"
              resource="/website/field_displaytype_list.jsp"
              layout="style"/>
-             
+
     <forward name="FieldRangeStartPopupOK"
              resource="/website/range_select_start.jsp"
              layout="style"/>
-             
+
     <forward name="FieldRangeEndPopupOK"
              resource="/website/range_select_end.jsp"
              layout="style"/>
@@ -2099,7 +2099,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp"
              layout="style"/>
 		<forward name="ProcessBatchOK" resource="/dialogcloseandreload.jsp"
-             layout="style"/>             
+             layout="style"/>
     <forward name="ReassignOK" resource="/coming-soon.jsp" layout="nav"/>
     <forward name="CheckAssignStatusOK"
              resource="/contacts/sales_reassign_lead.jsp" layout="style"/>
@@ -2110,7 +2110,7 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/Sales.do?command=Reports"/>
   </action>
-  
+
   <action name="SalesHistory" class="org.aspcfs.modules.contacts.actions.SalesHistory">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.ContactHistory"
           scope="request"/>
@@ -2123,7 +2123,7 @@
              layout="style"/>
     <forward name="SaveNoteOK" resource="/reopen_opener_id.jsp" layout="style"/>
   </action>
-  
+
   <action name="SalesFolders" class="org.aspcfs.modules.contacts.actions.SalesFolders">
   	<bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact"
           scope="request"/>
@@ -2194,7 +2194,7 @@
     <forward name="RestartDetailsOK"
              resource="/SalesActionPlans.do?command=Details"/>
   </action>
-  
+
   <action name="SalesCalls"
           class="org.aspcfs.modules.contacts.actions.SalesCalls">
     <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call"
@@ -2254,7 +2254,7 @@
              resource="/contacts/sales_confirmsend.jsp"
              layout="style"/>
   </action>
-  
+
   <action name="SalesMessages"
           class="org.aspcfs.modules.contacts.actions.SalesMessages">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact"
@@ -2269,7 +2269,7 @@
              resource="/contacts/sales_message_details.jsp"
              layout="nav"/>
   </action>
-  
+
     <action name="SalesLeadsMessages"
           class="org.aspcfs.modules.contacts.actions.SalesMessages">
     		<bean name="Message" class="org.aspcfs.modules.communications.base.Message"
@@ -2320,7 +2320,7 @@
     <forward name="DeleteContactFailedDetailsOK"
              resource="/contacts/sales_importcontact_details.jsp" layout="nav"/>
   </action>
-  
+
   <action name="SalesOpportunities"
           class="org.aspcfs.modules.contacts.actions.SalesOpportunities">
     <bean name="OppDetails"
@@ -2337,7 +2337,7 @@
              resource="/OpportunityForm.do?command=Prepare&amp;actionSource=SalesOpportunities&amp;entity=contact"/>
     <forward name="PrepareAddOppOK"
              resource="/contacts/sales_addopp.jsp" layout="nav"/>
-    <forward name="PrepareAddOppPopupOK"    
+    <forward name="PrepareAddOppPopupOK"
              resource="/contacts/sales_addopp.jsp" layout="style"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp"
              layout="style"/>
@@ -2367,7 +2367,7 @@
     <forward name="CloseAddPopup"
              resource="/accounts/accounts_closepopup_addopp.jsp"/>
   </action>
-  
+
   <action name="SalesOpportunitiesComponents"
           class="org.aspcfs.modules.contacts.actions.SalesOpportunities">
     <bean name="ComponentDetails"
@@ -2449,7 +2449,7 @@
     <forward name="PopupCloseOK"
              resource="/documents/documents_folders_popclose.jsp"/>
   </action>
-  
+
   <action name="SalesDocumentsFolders"
           class="org.aspcfs.modules.contacts.actions.SalesDocumentsFolders">
     <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder"
@@ -6212,7 +6212,7 @@
   <action name="RequestSyncUpdates" class="org.aspcfs.modules.offline.actions.RequestSyncUpdates">
     <forward name="UpdateOK" resource="/MyCFS.do?command=Home"/>
   </action>
-  
+
   <action name="About" class="org.aspcfs.modules.about.actions.About">
     <forward name="AboutOK" resource="/about/about.jsp" layout="style"/>
   </action>

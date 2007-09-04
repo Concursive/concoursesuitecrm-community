@@ -161,6 +161,9 @@
                 </td>
               </tr>
               <tr>
+                <td colspan="2">&nbsp;</td>
+              </tr>
+              <tr>
                 <td align="right">&nbsp;</td>
                 <td>
                   <a href="Login.do?command=ForgotPassword"><dhv:label name="calendar.forgotPassword">Forgot Password?</dhv:label></a>

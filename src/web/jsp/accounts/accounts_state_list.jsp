@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.DateFormat,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="form" class="java.lang.String" scope="request"/>
 <jsp:useBean id="selected" class="java.lang.String" scope="request"/>
 <jsp:useBean id="obj" class="java.lang.String" scope="request"/>
@@ -15,11 +15,19 @@
     return newOpt;
   }
 
+//-----------------------------------------------------------------
+//A condition is set in this function which places the stateSelect
+//object into session for lookup_selector.jsp, if this function is
+//called from "searchAccount" form.
+//-----------------------------------------------------------------
   function setStates() {
-<%  
+<%
     if (stateSelect.size() == 0) { %>
       parent.continueUpdateState('<%= obj %>', 'true');
-<%  } else { %>
+<%  } else {
+  if(form.equalsIgnoreCase("searchAccount")){%>
+          parent.continueUpdateState('<%= obj %>', 'false');
+      <%}else{%>
       parent.continueUpdateState('<%= obj %>', 'false');
       var stateSelect = parent.document.getElementById('<%= stateObj %>');
       stateSelect.options.length = 0;
@@ -43,7 +51,8 @@
       if (selectedOption > -1) {
         stateSelect.options.selectedIndex = selectedOption;
       }
-<%  } %>
+<%  }
+   }%>
   }
 </script>
 </body>

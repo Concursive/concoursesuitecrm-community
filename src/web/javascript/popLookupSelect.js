@@ -9,24 +9,38 @@ function popLookupSelectMultiple(displayFieldId, hiddenFieldId, table) {
   var posy = (screen.height - height) / 2;
 
   var selectedIds = '';
-  var selectedDisplays = '';
+  var selectedDisplays ='';
 
-  for (count = 0; count < (document.getElementById(displayFieldId).length); count++) {
+  if (displayFieldId!="multisearchmultiplecodeContactStateList" &&
+      displayFieldId!="multisearchmultiplecodeAccountStateList"){
+	  for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
+		  if (document.getElementById(displayFieldId).options[count].value > -1) {
+			  if (selectedIds.length > 0) {
+				  selectedIds = selectedIds + '|';
+				  selectedDisplays = selectedDisplays + '|';
+			  }
+			  selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
+        selectedDisplays = selectedDisplays + escape(document.getElementById(displayFieldId).options[count].text);
+		  }
 
-    if (document.getElementById(displayFieldId).options[count].value > -1) {
-      if (selectedIds.length > 0) {
-        selectedIds = selectedIds + '|';
-        selectedDisplays = selectedDisplays + '|';
-      }
-
-      selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
-      selectedDisplays = selectedDisplays + escape(document.getElementById(displayFieldId).options[count].text);
-    }
-
+	  }
   }
-
-  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin = window.open('LookupSelector.do?command=PopupSelector&hiddenFieldId=' + hiddenFieldId + '&displayFieldId=' + displayFieldId + '&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '&listType=list', title, params);
+  var newwin = null;
+	var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+	if (displayFieldId=="multisearchmultiplecodeContactStateList" ||
+      displayFieldId=="multisearchmultiplecodeAccountStateList"){
+		bars = '1';
+		params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+    if (displayFieldId=="multisearchmultiplecodeContactStateList") {
+      selectedIds = document.getElementById('previousSelection1').value;
+    }
+    if (displayFieldId=="multisearchmultiplecodeAccountStateList") {
+      selectedIds = document.getElementById('previousSelection2').value;
+    }
+    var tabCtrl = document.getElementById(table);
+		table = tabCtrl.options[tabCtrl.selectedIndex].value;
+	}
+	newwin=window.open('LookupSelector.do?command=PopupSelector&hiddenFieldId='+hiddenFieldId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '&listType=list', title, params);
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
@@ -271,7 +285,7 @@ function popConfigureSpreadSheet(folderId, configurePropertyName, rows, cols, pr
   if(previousRows == 0 || previousColumns == 0) {
     previousRows = document.getElementById("prevRows").value;
     previousColumns = document.getElementById("prevCols").value;
-  }  
+  }
   var posx = (screen.width - width) / 2;
   var posy = (screen.height - height) / 2;
   var hiddenTextValue = document.getElementById("hiddenText").value;

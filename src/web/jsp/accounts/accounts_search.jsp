@@ -27,16 +27,24 @@
 <jsp:useBean id="SiteList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js?v=20070904"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popOptionList.js"></script>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function clearForm() {
-    <%-- Account Filters --%>
-    document.forms['searchAccount'].searchAccountName.value="";
+    document.forms['searchAccount'].previousSelection2.value = ''
+    <dhv:include name="accounts-search-name" none="true">
+      document.forms['searchAccount'].searchAccountName.value="";
+    </dhv:include>
     <dhv:include name="accounts-search-number" none="true">
       document.forms['searchAccount'].searchAccountNumber.value="";
     </dhv:include>
     <dhv:include name="accounts-search-type" none="true">
-      document.forms['searchAccount'].listFilter1.options.selectedIndex = 0;
+      deleteOptions('multisearchmultiplecodeaccountTypeList');
+      document.forms['searchAccount'].searchmultiplecodeaccountTypeList.value="";
+      insertOption('None Selected','-1','multisearchmultiplecodeaccountTypeList');
+      document.forms['searchAccount'].searchmultiplecodeaccountTypeListOption[0].checked = true;
     </dhv:include>
     <dhv:include name="accounts-search-segment" none="true">
       document.forms['searchAccount'].searchAccountSegment.value = "";
@@ -51,32 +59,39 @@
     <dhv:evaluate if="<%=StageList.getEnabledElementCount() > 1 %>" >
       document.forms['searchAccount'].searchcodeStageId.options.selectedIndex = 0;
     </dhv:evaluate>
+    <dhv:evaluate if="<%= SiteList.size() > 2 && User.getUserRecord().getSiteId() == -1 %>" >
+      document.forms['searchAccount'].searchcodeOrgSiteId.options.selectedIndex = 0;
+    </dhv:evaluate>
+    document.forms['searchAccount'].searchmultipleAccountCityList.value="";
+    continueUpdateState('2','true');
+    deleteOptions('multisearchmultiplecodeAccountStateList');
+    insertOption('None Selected','-1','multisearchmultiplecodeAccountStateList');
+    document.forms['searchAccount'].searchmultipleAccountOtherStateList.value = '';
     <dhv:include name="accounts-search-country" none="true">
       document.forms['searchAccount'].searchcodeAccountCountry.options.selectedIndex = 0;
     </dhv:include>
-    document.forms['searchAccount'].searchAccountPostalCode.value="";
-    document.forms['searchAccount'].searchAccountCity.value="";
-    continueUpdateState('2','true');
-    document.forms['searchAccount'].searchcodeAccountState.options.selectedIndex = 0;
-    document.forms['searchAccount'].searchAccountOtherState.value = '';
+    document.forms['searchAccount'].multisearchmultiplecodeAccountStateList.options.selectedIndex = 0;
+    document.forms['searchAccount'].searchmultipleAccountOtherStateList.value = '';
+    document.forms['searchAccount'].searchmultipleAccountPostalCodeList.value="";
     <dhv:include name="accounts-search-asset-serial" none="true">
-      document.forms['searchAccount'].searchcodeAssetSerialNumber.value="";
+      document.forms['searchAccount'].searchmultipleAssetSerialNumberList.value="";
     </dhv:include>
-    <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 && SiteList.size() > 2 %>" >
-      document.forms['searchAccount'].searchcodeOrgSiteId.options.selectedIndex = 0;
-    </dhv:evaluate>
     document.forms['searchAccount'].searchAccountName.focus();
 
     <%-- Contact Filters --%>
     <dhv:include name="accounts-contact-information-filters" none="true">
-      document.forms['searchAccount'].searchFirstName.value="";
-      document.forms['searchAccount'].searchLastName.value="";
-      document.forms['searchAccount'].searchContactPhoneNumber.value="";
-      document.forms['searchAccount'].searchContactCity.value="";
+      document.forms['searchAccount'].previousSelection1.value = ''
+      document.forms['searchAccount'].searchmultipleFirstNameList.value="";
+      document.forms['searchAccount'].searchmultipleLastNameList.value="";
+      document.forms['searchAccount'].searchmultipleContactPhoneNumberList.value="";
+      document.forms['searchAccount'].searchmultipleContactCityList.value="";
       continueUpdateState('1','true');
+      deleteOptions('multi' + 'searchmultiplecodeContactStateList');
+      insertOption('None Selected','-1','multisearchmultiplecodeContactStateList');
+      document.forms['searchAccount'].searchmultipleContactOtherStateList.value = '';
       document.forms['searchAccount'].searchcodeContactCountry.options.selectedIndex = 0;
-      document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
-      document.forms['searchAccount'].searchContactOtherState.value = '';
+      document.forms['searchAccount'].multisearchmultiplecodeContactStateList.options.selectedIndex = 0;
+      document.forms['searchAccount'].searchmultipleContactOtherStateList.value = '';
     </dhv:include>
   }
   function fillAccountSegmentCriteria(){
@@ -89,46 +104,103 @@
   }
 
   function updateContacts(countryObj, stateObj, selectedValue) {
-
     var country = document.forms['searchAccount'].elements[countryObj].value;
-    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=searchAccount&stateObj=searchcodeContactState";
+    var url = "ExternalContacts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=searchAccount&stateObj=multisearchmultiplecodeContactStateList";
     window.frames['server_commands'].location.href=url;
   }
 
   function updateAccounts(countryObj, stateObj, selectedValue) {
     var country = document.forms['searchAccount'].elements[countryObj].value;
-    var url = "Accounts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=searchAccount&stateObj=searchcodeAccountState";
+    var url = "Accounts.do?command=States&country="+country+"&obj="+stateObj+"&selected="+selectedValue+"&form=searchAccount&stateObj=multisearchmultiplecodeAccountStateList";
     window.frames['server_commands'].location.href=url;
   }
 
   function continueUpdateState(stateObj, showText) {
-	switch(stateObj){
+    switch(stateObj){
       case '2':
         if(showText == 'true'){
           hideSpan('state31');
           showSpan('state41');
-          document.forms['searchAccount'].searchcodeAccountState.options.selectedIndex = 0;
+          deleteOptions('multisearchmultiplecodeAccountStateList');
+          insertOption('None Selected','-1','multisearchmultiplecodeAccountStateList');
+          document.forms['searchAccount'].searchmultiplecodeAccountStateList.value = '';
         } else {
           hideSpan('state41');
           showSpan('state31');
-          document.forms['searchAccount'].searchAccountOtherState.value = '';
+          deleteOptions('multisearchmultiplecodeAccountStateList');
+          var countrySelect = document.forms['searchAccount'].searchcodeAccountCountry;
+          if(countrySelect.options[countrySelect.selectedIndex].value!="<%=SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")%>"){
+            document.forms['searchAccount'].previousSelection2.value = '';
+            insertOption('None Selected','-1','multisearchmultiplecodeAccountStateList');
+          }else{
+            loadState('2');
+            document.forms['searchAccount'].previousSelection2.value = "<%=SearchOrgListInfo.getSearchOptionValue("searchmultiplecodeAccountStateList")%>";
+          }
+          document.forms['searchAccount'].searchmultipleAccountOtherStateList.value = '';
         }
         break;
-	  case '1':
-      default:
+	    case '1':
         if(showText == 'true'){
           hideSpan('state11');
           showSpan('state21');
-          document.forms['searchAccount'].searchcodeContactState.options.selectedIndex = 0;
+          deleteOptions('multisearchmultiplecodeContactStateList');
+          insertOption('None Selected','-1','multisearchmultiplecodeContactStateList');
+          document.forms['searchAccount'].searchmultiplecodeContactStateList.value = '';
         } else {
           hideSpan('state21');
           showSpan('state11');
-          document.forms['searchAccount'].searchContactOtherState.value = '';
+          deleteOptions('multisearchmultiplecodeContactStateList');
+          var countrySelect = document.forms['searchAccount'].searchcodeContactCountry;
+          if(countrySelect.options[countrySelect.selectedIndex].value!="<%=SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")%>"){
+            document.forms['searchAccount'].previousSelection1.value = '';
+            insertOption('None Selected','-1','multisearchmultiplecodeContactStateList');
+          }else{
+            loadState('1');
+            document.forms['searchAccount'].previousSelection1.value = "<%=SearchOrgListInfo.getSearchOptionValue("searchmultiplecodeContactStateList")%>";
+          }
+          document.forms['searchAccount'].searchmultipleContactOtherStateList.value = '';
         }
         break;
     }
   }
 
+  //---------------------------------------------
+  // This function is used to load the State List
+  // if user has choosen the country stored in
+  // PagedListInfo
+  //---------------------------------------------
+  function loadState(stateObj){
+    switch(stateObj){
+      case '2':
+        var str = "<%=SearchOrgListInfo.getSearchOptionValue("searchmultiplecodeAccountStateList")%>";
+        if(!checkNullString(str)){
+          var params = str.split(";");
+          for(var i =0  ; i < params.length ; i++){
+            if(!checkNullString(params[i])){
+              var temp = params[i].split(",");
+              insertOption(temp[1],temp[0],'multisearchmultiplecodeAccountStateList');
+            }
+          }
+        } else {
+          insertOption('None Selected','-1','multisearchmultiplecodeAccountStateList');
+        }
+        break;
+      case '1':
+        var str = "<%=SearchOrgListInfo.getSearchOptionValue("searchmultiplecodeContactStateList")%>";
+        if(!checkNullString(str)){
+          var params = str.split(";");
+          for(var i =0  ; i < params.length ; i++){
+            if(!checkNullString(params[i])){
+              var temp = params[i].split(",");
+              insertOption(temp[1],temp[0],'multisearchmultiplecodeContactStateList');
+            }
+          }
+        } else {
+          insertOption('None Selected','-1','multisearchmultiplecodeContactStateList');
+        }
+        break;
+    }
+  }
 </script>
 <dhv:include name="accounts-search-name" none="true">
   <body onLoad="javascript:document.searchAccount.searchAccountName.focus();">
@@ -138,7 +210,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
 <dhv:label name="accounts.search">Search Accounts</dhv:label>
 </td>
 </tr>
@@ -178,7 +250,7 @@
             <dhv:label name="accounts.type">Account Type</dhv:label>
           </td>
           <td>
-            <%= TypeSelect.getHtmlSelect("listFilter1", SearchOrgListInfo.getFilterKey("listFilter1")) %>
+            <dhv:searchListSelect pagedListInfo="SearchOrgListInfo" listName="lookup_account_types" formName="searchAccount" widgetName="searchmultiplecodeaccountTypeList" displayOption="true"/>
           </td>
         </tr>
         </dhv:include>
@@ -231,7 +303,7 @@
             <%= StageList.getHtmlSelect("searchcodeStageId", SearchOrgListInfo.getSearchOptionValueAsInt("searchcodeStageId")) %>
           </td>
         </tr>
-      </dhv:evaluate>  
+      </dhv:evaluate>
       </dhv:include>
       <dhv:evaluate if="<%= SiteList.getEnabledElementCount() <= 1 %>">
         <input type="hidden" name="searchcodeStageId" id="searchcodeStageId" value="-1" />
@@ -242,7 +314,7 @@
             <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
           </td>
           <td>
-            <% CountrySelect.setJsEvent("onChange=\"javascript:updateAccounts('searchcodeAccountCountry','2','"+ SearchOrgListInfo.getSearchOptionValue("searchAccountOtherState") +"');\""); %>
+            <% CountrySelect.setJsEvent("onChange=\"javascript:updateAccounts('searchcodeAccountCountry','2','"+ SearchOrgListInfo.getSearchOptionValue("searchmultipleAccountOtherStateList") +"');\""); CountrySelect.setIdName("searchcodeAccountCountry");%>
             <%= CountrySelect.getHtml("searchcodeAccountCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) %>
           </td>
         </tr>
@@ -253,7 +325,7 @@
             <dhv:label name="accounts.accounts_add.ZipPostalCode">Postal Code</dhv:label>
           </td>
           <td>
-            <input type="text" size="10" maxlength="12" name="searchAccountPostalCode" value="<%= SearchOrgListInfo.getSearchOptionValue("searchAccountPostalCode") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleAccountPostalCodeList"/>
           </td>
         </tr>
         <tr>
@@ -261,7 +333,7 @@
             <dhv:label name="accounts.accounts_add.City">City</dhv:label>
           </td>
           <td>
-            <input type="text" size="23" name="searchAccountCity" value="<%= SearchOrgListInfo.getSearchOptionValue("searchAccountCity") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleAccountCityList"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -270,11 +342,11 @@
           </td>
           <td>
             <span name="state31" ID="state31" style="<%= AccountStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry"))? "" : " display:none" %>">
-              <%= AccountStateSelect.getHtmlSelect("searchcodeAccountState", SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry"),SearchOrgListInfo.getSearchOptionValue("searchcodeAccountState")) %>
+              <dhv:searchListSelect pagedListInfo="SearchOrgListInfo" listName="searchcodeAccountCountry" formName="searchAccount" widgetName="searchmultiplecodeAccountStateList" displayOption="false"/>
             </span>
             <%-- If selected country is not US/Canada use textfield --%>
             <span name="state41" ID="state41" style="<%= !AccountStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeAccountCountry")) ? "" : " display:none" %>">
-              <input type="text" size="23" name="searchAccountOtherState"  value="<%= toHtmlValue(SearchOrgListInfo.getSearchOptionValue("searchAccountOtherState")) %>">
+              <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleAccountOtherStateList"/>
             </span>
           </td>
         </tr>
@@ -284,7 +356,7 @@
             <dhv:label name="accounts.assetSerial.number.symbol">Asset Serial #</dhv:label>
           </td>
           <td>
-            <input type="text" size="20" maxlength="30" name="searchcodeAssetSerialNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchcodeAssetSerialNumber") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleAssetSerialNumberList"/>
           </td>
         </tr>
         </dhv:include>
@@ -295,15 +367,15 @@
           </td>
           <td>
            <dhv:evaluate if="<%=User.getUserRecord().getSiteId() == -1 %>" >
-            <%= SiteList.getHtmlSelect("searchcodeOrgSiteId", ("".equals(SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId")) ? String.valueOf(Constants.INVALID_SITE) : SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId"))) %>
+             <%= SiteList.getHtmlSelect("searchcodeOrgSiteId", ("".equals(SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId")) ? String.valueOf(Constants.INVALID_SITE) : SearchOrgListInfo.getSearchOptionValue("searchcodeOrgSiteId"))) %>
            </dhv:evaluate>
            <dhv:evaluate if="<%=User.getUserRecord().getSiteId() != -1 %>" >
-              <input type="hidden" name="searchcodeOrgSiteId" value="<%= User.getUserRecord().getSiteId() %>">
-              <%= SiteList.getSelectedValue(User.getUserRecord().getSiteId()) %>
+             <input type="hidden" name="searchcodeOrgSiteId" value="<%= User.getUserRecord().getSiteId() %>">
+             <%= SiteList.getSelectedValue(User.getUserRecord().getSiteId()) %>
            </dhv:evaluate>
           </td>
         </tr>
-      </dhv:evaluate>  
+      </dhv:evaluate>
       <dhv:evaluate if="<%= SiteList.size() <= 2 %>">
         <input type="hidden" name="searchcodeOrgSiteId" id="searchcodeOrgSiteId" value="-1" />
       </dhv:evaluate>
@@ -333,7 +405,7 @@
             <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
           </td>
           <td>
-            <input type="text" size="23" name="searchFirstName" value="<%= SearchOrgListInfo.getSearchOptionValue("searchFirstName") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleFirstNameList"/>
           </td>
         </tr>
         <tr>
@@ -341,7 +413,7 @@
             <dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label>
           </td>
           <td>
-            <input type="text" size="23" name="searchLastName" value="<%= SearchOrgListInfo.getSearchOptionValue("searchLastName") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleLastNameList"/>
           </td>
         </tr>
         </dhv:include>
@@ -350,7 +422,7 @@
             <dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label>
           </td>
           <td>
-            <input type="text" size="23" name="searchContactPhoneNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchContactPhoneNumber") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleContactPhoneNumberList"/>
           </td>
         </tr>
         <tr>
@@ -358,7 +430,7 @@
             <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
           </td>
           <td>
-            <% CountrySelect.setJsEvent("onChange=\"javascript:updateContacts('searchcodeContactCountry','1','"+ SearchOrgListInfo.getSearchOptionValue("searchContactOtherState") +"');\""); %>
+            <% CountrySelect.setJsEvent("onChange=\"javascript:updateContacts('searchcodeContactCountry','1','"+ SearchOrgListInfo.getSearchOptionValue("searchmultipleContactOtherStateList") +"');\""); CountrySelect.setIdName("searchcodeContactCountry");%>
             <%= CountrySelect.getHtml("searchcodeContactCountry", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) %>
           </td>
         </tr>
@@ -367,7 +439,7 @@
             <dhv:label name="accounts.accounts_add.City">City</dhv:label>
           </td>
           <td>
-            <input type="text" size="23" name="searchContactCity" value="<%= SearchOrgListInfo.getSearchOptionValue("searchContactCity") %>">
+            <dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleContactCityList"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -376,11 +448,11 @@
           </td>
           <td>
             <span name="state11" ID="state11" style="<%= ContactStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry"))? "" : " display:none" %>">
-              <%= ContactStateSelect.getHtmlSelect("searchcodeContactState", SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry"),SearchOrgListInfo.getSearchOptionValue("searchcodeContactState")) %>
+              <dhv:searchListSelect pagedListInfo="SearchOrgListInfo" listName="searchcodeContactCountry" formName="searchAccount" widgetName="searchmultiplecodeContactStateList" displayOption="false"/>
             </span>
             <%-- If selected country is not US/Canada use textfield --%>
             <span name="state21" ID="state21" style="<%= !ContactStateSelect.hasCountry(SearchOrgListInfo.getSearchOptionValue("searchcodeContactCountry")) ? "" : " display:none" %>">
-              <input type="text" size="23" name="searchContactOtherState"  value="<%= toHtmlValue(SearchOrgListInfo.getSearchOptionValue("searchContactOtherState")) %>">
+            	<dhv:searchTextSelect pagedListInfo="SearchOrgListInfo" formName="searchAccount" widgetName="searchmultipleContactOtherStateList"/>
             </span>
           </td>
         </tr>
@@ -397,9 +469,15 @@
 <input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
 <input type="button" value="<dhv:label name="button.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 <input type="hidden" name="source" value="searchForm">
+<input type="hidden" name="previousSelection2" id="previousSelection2" value="<%=SearchOrgListInfo.getSearchOptionValue("searchmultiplecodeAccountStateList")%>">
+<input type="hidden" name="previousSelection1" id="previousSelection1" value="<%=SearchOrgListInfo.getSearchOptionValue("searchmultiplecodeContactStateList")%>">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <script type="text/javascript">
-  </script>
+  <dhv:include name="accounts-search-country" none="true">
+    updateAccounts('searchcodeAccountCountry','2', document.forms['searchAccount'].elements['searchmultipleAccountOtherStateList'].value);
+  </dhv:include>
+  updateContacts('searchcodeContactCountry','1', document.forms['searchAccount'].elements['searchmultipleContactOtherStateList'].value);
+</script>
 </form>
 </body>
 

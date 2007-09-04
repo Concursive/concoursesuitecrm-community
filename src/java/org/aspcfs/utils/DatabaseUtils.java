@@ -27,7 +27,8 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
+import java.util.ArrayList;
+import org.aspcfs.modules.base.Constants;
 /**
  * Useful methods for working with multiple databases and database fields
  *
@@ -1824,4 +1825,53 @@ public class DatabaseUtils {
     }
     return rs;
   }
+
+
+ /**
+  *	This function is used to create "?" for CreateFilter()
+  * This function inerts AND or OR for columns with string types
+  * @param list ArrayList,for which to create the number of params
+  * @return String A series of ? to be used as parameters for CreateFilter Prepared Statement
+  */
+  public static String createParams(ArrayList list,String column,Connection db,String option,String dataType) throws SQLException{
+    String qStr = null;
+    StringBuffer str = null;
+    if(Constants.STRING.equals(dataType.toLowerCase())){
+  	    qStr = DatabaseUtils.toLowerCase(db) + column + " LIKE " + DatabaseUtils.toLowerCase(db) + " (?) ";
+  	}else if(Constants.INT.equals(dataType.toLowerCase())){
+  		qStr = column + " = ? ";
+  	}else{
+		throw new SQLException("DatabaseUtils.java -> In createParams() for datatType parameter only Constants.INT or Constants.STRING can be used");
+  	}
+	str = new StringBuffer(" ( "+ qStr);
+  for(int count=1;count<list.size();count++){
+  	if(option.equals(Constants.ALL)){
+  		str.append(" AND ");
+  	}
+  	else{
+  		str.append(" OR ");
+  	}
+  	str.append(qStr);
+   }
+    str.append(" ) ");
+	return str.toString();
+  }
+
+  /**
+   * This function is used to create "?" for CreateFilter()
+   * This function does intersection between the queries
+   * @param list ArrayList,for which to create the number of params
+   * @return String A series of ? to be used as parameters for CreateFilter Prepared Statement
+   */
+   public static String createParams(ArrayList list,String column){
+   String qStr = column;
+   StringBuffer str = new StringBuffer(" ( "+ qStr);
+   for(int count=1;count<list.size();count++){
+  	str.append(" INTERSECT ");
+  	str.append(qStr);
+   }
+    str.append(" ) ");
+    return str.toString();
+ }
+
 }

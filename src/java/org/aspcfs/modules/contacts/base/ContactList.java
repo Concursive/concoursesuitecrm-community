@@ -203,6 +203,18 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
 
   private int id = -1;
 
+   //Contact filters for multiple search
+  private ArrayList firstNameList = null;
+  private ArrayList lastNameList = null;
+  private ArrayList contactPhoneNumberList = null;
+  private ArrayList contactCityList = null;
+  private ArrayList contactStateList = null;
+
+  //Account filters for multiple search
+  protected ArrayList accountPostalCodeList = null;
+  protected ArrayList assetSerialNumberList = null;
+  protected ArrayList accountTypeList = null;
+
   // Logger
   private static Logger logger = Logger.getLogger(org.aspcfs.modules.contacts.base.ContactList.class);
 
@@ -274,7 +286,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   public void setSyncType(String syncType) {
     this.syncType = Integer.parseInt(syncType);
   }
-  
+
   /**
    * Gets the contactUserId attribute of the ContactList object
    *
@@ -566,6 +578,25 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
+
+
+ /**
+  * Sets the AccountTypeList attribute of the ContactList object
+  *
+  * @param  accountTypeList The new AccountTypeList value
+  */
+  public void setAccountTypeList(ArrayList list) {
+    this.accountTypeList = list;
+  }
+
+  /**
+   * Sets the AccountTypeList attribute of the ContactList object
+   *
+   * @param  accountTypeList The new AccountTypeList value
+   */
+   public ArrayList getAccountTypeList() {
+     return this.accountTypeList;
+   }
 
   /**
    * Filters personal contacts based on the argument specified
@@ -2114,7 +2145,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     this.source = Integer.parseInt(tmp);
   }
 
-  
+
   /**
    * Gets the stage attribute of the ContactList object
    *
@@ -2141,8 +2172,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   public void setStage(String tmp) {
     this.stage = Integer.parseInt(tmp);
   }
-  
-  
+
+
   /**
    * Gets the rating attribute of the ContactList object
    *
@@ -2886,7 +2917,151 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   }
 
   /**
-   * Gets the HtmlSelect attribute of the ContactList object
+   *  Sets the accountPostalCodeList attribute of the OrganizationList object
+   *
+   * @param  list The new accountPostalCodeList value
+   */
+  public void setAccountPostalCodeList(ArrayList list){
+    this.accountPostalCodeList = list;
+  }
+
+  /**
+   *  Sets the assetSerialNumberList attribute of the OrganizationList object
+   *
+   * @param  list The new assetSerialNumberList value
+   */
+  public void setAssetSerialNumberList(ArrayList list){
+      this.assetSerialNumberList = list;
+  }
+
+  /**
+   *  Sets the firstNameList attribute of the ContactList object
+   *
+   * @param  list The new firstNameList value
+   */
+   public void setFirstNameList(ArrayList list){
+    	this.firstNameList = list;
+   }
+
+  /**
+    *  Sets the lastNameList attribute of the ContactList object
+    *
+    * @param  list The new lastNameList value
+    */
+   public void setLastNameList (ArrayList list){
+     this.lastNameList  = list;
+   }
+   /**
+    *  Sets the contactPhoneNumberList attribute of the ContactList object
+    *
+    * @param  list The new contactPhoneNumberList value
+    */
+
+   public void setContactPhoneNumberList (ArrayList list){
+     this.contactPhoneNumberList  = list;
+   }
+   /**
+    *  Sets the contactCityList attribute of the ContactList object
+    *
+    * @param  list The new contactCityList value
+    */
+
+   public void setContactCityList (ArrayList list){
+     this.contactCityList  = list;
+   }
+   /**
+    *  Sets the contactStateList attribute of the ContactList object
+    *
+    * @param  list The new contactStateList value
+    */
+
+   public void setContactOtherStateList (ArrayList list){
+     this.contactStateList  = list;
+   }
+   /**
+    *  Sets the contactStateList attribute of the ContactList object
+    *
+    * @param  list The new contactStateList value
+    */
+
+   public void setContactStateList (ArrayList list){
+       this.contactStateList  = list;
+   }
+
+  /**
+   *  Gets the firstNameList attribute of the ContactList object
+   *
+   * @return The firstNameList value
+   */
+   public ArrayList getFirstNameList(){
+	 return firstNameList;
+   }
+
+   /**
+    *  Gets the lastNameListof the ContactList object
+    *
+    * @return    The lastNameList
+    */
+   public ArrayList getLastNameList(){
+     return this.lastNameList;
+   }
+
+   /**
+    *  Gets the contactPhoneNumberListthe ContactList object
+    *
+    * @return    The contactPhoneNumberList
+    */
+   public ArrayList getContactPhoneNumberList(){
+     return this.contactPhoneNumberList;
+   }
+
+   /**
+    *  Gets the contactCityListattribute of the ContactList object
+    *
+    * @return    The contactCityListvalue
+    */
+   public ArrayList getContactCityList(){
+     return this.contactCityList;
+   }
+
+   /**
+    *  Gets the contactOtherStateListof the ContactList object
+    *
+    * @return    The contactOtherStateList
+    */
+   public ArrayList getContactOtherStateList(){
+     return this.contactStateList;
+   }
+
+   /**
+    *  Gets the contactStateListthe ContactList object
+    *
+    * @return    The contactStateList
+    */
+   public ArrayList getContactStateList(){
+     return this.contactStateList;
+   }
+
+  /**
+   *  Gets the accountPostalCodeListOrganizationList object
+   *
+   * @return    The accountPostalCodeList
+   */
+  public ArrayList getAccountPostalCodeList(){
+      return this.accountPostalCodeList;
+  }
+
+  /**
+   *  Gets the assetSerialNumberList object
+   *
+   * @return    The assetSerialNumberList
+   */
+  public ArrayList getAssetSerialNumberList(){
+      return this.assetSerialNumberList;
+  }
+
+  /**
+   *  Gets the HtmlSelect attribute of the ContactList object
    *
    * @param selectName Description of Parameter
    * @param defaultKey Description of Parameter
@@ -3097,7 +3272,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    * @since 1.1
    */
   public PreparedStatement prepareList(Connection db) throws SQLException {
-  
+
     ResultSet rs = null;
     int items = -1;
 
@@ -3248,8 +3423,8 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     items = prepareFilter(pst);
     return pst;
   }
-  
-  
+
+
   /**
    * Builds a list of contacts based on several parameters. The parameters are
    * set after this object is constructed, then the buildList method is called
@@ -3401,7 +3576,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
    * @param db        Description of the Parameter
    * @since 1.3
    */
-  private void createFilter(Connection db, StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) throws SQLException{
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -3468,6 +3643,11 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       }
     }
 
+    //Multisearch for firstName field
+	if (firstNameList!=null && firstNameList.size()!=0){
+		sqlFilter.append("AND " + DatabaseUtils.createParams(firstNameList," (c.nameFirst) ",db,"ANY",Constants.STRING));
+    }
+
     if (middleName != null) {
       if (middleName.indexOf("%") >= 0) {
         sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
@@ -3486,6 +3666,11 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
             + "(c.namelast) = ? ");
       }
+    }
+
+    //Multisearch for lastName field
+    if (lastNameList!=null && lastNameList.size()!=0){
+    	sqlFilter.append("AND " + DatabaseUtils.createParams(lastNameList," (c.namelast) ",db,"ANY",Constants.STRING));
     }
 
     if (accountName != null) {
@@ -3513,6 +3698,17 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
           .append("AND EXISTS (SELECT * FROM account_type_levels atl WHERE atl.type_id = ? AND o.org_id = atl.org_id) ");
     }
 
+    //Multisearch for accountType field
+	//This query is modified by replacing "*" with "atl.org_id" from the Select statement
+	if (accountTypeList!= null && accountTypeList.size()!=0) {
+		if(pagedListInfo.getCriteriaValue("searchmultiplecodeaccountTypeListOption")!=null && Constants.ALL.equals(pagedListInfo.getCriteriaValue("searchmultiplecodeaccountTypeListOption"))){
+		      sqlFilter.append("AND EXISTS (" + DatabaseUtils.createParams(accountTypeList,"(SELECT atl.org_id FROM account_type_levels atl WHERE atl.type_id = ? AND o.org_id = atl.org_id)") + ")");
+		}
+    	else{
+    	      sqlFilter.append("AND EXISTS (SELECT atl.org_id FROM account_type_levels atl WHERE " + DatabaseUtils.createParams(accountTypeList,"atl.type_id",db,"ANY",Constants.INT) + " AND o.org_id = atl.org_id) ");
+    	}
+    }
+
     if (accountOwnerId != -1) {
       sqlFilter.append("AND o.owner = ? ");
     }
@@ -3528,6 +3724,12 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
               + DatabaseUtils.toLowerCase(db)
               + " (a.serial_number) = ? )");
     }
+
+    //Multisearch for Asset Serial Number field
+	if (assetSerialNumberList != null && assetSerialNumberList.size()!=0) {
+	  sqlFilter.append(
+		"AND EXISTS (SELECT o.org_id FROM asset a WHERE o.org_id = a.account_id AND " + DatabaseUtils.createParams( assetSerialNumberList," (a.serial_number) ",db,"ANY",Constants.STRING) + ")" );
+	}
 
     if (accountSegment != null) {
       if (accountSegment.indexOf("%") >= 0) {
@@ -3557,6 +3759,11 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       }
     }
 
+    //Multisearch for Contact Phone Number field
+	if (contactPhoneNumberList !=null && contactPhoneNumberList.size()!=0){
+		sqlFilter.append("AND c.contact_id IN (select cp.contact_id from contact_phone cp where " + DatabaseUtils.createParams(contactPhoneNumberList," (cp.number) ",db,"ANY",Constants.STRING) + ")");
+	}
+
     if (contactState != null && !"-1".equals(contactState)) {
       if (contactState.indexOf("%") >= 0) {
         sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
@@ -3565,6 +3772,11 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
             + "(ca.state) = ? ");
       }
+    }
+
+    //Multisearch for Contact State List field
+	if (contactStateList != null && contactStateList.size()!=0) {
+		sqlFilter.append("AND "+ DatabaseUtils.createParams(contactStateList," (ca.state) ",db,"ANY",Constants.STRING));
     }
 
     if (accountPostalCode != null) {
@@ -3583,6 +3795,13 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       }
     }
 
+    //Multisearch for Account Postal Code field
+    if (accountPostalCodeList!=null && accountPostalCodeList.size()!= 0) {
+	        sqlFilter.append(
+			"AND EXISTS (SELECT o.org_id FROM organization o WHERE o.org_id = c.org_id AND o.org_id IN (SELECT org_id FROM organization_address WHERE " + DatabaseUtils.createParams(accountPostalCodeList," (postalcode) ",db,"ANY",Constants.STRING) +
+            "AND postalcode IS NOT NULL)) ");
+    }
+
     if (contactCity != null) {
       if (contactCity.indexOf("%") >= 0) {
         sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db)
@@ -3592,6 +3811,12 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
             + "(ca.city) = ? ");
       }
     }
+
+    //Multisearch for Conatct State List field
+    if (contactCityList!=null && contactCityList.size()!= 0) {
+	        sqlFilter.append("AND "+ DatabaseUtils.createParams(contactCityList," (ca.city) ",db,"ANY",Constants.STRING));
+      }
+
 
     if (title != null) {
       if (title.indexOf("%") >= 0) {
@@ -3938,11 +4163,11 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     }
 
     if (ownerOrReader) {
-      sqlFilter
-          .append("AND c.contact_id NOT IN ( "
-              + "SELECT contact_id FROM contact_lead_skipped_map WHERE user_id = ?) "
-              + "AND (c.owner = ? OR c.contact_id IN (SELECT contact_id "
-              + "FROM contact_lead_read_map WHERE user_id = ?)) ");
+      sqlFilter.append(
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
+          "AND (c.owner = ? OR c.contact_id IN (SELECT cr.contact_id AS contact_id " +
+          "FROM contact_lead_read_map cr WHERE cr.user_id = ?)) ");
     }
 
     if (this.getHierarchialUsers() != -1) {
@@ -4711,7 +4936,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
               }
               sqlFilter
                   .append(" (c.import_id IN (SELECT distinct  I.import_id FROM import I WHERE I.name "
-                      
+
                       + key1 + " '" + key2 + "' )) ");
               previousKey = key1;
               processElementType(db, sqlFilter, elementType);
@@ -4729,7 +4954,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         sqlFilter.append(") ");
       }
     }
-    
+
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND c.entered > ? ");
@@ -4740,7 +4965,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       sqlFilter.append("AND c.modified > ? ");
       sqlFilter.append("AND c.entered < ? ");
       sqlFilter.append("AND c.modified < ? ");
-    }    
+    }
   }
 
   /**
@@ -4798,12 +5023,26 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       pst.setString(++i, firstName.toLowerCase());
     }
 
+	//Multiple search for fistName field
+	if (firstNameList !=null && firstNameList.size()!=0){
+		for(int count=0;count<firstNameList.size();count++){
+			pst.setString(++i,((String)firstNameList.get(count)).toLowerCase());
+		}
+    }
+
     if (middleName != null) {
       pst.setString(++i, middleName.toLowerCase());
     }
 
     if (lastName != null) {
       pst.setString(++i, lastName.toLowerCase());
+    }
+
+	//Multiple search for lastName field
+	if (lastNameList !=null && lastNameList.size()!=0){
+		for(int count=0;count<lastNameList.size();count++){
+			pst.setString(++i,((String)lastNameList.get(count)).toLowerCase());
+    	}
     }
 
     if (accountName != null) {
@@ -4817,6 +5056,13 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     if (accountTypeId != -1) {
       pst.setInt(++i, accountTypeId);
     }
+
+	//Multiple search for Account Type field
+	if (accountTypeList!=null && accountTypeList.size()!=0){
+		for(int count=0;count<accountTypeList.size();count++){
+			pst.setInt(++i,(Integer.parseInt(accountTypeList.get(count).toString())));
+		}
+	}
 
     if (accountOwnerId != -1) {
       pst.setInt(++i, accountOwnerId);
@@ -4832,6 +5078,13 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       pst.setString(++i, assetSerialNumber.toLowerCase());
     }
 
+	//Multiple search for Asset Serial Number field
+	if (assetSerialNumberList !=null && assetSerialNumberList.size()!=0){
+		for(int count=0;count<assetSerialNumberList.size();count++){
+			pst.setString(++i,((String)assetSerialNumberList.get(count)).toLowerCase());
+		}
+	}
+
     if (accountSegment != null) {
       pst.setString(++i, accountSegment.toLowerCase());
     }
@@ -4840,17 +5093,45 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       pst.setString(++i, contactPhoneNumber.toLowerCase());
     }
 
+	//Multiple search for Contact Phone Number field
+	if (contactPhoneNumberList !=null && contactPhoneNumberList.size()!=0){
+		for(int count=0;count<contactPhoneNumberList.size();count++){
+			pst.setString(++i,((String)contactPhoneNumberList.get(count)).toLowerCase());
+    	}
+    }
+
     if (contactState != null && !"-1".equals(contactState)) {
       pst.setString(++i, contactState.toLowerCase());
     }
+
+	//Multiple search for Contact State field
+	if (contactStateList !=null && contactStateList.size()!=0){
+			for(int count=0;count<contactStateList.size();count++){
+				pst.setString(++i,((String)contactStateList.get(count)).toLowerCase());
+			}
+	}
 
     if (accountPostalCode != null) {
       pst.setString(++i, accountPostalCode.toLowerCase());
     }
 
+	//Multiple search for Account Postal code field
+	if (accountPostalCodeList !=null && accountPostalCodeList.size()!=0){
+		for(int count=0;count<accountPostalCodeList.size();count++){
+			pst.setString(++i,((String)accountPostalCodeList.get(count)).toLowerCase());
+		}
+	}
+
     if (contactCity != null) {
       pst.setString(++i, contactCity.toLowerCase());
     }
+
+	//Multiple search for Contact City  field
+    if (contactCityList !=null && contactCityList.size()!=0){
+			for(int count=0;count<contactCityList.size();count++){
+				pst.setString(++i,((String)contactCityList.get(count)).toLowerCase());
+	    	}
+	 }
 
     if (title != null) {
       pst.setString(++i, title.toLowerCase());
