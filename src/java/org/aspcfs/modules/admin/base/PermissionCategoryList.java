@@ -406,6 +406,7 @@ public class PermissionCategoryList extends Vector implements SyncableList {
       sqlFilter.append(
           "AND (lookups = ? OR folders = ? " +
           "OR scheduled_events = ? OR object_events = ? " +
+          "OR viewpoints = ? OR dashboards = ? OR customtabs = ? " +
           "OR categories = ? OR action_plans = ? OR custom_list_views = ?) ");
     }
     if (modulesWithReportsOnly) {
@@ -441,6 +442,9 @@ public class PermissionCategoryList extends Vector implements SyncableList {
       pst.setBoolean(++i, activeState == Constants.TRUE);
     }
     if (customizableModulesOnly) {
+      pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);

@@ -564,7 +564,7 @@ public boolean getForWebsite() { return forWebsite; }
 					ArrayList dashboards = new ArrayList();
 					while (dashboardsElementIterator.hasNext()) {
 						Element dashboardElement = (Element) dashboardsElementIterator.next();
-						dashboards.add(new Integer(dashboardElement.getAttribute("moduleId")));
+						dashboards.add(new Integer(dashboardElement.getAttribute("constantId")));
 					}
 					icelet.setDashboards(dashboards);
 					System.out.println("Count of dashboards is:" + dashboards.size());

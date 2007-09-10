@@ -1,33 +1,39 @@
 <!--
   Translate icelet: name, description
             property: label, description, additionalText, defaultValue
+  Note: The moduleId is the PermissionCategory.PERMISSION_CAT_* integer
+  Note: Version is based on date + sequence in order to create a number that
+        is larger than the previous entry
 -->
 <icelets>
-  <icelet name="Html Content" class="HtmlContentPortlet" version="5">
+  <icelet name="Html Content" class="HtmlContentPortlet" version="2007090601">
   	<description>
   		Create content for your website. Content includes text,
   		images, tables, and more.
   	</description>
   	<appearance website="true">
   		<dashboards applyConstraints="true">
-  			<!-- In accounts -->
-  			<module moduleId="1" />
-  			<!-- In tickets -->
-  			<module moduleId="8" />
-            <!-- In tickets -->
-  			<module moduleId="25" />
+  			<module constantId="4" />
+  			<module constantId="1" />
+  			<module constantId="2" />
+  			<module constantId="1111031131" />
+  			<module constantId="8" />
+  			<module constantId="330041409" />
+  			<module constantId="420041017" />
+  			<module constantId="228051100" />
+  			<module constantId="6" />
   		</dashboards>
   		<containerMenus applyConstraints="true">
   			<!--
   				In accounts, corresponds to a container menu name in
   				cfs-container_menus.xml
   			-->
-  			<container name="accounts" moduleId = "1"/>
+  			<container name="accounts" />
   			<!--
   				In accounts – contacts, corresponds to a container menu name in
   				cfs-container_menus.xml
   			-->
-  			<container name="contacts" moduleId = "1"/>
+  			<container name="contacts" />
   		</containerMenus>
   	</appearance>
   	<property constant="6022301" label="Content" description=""
@@ -37,7 +43,7 @@
   		</defaultValue>
   	</property>
   </icelet>
-  <icelet name="Contact Us Form" class="ContactFormPortlet" version="1">
+  <icelet name="Contact Us Form" class="ContactFormPortlet" version="2007090601">
     <description>Include a contact form in your web page.
       This form allows web site visitors to fill out contact
       information which will be saved directly to the Leads module so that you
@@ -65,7 +71,7 @@
               <defaultValue><![CDATA[-1]]></defaultValue>
     </property>
   </icelet>
-  <icelet name="Portfolio" class="PortfolioPortlet" version="1">
+  <icelet name="Portfolio" class="PortfolioPortlet" version="2007090601">
     <description>Displays the selected portfolio</description>
     <appearance website="true">
     </appearance>
@@ -76,7 +82,7 @@
               additionalText=""><defaultValue><![CDATA[-1]]></defaultValue>
     </property>
   </icelet>
-  <icelet name="Cart" class="CartPortlet" version="2">
+  <icelet name="Cart" class="CartPortlet" version="2007090601">
     <description>Displays the products added to a quote</description>
     <appearance website="true">
     </appearance>
@@ -154,7 +160,7 @@
               additionalText="Order error message"><defaultValue><![CDATA[]]></defaultValue>
       </property>
    </icelet>
-  <icelet name="Product Catalog" class="ProductCatalogPortlet" version="2">
+  <icelet name="Product Catalog" class="ProductCatalogPortlet" version="2007090601">
     <description>Displays the products for the selected category</description>
     <appearance website="true">
     </appearance>
@@ -263,16 +269,16 @@
               defaultValue="Forwarded from our web site"
               additionalText=""/>
 	</icelet>
-  <icelet name="Folder" class="FolderPortlet" version="1">
+  <icelet name="Folder" class="FolderPortlet" version="2007090601">
     <appearance website="false">
   		<dashboards applyConstraints="true">
   			<!-- In accounts -->
-  			<module moduleId="1" />
+  			<module constantId="1" />
             <!-- In employees -->
-  			<module moduleId="25" />
+  			<module constantId="1111031131" />
           </dashboards>
   		<containerMenus applyConstraints="true">
-  			<container name="accounts" moduleId = "1"/>
+  			<container name="accounts" />
   		</containerMenus>
   	</appearance>
     <description>Allows a folder's records to be managed</description>
@@ -324,16 +330,16 @@
               type="checkbox"
               additionalText="Average"><defaultValue><![CDATA[false]]></defaultValue></property>
 	</icelet>
-  <icelet name="Folder Graph" class="FolderGraphPortlet" version="1">
+  <icelet name="Folder Graph" class="FolderGraphPortlet" version="2007090601">
     <appearance website="false">
   		<dashboards applyConstraints="true">
   			<!-- In accounts -->
-  			<module moduleId="1" />
+  			<module constantId="1" />
         <!-- In employees -->
-            <module moduleId="25"/>
+        <module constantId="1111031131"/>
   		</dashboards>
   		<containerMenus applyConstraints="true">
-  			<container name="accounts" moduleId = "1"/>
+  			<container name="accounts" />
   		</containerMenus>
   	</appearance>
     <description>Renders a graph from a folder's records</description>
@@ -385,16 +391,16 @@
                   additionalText=""><defaultValue><![CDATA[0]]></defaultValue></property>
 
 	</icelet>
-    <icelet name="Spreadsheet" class="SpreadsheetPortlet" version="1">
+    <icelet name="Spreadsheet" class="SpreadsheetPortlet" version="2007090601">
     <appearance website="false">
   		<dashboards applyConstraints="true">
   			<!-- In accounts -->
-  			<module moduleId="1" />
-            <!-- In employees -->
-            <module moduleId="25"/>
+  			<module constantId="1" />
+        <!-- In employees -->
+        <module constantId="1111031131"/>
   		</dashboards>
   		<containerMenus applyConstraints="true">
-  			<container name="accounts" moduleId = "1"/>
+  			<container name="accounts" />
   		</containerMenus>
   	</appearance>
     <description>Spreadsheet data</description>

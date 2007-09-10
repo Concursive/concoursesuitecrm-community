@@ -989,6 +989,7 @@
       </classpath>
       <include name="**/*.java"/>
       <exclude name="**/*finclude_jsp.java"/>
+      <exclude name="**/*fheader_005finclude*_jsp.java" />
       <exclude name="**/*layout_005f*_jsp.java" />
       <exclude name="**/*fmenu_jsp.java"/>
       <exclude name="**/*frelationships_*fview2_jsp.java"/>

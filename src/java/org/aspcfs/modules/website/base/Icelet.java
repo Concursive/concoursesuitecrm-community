@@ -16,6 +16,7 @@
 package org.aspcfs.modules.website.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.base.ContainerMenu;
 import org.aspcfs.modules.base.ContainerMenuList;
 import org.aspcfs.utils.DatabaseUtils;
@@ -326,13 +327,17 @@ public class Icelet extends GenericBean {
   public void insertIceletDashboardMapList(Connection db) throws SQLException {
     Iterator i = this.getDashboards().iterator();
     while (i.hasNext()) {
-      int linkModuleId = ((Integer)i.next()).intValue();
+      int constantId = ((Integer)i.next()).intValue();
+      int linkModuleId = PermissionCategory.lookupId(db, constantId);
       IceletDashboardMap iceletDashboardMap = new IceletDashboardMap();
-      iceletDashboardMap.setIceletId(this.id);
+      iceletDashboardMap.setIceletId(id);
       iceletDashboardMap.setLinkModuleId(linkModuleId);
       iceletDashboardMap.setEnteredBy(0);
       iceletDashboardMap.setModifiedBy(0);
-      iceletDashboardMap.insert(db);
+      if (!IceletDashboardMap.mappingExists(db, this.id,  linkModuleId)) {
+        System.out.println("Icelet-> Insert mapping: " + this.id + "/" + linkModuleId);
+        iceletDashboardMap.insert(db);
+      }
     }
   }
 

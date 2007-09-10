@@ -475,7 +475,6 @@ public class PageList extends ArrayList {
    *  Description of the Method
    *
    * @param  db             Description of the Parameter
-   * @param  pst            Description of the Parameter
    * @return                Description of the Return Value
    * @throws  SQLException  Description of the Exception
    */

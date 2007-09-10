@@ -20,6 +20,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.servlet.ServletContext;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -121,10 +122,17 @@ public class Dictionary {
   }
 
 
+  public Dictionary(String languageFilePath, String defaultLanguage) throws Exception {
+    this.defaultLanguage = defaultLanguage;
+    // Load the default language
+    load(null, languageFilePath, defaultLanguage);
+  }
+
+
   /**
    * Description of the Method
    *
-   * @param context Description of the Parameter
+   * @param context          Description of the Parameter
    * @param languageFilePath Description of the Parameter
    * @param language         Description of the Parameter
    * @throws Exception Description of the Exception
@@ -141,7 +149,12 @@ public class Dictionary {
       System.out.println(
           "Dictionary-> Loading dictionary preferences: " + languageFilePath + languageFilename);
     }
-    XMLUtils xml = new XMLUtils(context, languageFilePath + languageFilename);
+    XMLUtils xml;
+    if (context != null) {
+      xml = new XMLUtils(context, languageFilePath + languageFilename);
+    } else {
+      xml = new XMLUtils(new File(languageFilePath + languageFilename));
+    }
     if (xml.getDocument() != null) {
       //Traverse the prefs and add the config nodes to the LinkedHashMap,
       //then for each config, add the param nodes into a child LinkedHashMap.
@@ -155,8 +168,8 @@ public class Dictionary {
             configNode.getNodeType() == Node.ELEMENT_NODE &&
             "config".equals(((Element) configNode).getTagName()) &&
             (((Element) configNode).getAttribute("enabled") == null ||
-            "".equals(((Element) configNode).getAttribute("enabled")) ||
-            "true".equals(((Element) configNode).getAttribute("enabled")))) {
+                "".equals(((Element) configNode).getAttribute("enabled")) ||
+                "true".equals(((Element) configNode).getAttribute("enabled")))) {
           //For each config name, create a map for each of the params
           String configName = ((Element) configNode).getAttribute("name");
           Map preferenceGroup = null;

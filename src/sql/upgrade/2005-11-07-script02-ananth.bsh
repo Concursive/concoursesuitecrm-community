@@ -19,7 +19,7 @@ String description = "How many tickets are resolvable per account?";
 int reportId = Report.lookupId(db, filename);
 if (reportId == -1) {
   //Get the report category id for which this report will be listed as
-  int categoryId = PermissionCategory.lookupId(db, moduleName);
+  int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_TICKETS);
   //Update the category report capability
   PermissionCategory.updateReportAttribute(db, categoryId, true);
   //Get the permission id for accessing this report

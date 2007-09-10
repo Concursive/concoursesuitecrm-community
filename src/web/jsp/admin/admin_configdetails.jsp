@@ -77,6 +77,45 @@
   </tr>
   </dhv:permission>
 <%}%>
+<%-- Custom List View Editor --%>
+<%
+  if (PermissionCategory.getCustomListViews()) {
+%>
+  <dhv:permission name="admin-sysconfig-customlistviews-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
+    <td>
+      <a href="AdminCustomListViews.do?command=List&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.customListViewEditor">Custom List View Editor</dhv:label></a>
+    </td>
+  </tr>
+  </dhv:permission>
+<%}%>
+<%-- Custom Tabs --%>
+<%
+  if (PermissionCategory.getCustomtabs()) {
+%>
+  <dhv:permission name="admin-sysconfig-customtab-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
+    <td>
+      <a href="AdminCustomTabs.do?command=List&moduleId=<%= PermissionCategory.getId() %>">Custom Tabs</a>
+    </td>
+  </tr>
+  </dhv:permission>
+<%}%>
+<%-- Dashboards --%>
+<%
+  if (PermissionCategory.getDashboards()) {
+%>
+  <dhv:permission name="admin-sysconfig-dashboard-view">
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
+    <td>
+      <a href="AdminDashboards.do?command=List&moduleId=<%= PermissionCategory.getId() %>">Dashboards</a>
+    </td>
+  </tr>
+  </dhv:permission>
+<%}%>
 <%-- Lookups --%>
 <%
   if (PermissionCategory.getLookups()) {
@@ -129,46 +168,6 @@
   </tr>
   </dhv:permission>
 <%}%>
-<%-- Custom List View Editor --%>
-<%
-  if (PermissionCategory.getCustomListViews()) {
-%>
-  <dhv:permission name="admin-sysconfig-customlistviews-view">
-  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
-	<tr class="row<%= rowid %>">
-		<td>
-			<a href="AdminCustomListViews.do?command=List&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.customListViewEditor">Custom List View Editor</dhv:label></a>
-		</td>
-	</tr>
-  </dhv:permission>
-<%}%>
-<%-- Dashboards --%>
-<%
-  if (PermissionCategory.getDashboards()) {
-%>
-  <dhv:permission name="admin-sysconfig-dashboard-view">
-  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
-  <tr class="row<%= rowid %>">
-    <td>
-      <a href="AdminDashboards.do?command=List&moduleId=<%= PermissionCategory.getId() %>">Dashboards</a>
-    </td>
-  </tr>
-  </dhv:permission>
-<%}%>
-<%-- Custom Tabs --%>
-<%
-  if (PermissionCategory.getCustomtabs()) {
-%>
-  <dhv:permission name="admin-sysconfig-customtab-view">
-  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
-  <tr class="row<%= rowid %>">
-    <td>
-      <a href="AdminCustomTabs.do?command=List&moduleId=<%= PermissionCategory.getId() %>">Custom Tabs</a>
-    </td>
-  </tr>
-  </dhv:permission>
-<%}%>
-
 <%-- Nothing to configure --%>
 <dhv:evaluate if="<%= count == 0 %>">
   <tr>

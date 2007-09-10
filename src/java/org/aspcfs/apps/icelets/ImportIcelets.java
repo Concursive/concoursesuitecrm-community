@@ -112,7 +112,6 @@ public class ImportIcelets {
       Icelet newIcelet = (Icelet) iceletMap.get(key);
       String iceletClass = newIcelet.getConfiguratorClass();
       int version = newIcelet.getVersion();
-
       Iterator persistantIceletIterator = persistantIceletList.iterator();
       boolean foundIcelet = false;
       boolean foundPreviousVersion = false;
@@ -128,6 +127,7 @@ public class ImportIcelets {
         }
       }
       if (!foundIcelet) {
+        System.out.println("ImportIcelets-> New icelet: " + newIcelet.getConfiguratorClass());
         //insert icelet into database
         newIcelet.setEnabled(true);
         newIcelet.insert(db);
@@ -136,6 +136,7 @@ public class ImportIcelets {
         newIcelet.insertPublicWebSiteIcelets(db);
       }
       if (foundPreviousVersion) {
+        System.out.println("ImportIcelets-> New version: " + newIcelet.getConfiguratorClass());
         //update icelet in the database
         persistantIcelet.setName(newIcelet.getName());
         persistantIcelet.setDescription(newIcelet.getDescription());
@@ -143,6 +144,11 @@ public class ImportIcelets {
         persistantIcelet.setEnabled(true);
         persistantIcelet.setVersion(newIcelet.getVersion());
         persistantIcelet.update(db);
+        persistantIcelet.setDashboards(newIcelet.getDashboards());
+        persistantIcelet.insertIceletDashboardMapList(db);
+        // TODO: Implement these too
+        //persistantIcelet.insertIceletCustomTabMapList(db);
+        //persistantIcelet.insertPublicWebSiteIcelets(db);
         updateRowColumnProperties(db, persistantIcelet, newIcelet);
       }
     }

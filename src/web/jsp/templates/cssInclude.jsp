@@ -57,7 +57,7 @@
 <%-- Use the user's language since they are logged in --%>
 <dhv:evaluate if="<%= User.getUserRecord() != null %>">
   <dhv:evaluate if='<%= !"en_US".equals(User.getUserRecord().getLanguage()) %>'>
-    <dhv:evaluate if='<%= new File(request.getRealPath("/") + "javascript/languages/dictionary_" +  User.getUserRecord().getLanguage() + ".js").exists() %>'>
+    <dhv:evaluate if='<%= request.getSession().getServletContext().getResource("/javascript/languages/dictionary_" +  User.getUserRecord().getLanguage() + ".js") != null %>'>
       <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" CHARSET="iso-8859-1" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
     </dhv:evaluate>
   </dhv:evaluate>

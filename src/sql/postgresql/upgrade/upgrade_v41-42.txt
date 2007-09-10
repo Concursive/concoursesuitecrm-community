@@ -53,13 +53,6 @@
 2007-03-30-script01-dharmas.bsh
 2007-04-03-script01-alugubillis.bsh
 
-
-##############################################################################
-# Run each time after upgrading a system (NOTE: this is a temporary measure)
-2005-07-20-script01-mr.bsh
-2006-06-01-script01-mr.bsh
-##############################################################################
-
 # Fix for MySQL document versions (backported to 4.1.3)
 2007-05-25-script01-mr.sql
 
@@ -109,3 +102,9 @@
 2007-08-01-script01-ananth.bsh
 2007-07-05-script01-yury.bsh
 2007-08-24-script01-mr.bsh
+
+##############################################################################
+# Run each time after upgrading a system (NOTE: this is a temporary measure)
+2005-07-20-script01-mr.bsh
+2006-06-01-script01-mr.bsh
+##############################################################################

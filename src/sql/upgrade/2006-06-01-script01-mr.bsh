@@ -10,10 +10,11 @@ import java.util.HashMap;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.apps.icelets.*;
 import org.aspcfs.modules.website.base.*;
+import java.io.File;
 
 // Create a default user to relate new data to, bypass user class constraints
 print("Updating default icelets...");
 String filePath = iceletsPath + "icelet_en_US.xml";
-HashMap iceletMap = IceletList.load(filePath);
+HashMap iceletMap = IceletList.load((new File(filePath)).toURL());
 ImportIcelets.insertIceletList(db, iceletMap);
 print("Complete.");
