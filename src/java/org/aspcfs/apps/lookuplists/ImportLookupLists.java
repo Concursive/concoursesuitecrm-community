@@ -22,6 +22,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.*;
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -99,7 +100,7 @@ public class ImportLookupLists {
   }
 
   public void importLookups(Connection db, String filePath) throws Exception {
-    importLookups(db, new URL(filePath));
+    importLookups(db, new File(filePath).toURL());
   }
 
   public void importLookups(Connection db, URL url) throws Exception {

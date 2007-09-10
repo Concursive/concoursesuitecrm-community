@@ -203,12 +203,12 @@ public class FileUtils {
     int wildcardPos = sourceFile.getName().indexOf("*");
     if (wildcardPos > 0) {
       // NOTE: this handles "/WEB-INF/setup/init/workflow_*.xml"
-      if (context.getResourcePaths(sourceFile.getParentFile().getPath()) == null) {
+      if (context.getResourcePaths("/" + sourceFile.getParentFile().getPath()) == null) {
         System.out.println(
             "FileUtils-> Source resource does not exist: " + sourceFile.getParentFile());
         return false;
       }
-      Set fileNames = context.getResourcePaths(sourceFile.getParentFile().getPath());
+      Set fileNames = context.getResourcePaths("/" + sourceFile.getParentFile().getPath());
       if (!fileNames.isEmpty()) {
         String part1 = sourceFile.getName().substring(0, wildcardPos);
         String part2 = null;

@@ -479,79 +479,60 @@ public final class Login extends CFSModule {
   }
 
   public String executeCommandForgotPassword(ActionContext context) {
-	  ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
-	  if (applicationPrefs.isUpgradeable()){
-		  String forg = "No";
-	      context.getRequest().setAttribute("forgo", forg);
-		  return"ForgotPasswordOK";
-	  }
-	  String forg = "Yes";
-      context.getRequest().setAttribute("forgo", forg);
-	  return "ForgotPasswordOK";
-  }
-  
-  public String executeCommandGenerateTemporaryPassword(ActionContext context) {
-	Connection db = null;
-    int k = 0;
-	try {
-	db = this.getConnection(context);
-	String username = (String) context.getRequest().getParameter("username");
-	UserList userList = new  UserList();
-	userList.buildList(db);
-	Iterator iter = userList.iterator();
-    while (iter.hasNext()){
-      User pers = (User)iter.next();
-        if (username.equals(pers.getUsername())){
-          ContactList contactList = new ContactList();
-          contactList.buildList(db);
-          k = 1;
-          Iterator ite = contactList.iterator();
-          while (ite.hasNext()){
-        	Contact per = (Contact) ite.next();
-        	if (pers.getId() == per.getUserId()){
-        	  per.getId();
-        	  ContactEmailAddressList contactEmailAddressList = new ContactEmailAddressList();
-              contactEmailAddressList.buildList(db);
-              Iterator it = contactEmailAddressList.iterator();
-              while (it.hasNext()){
-                ContactEmailAddress pe = (ContactEmailAddress) it.next();
-                if (pe.getContactId() == per.getId()){
-                  String newPassword = null;
-                  newPassword = String.valueOf(StringUtils.rand(100000, 999999));
-                  String templateFile = "";
-                  if (!FileUtils.fileExists(templateFile)) {
-                    templateFile = getDbNamePath(context) + "templates_en_US.xml";
-                  }
-                  SystemStatus systemStatus = this.getSystemStatus(context);
-                  UserEmail userEmail = new UserEmail(context, pers, username, newPassword, systemStatus.getUrl(), templateFile);
-                  SMTPMessage mail = new SMTPMessage();
-                  mail.setHost(getPref(context, "MAILSERVER"));
-                  mail.setFrom(getPref(context, "EMAILADDRESS"));
-                  mail.addReplyTo(pe.getEmail(), per.getNameFirst());
-                  mail.setType("text/html");
-                  mail.setSubject("New Password");
-                  mail.setBody(userEmail.getBody());
-                  mail.addTo(pe.getEmail());
-                  mail.send();
-                  pers.insertNewPassword(db, newPassword);
-                }
-              }
-            }
-                
-           }
-        }
-     }
-    } catch (Exception e) {
-        context.getRequest().setAttribute("Error", e);
-        return ("SystemError");
-    } finally {
-      freeConnection(context, db);
-  }
-    if (k == 0) {
-      context.getRequest().setAttribute("retu", "No");
-      return executeCommandForgotPassword(context);
-    }
-    return "PasswordGeneratedOK";
-  }
+		ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+		if (applicationPrefs.isUpgradeable()) {
+			String forg = "No";
+			context.getRequest().setAttribute("forgo", forg);
+			return "ForgotPasswordOK";
+		}
+		String forg = "Yes";
+		context.getRequest().setAttribute("forgo", forg);
+		return "ForgotPasswordOK";
+	}
+
+	public String executeCommandGenerateTemporaryPassword(ActionContext context) {
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			// building Users List
+			String username = (String) context.getRequest().getParameter("username");
+			UserList userList = new UserList();
+			userList.setUsername(username);
+			userList.setBuildContact(true);
+			userList.setBuildContactDetails(true);
+			userList.buildList(db);
+			if (userList.size() > 0) {
+				User user = (User) userList.get(0);
+				// Preparing the EMail
+				String newPassword = String.valueOf(StringUtils.rand(100000, 999999));
+				String templateFile = getDbNamePath(context) + "templates_en_US.xml";
+				UserEmail userEmail = new UserEmail(context, user, username, newPassword, this.getSystemStatus(context).getUrl(), templateFile);
+				// Sending Email
+				SMTPMessage mail = new SMTPMessage();
+				String email = user.getContact().getEmailAddress(1);
+				mail.setHost(getPref(context, "MAILSERVER"));
+				mail.setFrom(getPref(context, "EMAILADDRESS"));
+				mail.addReplyTo(email, user.getContact().getNameFirst());
+				mail.setType("text/html");
+				mail.setSubject("New Password");
+				mail.setBody(userEmail.getBody());
+				mail.addTo(email);
+				if (mail.send() == 2) {
+					System.out.println("Forgot Password -> Send error: " + mail.getErrorMsg() + "\n");
+				} else {
+					user.insertNewPassword(db, newPassword);
+				}
+			} else {
+				context.getRequest().setAttribute("retu", "No");
+				return executeCommandForgotPassword(context);
+			}
+		} catch (Exception e) {
+			context.getRequest().setAttribute("Error", e);
+			return ("SystemError");
+		} finally {
+			freeConnection(context, db);
+		}
+		return "PasswordGeneratedOK";
+	}
 
 }

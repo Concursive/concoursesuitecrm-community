@@ -117,7 +117,8 @@ public class SetupUtils {
   }
 
   public static boolean insertDefaultData(Connection db, String dbFileLibraryPath, String setupPath, String locale, boolean syncOnly) throws Exception, EvalError, IOException {
-    return SetupUtils.insertDefaultData(db, dbFileLibraryPath, (new File(setupPath)).toURL(), locale, syncOnly);
+  	System.out.println("SetupUtils(old)-> Using URL: " + setupPath);
+  	return SetupUtils.insertDefaultData(db, dbFileLibraryPath, (new File(setupPath)).toURL(), locale, syncOnly);
   }
 
   public static boolean insertDefaultData(Connection db, String dbFileLibraryPath, URL setupURL, String locale, boolean syncOnly) throws Exception, EvalError, IOException {
@@ -127,7 +128,7 @@ public class SetupUtils {
     script.set("db", db);
     script.set("dbFileLibraryPath", dbFileLibraryPath);
     script.set("locale", locale);
-    script.set("prefsURL", new URL(setupURL + "init/"));
+    script.set("prefsURL", null);
     script.set("libURL", new URL(setupURL + "../lib/"));
     // TODO: Fix downstream
     //script.set("prefsPath", setupPath + "init" + fs);

@@ -781,7 +781,16 @@
     <!-- Copy the object mappings file -->
     <copy file="${pref.dir}/cfs/transfer/import-mappings.xml" 
         todir="${CENTRIC_HOME}/WEB-INF" verbose="true" />
+
   
+    <!-- Copy the default preference files -->
+  	<mkdir dir="${CENTRIC_HOME}/WEB-INF/setup/init/" />
+    <copy todir="${CENTRIC_HOME}/WEB-INF/setup/init/" verbose="true">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+
     <!-- Copy the dictionary files -->
     <mkdir dir="${CENTRIC_HOME}/WEB-INF/languages"/>
     <copy todir="${CENTRIC_HOME}/WEB-INF/languages">

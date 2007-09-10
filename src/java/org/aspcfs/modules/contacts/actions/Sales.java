@@ -1576,7 +1576,7 @@ public final class Sales extends CFSModule {
               try {
                 db = getConnection(context);
                 thisContact = new Contact(db, leadId[i]);
-                if (thisContact.getOwner()==-1){
+                if ((thisContact.getOwner()==-1)||(!thisContact.getIsLead())){
                   if ("".equals(leadIdsCopy)){
                     leadIdsCopy = leadId[i];
                   }else{

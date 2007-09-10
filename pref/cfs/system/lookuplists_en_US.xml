@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 - we assume enabled=true
 
@@ -1082,7 +1082,7 @@
       <record><![CDATA[Cannot resolve]]></record>
       <record><![CDATA[Duplicate]]></record>
     </lookup>
-	  <lookup table="web_layout" key="layout_id">
+          <lookup table="web_layout" key="layout_id">
       <attribute name="custom" type="boolean" />
       <attribute name="layout_constant" type="integer" />
       <record LUID="5190610" custom="false" layout_constant="2006051813">
@@ -1138,13 +1138,13 @@
       <record constant="4" enabled="true" default_item="false"><![CDATA[Excel]]></record>
     </lookup>
     <lookup table="lookup_container_menu">
-    	<attribute name="link_module_id" type="integer" />
-    	<!-- Menu definitions for the accounts module -->
-    	<record link_module_id="1" cname="accounts">Accounts</record>
-    	<record link_module_id="1" cname="accountscontacts">Accounts Contacts</record>
-    	<record link_module_id="1" cname="accountcontactopportunities">Accounts Contacts Opportunities</record>
-    	<record link_module_id="2" cname="contacts">Contacts</record>
-    	<record link_module_id="8" cname="maintenance">Maintenance</record>
+        <attribute name="link_module_id" type="integer" />
+        <!-- Menu definitions for the accounts module -->
+        <record link_module_id="1" cname="accounts">Accounts</record>
+        <record link_module_id="1" cname="accountscontacts">Accounts Contacts</record>
+        <record link_module_id="1" cname="accountcontactopportunities">Accounts Contacts Opportunities</record>
+        <record link_module_id="2" cname="contacts">Contacts</record>
+        <record link_module_id="8" cname="maintenance">Maintenance</record>
     </lookup>
     <lookup table="lookup_graph_type">
       <record><![CDATA[Line]]></record>

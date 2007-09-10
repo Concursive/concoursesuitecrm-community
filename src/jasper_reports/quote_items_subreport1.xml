@@ -49,7 +49,8 @@ pc.product_name, pc.sku,
 qp."comment" as "comment" 
 FROM quote_product qp
 LEFT JOIN product_catalog pc ON (qp.product_id = pc.product_id)
-WHERE quote_id = $P{quote_id}]]></queryString>
+WHERE quote_id = $P{quote_id}
+ORDER BY qp.item_id]]></queryString>
 	<field name="item_id" class="java.lang.Integer"/>
 	<field name="quote_id" class="java.lang.Integer"/>
 	<field name="product_id" class="java.lang.Integer"/>

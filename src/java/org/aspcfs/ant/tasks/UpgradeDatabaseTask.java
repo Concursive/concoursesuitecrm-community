@@ -382,7 +382,7 @@ public class UpgradeDatabaseTask extends Task {
       script.set("fileLibraryPath", fileLibraryPath + fs);
       script.set("languagePath", languagePath + fs);
       script.set("iceletsPath", iceletsPath + fs);
-      script.set("prefsPath", prefsPath + fs);
+      script.set("prefsURL", prefsPath + fs);
       script.set("locale", locale);
       // Determine if fileLibrary is part of WEB-INF path
       File directory = new File(fileLibraryPath + fs + dbName);

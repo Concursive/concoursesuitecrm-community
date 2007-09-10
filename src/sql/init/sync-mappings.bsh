@@ -33,14 +33,14 @@ import org.w3c.dom.NodeList;
 
 // Determine a safe URL for accessing the file resource
 URL mapFileURL = null;
+String fs = System.getProperty("file.separator") ;
 if (prefsURL != null) {
-  mapFileURL = new URL(prefsURL + "import-mappings.xml");
+  mapFileURL = new File(prefsURL + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml").toURL();
 } else {
-  String fs = System.getProperty("file.separator") ;
-  String mapFile = prefsPath + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
+  String mapFile = prefsURL + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
   File importFile = new File(mapFile);
   if (!importFile.exists()) {
-    mapFile = prefsPath + "import-mappings.xml";
+    mapFile = prefsURL + "import-mappings.xml";
   }
   mapFileURL = (new File(mapFile)).toURL();
 }
