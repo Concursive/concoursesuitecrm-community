@@ -199,3 +199,7 @@ WEB-INF/lib/poi-scratchpad-2.5-final-20040302.jar
 ## 2007-07-09 updated jasper-reports libs
 WEB-INF/lib/jasperreports-1.0.2.jar
 WEB-INF/lib/jasperreports-bsh-1.0.2.jar
+
+## 2007-09-24 updated libs
+WEB-INF/lib/jtds-1.2.jar
+WEB-INF/lib/postgresql-8.1-405.jdbc3.jar
