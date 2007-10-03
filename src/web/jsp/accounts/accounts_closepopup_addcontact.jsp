@@ -15,30 +15,39 @@
   - 
   - Version: $Id$
   - Description: 
+  context.getRequest().setAttribute("fieldName", "");
   --%>
-<%@ page import="org.aspcfs.utils.StringUtils,org.aspcfs.modules.contacts.base.Contact" %>
-<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.utils.StringUtils" %>
+<jsp:useBean id="ContactDetails"
+             class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <html>
 <script type="text/javascript">
-  function addContact(text, value){
-    opener.insertOption(text, value, 'contactId');
+  function addContact(text, value, fieldName) {
+    opener.insertOption(text, value, fieldName);
+
   }
-  
+
   function doClose() {
     var source = '<%= request.getParameter("hiddensource") %>';
     if (source == 'attachplan') {
       var itemId = '<%= request.getParameter("actionStepWork") %>';
       var displayId = "changecontact" + itemId;
-      opener.document.getElementById('contactid').value="<%= ContactDetails.getId() %>";
+      opener.document.getElementById('contactid').value = "<%= ContactDetails.getId() %>";
       opener.changeDivContent(displayId, "<%= StringUtils.jsStringEscape(ContactDetails.getValidName()) %>");
       opener.attachContact(itemId);
     } else {
-      addContact("<%= StringUtils.jsStringEscape(ContactDetails.getValidName()) %>",'<%= ContactDetails.getId() %>');
+    <dhv:evaluate if="<%= request.getParameter("fieldName")!=null && !"".equals(request.getParameter("fieldName"))%>">
+      var fieldName = '<%=request.getParameter("fieldName")%>';
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= request.getParameter("fieldName")==null || "".equals(request.getParameter("fieldName"))%>">
+      var fieldName = "contactId";
+    </dhv:evaluate>
+      addContact("<%= StringUtils.jsStringEscape(ContactDetails.getValidName()) %>", '<%= ContactDetails.getId() %>', fieldName);
     }
     window.close();
   }
 </script>
-  <body onload="javascript:doClose();" />
-</body>
+<body onload="javascript:doClose();"/>
 </html>

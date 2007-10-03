@@ -21,11 +21,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -383,9 +379,9 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
     }
     sqlSelect.append(
         "lrt.* " +
-        "FROM " + tableName + " lrt " +
-        "WHERE lrt.type_id > -1 ");
-    if(sqlFilter == null || sqlFilter.length() == 0){
+            "FROM " + tableName + " lrt " +
+            "WHERE lrt.type_id > -1 ");
+    if (sqlFilter == null || sqlFilter.length() == 0) {
       StringBuffer buff = new StringBuffer();
       createFilter(db, buff);
       sqlFilter = buff.toString();
@@ -415,8 +411,8 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM lookup_relationship_types lrt " +
-        "WHERE code > -1 ");
+            "FROM lookup_relationship_types lrt " +
+            "WHERE code > -1 ");
 
     createFilter(db, sqlFilter);
 
@@ -436,8 +432,8 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
             sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND lrt.reciprocal_name_1 < ? ");
+                sqlFilter.toString() +
+                "AND lrt.reciprocal_name_1 < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -497,10 +493,10 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
       sqlFilter.append("AND lrt.modified < ? ");
     }
     if (reciprocalName1 != null) {
-        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db) + "(lrt.reciprocal_name_1) LIKE ? ");
+      sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db) + "(lrt.reciprocal_name_1) LIKE ? ");
     }
     if (reciprocalName2 != null) {
-        sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db) + "(lrt.reciprocal_name_2) LIKE ? ");
+      sqlFilter.append("AND " + DatabaseUtils.toLowerCase(db) + "(lrt.reciprocal_name_2) LIKE ? ");
     }
   }
 
@@ -533,10 +529,10 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
       pst.setTimestamp(++i, nextAnchor);
     }
     if (reciprocalName1 != null) {
-        pst.setString(++i, reciprocalName1.toLowerCase());
+      pst.setString(++i, reciprocalName1.toLowerCase());
     }
     if (reciprocalName2 != null) {
-        pst.setString(++i, reciprocalName2.toLowerCase());
+      pst.setString(++i, reciprocalName2.toLowerCase());
     }
     return i;
   }
@@ -545,7 +541,7 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
     int maxLevel = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT MAX(" + DatabaseUtils.addQuotes(db, "level") + ") AS max_level " +
-        "FROM lookup_relationship_types ");
+            "FROM lookup_relationship_types ");
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       maxLevel = rs.getInt("max_level");
@@ -553,6 +549,6 @@ public class RelationshipTypeList extends ArrayList implements SyncableList {
     rs.close();
     pst.close();
     return maxLevel;
-  } 
+  }
 }
 

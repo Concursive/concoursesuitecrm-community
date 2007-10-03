@@ -126,7 +126,9 @@ public final class AccountTickets extends CFSModule {
     Organization newOrg = null;
     //Parameters
     String temporgId = context.getRequest().getParameter("orgId");
+
     int tempid = Integer.parseInt(temporgId);
+
     try {
       db = this.getConnection(context);
       //find record permissions for portal users
@@ -142,10 +144,22 @@ public final class AccountTickets extends CFSModule {
               context.getRequest().getParameter("contact").equals("on"))) {
       } else {
         newTic.setOrgId(tempid);
+
       }
       buildFormElements(context, db, newTic, newOrg);
       addModuleBean(context, "View Accounts", "Add a Ticket");
+
+      ContactList submitterContactList = new ContactList();
+      submitterContactList.setBuildDetails(false);
+      submitterContactList.setBuildTypes(false);
+      submitterContactList.setOrgId(
+          Integer.parseInt(context.getRequest().getParameter("orgId")));
+      submitterContactList.setDefaultContactId(newTic.getContactId());
+      submitterContactList.buildList(db);
+      context.getRequest().setAttribute("SubmitterContactList", submitterContactList);
+
       context.getRequest().setAttribute("OrgDetails", newOrg);
+      context.getRequest().setAttribute("SubmiterOrgDetails", newOrg);
 
       //getting current date in mm/dd/yyyy format
       String currentDate = getCurrentDateAsString(context);
@@ -183,6 +197,14 @@ public final class AccountTickets extends CFSModule {
     String newContact = context.getRequest().getParameter("contact");
     //Process the submitted ticket
     Ticket newTic = (Ticket) context.getFormBean();
+    String subId = context.getRequest().getParameter("subId");
+    if (subId != null && !"".equals(subId)) {
+      newTic.setSubmitterId(Integer.parseInt(subId));
+    }
+    String subContactId = context.getRequest().getParameter("submitterContactId");
+    if (subId != null && !"".equals(subId)) {
+      newTic.setSubmitterContactId(Integer.parseInt(subContactId));
+    }
     if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null) {
       newTic.setAssignedDate(
           new java.sql.Timestamp(System.currentTimeMillis()));
@@ -206,6 +228,39 @@ public final class AccountTickets extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+
+      if (isPortalUser(context)) {
+        int catCode = newTic.getCatCode();
+        int subCat1 = newTic.getSubCat1();
+        int subCat2 = newTic.getSubCat2();
+        int subCat3 = newTic.getSubCat3();
+        TicketCategoryAssignment tcAssignment = null;
+        newTic.setPriorityCode(1);
+        if (catCode > 0) {
+          tcAssignment = new TicketCategoryAssignment(db, catCode, (String) null);
+        }
+        if (subCat1 > 0) {
+          tcAssignment = new TicketCategoryAssignment(db, subCat1, (String) null);
+        }
+        if (subCat2 > 0) {
+          tcAssignment = new TicketCategoryAssignment(db, subCat2, (String) null);
+        }
+        if (subCat3 > 0) {
+          tcAssignment = new TicketCategoryAssignment(db, subCat3, (String) null);
+        }
+
+        if (catCode > 0 || subCat1 > 0 || subCat2 > 0 || subCat3 > 0) {
+          if (tcAssignment.getDepartmentId() > -1)
+            newTic.setDepartmentCode(tcAssignment.getDepartmentId());
+          if (tcAssignment.getAssignedTo() > -1)
+            newTic.setAssignedTo(tcAssignment.getAssignedTo());
+          newTic.setAssignedDate(
+              new java.sql.Timestamp(System.currentTimeMillis()));
+          if (tcAssignment.getUserGroupId() > -1)
+            newTic.setUserGroupId(tcAssignment.getUserGroupId());
+
+        }
+      }
 
       //Display account name in the header
       String temporgId = context.getRequest().getParameter("orgId");
@@ -291,6 +346,10 @@ public final class AccountTickets extends CFSModule {
         processInsertHook(context, newTic);
       }
       addModuleBean(context, "View Accounts", "Ticket Insert ok");
+      Organization SubmiterOrg = new Organization(db, newTic.getSubmitterId());
+      context.getRequest().setAttribute("SubmitterOrgDetails", SubmiterOrg);
+      Contact SubmiterContact = new Contact(db, newTic.getSubmitterContactId());
+      context.getRequest().setAttribute("SubmitterContact", SubmiterContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -314,12 +373,15 @@ public final class AccountTickets extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-view")) {
       return ("PermissionError");
     }
+
     Connection db = null;
     //Parameters
     String ticketId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
       // Load the ticket
+
+
       Ticket newTic = new Ticket();
       newTic.setBuildHistory(true);
       SystemStatus systemStatus = this.getSystemStatus(context);
@@ -370,6 +432,10 @@ public final class AccountTickets extends CFSModule {
       if (newTic.getAssignedTo() > 0) {
         newTic.checkEnabledOwnerAccount(db);
       }
+      Organization SubmiterOrg = new Organization(db, newTic.getSubmitterId());
+      context.getRequest().setAttribute("SubmitterOrgDetails", SubmiterOrg);
+      Contact SubmiterContact = new Contact(db, newTic.getSubmitterContactId());
+      context.getRequest().setAttribute("SubmitterContact", SubmiterContact);
       context.getRequest().setAttribute("TicketDetails", newTic);
       addRecentItem(context, newTic);
       // Load the organization for the header
@@ -811,6 +877,10 @@ public final class AccountTickets extends CFSModule {
 
       //Put the ticket in the request
       addRecentItem(context, newTic);
+      Organization SubmiterOrg = new Organization(db, newTic.getSubmitterId());
+      context.getRequest().setAttribute("SubmiterOrgDetails", SubmiterOrg);
+      Contact SubmiterContact = new Contact(db, newTic.getSubmitterContactId());
+      context.getRequest().setAttribute("SubmitterContact", SubmiterContact);
       context.getRequest().setAttribute("TicketDetails", newTic);
       addModuleBean(context, "View Accounts", "View Tickets");
 
@@ -1267,6 +1337,9 @@ public final class AccountTickets extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-view")) {
       return ("PermissionError");
     }
+    User user = this.getUser(context, this.getUserId(context));
+    context.getRequest().setAttribute("userRole", user);
+
     Connection db = null;
     String ticketId = context.getRequest().getParameter("id");
     try {
@@ -1312,22 +1385,77 @@ public final class AccountTickets extends CFSModule {
     Connection db = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
+      String subId = context.getRequest().getParameter("subId");
       db = this.getConnection(context);
-
+      ContactList submitterList = new ContactList();
       ContactList contactList = new ContactList();
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
         contactList.setBuildTypes(false);
         contactList.setOrgId(Integer.parseInt(orgId));
         contactList.buildList(db);
+        context.getRequest().setAttribute("ContactList", contactList);
       }
-      context.getRequest().setAttribute("ContactList", contactList);
+      if (subId != null && !"-1".equals(subId)) {
+        submitterList.setBuildDetails(false);
+        submitterList.setBuildTypes(false);
+        submitterList.setOrgId(Integer.parseInt(subId));
+        submitterList.buildList(db);
+        context.getRequest().setAttribute("SubmitterList", submitterList);
+      }
     } catch (Exception errorMessage) {
 
     } finally {
       this.freeConnection(context, db);
     }
     return ("OrganizationJSListOK");
+  }
+
+  public String executeCommandPrepareAddTicketNote(ActionContext context) {
+
+    String id = context.getRequest().getParameter("id");
+    System.out.println(id + "");
+
+    Ticket t = new Ticket();
+    t.setId(id);
+    context.getRequest().setAttribute("TicketDetails", t);
+    return "PrepareAddTicketNoteOK";
+  }
+
+  public String executeCommandAddTicketNote(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-tickets-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    //Parameters
+    String ticketid = context.getRequest().getParameter("id");
+    String problem = context.getRequest().getParameter("problem");
+    try {
+      db = this.getConnection(context);
+      // Load the ticket
+      /*Ticket newTic = new Ticket();
+           newTic.setBuildHistory(true);
+           SystemStatus systemStatus = this.getSystemStatus(context);
+           newTic.setSystemStatus(systemStatus);
+           newTic.setBuildOrgHierarchy(true);
+           newTic.queryRecord(db, Integer.parseInt(ticketid));*/
+      TicketLog tlog = new TicketLog();
+      tlog.setEntryText(problem);
+      tlog.setTicketId(ticketid);
+      tlog.setEnteredBy(getUserId(context));
+      tlog.setModifiedBy(getUserId(context));
+      tlog.insert(db);
+
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    context.getRequest().setAttribute("id", ticketid);
+
+    return (executeCommandViewHistory(context));
   }
 
 }

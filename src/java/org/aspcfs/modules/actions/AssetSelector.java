@@ -121,9 +121,9 @@ public final class AssetSelector extends CFSModule {
       LookupList assetManufacturerList = new LookupList(db, "lookup_asset_manufacturer");
       assetManufacturerList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("assetManufacturerList", assetManufacturerList);
-      
+
       String orgIdString = context.getRequest().getParameter("orgId");
-      Organization organization = new Organization(db,Integer.parseInt(orgIdString));
+      Organization organization = new Organization(db, Integer.parseInt(orgIdString));
       buildCategories(context, db, null, organization.getSiteId());
 
       try {
@@ -154,6 +154,120 @@ public final class AssetSelector extends CFSModule {
     }
   }
 
+
+  public String executeCommandListAssets2(ActionContext context) {
+
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean listDone = false;
+    String listType = context.getRequest().getParameter("listType");
+    AssetList assetList = null;
+    AssetList finalAssets = null;
+    ArrayList selectedList = (ArrayList) context.getSession().getAttribute(
+        "SelectedAssets");
+    int tmpContractId = -1;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    if (selectedList == null || "true".equals(
+        context.getRequest().getParameter("reset"))) {
+      selectedList = new ArrayList();
+    }
+
+    if (context.getRequest().getParameter("previousSelection") != null) {
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("previousSelection"), "|");
+      while (st.hasMoreTokens()) {
+        selectedList.add(String.valueOf(st.nextToken()));
+      }
+    }
+
+    try {
+      db = this.getConnection(context);
+      int rowCount = 1;
+      assetList = new AssetList();
+
+      if ("list".equals(listType)) {
+        while (context.getRequest().getParameter("hiddenAssetId" + rowCount) != null) {
+          int assetId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAssetId" + rowCount));
+          if (context.getRequest().getParameter("asset" + rowCount) != null) {
+            if (!selectedList.contains(String.valueOf(assetId))) {
+              selectedList.add(String.valueOf(assetId));
+            }
+          } else {
+            selectedList.remove(String.valueOf(assetId));
+          }
+          rowCount++;
+        }
+      }
+
+      if ("true".equals(
+          (String) context.getRequest().getParameter("finalsubmit"))) {
+        //Handle single selection case
+        if ("single".equals(listType)) {
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          int assetId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAssetId" + rowCount));
+          selectedList.clear();
+          selectedList.add(String.valueOf(assetId));
+        }
+        listDone = true;
+        if (finalAssets == null) {
+          finalAssets = new AssetList();
+        }
+        for (int i = 0; i < selectedList.size(); i++) {
+          String assetId = (String) selectedList.get(i);
+          Asset thisAsset = new Asset(db, assetId);
+          finalAssets.add(thisAsset);
+        }
+      }
+
+      LookupList assetStatusList = new LookupList(db, "lookup_asset_status");
+      assetStatusList.addItem(
+          -1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("assetStatusList", assetStatusList);
+
+      LookupList assetManufacturerList = new LookupList(db, "lookup_asset_manufacturer");
+      assetManufacturerList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("assetManufacturerList", assetManufacturerList);
+
+      String orgIdString = context.getRequest().getParameter("orgId");
+      Organization organization = new Organization(db, Integer.parseInt(orgIdString));
+      buildCategories(context, db, null, organization.getSiteId());
+
+      try {
+        tmpContractId = Integer.parseInt(
+            context.getRequest().getParameter("contractId"));
+      } catch (Exception e) {
+        tmpContractId = -1;
+      }
+      assetList.setServiceContractId(tmpContractId);
+
+      setParameters2(assetList, context);
+
+      assetList.setOrgId(orgIdString);
+
+      String subIdString = context.getRequest().getParameter("subId");
+      assetList.setSubId(subIdString);
+
+      assetList.buildList(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("assetList", assetList);
+      context.getSession().setAttribute("selectedAssets", selectedList);
+      if (listDone) {
+        context.getRequest().setAttribute("finalAssets", finalAssets);
+      }
+      return ("ListAssets2OK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
   /**
    * Sets the parameters attribute of the AccountSelector object
@@ -215,6 +329,63 @@ public final class AssetSelector extends CFSModule {
     context.getRequest().setAttribute("orgId", orgId);
   }
 
+
+  private void setParameters2(AssetList assetList, ActionContext context) {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+    //Check if a text-based filter was entered
+    String serialNumberLabel = thisSystem.getLabel(
+        "accounts.accountasset_include.SerialNumber");
+    String contractNumberLabel = thisSystem.getLabel(
+        "accounts.accountasset_include.ServiceContractNumber");
+
+    String serialNumber = context.getRequest().getParameter("serialNumber");
+    String contractNumber = context.getRequest().getParameter(
+        "contractNumber");
+
+    if (serialNumber != null) {
+      if (!serialNumberLabel.equals(serialNumber) && !"".equals(
+          serialNumber.trim())) {
+        assetList.setSerialNumber("%" + serialNumber + "%");
+      }
+    }
+    if (contractNumber != null) {
+      if (!contractNumberLabel.equals(contractNumber) && !"".equals(
+          contractNumber.trim())) {
+        assetList.setServiceContractNumber("%" + contractNumber + "%");
+        assetList.setServiceContractId(-1);
+      }
+    }
+
+    PagedListInfo assetListInfo = this.getPagedListInfo(
+        context, "AssetListInfo");
+    //filter for departments & project teams
+    if (!assetListInfo.hasListFilters()) {
+      assetListInfo.addFilter(1, "0");
+    }
+    //add filters
+    FilterList filters = new FilterList();
+    filters.setSource(Constants.ASSETS);
+    filters.build(thisSystem, context.getRequest());
+    context.getRequest().setAttribute("Filters", filters);
+    //  set Filter for retrieving contracts depending on type of asset
+    String firstFilter = filters.getFirstFilter(assetListInfo.getListView());
+    if ("allassets".equals(firstFilter)) {
+      assetList.setAllAssets(true);
+    } else {
+      assetList.setAllAssets(false);
+    }
+
+    String orgId = context.getRequest().getParameter("orgId");
+    String subId = context.getRequest().getParameter("subId");
+    assetListInfo.setLink(
+        "AssetSelector.do?command=ListAssets2&orgId=" + orgId + "&subId=" + subId);
+    assetList.setPagedListInfo(assetListInfo);
+    assetList.setOrgId(Integer.parseInt(orgId));
+    assetList.setSubId(Integer.parseInt(subId));
+
+    context.getRequest().setAttribute("orgId", orgId);
+    context.getRequest().setAttribute("subId", subId);
+  }
 
   /**
    * Description of the Method

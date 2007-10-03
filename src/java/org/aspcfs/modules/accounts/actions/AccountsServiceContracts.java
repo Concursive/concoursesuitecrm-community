@@ -73,7 +73,7 @@ public class AccountsServiceContracts extends CFSModule {
         context, "ServiceContractListInfo");
     serviceContractListInfo.setLink(
         "AccountsServiceContracts.do?command=List&orgId=" + orgId
-        + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
+            + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -200,6 +200,12 @@ public class AccountsServiceContracts extends CFSModule {
           context.getRequest().getParameterValues("selectedList"));
       thisContract.setEnteredBy(getUserId(context));
       thisContract.setModifiedBy(getUserId(context));
+
+      String subId = context.getRequest().getParameter("subId");
+      if (subId != null && !"".equals(subId)) {
+        thisContract.setSubmitterId(Integer.parseInt(subId));
+      }
+
       isValid = this.validateObject(context, db, thisContract);
       if (isValid) {
         inserted = thisContract.insert(db);
@@ -280,6 +286,12 @@ public class AccountsServiceContracts extends CFSModule {
 
       thisContract.setTotalHoursRemaining(newHoursRemaining);
       thisContract.setModifiedBy(getUserId(context));
+
+      String subId = context.getRequest().getParameter("subId");
+      if (subId != null && !"".equals(subId)) {
+        thisContract.setSubmitterId(Integer.parseInt(subId));
+      }
+
       isValid = this.validateObject(context, db, thisContract);
       if (isValid) {
         resultCount = thisContract.update(db);
@@ -358,7 +370,7 @@ public class AccountsServiceContracts extends CFSModule {
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id 
+          systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Trash&action=delete&orgId=" + orgId + "&id=" + id
           + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
@@ -425,14 +437,14 @@ public class AccountsServiceContracts extends CFSModule {
           "AccountsServiceContracts.do?command=List&orgId="
               + context.getRequest().getParameter("orgId")
               + (inline ? "&popup=true" : ""));
-			return "DeleteOK";
+      return "DeleteOK";
     }
     processErrors(context, thisContract.getErrors());
     context.getRequest().setAttribute(
         "refreshUrl",
         "AccountsServiceContracts.do?command=View&orgId="
-            + context.getRequest().getParameter("orgId") + "&id=" + context.getRequest().getParameter("id")+(inline?"&popup=true":""));
-		return "DeleteOK";
+            + context.getRequest().getParameter("orgId") + "&id=" + context.getRequest().getParameter("id") + (inline ? "&popup=true" : ""));
+    return "DeleteOK";
   }
 
 
@@ -476,14 +488,14 @@ public class AccountsServiceContracts extends CFSModule {
     if (recordDeleted) {
       context.getRequest().setAttribute(
           "refreshUrl", "AccountsServiceContracts.do?command=List&orgId=" + context.getRequest().getParameter(
-              "orgId"));
+          "orgId"));
       return getReturn(context, "Delete");
     }
 
     processErrors(context, thisContract.getErrors());
     context.getRequest().setAttribute(
         "refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter(
-            "orgId") + "&id=" + context.getRequest().getParameter("id"));
+        "orgId") + "&id=" + context.getRequest().getParameter("id"));
     return getReturn(context, "Delete");
 
 /*    context.getRequest().setAttribute(
@@ -564,7 +576,7 @@ public class AccountsServiceContracts extends CFSModule {
 
           thisContract.getServiceContractProductList().add(spc);
         }
-        
+
         //Reset contract hours remaining fields  
         double newHoursRemaining = thisContract.getTotalHoursRemaining();
         String tmpHours = (String) context.getRequest().getParameter(
@@ -577,6 +589,12 @@ public class AccountsServiceContracts extends CFSModule {
           }
         }
         thisContract.setTotalHoursRemaining(newHoursRemaining);
+      }
+
+      int subId = thisContract.getSubmitterId();
+      if (!"".equals(subId) && subId > -1) {
+        Organization SubmiterOrg = new Organization(db, thisContract.getSubmitterId());
+        context.getRequest().setAttribute("SubmiterOrgDetails", SubmiterOrg);
       }
 
       context.getRequest().setAttribute("serviceContract", thisContract);
@@ -630,6 +648,13 @@ public class AccountsServiceContracts extends CFSModule {
         thisContact.queryRecord(db, thisContract.getContactId());
         context.getRequest().setAttribute(
             "serviceContractContact", thisContact);
+      }
+
+      //reseller
+      int subId = thisContract.getSubmitterId();
+      if (!"".equals(subId) && subId > -1) {
+        Organization thisSubmitter = new Organization(db, subId);
+        context.getRequest().setAttribute("serviceContractSubmitter", thisSubmitter);
       }
 
       //Fetch the history of changes to the hours used in the service contract

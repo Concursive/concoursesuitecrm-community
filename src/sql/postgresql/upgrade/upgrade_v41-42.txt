@@ -1,13 +1,12 @@
-# These scripts upgrade the 4.1 production databases to 4.2, in order
+# These scripts upgrade the 4.1 production databases to 5.0, in order
 
-# adding quick_complete in the action_step table
+# adding quick_complete in the action_step table; website documents; ingres
 2007-01-30-script01-zhenya.sql
-
-# website document links
 2007-01-19-script01-olga.sql
 
-# website page alias
+# permission_category
 2007-03-09-script01-mr.sql
+2007-02-01-script01-ayarotski.sql
 
 # offline capabilities
 2006-10-30-script01-holub.sql
@@ -33,8 +32,6 @@
 ## TODO: Verify BSH script with each database server type
 2007-03-16-script01-ananth.bsh
 
-# custom dashboards
-2007-02-01-script01-ayarotski.sql
 2007-02-19-artemz.bsh
 2007-04-12-script01-mr.sql
 2007-04-12-script02-mr.bsh
@@ -68,18 +65,15 @@
 2007-05-17-script01-holub.bsh
 2007-05-22-script01-holub.bsh
 
-# Contact History start times
-2007-02-09-script01-vadim.bsh
-
-# Activity improvements
+# Contact History and Activity improvements
 2007-05-02-script01-holub.sql
 2007-05-05-script01-ok.sql
+2007-02-09-script01-vadim.bsh
 2007-05-10-script01-david.sql
 2007-05-11-script01-holub.bsh
 2007-06-20-script01-holub.sql
-# TODO: Fix the following script
 2007-08-22-script01-mr.sql
-# Import JOIN
+# TODO: Import JOIN
 2007-08-23-script01-mr.sql
 # TODO: Add translation to the following script
 2007-06-28-script01-zhenya.sql
@@ -102,6 +96,14 @@
 2007-08-01-script01-ananth.bsh
 2007-07-05-script01-yury.bsh
 2007-08-24-script01-mr.bsh
+
+# Reseller ticket and portal capabilities
+2007-06-12-script01-slava.sql
+2007-06-12-script02-slava.sql
+2007-07-24-script01-sasha.sql
+2007-08-10-script01-sasha.bsh
+
+
 
 ##############################################################################
 # Run each time after upgrading a system (NOTE: this is a temporary measure)

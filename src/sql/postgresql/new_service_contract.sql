@@ -134,7 +134,8 @@ CREATE TABLE service_contract (
   initial_start_date_timezone VARCHAR(255),
   current_start_date_timezone VARCHAR(255),
   current_end_date_timezone VARCHAR(255),
-  trashed_date TIMESTAMP(3)
+  trashed_date TIMESTAMP(3),
+  submitter_id INT REFERENCES organization
   );
 
 CREATE TABLE service_contract_hours (

@@ -28,6 +28,9 @@ ALTER TABLE ticket ADD COLUMN resolvedby_department_code INT REFERENCES lookup_d
 ALTER TABLE ticket ADD COLUMN state_id INTEGER REFERENCES lookup_ticket_state(code);
 ALTER TABLE ticket ADD COLUMN site_id INT REFERENCES lookup_site_id(code);
 
+ALTER TABLE ticket ADD COLUMN submitter_id INT REFERENCES organization;
+ALTER TABLE ticket ADD COLUMN submitter_contact_id INT REFERENCES contact;
+
 -- ticketlog table
 ALTER TABLE ticketlog ADD COLUMN escalation_code INT REFERENCES lookup_ticket_escalation(code);
 ALTER TABLE ticketlog ADD COLUMN state_id INT REFERENCES lookup_ticket_state(code);

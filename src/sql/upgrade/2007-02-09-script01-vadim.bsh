@@ -8,21 +8,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-print("Upgrade call history start"); 
+print("Upgrade call history start");
 
 print("Upgrade call history for contacts");
- 	  
+
 ArrayList historyIdList = new ArrayList();
 PreparedStatement pst = null;
 String sqlSelect = ("SELECT h.history_id "+
 	"FROM history h " +
-	"WHERE h.history_id > 0 "+ 
-	" and h.link_object_id = ? AND h.org_id IS NULL");  
+	"WHERE h.history_id > 0 "+
+	" and h.link_object_id = ? AND h.org_id IS NULL");
 int i = 0;
 pst = db.prepareStatement(sqlSelect);
-pst.setInt(++i, 3);
+pst.setInt(++i, OrganizationHistory.COMPLETE_ACTIVITY);
 ResultSet rs = pst.executeQuery();
-while (rs.next()){ 
+while (rs.next()){
 	historyIdList.add(new Integer(rs.getInt("history_id")));
 }
 rs.close();
@@ -30,7 +30,7 @@ pst.close();
 Iterator it = historyIdList.iterator();
 while (it.hasNext()){
 ContactHistory history = new ContactHistory(db, ((Integer)it.next()).intValue());
-Call thisCall = new Call(db, history.getLinkObjectId());
+Call thisCall = new Call(db, history.getLinkItemId());
 if (thisCall.getId()>0) {
   if (thisCall.getStatusId() != Call.COMPLETE_FOLLOWUP_PENDING){
     history.setType("Complete: " + thisCall.getCallType());
@@ -41,7 +41,7 @@ if (thisCall.getId()>0) {
   }
   history.update(db);
   }
-} 
+}
 
 print("Upgrade call history for accounts");
 
@@ -49,21 +49,21 @@ ArrayList historyIdList = new ArrayList();
 PreparedStatement pst = null;
 String sqlSelect = ("SELECT h.history_id "+
 	"FROM history h " +
-	"WHERE h.history_id > 0 "+ 
-	" and h.link_object_id = ? AND h.org_id IS NOT NULL");  
+	"WHERE h.history_id > 0 "+
+	" and h.link_object_id = ? AND h.org_id IS NOT NULL");
 int i = 0;
 pst = db.prepareStatement(sqlSelect);
-pst.setInt(++i, 3);
+pst.setInt(++i, OrganizationHistory.COMPLETE_ACTIVITY);
 ResultSet rs = pst.executeQuery();
-while (rs.next()){ 
+while (rs.next()){
 	historyIdList.add(new Integer(rs.getInt("history_id")));
 }
 rs.close();
 pst.close();
 Iterator it = historyIdList.iterator();
 while (it.hasNext()){
-ContactHistory history = new ContactHistory(db, ((Integer)it.next()).intValue());
-Call thisCall = new Call(db, history.getLinkObjectId());
+OrganizationHistory history = new OrganizationHistory(db, ((Integer)it.next()).intValue());
+Call thisCall = new Call(db, history.getLinkItemId());
 if (thisCall.getId()>0) {
   if (thisCall.getStatusId() != Call.COMPLETE_FOLLOWUP_PENDING){
     history.setType("Complete: " + thisCall.getCallType());
@@ -74,5 +74,5 @@ if (thisCall.getId()>0) {
   }
   history.update(db);
   }
-} 
+}
 print("Upgrade call history end");

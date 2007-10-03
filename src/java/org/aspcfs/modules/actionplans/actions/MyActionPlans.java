@@ -32,20 +32,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     Ananth
- * @created    August 16, 2005
- * @version    $Id: MyActionPlans.java 13876 2006-01-19 17:03:37 -0500 (Thu, 19
- *      Jan 2006) partha $
+ * @author Ananth
+ * @version $Id: MyActionPlans.java 13876 2006-01-19 17:03:37 -0500 (Thu, 19
+ *          Jan 2006) partha $
+ * @created August 16, 2005
  */
 public final class MyActionPlans extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-view"))) {
@@ -56,10 +56,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-view"))) {
@@ -95,10 +95,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-view"))) {
@@ -199,7 +199,7 @@ public final class MyActionPlans extends CFSModule {
         thisPlan.queryRecord(db, Integer.parseInt(planId));
         context.getSession().setAttribute("actionPlanId", planId);
       } else
-          if ((String) context.getSession().getAttribute("actionPlanId") != null) {
+      if ((String) context.getSession().getAttribute("actionPlanId") != null) {
         //plan id not available in the request. check the session
         planId = (String) context.getSession().getAttribute("actionPlanId");
         if (!"".equals(planId.trim())) {
@@ -231,9 +231,11 @@ public final class MyActionPlans extends CFSModule {
 
         if ("all".equals(dashboardListInfo.getFilterValue("listFilter1"))) {
           planWorkList.setEnabled(Constants.UNDEFINED);
-        } else if ("true".equals(dashboardListInfo.getFilterValue("listFilter1"))) {
+        } else
+        if ("true".equals(dashboardListInfo.getFilterValue("listFilter1"))) {
           planWorkList.setEnabled(Constants.TRUE);
-        } else if ("false".equals(dashboardListInfo.getFilterValue("listFilter1"))) {
+        } else
+        if ("false".equals(dashboardListInfo.getFilterValue("listFilter1"))) {
           planWorkList.setEnabled(Constants.FALSE);
         }
 
@@ -262,10 +264,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-view"))) {
@@ -295,20 +297,20 @@ public final class MyActionPlans extends CFSModule {
       } else if ("my".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
         accountPlanWorkList.setOwner(this.getUserId(context));
       } else
-          if ("mymanaged".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
+      if ("mymanaged".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
         accountPlanWorkList.setManager(this.getUserId(context));
       } else
-          if ("mywaiting".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
+      if ("mywaiting".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
         accountPlanWorkList.setCurrentStepOwner(this.getUserId(context));
       }
 
       if ("all".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
         accountPlanWorkList.setEnabled(Constants.UNDEFINED);
       } else
-          if ("true".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
+      if ("true".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
         accountPlanWorkList.setEnabled(Constants.TRUE);
       } else
-          if ("false".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
+      if ("false".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
         accountPlanWorkList.setEnabled(Constants.FALSE);
       }
 
@@ -333,10 +335,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-view"))) {
@@ -348,6 +350,7 @@ public final class MyActionPlans extends CFSModule {
       db = this.getConnection(context);
 
       String actionPlanId = context.getRequest().getParameter("actionPlanId");
+
       //Build plan with regular phases
       ActionPlanWork planWork = new ActionPlanWork();
       planWork.setBuildPhaseWork(true);
@@ -359,7 +362,8 @@ public final class MyActionPlans extends CFSModule {
       planWork.buildStepLinks();
 
       context.getRequest().setAttribute("actionPlanWork", planWork);
-
+      if (planWork.getLinkModuleId() == ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS))
+        context.getRequest().setAttribute("ticket_id", planWork.getLinkItemId() + "");
       //Build plan with just the global phases
       ActionPlanWork globalPlanWork = new ActionPlanWork();
       globalPlanWork.setBuildPhaseWork(true);
@@ -379,7 +383,7 @@ public final class MyActionPlans extends CFSModule {
       context.getRequest().setAttribute("constants", ActionPlan.buildConstants(db));
       String notAttached = context.getRequest().getParameter("notAttached");
       if (notAttached != null && "true".equals(notAttached.trim())) {
-        context.getRequest().setAttribute("actionWarning",thisSystem.getLabel("","The recipient was not added to the active campaign"));
+        context.getRequest().setAttribute("actionWarning", thisSystem.getLabel("", "The recipient was not added to the active campaign"));
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -396,10 +400,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEnable(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -410,10 +414,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReassign(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -424,10 +428,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAttach(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -438,10 +442,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandResetFolderAttachment(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-delete"))) {
@@ -452,10 +456,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewNotes(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -466,10 +470,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyStatus(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -519,10 +523,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateStatus(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -558,14 +562,14 @@ public final class MyActionPlans extends CFSModule {
         oldItem = new ActionItemWork();
         oldItem.setPlanWork(planWork);
         oldItem.queryRecord(db, itemWork.getId());
-				if (Integer.parseInt(statusId) == ActionPlanWork.COMPLETED){
-					itemWork.checkPreviousSteps(db, planWork);
-				}
+        if (Integer.parseInt(statusId) == ActionPlanWork.COMPLETED) {
+          itemWork.checkPreviousSteps(db, planWork);
+        }
         if (statusId != null && Integer.parseInt(statusId) > 0) {
           itemWork.setStatusId(statusId);
           itemWork.setModifiedBy(this.getUserId(context));
         }
-        
+
         if (nextStepId != null && Integer.parseInt(nextStepId) > 0) {
           nextItem = new ActionItemWork();
           nextItem.setBuildStep(true);
@@ -604,7 +608,7 @@ public final class MyActionPlans extends CFSModule {
               // random phase to random phase translation
               sendEmailForAllNewSteps = true;
             } else
-                if (!nextPhaseWork.getPhase().getRandom() && nextPhaseWork.noStepComplete()) {
+            if (!nextPhaseWork.getPhase().getRandom() && nextPhaseWork.noStepComplete()) {
               // random phase to serial phase translation
               if (nextPhaseWork.getItemWorkList().size() > 0) {
                 nextItem = (ActionItemWork) nextPhaseWork.getItemWorkList().get(0);
@@ -647,10 +651,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRevertStatus(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -661,10 +665,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateGlobalStatus(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -675,10 +679,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRestart(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -689,10 +693,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateRating(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-edit"))) {
@@ -726,10 +730,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-plans-delete"))) {
@@ -754,10 +758,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmRevert(ActionContext context) {
     return "GoConfirmRevertOK";
@@ -765,10 +769,10 @@ public final class MyActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRevertToLead(ActionContext context) {
     return "GoRevertToLeadOK";

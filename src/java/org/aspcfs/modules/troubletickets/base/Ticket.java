@@ -19,22 +19,24 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.webdav.utils.ICalendar;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.admin.base.UserGroupList;
-import org.aspcfs.modules.admin.base.UserGroup;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionlist.base.ActionItemLogList;
-import org.aspcfs.modules.actionplans.base.*;
+import org.aspcfs.modules.actionplans.base.ActionPlan;
+import org.aspcfs.modules.actionplans.base.ActionPlanWork;
+import org.aspcfs.modules.actionplans.base.ActionPlanWorkList;
+import org.aspcfs.modules.admin.base.UserGroup;
+import org.aspcfs.modules.admin.base.UserGroupList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.CustomFieldRecordList;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.products.base.ProductCatalogList;
-import org.aspcfs.modules.products.base.ProductCatalog;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.modules.mycfs.base.TicketEventList;
+import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.products.base.ProductCatalogList;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
@@ -43,17 +45,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
-import java.util.HashMap;
 
 /**
- *  Represents a Ticket
+ * Represents a Ticket
  *
- * @author     chris
- * @created    November 8, 2001
- * @version    $Id: Ticket.java 14021 2006-01-25 15:15:37 -0500 (Wed, 25 Jan
- *      2006) partha@darkhorseventures.com $
+ * @author chris
+ * @version $Id: Ticket.java 14021 2006-01-25 15:15:37 -0500 (Wed, 25 Jan
+ *          2006) partha@darkhorseventures.com $
+ * @created November 8, 2001
  */
 public class Ticket extends GenericBean {
 
@@ -62,7 +64,8 @@ public class Ticket extends GenericBean {
   private String errorMessage = "";
   private int id = -1;
   private int orgId = -1;
-
+  private int submitterId = -1;
+  private int submitterContactId = -1;
   private int contractId = -1;
   private String serviceContractNumber = null;
   private double totalHoursRemaining = -1;
@@ -124,6 +127,7 @@ public class Ticket extends GenericBean {
   private int siteId = -1;
 
   //Related descriptions
+  private String submitterName = "";
   private String companyName = "";
   private String categoryName = "";
   private String departmentName = "";
@@ -165,20 +169,21 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Constructor for the Ticket object, creates an empty Ticket
+   * Constructor for the Ticket object, creates an empty Ticket
    *
-   * @since    1.0
+   * @since 1.0
    */
-  public Ticket() { }
+  public Ticket() {
+  }
 
 
   /**
-   *  Constructor for the Ticket object
+   * Constructor for the Ticket object
    *
-   * @param  rs                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public Ticket(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -186,13 +191,13 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of Parameter
-   * @param  id                Description of Parameter
-   * @exception  SQLException  Description of the Exception
-   * @throws  SQLException     Description of the Exception
-   * @throws  SQLException     Description of Exception
+   * @param db Description of Parameter
+   * @param id Description of Parameter
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of the Exception
+   * @throws SQLException Description of Exception
    */
   public Ticket(Connection db, int id) throws SQLException {
     queryRecord(db, id);
@@ -200,11 +205,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  id             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
@@ -212,47 +217,49 @@ public class Ticket extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.*, " +
-        "o.name AS orgname, " +
-        "o.enabled AS orgenabled, " +
-        "o.site_id AS orgsiteid, " +
-        "ld.description AS dept, " +
-        "lrd.description AS resolvedept, " +
-        "tp.description AS ticpri, " +
-        "ts.description AS ticsev, " +
-        "tc.description AS catname, " +
-        "lu_ts.description AS sourcename, " +
-        "sc.contract_number AS contractnumber, " +
-        "sc.total_hours_remaining AS hoursremaining, " +
-        "sc.current_start_date AS contractstartdate, " +
-        "sc.current_end_date AS contractenddate, " +
-        "sc.onsite_service_model AS contractonsiteservicemodel, " +
-        "a.serial_number AS serialnumber, " +
-        "a.manufacturer_code AS assetmanufacturercode, " +
-        "a.vendor_code AS assetvendorcode, " +
-        "a.model_version AS modelversion, " +
-        "a.location AS assetlocation, " +
-        "a.onsite_service_model AS assetonsiteservicemodel, " +
-        "pc.sku AS productsku , " +
-        "pc.product_name AS productname, " +
-        "tlp.project_id, " +
-        "proj.title as projectname, ug.group_name as usergroupname, " +
-        "lu_te.description AS escalationlevelname " +
-        "FROM ticket t " +
-        "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
-        "LEFT JOIN lookup_department lrd ON (t.resolvedby_department_code = lrd.code) " +
-        "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
-        "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
-        "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
-        "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
-        "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
-        "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
-        "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
-        "LEFT JOIN ticketlink_project tlp ON (t.ticketid = tlp.ticket_id) " +
-        "LEFT JOIN projects proj ON (tlp.project_id = proj.project_id) " +
-        "LEFT JOIN user_group ug ON (t.user_group_id = ug.group_id) " +
-        "LEFT JOIN lookup_ticket_escalation lu_te ON (t.escalation_level = lu_te.code) " +
-        "WHERE t.ticketid = ? ");
+            "o.name AS orgname, " +
+            "o.enabled AS orgenabled, " +
+            "o.site_id AS orgsiteid, " +
+            "os.name AS subname, " +
+            "ld.description AS dept, " +
+            "lrd.description AS resolvedept, " +
+            "tp.description AS ticpri, " +
+            "ts.description AS ticsev, " +
+            "tc.description AS catname, " +
+            "lu_ts.description AS sourcename, " +
+            "sc.contract_number AS contractnumber, " +
+            "sc.total_hours_remaining AS hoursremaining, " +
+            "sc.current_start_date AS contractstartdate, " +
+            "sc.current_end_date AS contractenddate, " +
+            "sc.onsite_service_model AS contractonsiteservicemodel, " +
+            "a.serial_number AS serialnumber, " +
+            "a.manufacturer_code AS assetmanufacturercode, " +
+            "a.vendor_code AS assetvendorcode, " +
+            "a.model_version AS modelversion, " +
+            "a.location AS assetlocation, " +
+            "a.onsite_service_model AS assetonsiteservicemodel, " +
+            "pc.sku AS productsku , " +
+            "pc.product_name AS productname, " +
+            "tlp.project_id, " +
+            "proj.title as projectname, ug.group_name as usergroupname, " +
+            "lu_te.description AS escalationlevelname " +
+            "FROM ticket t " +
+            "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
+            "LEFT JOIN organization os ON (t.submitter_id = os.org_id) " +
+            "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
+            "LEFT JOIN lookup_department lrd ON (t.resolvedby_department_code = lrd.code) " +
+            "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
+            "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
+            "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
+            "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
+            "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
+            "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
+            "LEFT JOIN product_catalog pc ON (t.product_id = pc.product_id) " +
+            "LEFT JOIN ticketlink_project tlp ON (t.ticketid = tlp.ticket_id) " +
+            "LEFT JOIN projects proj ON (tlp.project_id = proj.project_id) " +
+            "LEFT JOIN user_group ug ON (t.user_group_id = ug.group_id) " +
+            "LEFT JOIN lookup_ticket_escalation lu_te ON (t.escalation_level = lu_te.code) " +
+            "WHERE t.ticketid = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -289,10 +296,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildRelatedInformation(Connection db) throws SQLException {
     if (this.getProductId() != -1) {
@@ -318,10 +325,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildActionPlan(Connection db) throws SQLException {
     ActionPlanWorkList list = new ActionPlanWorkList();
@@ -349,10 +356,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildHistory(Connection db) throws SQLException {
     history.setTicketId(this.getId());
@@ -361,11 +368,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  systemStatus   Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param systemStatus Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildHistory(Connection db, SystemStatus systemStatus) throws SQLException {
     history.setTicketId(this.getId());
@@ -375,10 +382,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildFiles(Connection db) throws SQLException {
     files.clear();
@@ -389,10 +396,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildTasks(Connection db) throws SQLException {
     tasks.setTicketId(this.getId());
@@ -401,19 +408,19 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  id             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @param id Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean checkContactRecord(Connection db, int id) throws SQLException {
     boolean contactFound = false;
     if (id != -1) {
       PreparedStatement pst = db.prepareStatement(
           "SELECT contact_id from contact c " +
-          "WHERE c.contact_id = ? ");
+              "WHERE c.contact_id = ? ");
       pst.setInt(1, id);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -427,9 +434,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the resolvedByDeptName attribute of the Ticket object
+   * Gets the resolvedByDeptName attribute of the Ticket object
    *
-   * @return    The resolvedByDeptName value
+   * @return The resolvedByDeptName value
    */
   public String getResolvedByDeptName() {
     return resolvedByDeptName;
@@ -437,9 +444,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvedByDeptName attribute of the Ticket object
+   * Sets the resolvedByDeptName attribute of the Ticket object
    *
-   * @param  tmp  The new resolvedByDeptName value
+   * @param tmp The new resolvedByDeptName value
    */
   public void setResolvedByDeptName(String tmp) {
     this.resolvedByDeptName = tmp;
@@ -447,9 +454,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the Ticket object
+   * Sets the productId attribute of the Ticket object
    *
-   * @param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(int tmp) {
     this.productId = tmp;
@@ -457,9 +464,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the productId attribute of the Ticket object
+   * Sets the productId attribute of the Ticket object
    *
-   * @param  tmp  The new productId value
+   * @param tmp The new productId value
    */
   public void setProductId(String tmp) {
     this.productId = Integer.parseInt(tmp);
@@ -467,9 +474,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the systemStatus attribute of the Ticket object
+   * Sets the systemStatus attribute of the Ticket object
    *
-   * @param  tmp  The new systemStatus value
+   * @param tmp The new systemStatus value
    */
   public void setSystemStatus(SystemStatus tmp) {
     this.systemStatus = tmp;
@@ -477,9 +484,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the projectName attribute of the Ticket object
+   * Gets the projectName attribute of the Ticket object
    *
-   * @return    The projectName value
+   * @return The projectName value
    */
   public String getProjectName() {
     return projectName;
@@ -487,9 +494,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the projectName attribute of the Ticket object
+   * Sets the projectName attribute of the Ticket object
    *
-   * @param  tmp  The new projectName value
+   * @param tmp The new projectName value
    */
   public void setProjectName(String tmp) {
     this.projectName = tmp;
@@ -497,9 +504,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the systemStatus attribute of the Ticket object
+   * Gets the systemStatus attribute of the Ticket object
    *
-   * @return    The systemStatus value
+   * @return The systemStatus value
    */
   public SystemStatus getSystemStatus() {
     return systemStatus;
@@ -507,9 +514,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the productId attribute of the Ticket object
+   * Gets the productId attribute of the Ticket object
    *
-   * @return    The productId value
+   * @return The productId value
    */
   public int getProductId() {
     return productId;
@@ -517,9 +524,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Ticket object
+   * Sets the closed attribute of the Ticket object
    *
-   * @param  closed  The new closed value
+   * @param closed The new closed value
    */
   public void setClosed(java.sql.Timestamp closed) {
     this.closed = closed;
@@ -527,9 +534,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the closed attribute of the Ticket object
+   * Sets the closed attribute of the Ticket object
    *
-   * @param  tmp  The new closed value
+   * @param tmp The new closed value
    */
   public void setClosed(String tmp) {
     this.closed = DateUtils.parseTimestampString(tmp);
@@ -537,9 +544,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the expectation attribute of the Ticket object
+   * Sets the expectation attribute of the Ticket object
    *
-   * @param  tmp  The new expectation value
+   * @param tmp The new expectation value
    */
   public void setExpectation(int tmp) {
     this.expectation = tmp;
@@ -547,9 +554,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the expectation attribute of the Ticket object
+   * Sets the expectation attribute of the Ticket object
    *
-   * @param  tmp  The new expectation value
+   * @param tmp The new expectation value
    */
   public void setExpectation(String tmp) {
     this.expectation = Integer.parseInt(tmp);
@@ -557,9 +564,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the productSku attribute of the Ticket object
+   * Sets the productSku attribute of the Ticket object
    *
-   * @param  tmp  The new productSku value
+   * @param tmp The new productSku value
    */
   public void setProductSku(String tmp) {
     this.productSku = tmp;
@@ -567,9 +574,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the productName attribute of the Ticket object
+   * Sets the productName attribute of the Ticket object
    *
-   * @param  tmp  The new productName value
+   * @param tmp The new productName value
    */
   public void setProductName(String tmp) {
     this.productName = tmp;
@@ -577,9 +584,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the ThisContact attribute of the Ticket object
+   * Sets the ThisContact attribute of the Ticket object
    *
-   * @param  thisContact  The new ThisContact value
+   * @param thisContact The new ThisContact value
    */
   public void setThisContact(Contact thisContact) {
     this.thisContact = thisContact;
@@ -587,19 +594,43 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the Ticket object
+   * Sets the actionId attribute of the Ticket object
    *
-   * @param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
   }
 
+  public void setSubmitterId(int tmp) {
+    this.submitterId = tmp;
+  }
+
+  public void setSubmitterContactId(int tmp) {
+    this.submitterContactId = tmp;
+  }
+
+
+  public int getSubmitterId() {
+    if (submitterId == -1) {
+      submitterId = orgId;
+      submitterContactId = contactId;
+    }
+    return submitterId;
+  }
+
+  public int getSubmitterContactId() {
+    if (submitterContactId == -1) {
+      submitterId = orgId;
+      submitterContactId = contactId;
+    }
+    return submitterContactId;
+  }
 
   /**
-   *  Gets the resolvable attribute of the Ticket object
+   * Gets the resolvable attribute of the Ticket object
    *
-   * @return    The resolvable value
+   * @return The resolvable value
    */
   public boolean getResolvable() {
     return resolvable;
@@ -607,9 +638,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvable attribute of the Ticket object
+   * Sets the resolvable attribute of the Ticket object
    *
-   * @param  tmp  The new resolvable value
+   * @param tmp The new resolvable value
    */
   public void setResolvable(boolean tmp) {
     this.resolvable = tmp;
@@ -617,9 +648,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvable attribute of the Ticket object
+   * Sets the resolvable attribute of the Ticket object
    *
-   * @param  tmp  The new resolvable value
+   * @param tmp The new resolvable value
    */
   public void setResolvable(String tmp) {
     this.resolvable = DatabaseUtils.parseBoolean(tmp);
@@ -627,9 +658,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the resolvedBy attribute of the Ticket object
+   * Gets the resolvedBy attribute of the Ticket object
    *
-   * @return    The resolvedBy value
+   * @return The resolvedBy value
    */
   public int getResolvedBy() {
     return resolvedBy;
@@ -637,9 +668,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvedBy attribute of the Ticket object
+   * Sets the resolvedBy attribute of the Ticket object
    *
-   * @param  tmp  The new resolvedBy value
+   * @param tmp The new resolvedBy value
    */
   public void setResolvedBy(int tmp) {
     this.resolvedBy = tmp;
@@ -647,9 +678,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvedBy attribute of the Ticket object
+   * Sets the resolvedBy attribute of the Ticket object
    *
-   * @param  tmp  The new resolvedBy value
+   * @param tmp The new resolvedBy value
    */
   public void setResolvedBy(String tmp) {
     this.resolvedBy = Integer.parseInt(tmp);
@@ -657,9 +688,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the resolvedByDeptCode attribute of the Ticket object
+   * Gets the resolvedByDeptCode attribute of the Ticket object
    *
-   * @return    The resolvedByDeptCode value
+   * @return The resolvedByDeptCode value
    */
   public int getResolvedByDeptCode() {
     return resolvedByDeptCode;
@@ -667,9 +698,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvedByDeptCode attribute of the Ticket object
+   * Sets the resolvedByDeptCode attribute of the Ticket object
    *
-   * @param  tmp  The new resolvedByDeptCode value
+   * @param tmp The new resolvedByDeptCode value
    */
   public void setResolvedByDeptCode(int tmp) {
     this.resolvedByDeptCode = tmp;
@@ -677,9 +708,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolvedByDeptCode attribute of the Ticket object
+   * Sets the resolvedByDeptCode attribute of the Ticket object
    *
-   * @param  tmp  The new resolvedByDeptCode value
+   * @param tmp The new resolvedByDeptCode value
    */
   public void setResolvedByDeptCode(String tmp) {
     this.resolvedByDeptCode = Integer.parseInt(tmp);
@@ -687,9 +718,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the actionId attribute of the Ticket object
+   * Sets the actionId attribute of the Ticket object
    *
-   * @param  actionId  The new actionId value
+   * @param actionId The new actionId value
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
@@ -697,9 +728,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Ticket object
+   * Sets the statusId attribute of the Ticket object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -707,9 +738,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the statusId attribute of the Ticket object
+   * Sets the statusId attribute of the Ticket object
    *
-   * @param  tmp  The new statusId value
+   * @param tmp The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -717,9 +748,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the statusId attribute of the Ticket object
+   * Gets the statusId attribute of the Ticket object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -727,9 +758,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assignedDateTimeZone attribute of the Ticket object
+   * Sets the assignedDateTimeZone attribute of the Ticket object
    *
-   * @param  tmp  The new assignedDateTimeZone value
+   * @param tmp The new assignedDateTimeZone value
    */
   public void setAssignedDateTimeZone(String tmp) {
     this.assignedDateTimeZone = tmp;
@@ -737,9 +768,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolutionDateTimeZone attribute of the Ticket object
+   * Sets the resolutionDateTimeZone attribute of the Ticket object
    *
-   * @param  tmp  The new resolutionDateTimeZone value
+   * @param tmp The new resolutionDateTimeZone value
    */
   public void setResolutionDateTimeZone(String tmp) {
     this.resolutionDateTimeZone = tmp;
@@ -747,9 +778,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assignedDateTimeZone attribute of the Ticket object
+   * Gets the assignedDateTimeZone attribute of the Ticket object
    *
-   * @return    The assignedDateTimeZone value
+   * @return The assignedDateTimeZone value
    */
   public String getAssignedDateTimeZone() {
     return assignedDateTimeZone;
@@ -757,9 +788,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the resolutionDateTimeZone attribute of the Ticket object
+   * Gets the resolutionDateTimeZone attribute of the Ticket object
    *
-   * @return    The resolutionDateTimeZone value
+   * @return The resolutionDateTimeZone value
    */
   public String getResolutionDateTimeZone() {
     return resolutionDateTimeZone;
@@ -767,9 +798,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Ticket object
+   * Sets the trashedDate attribute of the Ticket object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(java.sql.Timestamp tmp) {
     this.trashedDate = tmp;
@@ -777,9 +808,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the trashedDate attribute of the Ticket object
+   * Sets the trashedDate attribute of the Ticket object
    *
-   * @param  tmp  The new trashedDate value
+   * @param tmp The new trashedDate value
    */
   public void setTrashedDate(String tmp) {
     this.trashedDate = DatabaseUtils.parseTimestamp(tmp);
@@ -787,9 +818,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the trashedDate attribute of the Ticket object
+   * Gets the trashedDate attribute of the Ticket object
    *
-   * @return    The statusId value
+   * @return The statusId value
    */
   public java.sql.Timestamp getTrashedDate() {
     return trashedDate;
@@ -797,9 +828,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the trashed attribute of the Ticket object
+   * Gets the trashed attribute of the Ticket object
    *
-   * @return    The trashed value
+   * @return The trashed value
    */
   public boolean isTrashed() {
     return (trashedDate != null);
@@ -807,9 +838,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the actionId attribute of the Ticket object
+   * Gets the actionId attribute of the Ticket object
    *
-   * @return    The actionId value
+   * @return The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -817,9 +848,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the tasks attribute of the Ticket object
+   * Sets the tasks attribute of the Ticket object
    *
-   * @param  tasks  The new tasks value
+   * @param tasks The new tasks value
    */
   public void setTasks(TaskList tasks) {
     this.tasks = tasks;
@@ -827,9 +858,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the tasks attribute of the Ticket object
+   * Gets the tasks attribute of the Ticket object
    *
-   * @return    The tasks value
+   * @return The tasks value
    */
   public TaskList getTasks() {
     return tasks;
@@ -837,9 +868,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the companyEnabled attribute of the Ticket object
+   * Gets the companyEnabled attribute of the Ticket object
    *
-   * @return    The companyEnabled value
+   * @return The companyEnabled value
    */
   public boolean getCompanyEnabled() {
     return companyEnabled;
@@ -847,9 +878,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the orgSiteId attribute of the Ticket object
+   * Gets the orgSiteId attribute of the Ticket object
    *
-   * @return    The orgSiteId value
+   * @return The orgSiteId value
    */
   public int getOrgSiteId() {
     return orgSiteId;
@@ -857,9 +888,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the companyEnabled attribute of the Ticket object
+   * Sets the companyEnabled attribute of the Ticket object
    *
-   * @param  companyEnabled  The new companyEnabled value
+   * @param companyEnabled The new companyEnabled value
    */
   public void setCompanyEnabled(boolean companyEnabled) {
     this.companyEnabled = companyEnabled;
@@ -867,9 +898,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the orgSiteId attribute of the Ticket object
+   * Sets the orgSiteId attribute of the Ticket object
    *
-   * @param  tmp  The new orgSiteId value
+   * @param tmp The new orgSiteId value
    */
   public void setOrgSiteId(int tmp) {
     this.orgSiteId = tmp;
@@ -877,9 +908,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the orgSiteId attribute of the Ticket object
+   * Sets the orgSiteId attribute of the Ticket object
    *
-   * @param  tmp  The new orgSiteId value
+   * @param tmp The new orgSiteId value
    */
   public void setOrgSiteId(String tmp) {
     this.orgSiteId = Integer.parseInt(tmp);
@@ -887,9 +918,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Newticketlogentry attribute of the Ticket object
+   * Sets the Newticketlogentry attribute of the Ticket object
    *
-   * @param  newticketlogentry  The new Newticketlogentry value
+   * @param newticketlogentry The new Newticketlogentry value
    */
   public void setNewticketlogentry(String newticketlogentry) {
     this.comment = newticketlogentry;
@@ -897,9 +928,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the AssignedTo attribute of the Ticket object
+   * Sets the AssignedTo attribute of the Ticket object
    *
-   * @param  assignedTo  The new AssignedTo value
+   * @param assignedTo The new AssignedTo value
    */
   public void setAssignedTo(int assignedTo) {
     this.assignedTo = assignedTo;
@@ -907,9 +938,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assignedDate attribute of the Ticket object
+   * Sets the assignedDate attribute of the Ticket object
    *
-   * @param  tmp  The new assignedDate value
+   * @param tmp The new assignedDate value
    */
   public void setAssignedDate(java.sql.Timestamp tmp) {
     this.assignedDate = tmp;
@@ -917,9 +948,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assignedDate attribute of the Ticket object
+   * Sets the assignedDate attribute of the Ticket object
    *
-   * @param  tmp  The new assignedDate value
+   * @param tmp The new assignedDate value
    */
   public void setAssignedDate(String tmp) {
     this.assignedDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -927,9 +958,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SubCat1 attribute of the Ticket object
+   * Sets the SubCat1 attribute of the Ticket object
    *
-   * @param  tmp  The new SubCat1 value
+   * @param tmp The new SubCat1 value
    */
   public void setSubCat1(int tmp) {
     this.subCat1 = tmp;
@@ -937,9 +968,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SubCat2 attribute of the Ticket object
+   * Sets the SubCat2 attribute of the Ticket object
    *
-   * @param  tmp  The new SubCat2 value
+   * @param tmp The new SubCat2 value
    */
   public void setSubCat2(int tmp) {
     this.subCat2 = tmp;
@@ -947,9 +978,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SourceName attribute of the Ticket object
+   * Sets the SourceName attribute of the Ticket object
    *
-   * @param  sourceName  The new SourceName value
+   * @param sourceName The new SourceName value
    */
   public void setSourceName(String sourceName) {
     this.sourceName = sourceName;
@@ -957,9 +988,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the escalationLevelName attribute of the Ticket object
+   * Sets the escalationLevelName attribute of the Ticket object
    *
-   * @param  tmp  The new escalationLevelName value
+   * @param tmp The new escalationLevelName value
    */
   public void setEscalationLevelName(String tmp) {
     this.escalationLevelName = tmp;
@@ -967,9 +998,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Ticket object
+   * Sets the entered attribute of the Ticket object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -977,9 +1008,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Ticket object
+   * Sets the modified attribute of the Ticket object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -987,9 +1018,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the entered attribute of the Ticket object
+   * Sets the entered attribute of the Ticket object
    *
-   * @param  tmp  The new entered value
+   * @param tmp The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -997,9 +1028,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the modified attribute of the Ticket object
+   * Sets the modified attribute of the Ticket object
    *
-   * @param  tmp  The new modified value
+   * @param tmp The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -1007,9 +1038,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SubCat3 attribute of the Ticket object
+   * Sets the SubCat3 attribute of the Ticket object
    *
-   * @param  tmp  The new SubCat3 value
+   * @param tmp The new SubCat3 value
    */
   public void setSubCat3(int tmp) {
     this.subCat3 = tmp;
@@ -1017,9 +1048,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SubCat1 attribute of the Ticket object
+   * Sets the SubCat1 attribute of the Ticket object
    *
-   * @param  tmp  The new SubCat1 value
+   * @param tmp The new SubCat1 value
    */
   public void setSubCat1(String tmp) {
     this.subCat1 = Integer.parseInt(tmp);
@@ -1027,9 +1058,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SubCat2 attribute of the Ticket object
+   * Sets the SubCat2 attribute of the Ticket object
    *
-   * @param  tmp  The new SubCat2 value
+   * @param tmp The new SubCat2 value
    */
   public void setSubCat2(String tmp) {
     this.subCat2 = Integer.parseInt(tmp);
@@ -1037,9 +1068,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SubCat3 attribute of the Ticket object
+   * Sets the SubCat3 attribute of the Ticket object
    *
-   * @param  tmp  The new SubCat3 value
+   * @param tmp The new SubCat3 value
    */
   public void setSubCat3(String tmp) {
     this.subCat3 = Integer.parseInt(tmp);
@@ -1047,9 +1078,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the AssignedTo attribute of the Ticket object
+   * Sets the AssignedTo attribute of the Ticket object
    *
-   * @param  assignedTo  The new AssignedTo value
+   * @param assignedTo The new AssignedTo value
    */
   public void setAssignedTo(String assignedTo) {
     this.assignedTo = Integer.parseInt(assignedTo);
@@ -1057,9 +1088,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentName attribute of the Ticket object
+   * Sets the DepartmentName attribute of the Ticket object
    *
-   * @param  departmentName  The new DepartmentName value
+   * @param departmentName The new DepartmentName value
    */
   public void setDepartmentName(String departmentName) {
     this.departmentName = departmentName;
@@ -1067,9 +1098,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the CloseIt attribute of the Ticket object
+   * Sets the CloseIt attribute of the Ticket object
    *
-   * @param  closeIt  The new CloseIt value
+   * @param closeIt The new CloseIt value
    */
   public void setCloseIt(boolean closeIt) {
     this.closeIt = closeIt;
@@ -1077,9 +1108,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the closeNow attribute of the Ticket object
+   * Sets the closeNow attribute of the Ticket object
    *
-   * @param  tmp  The new closeNow value
+   * @param tmp The new closeNow value
    */
   public void setCloseNow(String tmp) {
     this.closeIt = DatabaseUtils.parseBoolean(tmp);
@@ -1087,9 +1118,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SeverityName attribute of the Ticket object
+   * Sets the SeverityName attribute of the Ticket object
    *
-   * @param  severityName  The new SeverityName value
+   * @param severityName The new SeverityName value
    */
   public void setSeverityName(String severityName) {
     this.severityName = severityName;
@@ -1097,9 +1128,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the ErrorMessage attribute of the Ticket object
+   * Sets the ErrorMessage attribute of the Ticket object
    *
-   * @param  tmp  The new ErrorMessage value
+   * @param tmp The new ErrorMessage value
    */
   public void setErrorMessage(String tmp) {
     this.errorMessage = tmp;
@@ -1107,9 +1138,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the campaignId attribute of the Ticket object
+   * Sets the campaignId attribute of the Ticket object
    *
-   * @param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
@@ -1117,9 +1148,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the campaignId attribute of the Ticket object
+   * Sets the campaignId attribute of the Ticket object
    *
-   * @param  tmp  The new campaignId value
+   * @param tmp The new campaignId value
    */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
@@ -1127,9 +1158,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the History attribute of the Ticket object
+   * Sets the History attribute of the Ticket object
    *
-   * @param  history  The new History value
+   * @param history The new History value
    */
   public void setHistory(TicketLogList history) {
     this.history = history;
@@ -1137,9 +1168,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the files attribute of the Ticket object
+   * Sets the files attribute of the Ticket object
    *
-   * @param  tmp  The new files value
+   * @param tmp The new files value
    */
   public void setFiles(FileItemList tmp) {
     this.files = tmp;
@@ -1147,9 +1178,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Ticket object
+   * Sets the Id attribute of the Ticket object
    *
-   * @param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -1158,9 +1189,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Id attribute of the Ticket object
+   * Sets the Id attribute of the Ticket object
    *
-   * @param  tmp  The new Id value
+   * @param tmp The new Id value
    */
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
@@ -1168,9 +1199,18 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the CompanyName attribute of the Ticket object
+   * Sets the SubmitterName attribute of the Ticket object
    *
-   * @param  companyName  The new CompanyName value
+   * @param submitterName The new SubmitterName value
+   */
+  public void setSubmitterName(String submitterName) {
+    this.submitterName = submitterName;
+  }
+
+  /**
+   * Sets the CompanyName attribute of the Ticket object
+   *
+   * @param companyName The new CompanyName value
    */
   public void setCompanyName(String companyName) {
     this.companyName = companyName;
@@ -1178,9 +1218,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Ticket object
+   * Sets the OrgId attribute of the Ticket object
    *
-   * @param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -1188,9 +1228,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the OrgId attribute of the Ticket object
+   * Sets the OrgId attribute of the Ticket object
    *
-   * @param  tmp  The new OrgId value
+   * @param tmp The new OrgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -1198,9 +1238,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractId attribute of the Ticket object
+   * Sets the contractId attribute of the Ticket object
    *
-   * @param  tmp  The new contractId value
+   * @param tmp The new contractId value
    */
   public void setContractId(int tmp) {
     this.contractId = tmp;
@@ -1208,9 +1248,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractId attribute of the Ticket object
+   * Sets the contractId attribute of the Ticket object
    *
-   * @param  tmp  The new contractId value
+   * @param tmp The new contractId value
    */
   public void setContractId(String tmp) {
     this.contractId = Integer.parseInt(tmp);
@@ -1218,9 +1258,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the serviceContractNumber attribute of the Ticket object
+   * Sets the serviceContractNumber attribute of the Ticket object
    *
-   * @param  tmp  The new serviceContractNumber value
+   * @param tmp The new serviceContractNumber value
    */
   public void setServiceContractNumber(String tmp) {
     this.serviceContractNumber = tmp;
@@ -1228,9 +1268,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the totalHoursRemaining attribute of the Ticket object
+   * Sets the totalHoursRemaining attribute of the Ticket object
    *
-   * @param  tmp  The new totalHoursRemaining value
+   * @param tmp The new totalHoursRemaining value
    */
   public void setTotalHoursRemaining(double tmp) {
     this.totalHoursRemaining = tmp;
@@ -1238,9 +1278,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the totalHoursRemaining attribute of the Ticket object
+   * Sets the totalHoursRemaining attribute of the Ticket object
    *
-   * @param  tmp  The new totalHoursRemaining value
+   * @param tmp The new totalHoursRemaining value
    */
   public void setTotalHoursRemaining(String tmp) {
     this.totalHoursRemaining = Double.parseDouble(tmp);
@@ -1248,9 +1288,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractStartDate attribute of the Ticket object
+   * Sets the contractStartDate attribute of the Ticket object
    *
-   * @param  tmp  The new contractStartDate value
+   * @param tmp The new contractStartDate value
    */
   public void setContractStartDate(java.sql.Timestamp tmp) {
     this.contractStartDate = tmp;
@@ -1258,9 +1298,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractStartDate attribute of the Ticket object
+   * Sets the contractStartDate attribute of the Ticket object
    *
-   * @param  tmp  The new contractStartDate value
+   * @param tmp The new contractStartDate value
    */
   public void setContractStartDate(String tmp) {
     this.contractStartDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -1268,9 +1308,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractEndDate attribute of the Ticket object
+   * Sets the contractEndDate attribute of the Ticket object
    *
-   * @param  tmp  The new contractEndDate value
+   * @param tmp The new contractEndDate value
    */
   public void setContractEndDate(java.sql.Timestamp tmp) {
     this.contractEndDate = tmp;
@@ -1278,9 +1318,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractEndDate attribute of the Ticket object
+   * Sets the contractEndDate attribute of the Ticket object
    *
-   * @param  tmp  The new contractEndDate value
+   * @param tmp The new contractEndDate value
    */
   public void setContractEndDate(String tmp) {
     this.contractEndDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -1288,9 +1328,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractOnsiteResponseModel attribute of the Ticket object
+   * Sets the contractOnsiteResponseModel attribute of the Ticket object
    *
-   * @param  tmp  The new contractOnsiteResponseModel value
+   * @param tmp The new contractOnsiteResponseModel value
    */
   public void setContractOnsiteResponseModel(int tmp) {
     this.contractOnsiteResponseModel = tmp;
@@ -1298,9 +1338,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the contractOnsiteResponseModel attribute of the Ticket object
+   * Sets the contractOnsiteResponseModel attribute of the Ticket object
    *
-   * @param  tmp  The new contractOnsiteResponseModel value
+   * @param tmp The new contractOnsiteResponseModel value
    */
   public void setContractOnsiteResponseModel(String tmp) {
     this.contractOnsiteResponseModel = Integer.parseInt(tmp);
@@ -1308,9 +1348,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetId attribute of the Ticket object
+   * Sets the assetId attribute of the Ticket object
    *
-   * @param  tmp  The new assetId value
+   * @param tmp The new assetId value
    */
   public void setAssetId(int tmp) {
     this.assetId = tmp;
@@ -1318,9 +1358,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetId attribute of the Ticket object
+   * Sets the assetId attribute of the Ticket object
    *
-   * @param  tmp  The new assetId value
+   * @param tmp The new assetId value
    */
   public void setAssetId(String tmp) {
     this.assetId = Integer.parseInt(tmp);
@@ -1328,9 +1368,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetSerialNumber attribute of the Ticket object
+   * Sets the assetSerialNumber attribute of the Ticket object
    *
-   * @param  tmp  The new assetSerialNumber value
+   * @param tmp The new assetSerialNumber value
    */
   public void setAssetSerialNumber(String tmp) {
     this.assetSerialNumber = tmp;
@@ -1338,9 +1378,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetManufacturerCode attribute of the Ticket object
+   * Sets the assetManufacturerCode attribute of the Ticket object
    *
-   * @param  tmp  The new assetManufacturerCode value
+   * @param tmp The new assetManufacturerCode value
    */
   public void setAssetManufacturerCode(int tmp) {
     this.assetManufacturerCode = tmp;
@@ -1348,9 +1388,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetManufacturerCode attribute of the Ticket object
+   * Sets the assetManufacturerCode attribute of the Ticket object
    *
-   * @param  tmp  The new assetManufacturerCode value
+   * @param tmp The new assetManufacturerCode value
    */
   public void setAssetManufacturerCode(String tmp) {
     this.assetManufacturerCode = Integer.parseInt(tmp);
@@ -1358,9 +1398,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetVendorCode attribute of the Ticket object
+   * Sets the assetVendorCode attribute of the Ticket object
    *
-   * @param  tmp  The new assetVendorCode value
+   * @param tmp The new assetVendorCode value
    */
   public void setAssetVendorCode(int tmp) {
     this.assetVendorCode = tmp;
@@ -1368,20 +1408,19 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetVendorCode attribute of the Ticket object
+   * Sets the assetVendorCode attribute of the Ticket object
    *
-   * @param  tmp  The new assetVendorCode value
+   * @param tmp The new assetVendorCode value
    */
   public void setAssetVendorCode(String tmp) {
     this.assetVendorCode = Integer.parseInt(tmp);
   }
 
 
-
   /**
-   *  Sets the modelVersion attribute of the Ticket object
+   * Sets the modelVersion attribute of the Ticket object
    *
-   * @param  tmp  The new modelVersion value
+   * @param tmp The new modelVersion value
    */
   public void setAssetModelVersion(String tmp) {
     this.assetModelVersion = tmp;
@@ -1389,9 +1428,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the location attribute of the Ticket object
+   * Sets the location attribute of the Ticket object
    *
-   * @param  tmp  The new location value
+   * @param tmp The new location value
    */
   public void setAssetLocation(String tmp) {
     this.assetLocation = tmp;
@@ -1399,9 +1438,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetOnsiteResponseModel attribute of the Ticket object
+   * Sets the assetOnsiteResponseModel attribute of the Ticket object
    *
-   * @param  tmp  The new assetOnsiteResponseModel value
+   * @param tmp The new assetOnsiteResponseModel value
    */
   public void setAssetOnsiteResponseModel(int tmp) {
     this.assetOnsiteResponseModel = tmp;
@@ -1409,9 +1448,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the assetOnsiteResponseModel attribute of the Ticket object
+   * Sets the assetOnsiteResponseModel attribute of the Ticket object
    *
-   * @param  tmp  The new assetOnsiteResponseModel value
+   * @param tmp The new assetOnsiteResponseModel value
    */
   public void setAssetOnsiteResponseModel(String tmp) {
     this.assetOnsiteResponseModel = Integer.parseInt(tmp);
@@ -1419,9 +1458,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the buildFiles attribute of the Ticket object
+   * Sets the buildFiles attribute of the Ticket object
    *
-   * @param  buildFiles  The new buildFiles value
+   * @param buildFiles The new buildFiles value
    */
   public void setBuildFiles(boolean buildFiles) {
     this.buildFiles = buildFiles;
@@ -1429,9 +1468,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the buildTasks attribute of the Ticket object
+   * Sets the buildTasks attribute of the Ticket object
    *
-   * @param  buildTasks  The new buildTasks value
+   * @param buildTasks The new buildTasks value
    */
   public void setBuildTasks(boolean buildTasks) {
     this.buildTasks = buildTasks;
@@ -1439,9 +1478,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the buildHistory attribute of the Ticket object
+   * Sets the buildHistory attribute of the Ticket object
    *
-   * @param  buildHistory  The new buildHistory value
+   * @param buildHistory The new buildHistory value
    */
   public void setBuildHistory(boolean buildHistory) {
     this.buildHistory = buildHistory;
@@ -1449,9 +1488,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the customerProductId attribute of the Ticket object
+   * Sets the customerProductId attribute of the Ticket object
    *
-   * @param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(int tmp) {
     this.customerProductId = tmp;
@@ -1459,9 +1498,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the customerProductId attribute of the Ticket object
+   * Sets the customerProductId attribute of the Ticket object
    *
-   * @param  tmp  The new customerProductId value
+   * @param tmp The new customerProductId value
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
@@ -1469,9 +1508,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the customerProductId attribute of the Ticket object
+   * Gets the customerProductId attribute of the Ticket object
    *
-   * @return    The customerProductId value
+   * @return The customerProductId value
    */
   public int getCustomerProductId() {
     return customerProductId;
@@ -1479,9 +1518,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the buildFiles attribute of the Ticket object
+   * Gets the buildFiles attribute of the Ticket object
    *
-   * @return    The buildFiles value
+   * @return The buildFiles value
    */
   public boolean getBuildFiles() {
     return buildFiles;
@@ -1489,9 +1528,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the buildTasks attribute of the Ticket object
+   * Gets the buildTasks attribute of the Ticket object
    *
-   * @return    The buildTasks value
+   * @return The buildTasks value
    */
   public boolean getBuildTasks() {
     return buildTasks;
@@ -1499,9 +1538,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the buildHistory attribute of the Ticket object
+   * Gets the buildHistory attribute of the Ticket object
    *
-   * @return    The buildHistory value
+   * @return The buildHistory value
    */
   public boolean getBuildHistory() {
     return buildHistory;
@@ -1509,9 +1548,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the hasEnabledOwnerAccount attribute of the Ticket object
+   * Gets the hasEnabledOwnerAccount attribute of the Ticket object
    *
-   * @return    The hasEnabledOwnerAccount value
+   * @return The hasEnabledOwnerAccount value
    */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
@@ -1519,9 +1558,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the hasEnabledOwnerAccount attribute of the Ticket object
+   * Sets the hasEnabledOwnerAccount attribute of the Ticket object
    *
-   * @param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   * @param hasEnabledOwnerAccount The new hasEnabledOwnerAccount value
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
@@ -1529,9 +1568,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Ticket object
+   * Sets the projectId attribute of the Ticket object
    *
-   * @param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -1539,9 +1578,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the projectId attribute of the Ticket object
+   * Sets the projectId attribute of the Ticket object
    *
-   * @param  tmp  The new projectId value
+   * @param tmp The new projectId value
    */
   public void setProjectId(String tmp) {
     this.projectId = Integer.parseInt(tmp);
@@ -1549,9 +1588,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the projectId attribute of the Ticket object
+   * Gets the projectId attribute of the Ticket object
    *
-   * @return    The projectId value
+   * @return The projectId value
    */
   public int getProjectId() {
     return projectId;
@@ -1559,9 +1598,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the projectTicketCount attribute of the Ticket object
+   * Sets the projectTicketCount attribute of the Ticket object
    *
-   * @param  tmp  The new projectTicketCount value
+   * @param tmp The new projectTicketCount value
    */
   public void setProjectTicketCount(int tmp) {
     this.projectTicketCount = tmp;
@@ -1569,9 +1608,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the projectTicketCount attribute of the Ticket object
+   * Sets the projectTicketCount attribute of the Ticket object
    *
-   * @param  tmp  The new projectTicketCount value
+   * @param tmp The new projectTicketCount value
    */
   public void setProjectTicketCount(String tmp) {
     this.projectTicketCount = Integer.parseInt(tmp);
@@ -1579,9 +1618,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the projectTicketCount attribute of the Ticket object
+   * Gets the projectTicketCount attribute of the Ticket object
    *
-   * @return    The projectTicketCount value
+   * @return The projectTicketCount value
    */
   public int getProjectTicketCount() {
     return projectTicketCount;
@@ -1589,9 +1628,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the paddedProjectTicketCount attribute of the Ticket object
+   * Gets the paddedProjectTicketCount attribute of the Ticket object
    *
-   * @return    The paddedProjectTicketCount value
+   * @return The paddedProjectTicketCount value
    */
   public String getPaddedProjectTicketCount() {
     String padded = (String.valueOf(this.getProjectTicketCount()));
@@ -1603,9 +1642,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the paddedTicketId attribute of the Ticket object
+   * Gets the paddedTicketId attribute of the Ticket object
    *
-   * @return    The paddedTicketId value
+   * @return The paddedTicketId value
    */
   public String getPaddedTicketId() {
     if (projectId == -1) {
@@ -1616,9 +1655,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the Ticket object
+   * Sets the ContactId attribute of the Ticket object
    *
-   * @param  tmp  The new ContactId value
+   * @param tmp The new ContactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -1626,9 +1665,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the PriorityName attribute of the Ticket object
+   * Sets the PriorityName attribute of the Ticket object
    *
-   * @param  priorityName  The new PriorityName value
+   * @param priorityName The new PriorityName value
    */
   public void setPriorityName(String priorityName) {
     this.priorityName = priorityName;
@@ -1636,9 +1675,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the ContactId attribute of the Ticket object
+   * Sets the ContactId attribute of the Ticket object
    *
-   * @param  tmp  The new ContactId value
+   * @param tmp The new ContactId value
    */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
@@ -1646,9 +1685,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the AgeOf attribute of the Ticket object
+   * Sets the AgeOf attribute of the Ticket object
    *
-   * @param  ageOf  The new AgeOf value
+   * @param ageOf The new AgeOf value
    */
   public void setAgeDays(int ageOf) {
     this.ageDays = ageOf;
@@ -1656,9 +1695,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the CategoryName attribute of the Ticket object
+   * Sets the CategoryName attribute of the Ticket object
    *
-   * @param  categoryName  The new CategoryName value
+   * @param categoryName The new CategoryName value
    */
   public void setCategoryName(String categoryName) {
     this.categoryName = categoryName;
@@ -1666,9 +1705,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Problem attribute of the Ticket object
+   * Sets the Problem attribute of the Ticket object
    *
-   * @param  tmp  The new Problem value
+   * @param tmp The new Problem value
    */
   public void setProblem(String tmp) {
     this.problem = tmp;
@@ -1676,9 +1715,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the location attribute of the Ticket object
+   * Sets the location attribute of the Ticket object
    *
-   * @param  tmp  The new location value
+   * @param tmp The new location value
    */
   public void setLocation(String tmp) {
     this.location = tmp;
@@ -1686,9 +1725,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Comment attribute of the Ticket object
+   * Sets the Comment attribute of the Ticket object
    *
-   * @param  tmp  The new Comment value
+   * @param tmp The new Comment value
    */
   public void setComment(String tmp) {
     this.comment = tmp;
@@ -1696,9 +1735,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the estimatedResolutionDate attribute of the Ticket object
+   * Sets the estimatedResolutionDate attribute of the Ticket object
    *
-   * @param  tmp  The new estimatedResolutionDate value
+   * @param tmp The new estimatedResolutionDate value
    */
   public void setEstimatedResolutionDate(java.sql.Timestamp tmp) {
     this.estimatedResolutionDate = tmp;
@@ -1706,9 +1745,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the estimatedResolutionDate attribute of the Ticket object
+   * Sets the estimatedResolutionDate attribute of the Ticket object
    *
-   * @param  tmp  The new estimatedResolutionDate value
+   * @param tmp The new estimatedResolutionDate value
    */
   public void setEstimatedResolutionDate(String tmp) {
     this.estimatedResolutionDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -1716,9 +1755,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the estimatedResolutionDateTimeZone attribute of the Ticket object
+   * Sets the estimatedResolutionDateTimeZone attribute of the Ticket object
    *
-   * @param  tmp  The new estimatedResolutionDateTimeZone value
+   * @param tmp The new estimatedResolutionDateTimeZone value
    */
   public void setEstimatedResolutionDateTimeZone(String tmp) {
     this.estimatedResolutionDateTimeZone = tmp;
@@ -1726,9 +1765,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the cause attribute of the Ticket object
+   * Sets the cause attribute of the Ticket object
    *
-   * @param  tmp  The new cause value
+   * @param tmp The new cause value
    */
   public void setCause(String tmp) {
     this.cause = tmp;
@@ -1736,9 +1775,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the Solution attribute of the Ticket object
+   * Sets the Solution attribute of the Ticket object
    *
-   * @param  tmp  The new Solution value
+   * @param tmp The new Solution value
    */
   public void setSolution(String tmp) {
     this.solution = tmp;
@@ -1746,9 +1785,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the PriorityCode attribute of the Ticket object
+   * Sets the PriorityCode attribute of the Ticket object
    *
-   * @param  tmp  The new PriorityCode value
+   * @param tmp The new PriorityCode value
    */
   public void setPriorityCode(int tmp) {
     this.priorityCode = tmp;
@@ -1756,9 +1795,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the PriorityCode attribute of the Ticket object
+   * Sets the PriorityCode attribute of the Ticket object
    *
-   * @param  tmp  The new PriorityCode value
+   * @param tmp The new PriorityCode value
    */
   public void setPriorityCode(String tmp) {
     this.priorityCode = Integer.parseInt(tmp);
@@ -1766,9 +1805,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the LevelCode attribute of the Ticket object
+   * Sets the LevelCode attribute of the Ticket object
    *
-   * @param  tmp  The new LevelCode value
+   * @param tmp The new LevelCode value
    */
   public void setLevelCode(int tmp) {
     this.levelCode = tmp;
@@ -1776,9 +1815,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the levelCode attribute of the Ticket object
+   * Sets the levelCode attribute of the Ticket object
    *
-   * @param  tmp  The new levelCode value
+   * @param tmp The new levelCode value
    */
   public void setLevelCode(String tmp) {
     this.levelCode = Integer.parseInt(tmp);
@@ -1786,9 +1825,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentCode attribute of the Ticket object
+   * Sets the DepartmentCode attribute of the Ticket object
    *
-   * @param  tmp  The new DepartmentCode value
+   * @param tmp The new DepartmentCode value
    */
   public void setDepartmentCode(int tmp) {
     this.departmentCode = tmp;
@@ -1796,9 +1835,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the DepartmentCode attribute of the Ticket object
+   * Sets the DepartmentCode attribute of the Ticket object
    *
-   * @param  tmp  The new DepartmentCode value
+   * @param tmp The new DepartmentCode value
    */
   public void setDepartmentCode(String tmp) {
     this.departmentCode = Integer.parseInt(tmp);
@@ -1806,9 +1845,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SourceCode attribute of the Ticket object
+   * Sets the SourceCode attribute of the Ticket object
    *
-   * @param  tmp  The new SourceCode value
+   * @param tmp The new SourceCode value
    */
   public void setSourceCode(int tmp) {
     this.sourceCode = tmp;
@@ -1816,9 +1855,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SourceCode attribute of the Ticket object
+   * Sets the SourceCode attribute of the Ticket object
    *
-   * @param  tmp  The new SourceCode value
+   * @param tmp The new SourceCode value
    */
   public void setSourceCode(String tmp) {
     this.sourceCode = Integer.parseInt(tmp);
@@ -1826,9 +1865,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the CatCode attribute of the Ticket object
+   * Sets the CatCode attribute of the Ticket object
    *
-   * @param  tmp  The new CatCode value
+   * @param tmp The new CatCode value
    */
   public void setCatCode(int tmp) {
     this.catCode = tmp;
@@ -1836,9 +1875,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the CatCode attribute of the Ticket object
+   * Sets the CatCode attribute of the Ticket object
    *
-   * @param  tmp  The new CatCode value
+   * @param tmp The new CatCode value
    */
   public void setCatCode(String tmp) {
     this.catCode = Integer.parseInt(tmp);
@@ -1846,9 +1885,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SeverityCode attribute of the Ticket object
+   * Sets the SeverityCode attribute of the Ticket object
    *
-   * @param  tmp  The new SeverityCode value
+   * @param tmp The new SeverityCode value
    */
   public void setSeverityCode(int tmp) {
     this.severityCode = tmp;
@@ -1856,9 +1895,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the SeverityCode attribute of the Ticket object
+   * Sets the SeverityCode attribute of the Ticket object
    *
-   * @param  tmp  The new SeverityCode value
+   * @param tmp The new SeverityCode value
    */
   public void setSeverityCode(String tmp) {
     this.severityCode = Integer.parseInt(tmp);
@@ -1866,9 +1905,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolutionDate attribute of the Ticket object
+   * Sets the resolutionDate attribute of the Ticket object
    *
-   * @param  tmp  The new resolutionDate value
+   * @param tmp The new resolutionDate value
    */
   public void setResolutionDate(java.sql.Timestamp tmp) {
     this.resolutionDate = tmp;
@@ -1876,9 +1915,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolutionDate attribute of the Ticket object
+   * Sets the resolutionDate attribute of the Ticket object
    *
-   * @param  tmp  The new resolutionDate value
+   * @param tmp The new resolutionDate value
    */
   public void setResolutionDate(String tmp) {
     this.resolutionDate = DatabaseUtils.parseDateToTimestamp(tmp);
@@ -1886,9 +1925,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the escalationLevel attribute of the Ticket object
+   * Sets the escalationLevel attribute of the Ticket object
    *
-   * @param  tmp  The new escalationLevel value
+   * @param tmp The new escalationLevel value
    */
   public void setEscalationLevel(int tmp) {
     this.escalationLevel = tmp;
@@ -1896,9 +1935,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the escalationLevel attribute of the Ticket object
+   * Sets the escalationLevel attribute of the Ticket object
    *
-   * @param  tmp  The new escalationLevel value
+   * @param tmp The new escalationLevel value
    */
   public void setEscalationLevel(String tmp) {
     this.escalationLevel = Integer.parseInt(tmp);
@@ -1906,9 +1945,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Ticket object
+   * Sets the EnteredBy attribute of the Ticket object
    *
-   * @param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -1916,9 +1955,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the EnteredBy attribute of the Ticket object
+   * Sets the EnteredBy attribute of the Ticket object
    *
-   * @param  tmp  The new EnteredBy value
+   * @param tmp The new EnteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -1926,9 +1965,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Ticket object
+   * Sets the ModifiedBy attribute of the Ticket object
    *
-   * @param  tmp  The new ModifiedBy value
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -1936,9 +1975,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the ModifiedBy attribute of the Ticket object
+   * Sets the ModifiedBy attribute of the Ticket object
    *
-   * @param  tmp  The new ModifiedBy value
+   * @param tmp The new ModifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -1946,10 +1985,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the RequestItems attribute of the Ticket object
+   * Sets the RequestItems attribute of the Ticket object
    *
-   * @param  request     The new RequestItems value
-   * @throws  Exception  Description of the Exception
+   * @param request The new RequestItems value
+   * @throws Exception Description of the Exception
    */
   public void setRequestItems(HttpServletRequest request) throws Exception {
     history = new TicketLogList(request, this.getModifiedBy());
@@ -1957,9 +1996,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the Ticket object
+   * Gets the closed attribute of the Ticket object
    *
-   * @return    The closed value
+   * @return The closed value
    */
   public java.sql.Timestamp getClosed() {
     return closed;
@@ -1967,9 +2006,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the closedString attribute of the Ticket object
+   * Gets the closedString attribute of the Ticket object
    *
-   * @return    The closedString value
+   * @return The closedString value
    */
   public String getClosedString() {
     String tmp = "";
@@ -1983,9 +2022,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the closed attribute of the Ticket object
+   * Gets the closed attribute of the Ticket object
    *
-   * @return    The closed value
+   * @return The closed value
    */
   public boolean isClosed() {
     return closed != null;
@@ -1993,9 +2032,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the expectation attribute of the Ticket object
+   * Gets the expectation attribute of the Ticket object
    *
-   * @return    The expectation value
+   * @return The expectation value
    */
   public int getExpectation() {
     return expectation;
@@ -2003,9 +2042,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the productSku attribute of the Ticket object
+   * Gets the productSku attribute of the Ticket object
    *
-   * @return    The productSku value
+   * @return The productSku value
    */
   public String getProductSku() {
     return productSku;
@@ -2013,9 +2052,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the productName attribute of the Ticket object
+   * Gets the productName attribute of the Ticket object
    *
-   * @return    The productName value
+   * @return The productName value
    */
   public String getProductName() {
     return productName;
@@ -2023,9 +2062,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the paddedId attribute of the Ticket object
+   * Gets the paddedId attribute of the Ticket object
    *
-   * @return    The paddedId value
+   * @return The paddedId value
    */
   public String getPaddedId() {
     String padded = (String.valueOf(this.getId()));
@@ -2037,9 +2076,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the entered attribute of the Ticket object
+   * Gets the entered attribute of the Ticket object
    *
-   * @return    The entered value
+   * @return The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -2047,9 +2086,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Ticket object
+   * Gets the modified attribute of the Ticket object
    *
-   * @return    The modified value
+   * @return The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -2057,9 +2096,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the modifiedString attribute of the Ticket object
+   * Gets the modifiedString attribute of the Ticket object
    *
-   * @return    The modifiedString value
+   * @return The modifiedString value
    */
   public String getModifiedString() {
     String tmp = "";
@@ -2073,9 +2112,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Ticket object
+   * Gets the enteredString attribute of the Ticket object
    *
-   * @return    The enteredString value
+   * @return The enteredString value
    */
   public String getEnteredString() {
     String tmp = "";
@@ -2089,11 +2128,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the enteredString attribute of the Ticket object
+   * Gets the enteredString attribute of the Ticket object
    *
-   * @param  dateStyle  Description of the Parameter
-   * @param  timeStyle  Description of the Parameter
-   * @return            The enteredString value
+   * @param dateStyle Description of the Parameter
+   * @param timeStyle Description of the Parameter
+   * @return The enteredString value
    */
   public String getEnteredString(int dateStyle, int timeStyle) {
     String tmp = "";
@@ -2107,9 +2146,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the modifiedDateTimeString attribute of the Ticket object
+   * Gets the modifiedDateTimeString attribute of the Ticket object
    *
-   * @return    The modifiedDateTimeString value
+   * @return The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     String tmp = "";
@@ -2123,9 +2162,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the ThisContact attribute of the Ticket object
+   * Gets the ThisContact attribute of the Ticket object
    *
-   * @return    The ThisContact value
+   * @return The ThisContact value
    */
   public Contact getThisContact() {
     return thisContact;
@@ -2133,9 +2172,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SourceName attribute of the Ticket object
+   * Gets the SourceName attribute of the Ticket object
    *
-   * @return    The SourceName value
+   * @return The SourceName value
    */
   public String getSourceName() {
     return sourceName;
@@ -2143,9 +2182,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the escalationLevelName attribute of the Ticket object
+   * Gets the escalationLevelName attribute of the Ticket object
    *
-   * @return    The escalationLevelName value
+   * @return The escalationLevelName value
    */
   public String getEscalationLevelName() {
     return escalationLevelName;
@@ -2153,9 +2192,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SubCat1 attribute of the Ticket object
+   * Gets the SubCat1 attribute of the Ticket object
    *
-   * @return    The SubCat1 value
+   * @return The SubCat1 value
    */
   public int getSubCat1() {
     return subCat1;
@@ -2163,9 +2202,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SubCat2 attribute of the Ticket object
+   * Gets the SubCat2 attribute of the Ticket object
    *
-   * @return    The SubCat2 value
+   * @return The SubCat2 value
    */
   public int getSubCat2() {
     return subCat2;
@@ -2173,9 +2212,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SubCat3 attribute of the Ticket object
+   * Gets the SubCat3 attribute of the Ticket object
    *
-   * @return    The SubCat3 value
+   * @return The SubCat3 value
    */
   public int getSubCat3() {
     return subCat3;
@@ -2183,9 +2222,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the Newticketlogentry attribute of the Ticket object
+   * Gets the Newticketlogentry attribute of the Ticket object
    *
-   * @return    The Newticketlogentry value
+   * @return The Newticketlogentry value
    */
   public String getNewticketlogentry() {
     return comment;
@@ -2193,9 +2232,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the AssignedTo attribute of the Ticket object
+   * Gets the AssignedTo attribute of the Ticket object
    *
-   * @return    The AssignedTo value
+   * @return The AssignedTo value
    */
   public int getAssignedTo() {
     return assignedTo;
@@ -2203,9 +2242,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assigned attribute of the Ticket object
+   * Gets the assigned attribute of the Ticket object
    *
-   * @return    The assigned value
+   * @return The assigned value
    */
   public boolean isAssigned() {
     return (assignedTo > 0);
@@ -2213,9 +2252,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assignedDate attribute of the Ticket object
+   * Gets the assignedDate attribute of the Ticket object
    *
-   * @return    The assignedDate value
+   * @return The assignedDate value
    */
   public java.sql.Timestamp getAssignedDate() {
     return assignedDate;
@@ -2223,9 +2262,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the CloseIt attribute of the Ticket object
+   * Gets the CloseIt attribute of the Ticket object
    *
-   * @return    The CloseIt value
+   * @return The CloseIt value
    */
   public boolean getCloseIt() {
     return closeIt;
@@ -2233,9 +2272,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SeverityName attribute of the Ticket object
+   * Gets the SeverityName attribute of the Ticket object
    *
-   * @return    The SeverityName value
+   * @return The SeverityName value
    */
   public String getSeverityName() {
     return severityName;
@@ -2243,9 +2282,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the PriorityName attribute of the Ticket object
+   * Gets the PriorityName attribute of the Ticket object
    *
-   * @return    The PriorityName value
+   * @return The PriorityName value
    */
   public String getPriorityName() {
     return priorityName;
@@ -2253,9 +2292,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the DepartmentName attribute of the Ticket object
+   * Gets the DepartmentName attribute of the Ticket object
    *
-   * @return    The DepartmentName value
+   * @return The DepartmentName value
    */
   public String getDepartmentName() {
     return departmentName;
@@ -2263,9 +2302,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the campaignId attribute of the Ticket object
+   * Gets the campaignId attribute of the Ticket object
    *
-   * @return    The campaignId value
+   * @return The campaignId value
    */
   public int getCampaignId() {
     return campaignId;
@@ -2273,9 +2312,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the History attribute of the Ticket object
+   * Gets the History attribute of the Ticket object
    *
-   * @return    The History value
+   * @return The History value
    */
   public TicketLogList getHistory() {
     return history;
@@ -2283,9 +2322,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the files attribute of the Ticket object
+   * Gets the files attribute of the Ticket object
    *
-   * @return    The files value
+   * @return The files value
    */
   public FileItemList getFiles() {
     return files;
@@ -2293,9 +2332,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the AgeOf attribute of the Ticket object
+   * Gets the AgeOf attribute of the Ticket object
    *
-   * @return    The AgeOf value
+   * @return The AgeOf value
    */
   public String getAgeOf() {
     return ageDays + "d " + ageHours + "h";
@@ -2303,19 +2342,27 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the CategoryName attribute of the Ticket object
+   * Gets the CategoryName attribute of the Ticket object
    *
-   * @return    The CategoryName value
+   * @return The CategoryName value
    */
   public String getCategoryName() {
     return categoryName;
   }
 
+  /**
+   * Gets the CompanyName attribute of the Ticket object
+   *
+   * @return The CompanyName value
+   */
+  public String getSubmitterName() {
+    return submitterName;
+  }
 
   /**
-   *  Gets the CompanyName attribute of the Ticket object
+   * Gets the CompanyName attribute of the Ticket object
    *
-   * @return    The CompanyName value
+   * @return The CompanyName value
    */
   public String getCompanyName() {
     return companyName;
@@ -2323,9 +2370,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the ErrorMessage attribute of the Ticket object
+   * Gets the ErrorMessage attribute of the Ticket object
    *
-   * @return    The ErrorMessage value
+   * @return The ErrorMessage value
    */
   public String getErrorMessage() {
     return errorMessage;
@@ -2333,9 +2380,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the Id attribute of the Ticket object
+   * Gets the Id attribute of the Ticket object
    *
-   * @return    The Id value
+   * @return The Id value
    */
   public int getId() {
     return id;
@@ -2343,9 +2390,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the OrgId attribute of the Ticket object
+   * Gets the OrgId attribute of the Ticket object
    *
-   * @return    The OrgId value
+   * @return The OrgId value
    */
   public int getOrgId() {
     return orgId;
@@ -2353,9 +2400,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the contractId attribute of the Ticket object
+   * Gets the contractId attribute of the Ticket object
    *
-   * @return    The contractId value
+   * @return The contractId value
    */
   public int getContractId() {
     return contractId;
@@ -2363,9 +2410,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the serviceContractNumber attribute of the Ticket object
+   * Gets the serviceContractNumber attribute of the Ticket object
    *
-   * @return    The serviceContractNumber value
+   * @return The serviceContractNumber value
    */
   public String getServiceContractNumber() {
     return serviceContractNumber;
@@ -2373,9 +2420,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the totalHoursRemaining attribute of the Ticket object
+   * Gets the totalHoursRemaining attribute of the Ticket object
    *
-   * @return    The totalHoursRemaining value
+   * @return The totalHoursRemaining value
    */
   public double getTotalHoursRemaining() {
     return round(totalHoursRemaining, 2);
@@ -2383,9 +2430,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the contractStartDate attribute of the Ticket object
+   * Gets the contractStartDate attribute of the Ticket object
    *
-   * @return    The contractStartDate value
+   * @return The contractStartDate value
    */
   public java.sql.Timestamp getContractStartDate() {
     return contractStartDate;
@@ -2393,9 +2440,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the contractEndDate attribute of the Ticket object
+   * Gets the contractEndDate attribute of the Ticket object
    *
-   * @return    The contractEndDate value
+   * @return The contractEndDate value
    */
   public java.sql.Timestamp getContractEndDate() {
     return contractEndDate;
@@ -2403,9 +2450,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the contractOnsiteResponseModel attribute of the Ticket object
+   * Gets the contractOnsiteResponseModel attribute of the Ticket object
    *
-   * @return    The contractOnsiteResponseModel value
+   * @return The contractOnsiteResponseModel value
    */
   public int getContractOnsiteResponseModel() {
     return contractOnsiteResponseModel;
@@ -2413,9 +2460,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assetId attribute of the Ticket object
+   * Gets the assetId attribute of the Ticket object
    *
-   * @return    The assetId value
+   * @return The assetId value
    */
   public int getAssetId() {
     return assetId;
@@ -2423,9 +2470,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assetSerialNumber attribute of the Ticket object
+   * Gets the assetSerialNumber attribute of the Ticket object
    *
-   * @return    The assetSerialNumber value
+   * @return The assetSerialNumber value
    */
   public String getAssetSerialNumber() {
     return assetSerialNumber;
@@ -2433,9 +2480,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assetManufacturerCode attribute of the Ticket object
+   * Gets the assetManufacturerCode attribute of the Ticket object
    *
-   * @return    The assetManufacturerCode value
+   * @return The assetManufacturerCode value
    */
   public int getAssetManufacturerCode() {
     return assetManufacturerCode;
@@ -2443,9 +2490,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assetVendorCode attribute of the Ticket object
+   * Gets the assetVendorCode attribute of the Ticket object
    *
-   * @return    The assetVendorCode value
+   * @return The assetVendorCode value
    */
   public int getAssetVendorCode() {
     return assetVendorCode;
@@ -2453,9 +2500,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the modelVersion attribute of the Ticket object
+   * Gets the modelVersion attribute of the Ticket object
    *
-   * @return    The modelVersion value
+   * @return The modelVersion value
    */
   public String getAssetModelVersion() {
     return assetModelVersion;
@@ -2463,9 +2510,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the location attribute of the Ticket object
+   * Gets the location attribute of the Ticket object
    *
-   * @return    The location value
+   * @return The location value
    */
   public String getAssetLocation() {
     return assetLocation;
@@ -2473,9 +2520,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the assetOnsiteResponseModel attribute of the Ticket object
+   * Gets the assetOnsiteResponseModel attribute of the Ticket object
    *
-   * @return    The assetOnsiteResponseModel value
+   * @return The assetOnsiteResponseModel value
    */
   public int getAssetOnsiteResponseModel() {
     return assetOnsiteResponseModel;
@@ -2483,9 +2530,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the ContactId attribute of the Ticket object
+   * Gets the ContactId attribute of the Ticket object
    *
-   * @return    The ContactId value
+   * @return The ContactId value
    */
   public int getContactId() {
     return contactId;
@@ -2493,9 +2540,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the Problem attribute of the Ticket object
+   * Gets the Problem attribute of the Ticket object
    *
-   * @return    The Problem value
+   * @return The Problem value
    */
   public String getProblem() {
     return problem;
@@ -2503,9 +2550,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the location attribute of the Ticket object
+   * Gets the location attribute of the Ticket object
    *
-   * @return    The location value
+   * @return The location value
    */
   public String getLocation() {
     return location;
@@ -2513,9 +2560,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the problemHeader attribute of the Ticket object
+   * Gets the problemHeader attribute of the Ticket object
    *
-   * @return    The problemHeader value
+   * @return The problemHeader value
    */
   public String getProblemHeader() {
     if (problem.trim().length() > 100) {
@@ -2527,10 +2574,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getAssignedTo() == -1) {
@@ -2538,8 +2585,8 @@ public class Ticket extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
-        "WHERE user_id = ? AND enabled = ? ");
+            "FROM " + DatabaseUtils.addQuotes(db, "access") + " " +
+            "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getAssignedTo());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -2554,9 +2601,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the Comment attribute of the Ticket object
+   * Gets the Comment attribute of the Ticket object
    *
-   * @return    The Comment value
+   * @return The Comment value
    */
   public String getComment() {
     return comment;
@@ -2564,9 +2611,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the estimatedResolutionDate attribute of the Ticket object
+   * Gets the estimatedResolutionDate attribute of the Ticket object
    *
-   * @return    The estimatedResolutionDate value
+   * @return The estimatedResolutionDate value
    */
   public java.sql.Timestamp getEstimatedResolutionDate() {
     return estimatedResolutionDate;
@@ -2574,9 +2621,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the estimatedResolutionDateTimeZone attribute of the Ticket object
+   * Gets the estimatedResolutionDateTimeZone attribute of the Ticket object
    *
-   * @return    The estimatedResolutionDateTimeZone value
+   * @return The estimatedResolutionDateTimeZone value
    */
   public String getEstimatedResolutionDateTimeZone() {
     return estimatedResolutionDateTimeZone;
@@ -2584,9 +2631,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the cause attribute of the Ticket object
+   * Gets the cause attribute of the Ticket object
    *
-   * @return    The cause value
+   * @return The cause value
    */
   public String getCause() {
     return cause;
@@ -2594,9 +2641,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the Solution attribute of the Ticket object
+   * Gets the Solution attribute of the Ticket object
    *
-   * @return    The Solution value
+   * @return The Solution value
    */
   public String getSolution() {
     return solution;
@@ -2604,9 +2651,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the PriorityCode attribute of the Ticket object
+   * Gets the PriorityCode attribute of the Ticket object
    *
-   * @return    The PriorityCode value
+   * @return The PriorityCode value
    */
   public int getPriorityCode() {
     return priorityCode;
@@ -2614,9 +2661,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the LevelCode attribute of the Ticket object
+   * Gets the LevelCode attribute of the Ticket object
    *
-   * @return    The LevelCode value
+   * @return The LevelCode value
    */
   public int getLevelCode() {
     return levelCode;
@@ -2624,9 +2671,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the DepartmentCode attribute of the Ticket object
+   * Gets the DepartmentCode attribute of the Ticket object
    *
-   * @return    The DepartmentCode value
+   * @return The DepartmentCode value
    */
   public int getDepartmentCode() {
     return departmentCode;
@@ -2634,9 +2681,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SourceCode attribute of the Ticket object
+   * Gets the SourceCode attribute of the Ticket object
    *
-   * @return    The SourceCode value
+   * @return The SourceCode value
    */
   public int getSourceCode() {
     return sourceCode;
@@ -2644,9 +2691,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the CatCode attribute of the Ticket object
+   * Gets the CatCode attribute of the Ticket object
    *
-   * @return    The CatCode value
+   * @return The CatCode value
    */
   public int getCatCode() {
     return catCode;
@@ -2654,9 +2701,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the SeverityCode attribute of the Ticket object
+   * Gets the SeverityCode attribute of the Ticket object
    *
-   * @return    The SeverityCode value
+   * @return The SeverityCode value
    */
   public int getSeverityCode() {
     return severityCode;
@@ -2664,9 +2711,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the resolutionDate attribute of the Ticket object
+   * Gets the resolutionDate attribute of the Ticket object
    *
-   * @return    The resolutionDate value
+   * @return The resolutionDate value
    */
   public java.sql.Timestamp getResolutionDate() {
     return resolutionDate;
@@ -2674,9 +2721,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Ticket object
+   * Gets the EnteredBy attribute of the Ticket object
    *
-   * @return    The EnteredBy value
+   * @return The EnteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -2684,9 +2731,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the ModifiedBy attribute of the Ticket object
+   * Gets the ModifiedBy attribute of the Ticket object
    *
-   * @return    The ModifiedBy value
+   * @return The ModifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -2694,9 +2741,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the actionPlanId attribute of the Ticket object
+   * Gets the actionPlanId attribute of the Ticket object
    *
-   * @return    The actionPlanId value
+   * @return The actionPlanId value
    */
   public int getActionPlanId() {
     return actionPlanId;
@@ -2704,9 +2751,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the actionPlanId attribute of the Ticket object
+   * Sets the actionPlanId attribute of the Ticket object
    *
-   * @param  tmp  The new actionPlanId value
+   * @param tmp The new actionPlanId value
    */
   public void setActionPlanId(int tmp) {
     this.actionPlanId = tmp;
@@ -2714,9 +2761,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the actionPlanId attribute of the Ticket object
+   * Sets the actionPlanId attribute of the Ticket object
    *
-   * @param  tmp  The new actionPlanId value
+   * @param tmp The new actionPlanId value
    */
   public void setActionPlanId(String tmp) {
     this.actionPlanId = Integer.parseInt(tmp);
@@ -2724,9 +2771,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the insertActionPlan attribute of the Ticket object
+   * Gets the insertActionPlan attribute of the Ticket object
    *
-   * @return    The insertActionPlan value
+   * @return The insertActionPlan value
    */
   public boolean getInsertActionPlan() {
     return insertActionPlan;
@@ -2734,9 +2781,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the insertActionPlan attribute of the Ticket object
+   * Sets the insertActionPlan attribute of the Ticket object
    *
-   * @param  tmp  The new insertActionPlan value
+   * @param tmp The new insertActionPlan value
    */
   public void setInsertActionPlan(boolean tmp) {
     this.insertActionPlan = tmp;
@@ -2744,9 +2791,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the insertActionPlan attribute of the Ticket object
+   * Sets the insertActionPlan attribute of the Ticket object
    *
-   * @param  tmp  The new insertActionPlan value
+   * @param tmp The new insertActionPlan value
    */
   public void setInsertActionPlan(String tmp) {
     this.insertActionPlan = DatabaseUtils.parseBoolean(tmp);
@@ -2754,9 +2801,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the userGroupId attribute of the Ticket object
+   * Gets the userGroupId attribute of the Ticket object
    *
-   * @return    The userGroupId value
+   * @return The userGroupId value
    */
   public int getUserGroupId() {
     return userGroupId;
@@ -2764,9 +2811,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the userGroupId attribute of the Ticket object
+   * Sets the userGroupId attribute of the Ticket object
    *
-   * @param  tmp  The new userGroupId value
+   * @param tmp The new userGroupId value
    */
   public void setUserGroupId(int tmp) {
     this.userGroupId = tmp;
@@ -2774,9 +2821,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the userGroupId attribute of the Ticket object
+   * Sets the userGroupId attribute of the Ticket object
    *
-   * @param  tmp  The new userGroupId value
+   * @param tmp The new userGroupId value
    */
   public void setUserGroupId(String tmp) {
     this.userGroupId = Integer.parseInt(tmp);
@@ -2784,9 +2831,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the userGroupName attribute of the Ticket object
+   * Gets the userGroupName attribute of the Ticket object
    *
-   * @return    The userGroupName value
+   * @return The userGroupName value
    */
   public String getUserGroupName() {
     return userGroupName;
@@ -2794,9 +2841,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the userGroupName attribute of the Ticket object
+   * Sets the userGroupName attribute of the Ticket object
    *
-   * @param  tmp  The new userGroupName value
+   * @param tmp The new userGroupName value
    */
   public void setUserGroupName(String tmp) {
     this.userGroupName = tmp;
@@ -2804,9 +2851,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the causeId attribute of the Ticket object
+   * Gets the causeId attribute of the Ticket object
    *
-   * @return    The causeId value
+   * @return The causeId value
    */
   public int getCauseId() {
     return causeId;
@@ -2814,9 +2861,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the causeId attribute of the Ticket object
+   * Sets the causeId attribute of the Ticket object
    *
-   * @param  tmp  The new causeId value
+   * @param tmp The new causeId value
    */
   public void setCauseId(int tmp) {
     this.causeId = tmp;
@@ -2824,9 +2871,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the causeId attribute of the Ticket object
+   * Sets the causeId attribute of the Ticket object
    *
-   * @param  tmp  The new causeId value
+   * @param tmp The new causeId value
    */
   public void setCauseId(String tmp) {
     this.causeId = Integer.parseInt(tmp);
@@ -2834,9 +2881,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the resolutionId attribute of the Ticket object
+   * Gets the resolutionId attribute of the Ticket object
    *
-   * @return    The resolutionId value
+   * @return The resolutionId value
    */
   public int getResolutionId() {
     return resolutionId;
@@ -2844,9 +2891,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolutionId attribute of the Ticket object
+   * Sets the resolutionId attribute of the Ticket object
    *
-   * @param  tmp  The new resolutionId value
+   * @param tmp The new resolutionId value
    */
   public void setResolutionId(int tmp) {
     this.resolutionId = tmp;
@@ -2854,9 +2901,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the resolutionId attribute of the Ticket object
+   * Sets the resolutionId attribute of the Ticket object
    *
-   * @param  tmp  The new resolutionId value
+   * @param tmp The new resolutionId value
    */
   public void setResolutionId(String tmp) {
     this.resolutionId = Integer.parseInt(tmp);
@@ -2864,9 +2911,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the defectId attribute of the Ticket object
+   * Gets the defectId attribute of the Ticket object
    *
-   * @return    The defectId value
+   * @return The defectId value
    */
   public int getDefectId() {
     return defectId;
@@ -2874,9 +2921,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the defectId attribute of the Ticket object
+   * Sets the defectId attribute of the Ticket object
    *
-   * @param  tmp  The new defectId value
+   * @param tmp The new defectId value
    */
   public void setDefectId(int tmp) {
     this.defectId = tmp;
@@ -2884,9 +2931,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the defectId attribute of the Ticket object
+   * Sets the defectId attribute of the Ticket object
    *
-   * @param  tmp  The new defectId value
+   * @param tmp The new defectId value
    */
   public void setDefectId(String tmp) {
     this.defectId = Integer.parseInt(tmp);
@@ -2894,9 +2941,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the escalationLevel attribute of the Ticket object
+   * Gets the escalationLevel attribute of the Ticket object
    *
-   * @return    The escalationLevel value
+   * @return The escalationLevel value
    */
   public int getEscalationLevel() {
     return escalationLevel;
@@ -2904,9 +2951,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the EnteredBy attribute of the Ticket object
+   * Gets the EnteredBy attribute of the Ticket object
    *
-   * @return    The plan value
+   * @return The plan value
    */
   public ActionPlan getPlan() {
     return plan;
@@ -2914,9 +2961,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the plan attribute of the Ticket object
+   * Sets the plan attribute of the Ticket object
    *
-   * @param  tmp  The new plan value
+   * @param tmp The new plan value
    */
   public void setPlan(ActionPlan tmp) {
     this.plan = tmp;
@@ -2924,9 +2971,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the buildOrgHierarchy attribute of the Ticket object
+   * Gets the buildOrgHierarchy attribute of the Ticket object
    *
-   * @return    The buildOrgHierarchy value
+   * @return The buildOrgHierarchy value
    */
   public boolean getBuildOrgHierarchy() {
     return buildOrgHierarchy;
@@ -2934,9 +2981,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the buildOrgHierarchy attribute of the Ticket object
+   * Sets the buildOrgHierarchy attribute of the Ticket object
    *
-   * @param  tmp  The new buildOrgHierarchy value
+   * @param tmp The new buildOrgHierarchy value
    */
   public void setBuildOrgHierarchy(boolean tmp) {
     this.buildOrgHierarchy = tmp;
@@ -2944,9 +2991,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the buildOrgHierarchy attribute of the Ticket object
+   * Sets the buildOrgHierarchy attribute of the Ticket object
    *
-   * @param  tmp  The new buildOrgHierarchy value
+   * @param tmp The new buildOrgHierarchy value
    */
   public void setBuildOrgHierarchy(String tmp) {
     this.buildOrgHierarchy = DatabaseUtils.parseBoolean(tmp);
@@ -2954,9 +3001,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the companyNameHierarchy attribute of the Ticket object
+   * Gets the companyNameHierarchy attribute of the Ticket object
    *
-   * @return    The companyNameHierarchy value
+   * @return The companyNameHierarchy value
    */
   public String getCompanyNameHierarchy() {
     return companyNameHierarchy;
@@ -2964,9 +3011,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the companyNameHierarchy attribute of the Ticket object
+   * Sets the companyNameHierarchy attribute of the Ticket object
    *
-   * @param  tmp  The new companyNameHierarchy value
+   * @param tmp The new companyNameHierarchy value
    */
   public void setCompanyNameHierarchy(String tmp) {
     this.companyNameHierarchy = tmp;
@@ -2974,9 +3021,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the stateId attribute of the Ticket object
+   * Gets the stateId attribute of the Ticket object
    *
-   * @return    The stateId value
+   * @return The stateId value
    */
   public int getStateId() {
     return stateId;
@@ -2984,9 +3031,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the stateId attribute of the Ticket object
+   * Sets the stateId attribute of the Ticket object
    *
-   * @param  tmp  The new stateId value
+   * @param tmp The new stateId value
    */
   public void setStateId(int tmp) {
     this.stateId = tmp;
@@ -2994,9 +3041,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the stateId attribute of the Ticket object
+   * Sets the stateId attribute of the Ticket object
    *
-   * @param  tmp  The new stateId value
+   * @param tmp The new stateId value
    */
   public void setStateId(String tmp) {
     this.stateId = Integer.parseInt(tmp);
@@ -3004,9 +3051,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the siteId attribute of the Ticket object
+   * Sets the siteId attribute of the Ticket object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(int tmp) {
     this.siteId = tmp;
@@ -3014,9 +3061,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Sets the siteId attribute of the Ticket object
+   * Sets the siteId attribute of the Ticket object
    *
-   * @param  tmp  The new siteId value
+   * @param tmp The new siteId value
    */
   public void setSiteId(String tmp) {
     this.siteId = Integer.parseInt(tmp);
@@ -3024,9 +3071,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the siteId attribute of the Ticket object
+   * Gets the siteId attribute of the Ticket object
    *
-   * @return    The siteId value
+   * @return The siteId value
    */
   public int getSiteId() {
     return siteId;
@@ -3034,10 +3081,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildContactInformation(Connection db) throws SQLException {
     if (contactId > -1) {
@@ -3047,12 +3094,12 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Inserts this ticket into the database, and populates this Id. Inserts
-   *  required fields, then calls update to finish record entry
+   * Inserts this ticket into the database, and populates this Id. Inserts
+   * required fields, then calls update to finish record entry
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -3066,12 +3113,13 @@ public class Ticket extends GenericBean {
       }
       id = DatabaseUtils.getNextSeq(db, "ticket_ticketid_seq");
       sql.append(
-          "INSERT INTO ticket (contact_id, problem, pri_code, " +
-          "department_code, cat_code, scode, org_id, link_contract_id, " +
-          "link_asset_id, expectation, product_id, customer_product_id, " +
-          "key_count, status_id, trashed_date, user_group_id, cause_id, " +
-          "resolution_id, defect_id, escalation_level, resolvable, " +
-          "resolvedby, resolvedby_department_code, state_id, site_id, ");
+          "INSERT INTO ticket (submitter_id, submitter_contact_id, contact_id, problem, pri_code, " +
+              "department_code, cat_code, scode, org_id, link_contract_id, " +
+              "link_asset_id, expectation, product_id, customer_product_id, " +
+              "key_count, status_id, trashed_date, user_group_id, cause_id, " +
+              "resolution_id, defect_id, escalation_level, resolvable, " +
+              "resolvedby, resolvedby_department_code, state_id, site_id, ");
+
       if (id > -1) {
         sql.append("ticketid, ");
       }
@@ -3082,7 +3130,7 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       sql.append("?, ?, ?, ");
       if (id > -1) {
         sql.append("?,");
@@ -3096,6 +3144,10 @@ public class Ticket extends GenericBean {
       sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+
+      DatabaseUtils.setInt(pst, ++i, this.getSubmitterId());
+      DatabaseUtils.setInt(pst, ++i, this.getSubmitterContactId());
+
       DatabaseUtils.setInt(pst, ++i, this.getContactId());
       pst.setString(++i, this.getProblem());
       if (this.getPriorityCode() > 0) {
@@ -3118,6 +3170,7 @@ public class Ticket extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
+
       DatabaseUtils.setInt(pst, ++i, orgId);
       DatabaseUtils.setInt(pst, ++i, contractId);
       DatabaseUtils.setInt(pst, ++i, assetId);
@@ -3185,10 +3238,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateLog(Connection db) throws SQLException {
     boolean commit = true;
@@ -3221,12 +3274,12 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Update this ticket in the database
+   * Update this ticket in the database
    *
-   * @param  db             Description of Parameter
-   * @param  override       Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db       Description of Parameter
+   * @param override Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
@@ -3234,12 +3287,12 @@ public class Ticket extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE ticket " +
-        "SET link_contract_id = ?, link_asset_id = ?, department_code = ?, " +
-        "pri_code = ?, scode = ?, " +
-        "cat_code = ?, assigned_to = ?, " +
-        "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
-        "source_code = ?, contact_id = ?, problem = ?, " +
-        "status_id = ?, trashed_date = ?, site_id = ? , ");
+            "SET link_contract_id = ?, link_asset_id = ?, department_code = ?, " +
+            "pri_code = ?, scode = ?, " +
+            "cat_code = ?, assigned_to = ?, " +
+            "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
+            "source_code = ?, contact_id = ?, problem = ?, " +
+            "status_id = ?, trashed_date = ?, site_id = ? , ");
     if (!override) {
       sql.append(
           "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, ");
@@ -3254,15 +3307,19 @@ public class Ticket extends GenericBean {
     if (orgId != -1) {
       sql.append(" org_id = ?, ");
     }
+    if (submitterId != -1) {
+      sql.append(" submitter_id = ?, ");
+      sql.append(" submitter_contact_id = ?, ");
+    }
     sql.append(
         "solution = ?, location = ?, assigned_date = ?, assigned_date_timezone = ?, " +
-        "est_resolution_date = ?, est_resolution_date_timezone = ?, resolution_date = ?, resolution_date_timezone = ?, " +
-        "cause = ?, expectation = ?, product_id = ?, customer_product_id = ?, " +
-        "user_group_id = ?, cause_id = ?, resolution_id = ?, defect_id = ?, state_id = ?, " +
-        "escalation_level = ?, resolvable = ?, resolvedby = ?, resolvedby_department_code = ? " +
-        "WHERE ticketid = ? ");
+            "est_resolution_date = ?, est_resolution_date_timezone = ?, resolution_date = ?, resolution_date_timezone = ?, " +
+            "cause = ?, expectation = ?, product_id = ?, customer_product_id = ?, " +
+            "user_group_id = ?, cause_id = ?, resolution_id = ?, defect_id = ?, state_id = ?, " +
+            "escalation_level = ?, resolvable = ?, resolvedby = ?, resolvedby_department_code = ? " +
+            "WHERE ticketid = ? ");
     if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+      sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -3327,6 +3384,10 @@ public class Ticket extends GenericBean {
     if (orgId != -1) {
       DatabaseUtils.setInt(pst, ++i, orgId);
     }
+    if (submitterId != -1) {
+      DatabaseUtils.setInt(pst, ++i, getSubmitterId());
+      DatabaseUtils.setInt(pst, ++i, getSubmitterContactId());
+    }
     pst.setString(++i, this.getSolution());
     pst.setString(++i, location);
     DatabaseUtils.setTimestamp(pst, ++i, assignedDate);
@@ -3384,11 +3445,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean parseActionPlanMapping(Connection db) throws SQLException {
     ActionPlan actionPlan = new ActionPlan();
@@ -3426,13 +3487,13 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  toTrash        Description of the Parameter
-   * @param  tmpUserId      Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param toTrash   Description of the Parameter
+   * @param tmpUserId Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean updateStatus(Connection db, boolean toTrash, int tmpUserId) throws SQLException {
 
@@ -3441,11 +3502,11 @@ public class Ticket extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE ticket " +
-        "SET trashed_date = ?, " +
-        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-        "user_group_id = ? , " +
-        "modifiedby = ? " +
-        "WHERE ticketid = ? ");
+            "SET trashed_date = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+            "user_group_id = ? , " +
+            "modifiedby = ? " +
+            "WHERE ticketid = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -3475,7 +3536,7 @@ public class Ticket extends GenericBean {
       workList.setSiteId(this.getSiteId());
       workList.buildList(db);
       workList.delete(db);
-      
+
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
     }
@@ -3488,12 +3549,12 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  newOwner       Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db       Description of the Parameter
+   * @param newOwner Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
@@ -3507,11 +3568,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Reopens a ticket so that it can be modified again
+   * Reopens a ticket so that it can be modified again
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public int reopen(Connection db) throws SQLException {
     int resultCount = 0;
@@ -3520,9 +3581,9 @@ public class Ticket extends GenericBean {
       PreparedStatement pst = null;
       String sql =
           "UPDATE ticket " +
-          "SET closed = ?, modified = " + DatabaseUtils.getCurrentTimestamp(
-          db) + ", modifiedby = ? " +
-          "WHERE ticketid = ? ";
+              "SET closed = ?, modified = " + DatabaseUtils.getCurrentTimestamp(
+              db) + ", modifiedby = ? " +
+              "WHERE ticketid = ? ";
       int i = 0;
       pst = db.prepareStatement(sql);
       pst.setNull(++i, java.sql.Types.TIMESTAMP);
@@ -3556,11 +3617,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @return                Description of the Return Value
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
@@ -3579,8 +3640,8 @@ public class Ticket extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) as linkcount " +
-          "FROM tasklink_ticket " +
-          "WHERE ticket_id = ? ");
+              "FROM tasklink_ticket " +
+              "WHERE ticket_id = ? ");
       pst.setInt(++i, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -3603,7 +3664,7 @@ public class Ticket extends GenericBean {
     docDependency.setName("documents");
     docDependency.setCount(
         FileItemList.retrieveRecordCount(
-        db, Constants.DOCUMENTS_TICKETS, this.getId()));
+            db, Constants.DOCUMENTS_TICKETS, this.getId()));
     docDependency.setCanDelete(true);
     dependencyList.add(docDependency);
     //Check for folders
@@ -3611,7 +3672,7 @@ public class Ticket extends GenericBean {
     folderDependency.setName("folders");
     folderDependency.setCount(
         CustomFieldRecordList.retrieveRecordCount(
-        db, Constants.FOLDERS_TICKETS, this.getId()));
+            db, Constants.FOLDERS_TICKETS, this.getId()));
     folderDependency.setCanDelete(true);
     dependencyList.add(folderDependency);
     //Check for Form - Asset Maintenance links
@@ -3619,8 +3680,8 @@ public class Ticket extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) as linkcount " +
-          "FROM ticket_sun_form " +
-          "WHERE link_ticket_id = ? ");
+              "FROM ticket_sun_form " +
+              "WHERE link_ticket_id = ? ");
       pst.setInt(++i, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -3643,9 +3704,9 @@ public class Ticket extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "SELECT COUNT(DISTINCT(group_id)) AS quotecount " +
-          "FROM quote_entry " +
-          "WHERE ticketid = ? " +
-          "AND trashed_date IS NULL ");
+              "FROM quote_entry " +
+              "WHERE ticketid = ? " +
+              "AND trashed_date IS NULL ");
       pst.setInt(++i, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -3669,9 +3730,9 @@ public class Ticket extends GenericBean {
       int linkModuleId = ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS);
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) AS plancount " +
-          "FROM action_plan_work " +
-          "WHERE link_module_id = ? " +
-          "AND link_item_id = ? ");
+              "FROM action_plan_work " +
+              "WHERE link_module_id = ? " +
+              "AND link_item_id = ? ");
       pst.setInt(++i, linkModuleId);
       pst.setInt(++i, this.getId());
       ResultSet rs = pst.executeQuery();
@@ -3695,8 +3756,8 @@ public class Ticket extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) as linkcount " +
-          "FROM ticket_csstm_form " +
-          "WHERE link_ticket_id = ? ");
+              "FROM ticket_csstm_form " +
+              "WHERE link_ticket_id = ? ");
       pst.setInt(++i, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -3720,12 +3781,12 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @param  baseFilePath   Description of the Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db           Description of Parameter
+   * @param baseFilePath Description of the Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getId() == -1) {
@@ -3779,7 +3840,7 @@ public class Ticket extends GenericBean {
       //Delete the related project link
       pst = db.prepareStatement(
           "DELETE FROM ticketlink_project " +
-          "WHERE ticket_id = ? ");
+              "WHERE ticket_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -3845,11 +3906,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of Parameter
-   * @return                Description of the Returned Value
-   * @throws  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   public int update(Connection db) throws SQLException {
     int i = -1;
@@ -3869,10 +3930,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateEntry(Connection db) throws SQLException {
     TicketLog thisEntry = new TicketLog();
@@ -3899,10 +3960,10 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  rs             Description of Parameter
-   * @throws  SQLException  Description of Exception
+   * @param rs Description of Parameter
+   * @throws SQLException Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //ticket table
@@ -3956,10 +4017,16 @@ public class Ticket extends GenericBean {
     resolvedByDeptCode = DatabaseUtils.getInt(rs, "resolvedby_department_code");
     stateId = DatabaseUtils.getInt(rs, "state_id");
     siteId = DatabaseUtils.getInt(rs, "site_id");
-    //organization table
+    submitterId = DatabaseUtils.getInt(rs, "submitter_id");
+    submitterContactId = DatabaseUtils.getInt(rs, "submitter_contact_id");
+
+    //organization table 
     companyName = rs.getString("orgname");
     companyEnabled = rs.getBoolean("orgenabled");
     orgSiteId = DatabaseUtils.getInt(rs, "orgsiteid");
+
+    //organization submitter table
+    submitterName = rs.getString("subname");
 
     //lookup_department table
     departmentName = rs.getString("dept");
@@ -4032,9 +4099,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public boolean hasFiles() {
     return (files != null && files.size() > 0);
@@ -4042,9 +4109,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the properties that are TimeZone sensitive for auto-populating
+   * Gets the properties that are TimeZone sensitive for auto-populating
    *
-   * @return    The timeZoneParams value
+   * @return The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
@@ -4058,11 +4125,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  db             Description of the Parameter
-   * @param  projectId      Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void insertProjectLink(Connection db, int projectId) throws SQLException {
     String sql = "INSERT INTO ticketlink_project " +
@@ -4078,11 +4145,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Each ticket in a project has its own unique count
+   * Each ticket in a project has its own unique count
    *
-   * @param  db             Description of the Parameter
-   * @param  projectId      Description of the Parameter
-   * @throws  SQLException  Description of the Exception
+   * @param db        Description of the Parameter
+   * @param projectId Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void updateProjectTicketCount(Connection db, int projectId) throws SQLException {
     Exception errorMessage = null;
@@ -4095,8 +4162,8 @@ public class Ticket extends GenericBean {
       // Lock the row with the new value
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_ticket_count " +
-          "SET key_count = key_count + 1 " +
-          "WHERE project_id = ? ");
+              "SET key_count = key_count + 1 " +
+              "WHERE project_id = ? ");
       pst.setInt(++i, projectId);
       pst.execute();
       pst.close();
@@ -4104,8 +4171,8 @@ public class Ticket extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "SELECT key_count " +
-          "FROM project_ticket_count " +
-          "WHERE project_id = ? ");
+              "FROM project_ticket_count " +
+              "WHERE project_id = ? ");
       pst.setInt(++i, projectId);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -4133,12 +4200,12 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Each ticket in a project has its own unique count
+   * Each ticket in a project has its own unique count
    *
-   * @param  tz       Description of the Parameter
-   * @param  created  Description of the Parameter
-   * @param  type     Description of the Parameter
-   * @return          Description of the Return Value
+   * @param tz      Description of the Parameter
+   * @param created Description of the Parameter
+   * @param type    Description of the Parameter
+   * @return Description of the Return Value
    */
   public String generateWebcalEvent(TimeZone tz, Timestamp created, int type) {
     StringBuffer webcal = new StringBuffer();
@@ -4188,7 +4255,7 @@ public class Ticket extends GenericBean {
     if (estimatedResolutionDate != null) {
       webcal.append(
           "DTSTART;TZID=" + tz.getID() + ":" + ICalendar.getDateTime(
-          tz, estimatedResolutionDate) + CRLF);
+              tz, estimatedResolutionDate) + CRLF);
     }
     if (problem != null) {
       webcal.append(
@@ -4205,11 +4272,11 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Gets the projectIdByTicket attribute of the Ticket object
+   * Gets the projectIdByTicket attribute of the Ticket object
    *
-   * @param  db                Description of the Parameter
-   * @return                   The projectIdByTicket value
-   * @exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return The projectIdByTicket value
+   * @throws SQLException Description of the Exception
    */
   public int getProjectIdByTicket(Connection db) throws SQLException {
     int result = -1;
@@ -4223,5 +4290,6 @@ public class Ticket extends GenericBean {
     pst.close();
     return result;
   }
+
 }
 

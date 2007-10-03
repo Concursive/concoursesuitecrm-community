@@ -45,6 +45,7 @@ public class ServiceContract extends GenericBean {
   private int id = -1;
   private String serviceContractNumber = null;
   private int orgId = -1;
+  private int submitterId = -1;
   private double contractValue = -1;
   private java.sql.Timestamp initialStartDate = null;
   private java.sql.Timestamp currentStartDate = null;
@@ -79,6 +80,8 @@ public class ServiceContract extends GenericBean {
   private String adjustmentNotes = null;
   private double netHours = 0.0;
 
+  //Related descriptions
+  private String submitterName = "";
 
   /**
    * Constructor for the ServiceContract object
@@ -165,6 +168,21 @@ public class ServiceContract extends GenericBean {
     this.orgId = tmp;
   }
 
+  public void setSubmitterId(int tmp) {
+    this.submitterId = tmp;
+  }
+
+  public int getSubmitterId() {
+    return submitterId;
+  }
+
+  public void setSubmitterName(String submitterName) {
+    this.submitterName = submitterName;
+  }
+
+  public String getSubmitterName() {
+    return submitterName;
+  }
 
   /**
    * Sets the orgId attribute of the ServiceContract object
@@ -1177,28 +1195,29 @@ public class ServiceContract extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE service_contract " +
-        "SET " +
-        "contract_number = ? , " +
-        "account_id = ? , " +
-        "contract_value = ? , " +
-        "initial_start_date = ? , " +
-        "initial_start_date_timezone = ? , " +
-        "current_start_date = ? , " +
-        "current_start_date_timezone = ? , " +
-        "current_end_date = ? , " +
-        "current_end_date_timezone = ? , " +
-        "category = ? , " +
-        DatabaseUtils.addQuotes(db, "type")+ " = ? , " +
-        "contact_id = ? , " +
-        "description = ? , " +
-        "contract_billing_notes = ? , " +
-        "total_hours_remaining = ? , " +
-        "response_time = ? , " +
-        "telephone_service_model= ? , " +
-        "onsite_service_model = ? , " +
-        "email_service_model = ? , " +
-        "service_model_notes = ? , " +
-        "trashed_date = ? ");
+            "SET " +
+            "contract_number = ? , " +
+            "account_id = ? , " +
+            "submitter_id = ? , " +
+            "contract_value = ? , " +
+            "initial_start_date = ? , " +
+            "initial_start_date_timezone = ? , " +
+            "current_start_date = ? , " +
+            "current_start_date_timezone = ? , " +
+            "current_end_date = ? , " +
+            "current_end_date_timezone = ? , " +
+            "category = ? , " +
+            DatabaseUtils.addQuotes(db, "type") + " = ? , " +
+            "contact_id = ? , " +
+            "description = ? , " +
+            "contract_billing_notes = ? , " +
+            "total_hours_remaining = ? , " +
+            "response_time = ? , " +
+            "telephone_service_model= ? , " +
+            "onsite_service_model = ? , " +
+            "email_service_model = ? , " +
+            "service_model_notes = ? , " +
+            "trashed_date = ? ");
 
     if (!override) {
       sql.append(
@@ -1206,13 +1225,14 @@ public class ServiceContract extends GenericBean {
     }
     sql.append("WHERE contract_id = ? ");
     if (!override) {
-      sql.append("AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
+      sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     }
 
     pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
+    DatabaseUtils.setInt(pst, ++i, submitterId);
     DatabaseUtils.setDouble(pst, ++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
     pst.setString(++i, this.initialStartDateTimeZone);
@@ -1296,9 +1316,9 @@ public class ServiceContract extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE service_contract " +
-        "SET " +
-        "total_hours_remaining = total_hours_remaining + ? " +
-        "WHERE contract_id = ? ");
+            "SET " +
+            "total_hours_remaining = total_hours_remaining + ? " +
+            "WHERE contract_id = ? ");
 
     pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -1331,10 +1351,10 @@ public class ServiceContract extends GenericBean {
       }
       sql.append(
           "UPDATE service_contract " +
-          "SET trashed_date = ? , " +
-          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-          "modifiedby = ? " +
-          "WHERE contract_id = ? ");
+              "SET trashed_date = ? , " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+              "modifiedby = ? " +
+              "WHERE contract_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       if (toTrash) {
@@ -1440,7 +1460,7 @@ public class ServiceContract extends GenericBean {
       // Delete Contact History
       ContactHistory.deleteObject(
           db, OrganizationHistory.SERVICE_CONTRACT, this.getId());
-      
+
       //Service Contracts have  tickets, assets, hours history related  related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setServiceContractId(this.getId());
@@ -1491,7 +1511,7 @@ public class ServiceContract extends GenericBean {
       Statement st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM service_contract " +
-          "WHERE contract_id = " + this.getId());
+              "WHERE contract_id = " + this.getId());
       st.close();
 
       if (commit) {
@@ -1523,36 +1543,38 @@ public class ServiceContract extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "service_contract_contract_id_seq");
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO service_contract " +
-        "(" + (id > -1 ? "contract_id, " : "") + "contract_number , " +
-        "account_id , " +
-        "contract_value , " +
-        "initial_start_date , " +
-        "initial_start_date_timezone, " +
-        "current_start_date , " +
-        "current_start_date_timezone, " +
-        "current_end_date , " +
-        "current_end_date_timezone , " +
-        "category , " +
-        DatabaseUtils.addQuotes(db, "type")+ " , " +
-        "contact_id , " +
-        "description , " +
-        "contract_billing_notes , " +
-        "total_hours_remaining , " +
-        "response_time , " +
-        "telephone_service_model , " +
-        "onsite_service_model , " +
-        "email_service_model , " +
-        "service_model_notes , " +
-        "enteredby , " +
-        "modifiedby , " +
-        "trashed_date ) " +
-        "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            "(" + (id > -1 ? "contract_id, " : "") + "contract_number , " +
+            "account_id , " +
+            "submitter_id , " +
+            "contract_value , " +
+            "initial_start_date , " +
+            "initial_start_date_timezone, " +
+            "current_start_date , " +
+            "current_start_date_timezone, " +
+            "current_end_date , " +
+            "current_end_date_timezone , " +
+            "category , " +
+            DatabaseUtils.addQuotes(db, "type") + " , " +
+            "contact_id , " +
+            "description , " +
+            "contract_billing_notes , " +
+            "total_hours_remaining , " +
+            "response_time , " +
+            "telephone_service_model , " +
+            "onsite_service_model , " +
+            "email_service_model , " +
+            "service_model_notes , " +
+            "enteredby , " +
+            "modifiedby , " +
+            "trashed_date ) " +
+            "VALUES (" + (id > -1 ? "?," : "") + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
     if (id > -1) {
       pst.setInt(++i, id);
     }
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
+    DatabaseUtils.setInt(pst, ++i, this.getSubmitterId());
     DatabaseUtils.setDouble(pst, ++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
     pst.setString(++i, this.initialStartDateTimeZone);
@@ -1598,9 +1620,11 @@ public class ServiceContract extends GenericBean {
     PreparedStatement pst = null;
     ResultSet rs = null;
     pst = db.prepareStatement(
-        " SELECT * " +
-        " FROM service_contract " +
-        " WHERE contract_id = ? ");
+        " SELECT sc.*, " +
+            " os.name AS subname " +
+            " FROM service_contract sc " +
+            " LEFT JOIN organization os ON (sc.submitter_id = os.org_id) " +
+            " WHERE contract_id = ? ");
     pst.setInt(1, tmpContractId);
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -1633,6 +1657,7 @@ public class ServiceContract extends GenericBean {
    * @throws SQLException Description of the Exception
    */
   public void buildRecord(ResultSet rs) throws SQLException {
+    // Fields from service_contract
     id = rs.getInt("contract_id");
     serviceContractNumber = rs.getString("contract_number");
     orgId = rs.getInt("account_id");
@@ -1661,6 +1686,10 @@ public class ServiceContract extends GenericBean {
     currentStartDateTimeZone = rs.getString("current_start_date_timezone");
     currentEndDateTimeZone = rs.getString("current_end_date_timezone");
     trashedDate = rs.getTimestamp("trashed_date");
+    submitterId = DatabaseUtils.getInt(rs, "submitter_id");
+
+    // Fields from organization
+    submitterName = rs.getString("subname");
   }
 }
 

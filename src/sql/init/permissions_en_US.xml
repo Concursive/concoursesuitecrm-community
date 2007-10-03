@@ -8,51 +8,51 @@
   <!-- Permission attributes include: View, Add, Edit, Delete (vaed) and can be in any order -->
   <permissions>
     <category id="13" name="System" folders="false" lookups="false">
-      <permission name="globalitems-search"                              attributes="v---" offline="v---" description="Access to Global Search"/>
-      <permission name="globalitems-myitems"                             attributes="v---" offline="v---" description="Access to My Items"/>
-      <permission name="globalitems-recentitems"                         attributes="v---" offline="v---" description="Access to Recent Items"/>
+      <permission name="globalitems-search" attributes="v---" offline="v---" description="Access to Global Search"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="v---" description="Access to My Items"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="v---" description="Access to Recent Items"/>
     </category>
     <category id="14" name="My Home Page" folders="false" lookups="false" reports="true">
-      <permission name="myhomepage"                                      attributes="v---" offline="v---" description="Access to My Home Page module"/>
-      <permission name="myhomepage-dashboard"                            attributes="v---" offline="v---" description="View Performance Dashboard"/>
-      <permission name="myhomepage-miner"                                attributes="va-d" offline="----" description="Industry News records" enabled="false"/>
-      <permission name="myhomepage-inbox"                                attributes="v---" offline="v---" description="Mailbox"/>
-      <permission name="myhomepage-tasks"                                attributes="vaed" offline="vaed" description="Tasks"/>
-      <permission name="myhomepage-reassign"                             attributes="v-e-" offline="----" description="Re-assign Items"/>
-      <permission name="myhomepage-profile"                              attributes="v---" offline="v---" description="Profile"/>
-      <permission name="myhomepage-profile-personal"                     attributes="v-e-" offline="v---" description="Personal Information"/>
-      <permission name="myhomepage-profile-settings"                     attributes="v-e-" offline="----" description="Settings" enabled="false"/>
-      <permission name="myhomepage-profile-password"                     attributes="--e-" offline="--e-" description="Password"/>
-      <permission name="myhomepage-action-lists"                         attributes="vaed" offline="vaed" description="Action Lists"/>
-      <permission name="myhomepage-action-plans"                         attributes="vaed" offline="vaed" description="Action Plans"/>
+      <permission name="myhomepage" attributes="v---" offline="v---" description="Access to My Home Page module"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="v---" description="View Performance Dashboard"/>
+      <permission name="myhomepage-miner" attributes="va-d" offline="----" description="Industry News records" enabled="false"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="v---" description="Mailbox"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="vaed" description="Tasks"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----" description="Re-assign Items"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="v---" description="Profile"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="v---" description="Personal Information"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----" description="Settings" enabled="false"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="--e-" description="Password"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" offline="vaed" description="Action Lists"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="vaed" description="Action Plans"/>
       <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="What are the tasks due withing a date range?"/>
       <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="What are all the tasks in the system?"/>
       <report file="contact_activities.xml" type="user" permission="contacts-external_contacts-calls" title="Contact Activities" description="What are the activities associated with a contact?"/>
     </category>
     <category id="420041014" name="Products and Services" folders="false" lookups="false" reports="false" enabled="false">
-      <permission name="products"                                        attributes="v---" offline="----" description="Access to Products and Services module"/>
+      <permission name="products" attributes="v---" offline="----" description="Access to Products and Services module"/>
     </category>
     <category id="223061200" name="Website" folders="false" lookups="true" reports="false" categories="false" products="false" enabled="true">
-      <permission name="website"                                         attributes="v---" offline="v---" description="Access to Website module" enabled="true"/>
-      <permission name="website-portfolio"                               attributes="vaed" offline="vaed" description="Portfolio Editor" enabled="true"/>
-      <permission name="site-editor"                                     attributes="vaed" offline="va-d" description="Site Editor" enabled="true"/>
+      <permission name="website" attributes="v---" offline="v---" description="Access to Website module" enabled="true"/>
+      <permission name="website-portfolio" attributes="vaed" offline="vaed" description="Portfolio Editor" enabled="true"/>
+      <permission name="site-editor" attributes="vaed" offline="va-d" description="Site Editor" enabled="true"/>
     </category>
     <category id="228051100" name="Leads" folders="false" lookups="true" reports="true" dashboards="true" customtabs="true" actionPlans="true">
       <lookup constantId="228051102" class="lookupList" table="lookup_contact_rating" description="Contact Rating"/>
       <lookup constantId="228051103" class="lookupList" table="lookup_contact_source" description="Contact Source"/>
       <lookup constantId="626071723" class="lookupList" table="lookup_contact_stage" description="Contact Stage"/>
-      <permission name="sales"                                           attributes="v---" offline="v---" description="Access to the Leads Module"/>
-      <permission name="sales-leads"                                     attributes="vaed" offline="vaed" description="Lead Records"/>
-      <permission name="sales-leads-opportunities"                       attributes="vaed" offline="vaed" description="Leads Opportunities"/>
-      <permission name="sales-leads-documents"                           attributes="vaed" offline="vaed" description="Leads Documents"/>
-      <permission name="sales-import"                                    attributes="v---" offline="----" description="Access to Import Leads"/>
-      <permission name="sales-dashboard"                                 attributes="v---" offline="----" description="Leads Dashboard"/>
-      <permission name="sales-reports"                                   attributes="va-d" offline="va-d" description="Export Leads Data"/>
-      <permission name="sales-leads-history"                             attributes="vaed" offline="vaed" description="Leads History"/>
-      <permission name="sales-leads-messages"                            attributes="vaed" offline="vaed" description="Leads Messages"/>
-      <permission name="sales-leads-action-plans"                        attributes="vaed" offline="vaed" description="Leads Action Plans"/>
-      <permission name="sales-leads-folders"                              attributes="vaed" offline="vaed" description="Leads Folders" enabled="false"/>
-      <permission name="sales-leads-calls"                               attributes="vaed" offline="vaed" description="Leads Calls"/>
+      <permission name="sales" attributes="v---" offline="v---" description="Access to the Leads Module"/>
+      <permission name="sales-leads" attributes="vaed" offline="vaed" description="Lead Records"/>
+      <permission name="sales-leads-opportunities" attributes="vaed" offline="vaed" description="Leads Opportunities"/>
+      <permission name="sales-leads-documents" attributes="vaed" offline="vaed" description="Leads Documents"/>
+      <permission name="sales-import" attributes="v---" offline="----" description="Access to Import Leads"/>
+      <permission name="sales-dashboard" attributes="v---" offline="----" description="Leads Dashboard"/>
+      <permission name="sales-reports" attributes="va-d" offline="va-d" description="Export Leads Data"/>
+      <permission name="sales-leads-history" attributes="vaed" offline="vaed" description="Leads History"/>
+      <permission name="sales-leads-messages" attributes="vaed" offline="vaed" description="Leads Messages"/>
+      <permission name="sales-leads-action-plans" attributes="vaed" offline="vaed" description="Leads Action Plans"/>
+      <permission name="sales-leads-folders" attributes="vaed" offline="vaed" description="Leads Folders" enabled="false"/>
+      <permission name="sales-leads-calls" attributes="vaed" offline="vaed" description="Leads Calls"/>
       <report file="leads_user.xml" type="user" permission="sales-leads" title="User Leads" description="Who are the leads owned by a specific user?"/>
       <!--
       <report file="leads_to_accounts.xml" type="user" permission="sales-leads" title="Leads To Accounts Summary" description="How many leads have been converted into accounts?"/>
@@ -69,18 +69,18 @@
       <!--
       <lookup constantId="111051308" class="lookupList" table="lookup_im_types" description="Instant Messaging Types"/>
       -->
-      <permission name="contacts"                                        attributes="v---" offline="v---" description="Access to Contacts module"/>
-      <permission name="contacts-external_contacts"                      attributes="vaed" offline="vaed" description="General Contact Records"/>
-      <permission name="contacts-external_contacts-reports"              attributes="va-d" offline="va-d" description="Export Contact Data"/>
-      <permission name="contacts-external_contacts-folders"              attributes="vaed" offline="vaed" description="Folders"/>
-      <permission name="contacts-external_contacts-calls"                attributes="vaed" offline="vaed" description="Activities"/>
-      <permission name="contacts-external_contacts-messages"             attributes="v---" offline="v---" description="Messages"/>
-      <permission name="contacts-external_contacts-documents"            attributes="vaed" offline="v---" description="Documents"/>
-      <permission name="contacts-external_contacts-opportunities"        attributes="vaed" offline="vaed" description="Opportunities"/>
-      <permission name="contacts-external_contacts-imports"              attributes="vaed" offline="vaed" description="Imports"/>
-      <permission name="contacts-external-contact-updater"               attributes="v---" offline="----" description="Request contact information update"/>
-      <permission name="contacts-external_contacts-history"              attributes="vaed" offline="vaed" description="Contact History"/>
-			<permission name="contacts-external_contacts-dashboards"           attributes="v---" offline="----" description="Dashboards"/>
+      <permission name="contacts" attributes="v---" offline="v---" description="Access to Contacts module"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="vaed" description="General Contact Records"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="va-d" description="Export Contact Data"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" offline="vaed" description="Folders"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="vaed" description="Activities"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" offline="v---" description="Messages"/>
+      <permission name="contacts-external_contacts-documents" attributes="vaed" offline="v---" description="Documents"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" offline="vaed" description="Opportunities"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="vaed" description="Imports"/>
+      <permission name="contacts-external-contact-updater" attributes="v---" offline="----" description="Request contact information update"/>
+      <permission name="contacts-external_contacts-history" attributes="vaed" offline="vaed" description="Contact History"/>
+      <permission name="contacts-external_contacts-dashboards" attributes="v---" offline="----" description="Dashboards"/>
       <report file="contacts_user.xml" type="user" permission="contacts" title="Contacts" description="Who are my contacts?"/>
     </category>
     <category id="4" name="Pipeline" folders="true" lookups="true" viewpoints="true" reports="true">
@@ -92,14 +92,14 @@
       <lookup constantId="707050231" class="lookupList" table="lookup_opportunity_event_compelling" description="Compelling Event"/>
       <lookup constantId="707050232" class="lookupList" table="lookup_opportunity_budget" description="Budget"/>
       <lookup constantId="206061500" class="lookupList" table="lookup_call_types" description="Activity Type"/>
-      <permission name="pipeline"                                        attributes="v---" offline="v---" description="Access to Pipeline module" viewpoints="true"/>
-      <permission name="pipeline-opportunities"                          attributes="vaed" offline="vaed" description="Opportunity Records"/>
-      <permission name="pipeline-dashboard"                              attributes="v---" offline="----" description="Dashboard"/>
-      <permission name="pipeline-reports"                                attributes="va-d" offline="va-d" description="Export Opportunity Data"/>
-      <permission name="pipeline-opportunities-calls"                    attributes="vaed" offline="vaed" description="Activities"/>
-      <permission name="pipeline-opportunities-documents"                attributes="vaed" offline="vaed" description="Documents"/>
-      <permission name="pipeline-folders"                                attributes="vaed" offline="vaed" description="Folders"/>
-      <permission name="pipeline-quotes"                                 attributes="vaed" offline="vaed" description="Quotes"/>
+      <permission name="pipeline" attributes="v---" offline="v---" description="Access to Pipeline module" viewpoints="true"/>
+      <permission name="pipeline-opportunities" attributes="vaed" offline="vaed" description="Opportunity Records"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----" description="Dashboard"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="va-d" description="Export Opportunity Data"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" offline="vaed" description="Activities"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" offline="vaed" description="Documents"/>
+      <permission name="pipeline-folders" attributes="vaed" offline="vaed" description="Folders"/>
+      <permission name="pipeline-quotes" attributes="vaed" offline="vaed" description="Quotes"/>
       <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Stage" description="What are my upcoming opportunities by stage?"/>
       <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Account" description="What are all the accounts associated with my opportunities?"/>
       <report file="opportunity_owner.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Owner" description="What are all the opportunities based on ownership?"/>
@@ -120,48 +120,49 @@
       <lookup constantId="158051538" class="lookupList" table="lookup_account_size" description="Account Size"/>
       <lookup constantId="181206161" class="lookupList" table="lookup_account_stage" description="Account Stage"/>
       <webdav class="org.aspcfs.modules.accounts.webdav.AccountsWebdavContext"/>
-      <permission name="accounts"                                        attributes="v---" offline="v---" description="Access to Accounts module"/>
-      <permission name="accounts-accounts"                               attributes="vaed" offline="vaed" description="Account Records"/>
-      <permission name="accounts-accounts-folders"                       attributes="vaed" offline="vaed" description="Folders"/>
-      <permission name="accounts-accounts-contacts"                      attributes="vaed" offline="vaed" description="Contacts"/>
-      <permission name="accounts-accounts-contacts-opportunities"        attributes="vaed" offline="vaed" description="Contact Opportunities"/>
-      <permission name="accounts-accounts-contacts-calls"                attributes="vaed" offline="vaed" description="Contact Activities"/>
-      <permission name="accounts-accounts-contacts-completed-calls"      attributes="--e-" offline="--e-" description="Completed Activities"/>
-      <permission name="accounts-accounts-contacts-messages"             attributes="vaed" offline="v--d" description="Contact Messages"/>
-      <permission name="accounts-accounts-contacts-documents"            attributes="vaed" offline="v---" description="Contact Documents"/>
-      <permission name="accounts-accounts-contacts-move"                 attributes="v---" offline="----" description="Move contacts to other accounts"/>
-      <permission name="accounts-accounts-contacts-history"              attributes="vaed" offline="vaed" description="Contact History"/>
-      <permission name="accounts-accounts-opportunities"                 attributes="vaed" offline="vaed" description="Opportunities"/>
-      <permission name="accounts-accounts-tickets"                       attributes="vaed" offline="vaed" description="Tickets"/>
-      <permission name="accounts-accounts-tickets-tasks"                 attributes="vaed" offline="vaed" description="Ticket Tasks"/>
-      <permission name="accounts-accounts-tickets-folders"               attributes="vaed" offline="vaed" description="Ticket Folders"/>
-      <permission name="accounts-accounts-tickets-documents"             attributes="vaed" offline="vaed" description="Ticket Documents"/>
-      <permission name="accounts-accounts-documents"                     attributes="vaed" offline="vaed" description="Documents"/>
-      <permission name="accounts-accounts-reports"                       attributes="va-d" offline="va-d" description="Export Account Data"/>
-      <permission name="accounts-accounts-history"                       attributes="vaed" offline="vaed" description="Account History"/>
-      <permission name="accounts-dashboard"                              attributes="v---" offline="v---" description="Dashboard"/>
-      <permission name="accounts-accounts-revenue"                       attributes="vaed" offline="----" description="Revenue" enabled="false"/>
-      <permission name="accounts-autoguide-inventory"                    attributes="vaed" offline="----" description="Auto Guide Vehicle Inventory" enabled="false"/>
-      <permission name="accounts-service-contracts"                      attributes="vaed" offline="vaed" description="Service Contracts"/>
-      <permission name="accounts-assets"                                 attributes="vaed" offline="vaed" description="Assets"/>
-      <permission name="accounts-accounts-tickets-maintenance-report"    attributes="vaed" offline="vaed" description="Ticket Maintenance Notes"/>
-      <permission name="accounts-accounts-tickets-activity-log"          attributes="vaed" offline="vaed" description="Ticket Activities"/>
-      <permission name="portal-user"                                     attributes="vaed" offline="v---" description="Customer Portal User"/>
-      <permission name="accounts-quotes"                                 attributes="vaed" offline="vaed" description="Quotes" />
-      <permission name="accounts-orders"                                 attributes="vaed" offline="----" description="Orders" enabled="false"/>
-      <permission name="accounts-products"                               attributes="vaed" offline="----" description="Products and Services" enabled="false"/>
-      <permission name="accounts-accounts-contacts-imports"              attributes="vaed" offline="vaed" description="Import Accounts/Contacts"/>
-      <permission name="accounts-accounts-relationships"                 attributes="vaed" offline="vaed" description="Relationships"/>
-      <permission name="accounts-accounts-contact-updater"               attributes="v---" offline="----" description="Request contact information update"/>
-      <permission name="accounts-projects"                               attributes="v---" offline="v---" description="Projects"/>
-      <permission name="accounts-action-plans"                           attributes="vaed" offline="vaed" description="Action Plans"/>
+      <permission name="accounts" attributes="v---" offline="v---" description="Access to Accounts module"/>
+      <permission name="accounts-accounts" attributes="vaed" offline="vaed" description="Account Records"/>
+      <permission name="accounts-accounts-folders" attributes="vaed" offline="vaed" description="Folders"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" offline="vaed" description="Contacts"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" offline="vaed" description="Contact Opportunities"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" offline="vaed" description="Contact Activities"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="--e-" description="Completed Activities"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" offline="v--d" description="Contact Messages"/>
+      <permission name="accounts-accounts-contacts-documents" attributes="vaed" offline="v---" description="Contact Documents"/>
+      <permission name="accounts-accounts-contacts-move" attributes="v---" offline="----" description="Move contacts to other accounts"/>
+      <permission name="accounts-accounts-contacts-history" attributes="vaed" offline="vaed" description="Contact History"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed" offline="vaed" description="Opportunities"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed" offline="vaed" description="Tickets"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed" offline="vaed" description="Ticket Tasks"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vaed" offline="vaed" description="Ticket Folders"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed" offline="vaed" description="Ticket Documents"/>
+      <permission name="accounts-accounts-tickets-reseller-restriction" attributes="v---" offline="----" description="Tickets: Restrict this role to see only reseller's service contracts, and assets related to those service contracts"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" offline="vaed" description="Documents"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="va-d" description="Export Account Data"/>
+      <permission name="accounts-accounts-history" attributes="vaed" offline="vaed" description="Account History"/>
+      <permission name="accounts-dashboard" attributes="v---" offline="v---" description="Dashboard"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" offline="----" description="Revenue" enabled="false"/>
+      <permission name="accounts-autoguide-inventory" attributes="vaed" offline="----" description="Auto Guide Vehicle Inventory" enabled="false"/>
+      <permission name="accounts-service-contracts" attributes="vaed" offline="vaed" description="Service Contracts"/>
+      <permission name="accounts-assets" attributes="vaed" offline="vaed" description="Assets"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" offline="vaed" description="Ticket Maintenance Notes"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" offline="vaed" description="Ticket Activities"/>
+      <permission name="portal-user" attributes="vaed" offline="v---" description="Customer Portal User"/>
+      <permission name="accounts-quotes" attributes="vaed" offline="vaed" description="Quotes"/>
+      <permission name="accounts-orders" attributes="vaed" offline="----" description="Orders" enabled="false"/>
+      <permission name="accounts-products" attributes="vaed" offline="----" description="Products and Services" enabled="false"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="vaed" description="Import Accounts/Contacts"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="vaed" description="Relationships"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---" offline="----" description="Request contact information update"/>
+      <permission name="accounts-projects" attributes="v---" offline="v---" description="Projects"/>
+      <permission name="accounts-action-plans" attributes="vaed" offline="vaed" description="Action Plans"/>
       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" offline="vaed" description="Contact Opportunities Quotes"/>
-      <permission name="accounts-directbill"                             attributes="vaed" offline="----" description="Direct Bill" enabled="false"/>
-      <permission name="accounts-accounts-contacts-folders"              attributes="vaed" offline="vaed" description="Contact Folders"/>
-      <permission name="accounts-accounts-contacts-opps-folders"         attributes="vaed" offline="vaed" description="Contact Opportunity Folders"/>
-      <permission name="accounts-accounts-shareddocuments"               attributes="vaed" offline="----" description="Share Accounts Documents"/>
-      <permission name="accounts-accounts-documentstore"                 attributes="vaed" offline="----" description="Account Document Store"/>
-      <permission name="accounts-dashboards"                             attributes="v---" offline="----" description="Dashboards"/>
+      <permission name="accounts-directbill" attributes="vaed" offline="----" description="Direct Bill" enabled="false"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" offline="vaed" description="Contact Folders"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" offline="vaed" description="Contact Opportunity Folders"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" offline="----" description="Share Accounts Documents"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed" offline="----" description="Account Document Store"/>
+      <permission name="accounts-dashboards" attributes="v---" offline="----" description="Dashboards"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -177,9 +178,9 @@
     </category>
     <category id="330041409" name="Product Catalog" folders="false" lookups="true" reports="false" categories="false">
       <folder constantId="200403192" description="Product Catalog Categories" enabled="false"/>
-      <permission name="product-catalog"                                 attributes="v---" offline="v---" description="Access to Product Catalog module" enabled="true"/>
-      <permission name="product-catalog-product"                         attributes="vaed" offline="----" description="Products" enabled="true"/>
-      <permission name="product-catalog-product-imports"                 attributes="vaed" offline="vaed" description="Product Catalog Import" enabled="true"/>
+      <permission name="product-catalog" attributes="v---" offline="v---" description="Access to Product Catalog module" enabled="true"/>
+      <permission name="product-catalog-product" attributes="vaed" offline="----" description="Products" enabled="true"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" offline="vaed" description="Product Catalog Import" enabled="true"/>
       <lookup constantId="1017040901" class="lookupList" table="lookup_product_type" description="Product Types"/>
       <lookup constantId="1017040902" class="lookupList" table="lookup_product_format" description="Product Format Types"/>
       <lookup constantId="1017040903" class="lookupList" table="lookup_product_shipping" description="Product Shipping Types"/>
@@ -191,12 +192,12 @@
       <lookup constantId="1017040909" class="lookupList" table="lookup_product_manufacturer" description="Product Manufacturer Types"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
-      <permission name="autoguide"                                       attributes="v---" offline="----" description="Access to the Auto Guide module"/>
-      <permission name="autoguide-adruns"                                attributes="--e-" offline="----" description="Ad Run complete status"/>
+      <permission name="autoguide" attributes="v---" offline="----" description="Access to the Auto Guide module"/>
+      <permission name="autoguide-adruns" attributes="--e-" offline="----" description="Ad Run complete status"/>
     </category>
     <category id="420041017" name="Quotes" folders="false" lookups="true" reports="false" logos="true">
-      <permission name="quotes"                                          attributes="v---" offline="v---" description="Access to Quotes module"/>
-      <permission name="quotes-quotes"                                   attributes="vaed" offline="vaed" description="Quote Records"/>
+      <permission name="quotes" attributes="v---" offline="v---" description="Access to Quotes module"/>
+      <permission name="quotes-quotes" attributes="vaed" offline="vaed" description="Quote Records"/>
       <lookup constantId="1123041000" class="lookupList" table="lookup_quote_status" description="Quote Status"/>
       <!--
       <lookup constantId="1123041001" class="lookupList" table="lookup_quote_type" description="Quote Types"/>
@@ -208,25 +209,25 @@
       <lookup constantId="1123041006" class="lookupList" table="lookup_quote_remarks" description="Quote Remarks"/>
     </category>
     <category id="420041018" name="Orders" folders="false" lookups="false" reports="true" enabled="false">
-      <permission name="orders"                                          attributes="v---" offline="----" description="Access to Orders module"/>
-      <permission name="orders-orders"                                   attributes="vaed" offline="----" description="Order Records"/>
+      <permission name="orders" attributes="v---" offline="----" description="Access to Orders module"/>
+      <permission name="orders-orders" attributes="vaed" offline="----" description="Order Records"/>
     </category>
     <category id="6" name="Communications" folders="false" lookups="false" reports="true">
-      <permission name="campaign"                                        attributes="v---" offline="v---" description="Access to Communications module"/>
-      <permission name="campaign-dashboard"                              attributes="v---" offline="v---" description="Dashboard"/>
-      <permission name="campaign-campaigns"                              attributes="vaed" offline="v---" description="Campaign Records"/>
-      <permission name="campaign-campaigns-groups"                       attributes="vaed" offline="vaed" description="Group Records"/>
-      <permission name="campaign-campaigns-messages"                     attributes="vaed" offline="vaed" description="Message Records"/>
-      <permission name="campaign-campaigns-surveys"                      attributes="vaed" offline="vaed" description="Survey Records"/>
-      <permission name="campaign-campaign-contact-updater"               attributes="v---" offline="----" description="Request contact information update"/>
+      <permission name="campaign" attributes="v---" offline="v---" description="Access to Communications module"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="v---" description="Dashboard"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="v---" description="Campaign Records"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="vaed" description="Group Records"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="vaed" description="Message Records"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="vaed" description="Survey Records"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----" description="Request contact information update"/>
       <report file="campaign.xml" type="user" permission="campaign-campaigns" title="Campaigns by date" description="What are my active campaigns?"/>
     </category>
     <category id="7" name="Projects" folders="false" lookups="false" enabled="true" webdav="true">
       <webdav class="com.zeroio.iteam.webdav.ProjectsWebdavContext"/>
-      <permission name="projects"                                        attributes="v---" offline="v---" description="Access to Project Management module"/>
-      <permission name="projects-personal"                               attributes="v---" offline="v---" description="Personal View"/>
-      <permission name="projects-enterprise"                             attributes="v---" offline="v---" description="Enterprise View"/>
-      <permission name="projects-projects"                               attributes="vaed" offline="vaed" description="Project Records"/>
+      <permission name="projects" attributes="v---" offline="v---" description="Access to Project Management module"/>
+      <permission name="projects-personal" attributes="v---" offline="v---" description="Personal View"/>
+      <permission name="projects-enterprise" attributes="v---" offline="v---" description="Enterprise View"/>
+      <permission name="projects-projects" attributes="vaed" offline="vaed" description="Project Records"/>
     </category>
     <category id="130041100" name="Service Contracts" folders="false" lookups="true" reports="false" categories="false">
       <lookup constantId="130041305" class="lookupList" table="lookup_sc_category" description="Service Contract Category"/>
@@ -254,15 +255,15 @@
       <lookup constantId="101705190" class="lookupList" table="lookup_ticket_task_category" description="Ticket Task Categories"/>
       <lookup constantId="910040913" class="lookupList" table="lookup_ticket_escalation" description="Ticket Escalation Level"/>
       <lookup constantId="112205113" class="lookupList" table="lookup_ticket_state" description="Ticket State"/>
-      <permission name="tickets"                                         attributes="v---" offline="v---" description="Access to Help Desk module"/>
-      <permission name="tickets-tickets"                                 attributes="vaed" offline="vaed" description="Ticket Records"/>
-      <permission name="tickets-reports"                                 attributes="vaed" offline="vaed" description="Export Ticket Data"/>
-      <permission name="tickets-tickets-tasks"                           attributes="vaed" offline="vaed" description="Tasks"/>
-      <permission name="tickets-maintenance-report"                      attributes="vaed" offline="vaed" description="Maintenance Notes"/>
-      <permission name="tickets-activity-log"                            attributes="vaed" offline="vaed" description="Activities"/>
-      <permission name="tickets-knowledge-base"                          attributes="vaed" offline="vaed" description="Knowledge Base"/>
-      <permission name="tickets-defects"                                 attributes="vaed" offline="vaed" description="Ticket Defects"/>
-      <permission name="tickets-action-plans"                            attributes="vaed" offline="vaed" description="Action Plans"/>
+      <permission name="tickets" attributes="v---" offline="v---" description="Access to Help Desk module"/>
+      <permission name="tickets-tickets" attributes="vaed" offline="vaed" description="Ticket Records"/>
+      <permission name="tickets-reports" attributes="vaed" offline="vaed" description="Export Ticket Data"/>
+      <permission name="tickets-tickets-tasks" attributes="vaed" offline="vaed" description="Tasks"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" offline="vaed" description="Maintenance Notes"/>
+      <permission name="tickets-activity-log" attributes="vaed" offline="vaed" description="Activities"/>
+      <permission name="tickets-knowledge-base" attributes="vaed" offline="vaed" description="Knowledge Base"/>
+      <permission name="tickets-defects" attributes="vaed" offline="vaed" description="Ticket Defects"/>
+      <permission name="tickets-action-plans" attributes="vaed" offline="vaed" description="Action Plans"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
       <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How many tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
@@ -287,840 +288,841 @@
     </category>
     <category id="1202041528" name="Documents" lookups="false" enabled="true" webdav="true">
       <webdav class="org.aspcfs.modules.documents.webdav.DocumentsWebdavContext"/>
-      <permission name="documents"                                       attributes="v---" offline="v---" description="Access to Documents module"/>
-      <permission name="documents_documentstore"                         attributes="vaed" offline="vaed" description="Manage Document Stores"/>
+      <permission name="documents" attributes="v---" offline="v---" description="Access to Documents module"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="vaed" description="Manage Document Stores"/>
     </category>
     <category id="1021051129" name="NetApp" reports="true" enabled="false">
-      <permission name="netapps_expiration_contracts"                    attributes="vaed" offline="----" description="Manage Network Application Information"/>
-      <permission name="netapps_expiration_contracts_imports"            attributes="vaed" offline="----" description="Network Application Import"/>
+      <permission name="netapps_expiration_contracts" attributes="vaed" offline="----" description="Manage Network Application Information"/>
+      <permission name="netapps_expiration_contracts_imports" attributes="vaed" offline="----" description="Network Application Import"/>
       <report file="dataline_contract_renewal.xml" type="user" permission="netapps_expiration_contracts" title="Contract expirations by date" description="Which contracts expire between any two dates?"/>
     </category>
     <category id="1111031131" name="Employees" folders="true" lookups="true" dashboards="true" reports="true">
       <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
       <folder constantId="120200513" description="Employees"/>
-      <permission name="employees"                                       attributes="v---" offline="v---" description="Access to Employee module"/>
-      <permission name="contacts-internal_contacts"                      attributes="vaed" offline="vaed" description="Employees"/>
-      <permission name="contacts-internal_contacts-folders"              attributes="vaed" offline="vaed" description="Folders" />
-      <permission name="contacts-internal_contacts-projects"             attributes="v---" offline="v---" description="Projects"/>
-      <permission name="contacts-internal_contacts-dashboards"           attributes="v---" offline="----" description="Dashboards"/>  
+      <permission name="employees" attributes="v---" offline="v---" description="Access to Employee module"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" offline="vaed" description="Employees"/>
+      <permission name="contacts-internal_contacts-folders" attributes="vaed" offline="vaed" description="Folders"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="v---" description="Projects"/>
+      <permission name="contacts-internal_contacts-dashboards" attributes="v---" offline="----" description="Dashboards"/>
       <report file="employees.xml" type="user" permission="contacts-internal_contacts" title="Employees" description="Who are the employees in my organization?"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
-      <permission name="reports"                                         attributes="v---" offline="v---" description="Access to Reports module"/>
+      <permission name="reports" attributes="v---" offline="v---" description="Access to Reports module"/>
     </category>
     <category id="9" name="Admin" folders="false" lookups="false" reports="true">
-      <permission name="admin"                                           attributes="v---" offline="v---" description="Access to Admin module"/>
-      <permission name="admin-users"                                     attributes="vaed" offline="v---" description="Users"/>
-      <permission name="admin-roles"                                     attributes="vaed" offline="v---" description="Roles"/>
-      <permission name="admin-portalroleeditor"                          attributes="vaed" offline="----" description="Portal Roles"/>
-      <permission name="admin-usage"                                     attributes="v---" offline="v---" description="System Usage"/>
-      <permission name="admin-sysconfig"                                 attributes="v-e-" offline="v---" description="System Configuration"/>
-      <permission name="admin-sysconfig-lists"                           attributes="v-e-" offline="v---" description="Configure Lookup Lists"/>
-      <permission name="admin-sysconfig-folders"                         attributes="vaed" offline="v---" description="Configure Custom Folders &amp; Fields"/>
-      <permission name="admin-sysconfig-dashboard"                       attributes="vaed" offline="v-ed" description="Configure Custom Dashboards"/>
-      <permission name="admin-sysconfig-customtab"                       attributes="vaed" offline="----" description="Configure Custom Tabs"/>
-      <permission name="admin-object-workflow"                           attributes="vaed" offline="v---" description="Configure Object Workflow"/>
-      <permission name="admin-sysconfig-categories"                      attributes="vaed" offline="v---" description="Configure Module Categories"/>
-      <permission name="admin-sysconfig-logos"                           attributes="vaed" offline="v---" description="Configure Module Logos"/>
-      <permission name="admin-actionplans"                               attributes="vaed" offline="v---" description="Configure Action Plans"/>
+      <permission name="admin" attributes="v---" offline="v---" description="Access to Admin module"/>
+      <permission name="admin-users" attributes="vaed" offline="v---" description="Users"/>
+      <permission name="admin-roles" attributes="vaed" offline="v---" description="Roles"/>
+      <permission name="admin-portalroleeditor" attributes="vaed" offline="----" description="Portal Roles"/>
+      <permission name="admin-usage" attributes="v---" offline="v---" description="System Usage"/>
+      <permission name="admin-sysconfig" attributes="v-e-" offline="v---" description="System Configuration"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-" offline="v---" description="Configure Lookup Lists"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed" offline="v---" description="Configure Custom Folders &amp; Fields"/>
+      <permission name="admin-sysconfig-dashboard" attributes="vaed" offline="v-ed" description="Configure Custom Dashboards"/>
+      <permission name="admin-sysconfig-customtab" attributes="vaed" offline="----" description="Configure Custom Tabs"/>
+      <permission name="admin-object-workflow" attributes="vaed" offline="v---" description="Configure Object Workflow"/>
+      <permission name="admin-sysconfig-categories" attributes="vaed" offline="v---" description="Configure Module Categories"/>
+      <permission name="admin-sysconfig-logos" attributes="vaed" offline="v---" description="Configure Module Logos"/>
+      <permission name="admin-actionplans" attributes="vaed" offline="v---" description="Configure Action Plans"/>
       <report file="users.xml" type="user" permission="admin" title="System Users" description="Who are all the users of the system?"/>
       <report file="login_usage.xml" type="user" permission="admin-usage" title="System Usage" description="What is the login activity per user on a day?"/>
       <multipleCategory constantId="907051127" table="action_plan_category" maxLevels="4" description="Action Plan Categories"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">
-      <permission name="help"                                            attributes="v---" offline="v---" description="Access to Help System"/>
+      <permission name="help" attributes="v---" offline="v---" description="Access to Help System"/>
     </category>
     <category id="15" name="QA" folders="false" lookups="false" enabled="false">
-      <permission name="qa"                                              attributes="vaed" offline="----" description="Access to QA Tool"/>
+      <permission name="qa" attributes="vaed" offline="----" description="Access to QA Tool"/>
     </category>
     <category id="5" name="Demo" folders="false" lookups="false" enabled="false">
-      <permission name="demo"                                            attributes="vaed" offline="----" description="Access to Demo/Non-working features"/>
+      <permission name="demo" attributes="vaed" offline="----" description="Access to Demo/Non-working features"/>
     </category>
     <category id="327071502" name="Global Folders" folders="true" lookups="false" reports="false" categories="false" products="false" enabled="true">
-       <folder constantId="327071502" description="Global Folders"/>
-       <permission name="global_folders"                                  attributes="vaed" offline="vaed" description="Access to Global Folders Module" enabled="true"/>
+      <folder constantId="327071502" description="Global Folders"/>
+      <permission name="global_folders" attributes="vaed" offline="vaed" description="Access to Global Folders Module" enabled="true"/>
     </category>
   </permissions>
   <roles>
     <role name="Administrator" description="Performs system configuration and maintenance">
-      <permission name="myhomepage"                                      attributes="v---" offline="----"/>
-      <permission name="myhomepage-dashboard"                            attributes="v---" offline="----" />
-      <permission name="myhomepage-miner"                                attributes="va-d" offline="----"/>
-      <permission name="myhomepage-inbox"                                attributes="v---" offline="----"/>
-      <permission name="myhomepage-tasks"                                attributes="vaed" offline="----"/>
-      <permission name="myhomepage-profile"                              attributes="v---" offline="----"/>
-      <permission name="myhomepage-profile-personal"                     attributes="v-e-" offline="----"/>
-      <permission name="myhomepage-profile-settings"                     attributes="v-e-" offline="----"/>
-      <permission name="myhomepage-profile-password"                     attributes="--e-" offline="----"/>
-      <permission name="myhomepage-action-lists"                         attributes="vaed" offline="----"/>
-      <permission name="myhomepage-action-plans"                         attributes="vaed" offline="----"/>
-      <permission name="myhomepage-reassign"                             attributes="v-e-" offline="----"/>
-      <permission name="products"                                        attributes="v---" offline="----"/>
-      <permission name="sales"                                           attributes="v---" offline="----"/>
-      <permission name="sales-leads"                                     attributes="vaed" offline="----"/>
-      <permission name="sales-import"                                    attributes="v---" offline="----"/>
-      <permission name="sales-dashboard"                                 attributes="v---" offline="----"/>
-      <permission name="sales-reports"                                   attributes="va-d" offline="----"/>
-      <permission name="contacts"                                        attributes="v---" offline="----"/>
-      <permission name="contacts-external_contacts"                      attributes="vaed" offline="----"/>
-      <permission name="contacts-external_contacts-reports"              attributes="va-d" offline="----"/>
-      <permission name="contacts-external_contacts-folders"              attributes="vaed" offline="----"/>
-      <permission name="contacts-external_contacts-calls"                attributes="vaed" offline="----"/>
-      <permission name="contacts-external_contacts-messages"             attributes="v---" offline="----"/>
-      <permission name="contacts-external_contacts-documents"            attributes="vaed" offline="----"/>
-      <permission name="contacts-external_contacts-opportunities"        attributes="vaed" offline="----"/>
-      <permission name="contacts-external_contacts-imports"              attributes="vaed" offline="----"/>
-      <permission name="contacts-external_contacts-history"              attributes="vaed" offline="----"/>
-      <permission name="contacts-external-contact-updater"               attributes="v---" offline="----"/>
-      <permission name="pipeline"                                        attributes="v---" offline="----"/>
-      <permission name="pipeline-opportunities"                          attributes="vaed" offline="----"/>
-      <permission name="pipeline-dashboard"                              attributes="v---" offline="----"/>
-      <permission name="pipeline-reports"                                attributes="va-d" offline="----"/>
-      <permission name="pipeline-opportunities-calls"                    attributes="vaed" offline="----"/>
-      <permission name="pipeline-opportunities-documents"                attributes="vaed" offline="----"/>
-      <permission name="pipeline-folders"                                attributes="vaed" offline="----"/>
-      <permission name="pipeline-quotes"                                 attributes="vaed" offline="----"/>
-      <permission name="accounts"                                        attributes="v---" offline="----"/>
-      <permission name="accounts-accounts"                               attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-folders"                       attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts"                      attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-contacts-opportunities"        attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-contacts-calls"                attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-completed-calls"      attributes="--e-" offline="----" />
-      <permission name="accounts-accounts-contacts-messages"             attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-documents"            attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-move"                 attributes="v---" offline="----" />
-      <permission name="accounts-accounts-contacts-history"              attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-opportunities"                 attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-tickets"                       attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-tickets-tasks"                 attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-tickets-folders"               attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-tickets-documents"             attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-documents"                     attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-reports"                       attributes="va-d" offline="----" />
-      <permission name="accounts-accounts-history"                       attributes="vaed" offline="----" />
-      <permission name="accounts-service-contracts"                      attributes="vaed" offline="----" />
-      <permission name="accounts-assets"                                 attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-tickets-maintenance-report"    attributes="vaed" offline="----"/>
-      <permission name="accounts-accounts-tickets-activity-log"          attributes="vaed" offline="----"/>
-      <permission name="accounts-quotes"                                 attributes="vaed" offline="----" />
-      <permission name="accounts-orders"                                 attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-imports"              attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-relationships"                 attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contact-updater"               attributes="v---" offline="----" />
-      <permission name="accounts-projects"                               attributes="v---" offline="----" />
-      <permission name="accounts-action-plans"                           attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-folders"              attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-contacts-opps-folders"         attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-documentstore"                 attributes="vaed" offline="----" />
-      <permission name="accounts-accounts-shareddocuments"               attributes="vaed" offline="----" />
-      <permission name="product-catalog"                                 attributes="v---" offline="----" />
-      <permission name="product-catalog-product"                         attributes="vaed" offline="----" />
-      <permission name="product-catalog-product-imports"                 attributes="vaed" offline="----" />
-      <permission name="portal-user"                                     attributes="vaed" offline="----" />
-      <permission name="quotes"                                          attributes="v---" offline="----" />
-      <permission name="quotes-quotes"                                   attributes="vaed" offline="----" />
-      <permission name="orders"                                          attributes="v---" offline="----" />
-      <permission name="campaign"                                        attributes="v---" offline="----"/>
-      <permission name="campaign-dashboard"                              attributes="v---" offline="----"/>
-      <permission name="campaign-campaigns"                              attributes="vaed" offline="----"/>
-      <permission name="campaign-campaigns-groups"                       attributes="vaed" offline="----"/>
-      <permission name="campaign-campaigns-messages"                     attributes="vaed" offline="----"/>
-      <permission name="campaign-campaigns-surveys"                      attributes="vaed" offline="----"/>
-      <permission name="campaign-campaign-contact-updater"               attributes="v---" offline="----" />
-      <permission name="tickets"                                         attributes="v---" offline="----"/>
-      <permission name="tickets-tickets"                                 attributes="vaed" offline="----"/>
-      <permission name="tickets-reports"                                 attributes="vaed" offline="----"/>
-      <permission name="tickets-tickets-tasks"                           attributes="vaed" offline="----"/>
-      <permission name="tickets-maintenance-report"                      attributes="vaed" offline="----" />
-      <permission name="tickets-activity-log"                            attributes="vaed" offline="----" />
-      <permission name="tickets-knowledge-base"                          attributes="vaed" offline="----" />
-      <permission name="tickets-defects"                                 attributes="vaed" offline="----" />
-      <permission name="tickets-action-plans"                            attributes="vaed" offline="----" />
-      <permission name="employees"                                       attributes="vae-" offline="----"/>
-      <permission name="contacts-internal_contacts"                      attributes="vaed" offline="----"/>
-      <permission name="contacts-internal_contacts-folders"              attributes="vaed" offline="----" />
-      <permission name="contacts-internal_contacts-projects"             attributes="v---" offline="----" />
-      <permission name="reports"                                         attributes="v---" offline="----"/>
-      <permission name="admin"                                           attributes="v---" offline="v---"/>
-      <permission name="admin-users"                                     attributes="vaed" offline="----"/>
-      <permission name="admin-roles"                                     attributes="vaed" offline="----"/>
-      <permission name="admin-portalroleeditor"                          attributes="vaed" offline="----"/>
-      <permission name="admin-sysconfig"                                 attributes="v-e-" offline="----"/>
-      <permission name="admin-usage"                                     attributes="v---" offline="----"/>
-      <permission name="admin-sysconfig-lists"                           attributes="v-e-" offline="----"/>
-      <permission name="admin-sysconfig-folders"                         attributes="vaed" offline="----"/>
-      <permission name="admin-sysconfig-dashboard"                       attributes="vaed" offline="v-ed"/>
-      <permission name="admin-sysconfig-customtab"                       attributes="vaed" offline="----"/>
-      <permission name="admin-object-workflow"                           attributes="vaed" offline="----"/>
-      <permission name="admin-sysconfig-categories"                      attributes="vaed" offline="----"/>
-      <permission name="admin-sysconfig-logos"                           attributes="vaed" offline="----" />
-      <permission name="admin-actionplans"                               attributes="vaed" offline="----" />
-      <permission name="help"                                            attributes="v---" offline="----"/>
-      <permission name="globalitems-search"                              attributes="v---" offline="----"/>
-      <permission name="globalitems-myitems"                             attributes="v---" offline="----"/>
-      <permission name="globalitems-recentitems"                         attributes="v---" offline="----"/>
-      <permission name="projects"                                        attributes="v---" offline="----" />
-      <permission name="projects-personal"                               attributes="v---" offline="----" />
-      <permission name="projects-enterprise"                             attributes="v---" offline="----" />
-      <permission name="projects-projects"                               attributes="vaed" offline="----" />
-      <permission name="documents"                                       attributes="v---" offline="----" />
-      <permission name="documents_documentstore"                         attributes="vaed" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-miner" attributes="va-d" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="products" attributes="v---" offline="----"/>
+      <permission name="sales" attributes="v---" offline="----"/>
+      <permission name="sales-leads" attributes="vaed" offline="----"/>
+      <permission name="sales-import" attributes="v---" offline="----"/>
+      <permission name="sales-dashboard" attributes="v---" offline="----"/>
+      <permission name="sales-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts-documents" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-history" attributes="vaed" offline="----"/>
+      <permission name="contacts-external-contact-updater" attributes="v---" offline="----"/>
+      <permission name="pipeline" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities" attributes="vaed" offline="----"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="----"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" offline="----"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" offline="----"/>
+      <permission name="pipeline-folders" attributes="vaed" offline="----"/>
+      <permission name="pipeline-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-move" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts-history" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="vaed" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="vaed" offline="----"/>
+      <permission name="accounts-assets" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" offline="----"/>
+      <permission name="accounts-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts-orders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-documentstore" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-shareddocuments" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="vaed" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="vaed" offline="----"/>
+      <permission name="portal-user" attributes="vaed" offline="----"/>
+      <permission name="quotes" attributes="v---" offline="----"/>
+      <permission name="quotes-quotes" attributes="vaed" offline="----"/>
+      <permission name="orders" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vaed" offline="----"/>
+      <permission name="tickets-reports" attributes="vaed" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vaed" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" offline="----"/>
+      <permission name="tickets-activity-log" attributes="vaed" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="vaed" offline="----"/>
+      <permission name="tickets-defects" attributes="vaed" offline="----"/>
+      <permission name="tickets-action-plans" attributes="vaed" offline="----"/>
+      <permission name="employees" attributes="vae-" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-internal_contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="admin" attributes="v---" offline="v---"/>
+      <permission name="admin-users" attributes="vaed" offline="----"/>
+      <permission name="admin-roles" attributes="vaed" offline="----"/>
+      <permission name="admin-portalroleeditor" attributes="vaed" offline="----"/>
+      <permission name="admin-sysconfig" attributes="v-e-" offline="----"/>
+      <permission name="admin-usage" attributes="v---" offline="----"/>
+      <permission name="admin-sysconfig-lists" attributes="v-e-" offline="----"/>
+      <permission name="admin-sysconfig-folders" attributes="vaed" offline="----"/>
+      <permission name="admin-sysconfig-dashboard" attributes="vaed" offline="v-ed"/>
+      <permission name="admin-sysconfig-customtab" attributes="vaed" offline="----"/>
+      <permission name="admin-object-workflow" attributes="vaed" offline="----"/>
+      <permission name="admin-sysconfig-categories" attributes="vaed" offline="----"/>
+      <permission name="admin-sysconfig-logos" attributes="vaed" offline="----"/>
+      <permission name="admin-actionplans" attributes="vaed" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
     </role>
     <role name="Operations Manager" description="Manages operations">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-lists"                        attributes="vaed" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="contacts"                                       attributes="v---" offline="----" />
-       <permission name="contacts-external_contacts"                     attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-reports"             attributes="va-d" offline="----"/>
-       <permission name="contacts-external_contacts-folders"             attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-messages"            attributes="v---" offline="----"/>
-       <permission name="contacts-external_contacts-opportunities"       attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-imports"             attributes="vaed" offline="----"/>
-       <permission name="pipeline"                                       attributes="v---" offline="----"/>
-       <permission name="pipeline-opportunities"                         attributes="vaed" offline="----"/>
-       <permission name="pipeline-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="pipeline-reports"                               attributes="va-d" offline="----"/>
-       <permission name="pipeline-opportunities-calls"                   attributes="vaed" offline="----"/>
-       <permission name="pipeline-opportunities-documents"               attributes="vaed" offline="----"/>
-       <permission name="pipeline-folders"                               attributes="vaed" offline="----"/>
-       <permission name="pipeline-quotes"                                attributes="vaed" offline="----" />
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-opportunities"       attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-completed-calls"     attributes="--e-" offline="----" />
-       <permission name="accounts-accounts-contacts-messages"            attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-opportunities"                attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-revenue"                      attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-documents"            attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="vaed" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-relationships"                attributes="vaed" offline="----" />
-       <permission name="accounts-assets"                                attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="vae-" offline="----"/>
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-contacts-folders"             attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-opps-folders"        attributes="vae-" offline="----"/>
-       <permission name="portal-user"                                    attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-reports"                                attributes="vaed" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="vae-" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="vae-" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="vae-" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="vae-" offline="----" />
-       <permission name="tickets-defects"                                attributes="vae-" offline="----" />
-       <permission name="tickets-action-plans"                           attributes="vae-" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-      <permission name="documents"                                       attributes="v---" offline="----" />
-      <permission name="documents_documentstore"                         attributes="vaed" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="pipeline" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities" attributes="vaed" offline="----"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="----"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" offline="----"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" offline="----"/>
+      <permission name="pipeline-folders" attributes="vaed" offline="----"/>
+      <permission name="pipeline-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="----"/>
+      <permission name="accounts-assets" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vae-" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vae-" offline="----"/>
+      <permission name="portal-user" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vae-" offline="----"/>
+      <permission name="tickets-reports" attributes="vaed" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="vae-" offline="----"/>
+      <permission name="tickets-activity-log" attributes="vae-" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="vae-" offline="----"/>
+      <permission name="tickets-defects" attributes="vae-" offline="----"/>
+      <permission name="tickets-action-plans" attributes="vae-" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
     </role>
     <role name="Sales Manager" description="Manages all accounts and opportunities">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-lists"                        attributes="vaed" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="sales"                                          attributes="v---" offline="----"/>
-       <permission name="sales-leads"                                    attributes="vaed" offline="----"/>
-       <permission name="sales-dashboard"                                attributes="v---" offline="----"/>
-       <permission name="sales-reports"                                  attributes="va-d" offline="----"/>
-       <permission name="sales-import"                                   attributes="v---" offline="----"/>
-       <permission name="contacts"                                       attributes="v---" offline="----" />
-       <permission name="contacts-external_contacts"                     attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-reports"             attributes="va-d" offline="----"/>
-       <permission name="contacts-external_contacts-folders"             attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-messages"            attributes="v---" offline="----"/>
-       <permission name="contacts-external_contacts-opportunities"       attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-imports"             attributes="vaed" offline="----"/>
-       <permission name="pipeline"                                       attributes="v---" offline="----"/>
-       <permission name="pipeline-opportunities"                         attributes="vaed" offline="----"/>
-       <permission name="pipeline-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="pipeline-reports"                               attributes="va-d" offline="----"/>
-       <permission name="pipeline-opportunities-calls"                   attributes="vaed" offline="----"/>
-       <permission name="pipeline-opportunities-documents"               attributes="vaed" offline="----"/>
-       <permission name="pipeline-folders"                               attributes="vaed" offline="----"/>
-       <permission name="pipeline-quotes"                                attributes="vaed" offline="----" />
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-opportunities"       attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-completed-calls"     attributes="--e-" offline="----" />
-       <permission name="accounts-accounts-contacts-messages"            attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-move"                attributes="v---" offline="----" />
-       <permission name="accounts-accounts-opportunities"                attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="vaed" offline="----" />
-       <permission name="accounts-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-revenue"                      attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-documents"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="vae-" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="vae-" offline="----" />
-       <permission name="accounts-assets"                                attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-relationships"                attributes="vaed" offline="----" />
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-contacts-folders"             attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-opps-folders"        attributes="vaed" offline="----" />
-       <permission name="portal-user"                                    attributes="v---" offline="----" />
-       <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-reports"                                attributes="vaed" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="vae-" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="v---" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="v---" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="v---" offline="----" />
-       <permission name="tickets-defects"                                attributes="v---" offline="----" />
-       <permission name="tickets-action-plans"                           attributes="v---" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="accounts-quotes"                                attributes="vaed" offline="----" />
-       <permission name="quotes"                                         attributes="v---" offline="----" />
-       <permission name="quotes-quotes"                                  attributes="vaed" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="vaed" offline="----" />
-       <permission name="contacts-external-contact-updater"              attributes="v---" offline="----" />
-       <permission name="accounts-accounts-contact-updater"              attributes="v---" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="sales" attributes="v---" offline="----"/>
+      <permission name="sales-leads" attributes="vaed" offline="----"/>
+      <permission name="sales-dashboard" attributes="v---" offline="----"/>
+      <permission name="sales-reports" attributes="va-d" offline="----"/>
+      <permission name="sales-import" attributes="v---" offline="----"/>
+      <permission name="contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="pipeline" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities" attributes="vaed" offline="----"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="----"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" offline="----"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" offline="----"/>
+      <permission name="pipeline-folders" attributes="vaed" offline="----"/>
+      <permission name="pipeline-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-move" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="vaed" offline="----"/>
+      <permission name="accounts-dashboard" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="vae-" offline="----"/>
+      <permission name="accounts-assets" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vaed" offline="----"/>
+      <permission name="portal-user" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vae-" offline="----"/>
+      <permission name="tickets-reports" attributes="vaed" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="v---" offline="----"/>
+      <permission name="tickets-defects" attributes="v---" offline="----"/>
+      <permission name="tickets-action-plans" attributes="v---" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="accounts-quotes" attributes="vaed" offline="----"/>
+      <permission name="quotes" attributes="v---" offline="----"/>
+      <permission name="quotes-quotes" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
+      <permission name="contacts-external-contact-updater" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---" offline="----"/>
     </role>
     <role name="Salesperson" description="Manages own accounts and opportunities">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-lists"                        attributes="vaed" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="sales"                                          attributes="v---" offline="----"/>
-       <permission name="sales-leads"                                    attributes="vae-" offline="----"/>
-       <permission name="sales-import"                                   attributes="v---" offline="----"/>
-       <permission name="sales-dashboard" attributes="v---"/>
-       <permission name="sales-reports" attributes="va--"/>
-       <permission name="contacts"                                       attributes="v---" offline="----" />
-       <permission name="contacts-external_contacts"                     attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-reports"             attributes="va-d" offline="----"/>
-       <permission name="contacts-external_contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-messages"            attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-opportunities"       attributes="v---" offline="----"/>
-       <permission name="contacts-external_contacts-imports"             attributes="vaed" offline="----"/>
-       <permission name="pipeline"                                       attributes="v---" offline="----"/>
-       <permission name="pipeline-opportunities"                         attributes="vae-" offline="----"/>
-       <permission name="pipeline-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="pipeline-reports"                               attributes="va-d" offline="----"/>
-       <permission name="pipeline-opportunities-calls"                   attributes="vaed" offline="----"/>
-       <permission name="pipeline-opportunities-documents"               attributes="vaed" offline="----"/>
-       <permission name="pipeline-folders"                               attributes="vaed" offline="----"/>
-       <permission name="pipeline-quotes"                                attributes="vaed" offline="----" />
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-opportunities"       attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-completed-calls"     attributes="--e-" offline="----" />
-       <permission name="accounts-accounts-contacts-messages"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-opportunities"                attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="vae-" offline="----" />
-       <permission name="accounts-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-revenue"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-documents"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="vae-" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="v---" offline="----" />
-       <permission name="accounts-assets"                                attributes="v---" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-relationships"                attributes="vae-" offline="----" />
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-folders"             attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-contacts-opps-folders"        attributes="vae-" offline="----" />
-       <permission name="portal-user"                                    attributes="v---" offline="----" />
-       <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-reports"                                attributes="va-d" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="vae-" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="v---" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="v---" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="vae-" offline="----" />
-       <permission name="tickets-defects"                                attributes="vae-" offline="----" />
-       <permission name="tickets-action-plans"                           attributes="vae-" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----"/>
-       <permission name="projects-enterprise"                            attributes="v---" offline="----"/>
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="accounts-quotes"                                attributes="vae-" offline="----" />
-       <permission name="quotes"                                         attributes="v---" offline="----" />
-       <permission name="quotes-quotes"                                  attributes="vae-" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="vaed" offline="----" />
-       <permission name="contacts-external-contact-updater"              attributes="v---" offline="----" />
-       <permission name="accounts-accounts-contact-updater"              attributes="v---" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="sales" attributes="v---" offline="----"/>
+      <permission name="sales-leads" attributes="vae-" offline="----"/>
+      <permission name="sales-import" attributes="v---" offline="----"/>
+      <permission name="sales-dashboard" attributes="v---"/>
+      <permission name="sales-reports" attributes="va--"/>
+      <permission name="contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-messages" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="pipeline" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities" attributes="vae-" offline="----"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="----"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" offline="----"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" offline="----"/>
+      <permission name="pipeline-folders" attributes="vaed" offline="----"/>
+      <permission name="pipeline-quotes" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-opportunities" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="vae-" offline="----"/>
+      <permission name="accounts-dashboard" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-revenue" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="v---" offline="----"/>
+      <permission name="accounts-assets" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vae-" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities-quotes" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-opps-folders" attributes="vae-" offline="----"/>
+      <permission name="portal-user" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vae-" offline="----"/>
+      <permission name="tickets-reports" attributes="va-d" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="vae-" offline="----"/>
+      <permission name="tickets-defects" attributes="vae-" offline="----"/>
+      <permission name="tickets-action-plans" attributes="vae-" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="accounts-quotes" attributes="vae-" offline="----"/>
+      <permission name="quotes" attributes="v---" offline="----"/>
+      <permission name="quotes-quotes" attributes="vae-" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
+      <permission name="contacts-external-contact-updater" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contact-updater" attributes="v---" offline="----"/>
     </role>
     <role name="Customer Service Manager" description="Manages all tickets">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-completed-calls"     attributes="--e-" offline="----" />
-       <permission name="accounts-accounts-contacts-messages"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-move"                attributes="v---" offline="----" />
-       <permission name="accounts-accounts-tickets"                      attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-tickets-documents"            attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="vaed" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="vaed" offline="----" />
-       <permission name="accounts-assets"                                attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-relationships"                attributes="vaed" offline="----" />
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-contacts-folders"             attributes="vaed" offline="----" />
-       <permission name="portal-user"                                    attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="vaed" offline="----"/>
-       <permission name="tickets-reports"                                attributes="vaed" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="vaed" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="vaed" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="vaed" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="vaed" offline="----" />
-       <permission name="tickets-defects"                                attributes="vaed" offline="----" />
-       <permission name="tickets-action-plans"                           attributes="vaed" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="vaed" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-move" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="vaed" offline="----"/>
+      <permission name="accounts-assets" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="portal-user" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vaed" offline="----"/>
+      <permission name="tickets-reports" attributes="vaed" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vaed" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" offline="----"/>
+      <permission name="tickets-activity-log" attributes="vaed" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="vaed" offline="----"/>
+      <permission name="tickets-defects" attributes="vaed" offline="----"/>
+      <permission name="tickets-action-plans" attributes="vaed" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
     </role>
     <role name="Customer Service Representative" description="Manages own tickets">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-completed-calls"     attributes="--e-" offline="----" />
-       <permission name="accounts-accounts-contacts-messages"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-tickets-documents"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="vae-" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="vae-" offline="----" />
-       <permission name="accounts-assets"                                attributes="vae-" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-relationships"                attributes="vae-" offline="----" />
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
-       <permission name="portal-user"                                    attributes="vaed" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-reports"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="vae-" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="vae-" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="vae-" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="vae-" offline="----" />
-       <permission name="tickets-defects"                                attributes="vae-" offline="----" />
-       <permission name="tickets-action-plans"                           attributes="vae-" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="v---" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="vae-" offline="----"/>
+      <permission name="accounts-assets" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vae-" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vae-" offline="----"/>
+      <permission name="portal-user" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vae-" offline="----"/>
+      <permission name="tickets-reports" attributes="vae-" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="vae-" offline="----"/>
+      <permission name="tickets-activity-log" attributes="vae-" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="vae-" offline="----"/>
+      <permission name="tickets-defects" attributes="vae-" offline="----"/>
+      <permission name="tickets-action-plans" attributes="vae-" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="v---" offline="----"/>
     </role>
     <role name="Marketing Manager" description="Manages communications">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-lists"                        attributes="vaed" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="contacts"                                       attributes="v---" offline="----" />
-       <permission name="contacts-external_contacts"                     attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-reports"             attributes="va-d" offline="----"/>
-       <permission name="contacts-external_contacts-folders"             attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-messages"            attributes="v---" offline="----"/>
-       <permission name="contacts-external_contacts-opportunities"       attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-imports"             attributes="vaed" offline="----"/>
-       <permission name="pipeline"                                       attributes="v---" offline="----"/>
-       <permission name="pipeline-opportunities"                         attributes="vaed" offline="----"/>
-       <permission name="pipeline-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="pipeline-reports"                               attributes="va-d" offline="----"/>
-       <permission name="pipeline-opportunities-calls"                   attributes="vaed" offline="----"/>
-       <permission name="pipeline-opportunities-documents"               attributes="vaed" offline="----"/>
-       <permission name="pipeline-folders"                               attributes="vaed" offline="----"/>
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-opportunities"       attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts-completed-calls"     attributes="--e-" offline="----" />
-       <permission name="accounts-accounts-contacts-messages"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-opportunities"                attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="v---" offline="----" />
-       <permission name="accounts-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-revenue"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-documents"            attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="vae-" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="v---" offline="----" />
-       <permission name="accounts-assets"                                attributes="v---" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-relationships"                attributes="vaed" offline="----" />
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-reports"                                attributes="vae-" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="vae-" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="v---" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="v---" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="v---" offline="----" />
-       <permission name="tickets-defects"                                attributes="v---" offline="----" />
-       <permission name="tickets-action-plans"                           attributes="v---" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="vaed" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="pipeline" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities" attributes="vaed" offline="----"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="----"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" offline="----"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed" offline="----"/>
+      <permission name="pipeline-folders" attributes="vaed" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-opportunities" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="v---" offline="----"/>
+      <permission name="accounts-dashboard" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-revenue" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="v---" offline="----"/>
+      <permission name="accounts-assets" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vae-" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="vae-" offline="----"/>
+      <permission name="tickets-reports" attributes="vae-" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="vae-" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="v---" offline="----"/>
+      <permission name="tickets-defects" attributes="v---" offline="----"/>
+      <permission name="tickets-action-plans" attributes="v---" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
     </role>
     <role name="Accounting Manager" description="Reviews revenue and opportunities">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="contacts"                                       attributes="v---" offline="----" />
-       <permission name="contacts-external_contacts"                     attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-reports"             attributes="va-d" offline="----"/>
-       <permission name="contacts-external_contacts-folders"             attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-calls"               attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-messages"            attributes="v---" offline="----"/>
-       <permission name="contacts-external_contacts-opportunities"       attributes="vaed" offline="----"/>
-       <permission name="contacts-external_contacts-imports"             attributes="vaed" offline="----"/>
-       <permission name="pipeline"                                       attributes="v---" offline="----"/>
-       <permission name="pipeline-opportunities"                         attributes="v---" offline="----"/>
-       <permission name="pipeline-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="pipeline-reports"                               attributes="va-d" offline="----"/>
-       <permission name="pipeline-opportunities-calls"                   attributes="v---" offline="----"/>
-       <permission name="pipeline-opportunities-documents"               attributes="v---" offline="----"/>
-       <permission name="pipeline-folders"                               attributes="v---" offline="----"/>
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-folders"                      attributes="vae-" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-contacts-calls"               attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-contacts-messages"            attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-opportunities"                attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-documents"                    attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-reports"                      attributes="va-d" offline="----"/>
-       <permission name="accounts-accounts-history"                      attributes="v---" offline="----" />
-       <permission name="accounts-accounts-revenue"                      attributes="vaed" offline="----"/>
-       <permission name="accounts-accounts-tickets-documents"            attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-folders"              attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-tasks"                attributes="v---" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="v---" offline="----" />
-       <permission name="accounts-assets"                                attributes="v---" offline="----" />
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-contacts-imports"             attributes="vaed" offline="----" />
-       <permission name="accounts-accounts-relationships"                attributes="vaed" offline="----" />
-       <permission name="accounts-projects"                              attributes="v---" offline="----" />
-       <permission name="accounts-action-plans"                          attributes="vae-" offline="----" />
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="campaign-campaign-contact-updater"              attributes="v---" offline="----" />
-       <permission name="tickets"                                        attributes="v---" offline="----"/>
-       <permission name="tickets-tickets"                                attributes="v---" offline="----"/>
-       <permission name="tickets-reports"                                attributes="vaed" offline="----"/>
-       <permission name="tickets-tickets-tasks"                          attributes="v---" offline="----"/>
-       <permission name="tickets-maintenance-report"                     attributes="v---" offline="----" />
-       <permission name="tickets-activity-log"                           attributes="v---" offline="----" />
-       <permission name="tickets-knowledge-base"                         attributes="v---" offline="----" />
-       <permission name="tickets-defects"                                attributes="v---" offline="----"/>
-       <permission name="tickets-action-plans"                           attributes="v---" offline="----" />
-       <permission name="employees"                                      attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="v---" offline="----"/>
-       <permission name="contacts-internal_contacts-projects"            attributes="v---" offline="----" />
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="accounts-quotes"                                attributes="v---" offline="----" />
-       <permission name="quotes"                                         attributes="v---" offline="----" />
-       <permission name="quotes-quotes"                                  attributes="v---" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="vaed" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d" offline="----"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---" offline="----"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed" offline="----"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="pipeline" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities" attributes="v---" offline="----"/>
+      <permission name="pipeline-dashboard" attributes="v---" offline="----"/>
+      <permission name="pipeline-reports" attributes="va-d" offline="----"/>
+      <permission name="pipeline-opportunities-calls" attributes="v---" offline="----"/>
+      <permission name="pipeline-opportunities-documents" attributes="v---" offline="----"/>
+      <permission name="pipeline-folders" attributes="v---" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-folders" attributes="vae-" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts-messages" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-opportunities" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-documents" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-reports" attributes="va-d" offline="----"/>
+      <permission name="accounts-accounts-history" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-revenue" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-folders" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="v---" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="v---" offline="----"/>
+      <permission name="accounts-assets" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" offline="----"/>
+      <permission name="accounts-accounts-relationships" attributes="vaed" offline="----"/>
+      <permission name="accounts-projects" attributes="v---" offline="----"/>
+      <permission name="accounts-action-plans" attributes="vae-" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaign-contact-updater" attributes="v---" offline="----"/>
+      <permission name="tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-tickets" attributes="v---" offline="----"/>
+      <permission name="tickets-reports" attributes="vaed" offline="----"/>
+      <permission name="tickets-tickets-tasks" attributes="v---" offline="----"/>
+      <permission name="tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="tickets-knowledge-base" attributes="v---" offline="----"/>
+      <permission name="tickets-defects" attributes="v---" offline="----"/>
+      <permission name="tickets-action-plans" attributes="v---" offline="----"/>
+      <permission name="employees" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="v---" offline="----"/>
+      <permission name="contacts-internal_contacts-projects" attributes="v---" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="accounts-quotes" attributes="v---" offline="----"/>
+      <permission name="quotes" attributes="v---" offline="----"/>
+      <permission name="quotes-quotes" attributes="v---" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
     </role>
     <role name="HR Representative" description="Manages employee information">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="myhomepage-inbox"                               attributes="v---" offline="----"/>
-       <permission name="myhomepage-tasks"                               attributes="vaed" offline="----"/>
-       <permission name="myhomepage-reassign"                            attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile"                             attributes="v---" offline="----"/>
-       <permission name="myhomepage-profile-personal"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-settings"                    attributes="v-e-" offline="----"/>
-       <permission name="myhomepage-profile-password"                    attributes="--e-" offline="----"/>
-       <permission name="myhomepage-action-plans"                        attributes="vaed" offline="----"/>
-       <permission name="product-catalog"                                attributes="v---" offline="----"/>
-       <permission name="product-catalog-product"                        attributes="v---" offline="----"/>
-       <permission name="product-catalog-product-imports"                attributes="v---" offline="----"/>
-       <permission name="campaign"                                       attributes="v---" offline="----"/>
-       <permission name="campaign-dashboard"                             attributes="v---" offline="----"/>
-       <permission name="campaign-campaigns"                             attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-groups"                      attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-messages"                    attributes="vaed" offline="----"/>
-       <permission name="campaign-campaigns-surveys"                     attributes="vaed" offline="----"/>
-       <permission name="employees"                                      attributes="vaed" offline="----"/>
-       <permission name="contacts-internal_contacts"                     attributes="vaed" offline="----"/>
-       <permission name="reports"                                        attributes="v---" offline="----"/>
-       <permission name="help"                                           attributes="v---" offline="----"/>
-       <permission name="globalitems-search"                             attributes="v---" offline="----"/>
-       <permission name="globalitems-myitems"                            attributes="v---" offline="----"/>
-       <permission name="globalitems-recentitems"                        attributes="v---" offline="----"/>
-       <permission name="projects"                                       attributes="v---" offline="----" />
-       <permission name="projects-personal"                              attributes="v---" offline="----" />
-       <permission name="projects-enterprise"                            attributes="v---" offline="----" />
-       <permission name="projects-projects"                              attributes="vaed" offline="----" />
-       <permission name="documents"                                      attributes="v---" offline="----" />
-       <permission name="documents_documentstore"                        attributes="vaed" offline="----" />
-       <permission name="contacts-internal_contacts-folders"             attributes="vaed" offline="----" />
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="myhomepage-inbox" attributes="v---" offline="----"/>
+      <permission name="myhomepage-tasks" attributes="vaed" offline="----"/>
+      <permission name="myhomepage-reassign" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile" attributes="v---" offline="----"/>
+      <permission name="myhomepage-profile-personal" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-settings" attributes="v-e-" offline="----"/>
+      <permission name="myhomepage-profile-password" attributes="--e-" offline="----"/>
+      <permission name="myhomepage-action-plans" attributes="vaed" offline="----"/>
+      <permission name="product-catalog" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product" attributes="v---" offline="----"/>
+      <permission name="product-catalog-product-imports" attributes="v---" offline="----"/>
+      <permission name="campaign" attributes="v---" offline="----"/>
+      <permission name="campaign-dashboard" attributes="v---" offline="----"/>
+      <permission name="campaign-campaigns" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed" offline="----"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed" offline="----"/>
+      <permission name="employees" attributes="vaed" offline="----"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" offline="----"/>
+      <permission name="reports" attributes="v---" offline="----"/>
+      <permission name="help" attributes="v---" offline="----"/>
+      <permission name="globalitems-search" attributes="v---" offline="----"/>
+      <permission name="globalitems-myitems" attributes="v---" offline="----"/>
+      <permission name="globalitems-recentitems" attributes="v---" offline="----"/>
+      <permission name="projects" attributes="v---" offline="----"/>
+      <permission name="projects-personal" attributes="v---" offline="----"/>
+      <permission name="projects-enterprise" attributes="v---" offline="----"/>
+      <permission name="projects-projects" attributes="vaed" offline="----"/>
+      <permission name="documents" attributes="v---" offline="----"/>
+      <permission name="documents_documentstore" attributes="vaed" offline="----"/>
+      <permission name="contacts-internal_contacts-folders" attributes="vaed" offline="----"/>
     </role>
     <role name="Customer" description="Customer portal user" type="1">
-       <permission name="accounts"                                       attributes="v---" offline="----"/>
-       <permission name="accounts-accounts"                              attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-contacts"                     attributes="v---" offline="----"/>
-       <permission name="accounts-service-contracts"                     attributes="v---" offline="----"/>
-       <permission name="accounts-assets"                                attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-maintenance-report"   attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets-activity-log"         attributes="v---" offline="----"/>
-       <permission name="accounts-accounts-tickets"                      attributes="va--" offline="----"/>
+      <permission name="accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-contacts" attributes="v---" offline="----"/>
+      <permission name="accounts-service-contracts" attributes="v---" offline="----"/>
+      <permission name="accounts-assets" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="v---" offline="----"/>
+      <permission name="accounts-accounts-tickets" attributes="va--" offline="----"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vae-" offline="----"/>
     </role>
     <role name="Products and Services Customer" description="Products and Services portal user" type="420041011" enabled="false">
-       <permission name="myhomepage"                                     attributes="v---" offline="----"/>
-       <permission name="myhomepage-dashboard"                           attributes="v---" offline="----"/>
-       <permission name="products"                                       attributes="v---" offline="----"/>
+      <permission name="myhomepage" attributes="v---" offline="----"/>
+      <permission name="myhomepage-dashboard" attributes="v---" offline="----"/>
+      <permission name="products" attributes="v---" offline="----"/>
     </role>
     <!--
     <role name="Marketing assistant" description="">

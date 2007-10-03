@@ -47,6 +47,7 @@ public class ServiceContractList extends ArrayList {
   private String jsEvent = null;
   private int id = -1;
   private int orgId = -1;
+  private int subId = -1;
   private int contactId = -1;
   private String serviceContractNumber = null;
   private int enteredBy = -1;
@@ -200,6 +201,9 @@ public class ServiceContractList extends ArrayList {
     this.orgId = tmp;
   }
 
+  public void setSubId(int tmp) {
+    this.subId = tmp;
+  }
 
   /**
    * Sets the orgId attribute of the ServiceContractList object
@@ -210,6 +214,9 @@ public class ServiceContractList extends ArrayList {
     this.orgId = Integer.parseInt(tmp);
   }
 
+  public void setSubId(String tmp) {
+    this.subId = Integer.parseInt(tmp);
+  }
 
   /**
    * Sets the contactId attribute of the ServiceContractList object
@@ -350,6 +357,9 @@ public class ServiceContractList extends ArrayList {
     return orgId;
   }
 
+  public int getSubId() {
+    return subId;
+  }
 
   /**
    * Gets the contactId attribute of the ServiceContractList object
@@ -424,7 +434,7 @@ public class ServiceContractList extends ArrayList {
   /**
    * Description of the Method
    *
-   * @param db  Description of the Parameter
+   * @param db Description of the Parameter
    * @return Description of the Return Value
    * @throws SQLException Description of the Exception
    */
@@ -440,7 +450,7 @@ public class ServiceContractList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-            "FROM service_contract " +
+            "FROM service_contract sc " +
             "WHERE contract_id > -1 ");
 
     createFilter(sqlFilter, db);
@@ -471,8 +481,10 @@ public class ServiceContractList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "sc.* " +
+        "sc.*, " +
+            "os.name AS subname " +
             "FROM service_contract sc " +
+            "LEFT JOIN organization os ON (sc.submitter_id = os.org_id) " +
             "WHERE contract_id > -1 ");
     PreparedStatement pst = db.prepareStatement(
         sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -490,42 +502,46 @@ public class ServiceContractList extends ArrayList {
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) throws SQLException {
     if (enteredBy > -1) {
-      sqlFilter.append("AND enteredby = ? ");
+      sqlFilter.append("AND sc.enteredby = ? ");
     }
 
     if (id > -1) {
-      sqlFilter.append("AND contract_id = ? ");
+      sqlFilter.append("AND sc.contract_id = ? ");
     }
 
     if (orgId > -1) {
-      sqlFilter.append("AND account_id = ? ");
+      sqlFilter.append("AND sc.account_id = ? ");
+    }
+
+    if (subId > -1) {
+      sqlFilter.append("AND sc.submitter_id = ? ");
     }
 
     if (contactId > -1) {
-      sqlFilter.append("AND contact_id = ? ");
+      sqlFilter.append("AND sc.contact_id = ? ");
     }
 
     if (serviceContractNumber != null) {
-      sqlFilter.append("AND contract_number = ? ");
+      sqlFilter.append("AND sc.contract_number = ? ");
     }
 
     if (includeOnlyTrashed) {
-      sqlFilter.append("AND trashed_date IS NOT NULL ");
+      sqlFilter.append("AND sc.trashed_date IS NOT NULL ");
     } else if (trashedDate != null) {
-      sqlFilter.append("AND trashed_date = ? ");
+      sqlFilter.append("AND sc.trashed_date = ? ");
     } else {
-      sqlFilter.append("AND trashed_date IS NULL ");
+      sqlFilter.append("AND sc.trashed_date IS NULL ");
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND sc.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND sc.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND sc.modified > ? ");
+      sqlFilter.append("AND sc.entered < ? ");
+      sqlFilter.append("AND sc.modified < ? ");
     }
   }
 
@@ -550,6 +566,10 @@ public class ServiceContractList extends ArrayList {
 
     if (orgId > -1) {
       pst.setInt(++i, orgId);
+    }
+
+    if (subId > -1) {
+      pst.setInt(++i, subId);
     }
 
     if (contactId > -1) {

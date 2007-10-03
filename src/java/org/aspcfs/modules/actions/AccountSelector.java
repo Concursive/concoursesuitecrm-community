@@ -23,6 +23,9 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.FilterList;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.relationships.base.RelationshipList;
+import org.aspcfs.modules.relationships.base.RelationshipType;
+import org.aspcfs.modules.relationships.base.RelationshipTypeList;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 
@@ -124,7 +127,7 @@ public final class AccountSelector extends CFSModule {
       LookupList siteIdList = new LookupList(db, "lookup_site_id");
       siteIdList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes")); //None Site
       context.getRequest().setAttribute("siteIdList", siteIdList);
-      
+
       //Set OrganizationList Parameters and build the list
       setParameters(acctList, context);
       UserBean thisUserBean = (UserBean) context.getSession().getAttribute("User");
@@ -145,7 +148,7 @@ public final class AccountSelector extends CFSModule {
         int siteIdToFetch = Integer.parseInt(siteId);
         acctList.setOrgSiteId(siteIdToFetch);
         //fetch organizations with null site
-        if ((siteIdToFetch == -1) && ("true".equals(thisSiteIdOnly))){
+        if ((siteIdToFetch == -1) && ("true".equals(thisSiteIdOnly))) {
           acctList.setIncludeOrganizationWithoutSite(true);
         }
       }
@@ -163,6 +166,146 @@ public final class AccountSelector extends CFSModule {
         context.getRequest().setAttribute("FinalAccounts", finalAccounts);
       }
       return ("ListAccountsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  public String executeCommandListAccounts2(ActionContext context) {
+
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean listDone = false;
+    String listType = context.getRequest().getParameter("listType");
+
+    SystemStatus thisSystem = this.getSystemStatus(context);
+
+    OrganizationList acctList = null;
+    OrganizationList finalAccounts = null;
+    ArrayList selectedList = (ArrayList) context.getSession().getAttribute(
+        "SelectedAccounts");
+
+    if (selectedList == null || "true".equals(
+        context.getRequest().getParameter("reset"))) {
+      selectedList = new ArrayList();
+    }
+    if (context.getRequest().getParameter("previousSelection") != null) {
+      StringTokenizer st = new StringTokenizer(
+          context.getRequest().getParameter("previousSelection"), "|");
+      while (st.hasMoreTokens()) {
+        selectedList.add(String.valueOf(st.nextToken()));
+      }
+    }
+
+    try {
+      db = this.getConnection(context);
+      int rowCount = 1;
+      acctList = new OrganizationList();
+      RelationshipList thisList = new RelationshipList();
+
+      if ("list".equals(listType)) {
+        while (context.getRequest().getParameter("hiddenAccountId" + rowCount) != null) {
+          int acctId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAccountId" + rowCount));
+          if (context.getRequest().getParameter("account" + rowCount) != null) {
+            if (!selectedList.contains(String.valueOf(acctId))) {
+              selectedList.add(String.valueOf(acctId));
+            }
+          } else {
+            selectedList.remove(String.valueOf(acctId));
+          }
+          rowCount++;
+        }
+      }
+
+      if ("true".equals(
+          (String) context.getRequest().getParameter("finalsubmit"))) {
+        //Handle single selection case
+        if ("single".equals(listType)) {
+          rowCount = Integer.parseInt(
+              context.getRequest().getParameter("rowcount"));
+          int acctId = Integer.parseInt(
+              context.getRequest().getParameter("hiddenAccountId" + rowCount));
+          selectedList.clear();
+          selectedList.add(String.valueOf(acctId));
+        }
+        listDone = true;
+        if (finalAccounts == null) {
+          finalAccounts = new OrganizationList();
+        }
+        for (int i = 0; i < selectedList.size(); i++) {
+          int orgId = Integer.parseInt((String) selectedList.get(i));
+          finalAccounts.add(new Organization(db, orgId));
+        }
+      }
+
+      LookupList typeSelect = new LookupList(db, "lookup_account_types");
+      typeSelect.addItem(0, thisSystem.getLabel("accounts.allTypes")); //All Types
+      context.getRequest().setAttribute("TypeSelect", typeSelect);
+
+      LookupList siteIdList = new LookupList(db, "lookup_site_id");
+      siteIdList.addItem(-1, thisSystem.getLabel("calendar.none.4dashes")); //None Site
+      context.getRequest().setAttribute("siteIdList", siteIdList);
+
+      //Set OrganizationList Parameters and build the list
+      setParameters(acctList, context);
+      UserBean thisUserBean = (UserBean) context.getSession().getAttribute("User");
+      /*User thisUser = thisUserBean.getUserRecord();
+           acctList.setOrgSiteId(thisUser.getSiteId());*/
+
+      String siteId = context.getRequest().getParameter("siteId");
+      if (siteId == null || "".equals(siteId)) {
+        String tmpOrgId = context.getRequest().getParameter("siteIdOrg");
+        if (tmpOrgId != null && !"".equals(tmpOrgId) && !"-1".equals(tmpOrgId)) {
+          Organization org = new Organization(db, Integer.parseInt(tmpOrgId));
+          siteId = String.valueOf(org.getSiteId());
+        }
+      }
+      String thisSiteIdOnly = context.getRequest().getParameter("thisSiteIdOnly");
+      //fetch organizations with the same site as the one requested
+      if (siteId != null && !"".equals(siteId.trim())) {
+        int siteIdToFetch = Integer.parseInt(siteId);
+        acctList.setOrgSiteId(siteIdToFetch);
+        //fetch organizations with null site
+        if ((siteIdToFetch == -1) && ("true".equals(thisSiteIdOnly))) {
+          acctList.setIncludeOrganizationWithoutSite(true);
+        }
+      }
+      String thisOrgId = context.getRequest().getParameter("orgid");
+      if (thisOrgId != null) {
+        RelationshipTypeList relationshipList = new RelationshipTypeList();
+        relationshipList.setReciprocalName1("Reseller of");
+        relationshipList.setReciprocalName2("Client of");
+        relationshipList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+        relationshipList.buildList(db);
+        int relId = -1;
+        if (relationshipList.size() > 0) {
+          relId = ((RelationshipType) relationshipList.get(0)).getTypeId();
+        }
+        if (relId > 0) {
+          acctList.setOrgId(thisOrgId);
+          acctList.setRelationId(relId);
+          acctList.setBuildWithRelation(true);
+          if ("true".equals(context.getRequest().getParameter("reverseRelation")))
+            acctList.setReverseRelation(true);
+        }
+      }
+      acctList.buildList(db);
+      context.getRequest().setAttribute("siteId", siteId);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("AccountList", acctList);
+      context.getSession().setAttribute("SelectedAccounts", selectedList);
+      if (listDone) {
+        context.getRequest().setAttribute("FinalAccounts", finalAccounts);
+      }
+      return ("ListAccountsOK2");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

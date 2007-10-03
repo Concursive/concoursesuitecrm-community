@@ -19,6 +19,7 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.troubletickets.base.TicketActivityLog;
@@ -52,6 +53,9 @@ public final class AccountTicketActivityLog extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-view")) {
       return ("PermissionError");
     }
+    User user = this.getUser(context, this.getUserId(context));
+    context.getRequest().setAttribute("userRole", user);
+
     Connection db = null;
     try {
       String ticketId = context.getRequest().getParameter("id");
@@ -70,7 +74,7 @@ public final class AccountTicketActivityLog extends CFSModule {
       PagedListInfo tmListInfo = this.getPagedListInfo(context, "TMListInfo");
       tmListInfo.setLink(
           "AccountTicketActivityLog.do?command=List&id=" + thisTicket.getId()
-          +RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
+              + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType"));
       thisList.setPagedListInfo(tmListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
@@ -164,7 +168,7 @@ public final class AccountTicketActivityLog extends CFSModule {
         LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
         onsiteModelList.addItem(
             -1, this.getSystemStatus(context).getLabel(
-                "calendar.none.4dashes"));
+            "calendar.none.4dashes"));
         context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
         context.getRequest().setAttribute(
             "return", context.getRequest().getParameter("return"));
@@ -172,12 +176,12 @@ public final class AccountTicketActivityLog extends CFSModule {
         TicketActivityLog thisMaintenance = new TicketActivityLog();
         thisMaintenance.queryRecord(db, Integer.parseInt(formId));
         //Check access permission to organization record
-        if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+        if (thisMaintenance.getLinkTicketId() == thisTicket.getId()) {
           if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
             return ("PermissionError");
           }
         } else {
-            return ("PermissionError");
+          return ("PermissionError");
         }
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
       }
@@ -250,18 +254,18 @@ public final class AccountTicketActivityLog extends CFSModule {
           "descriptionOfService" + i) != null); i++) {
         if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(
             "")) || !(context.getRequest().getParameter(
-                "descriptionOfService" + i).trim().equals(""))) {
+            "descriptionOfService" + i).trim().equals(""))) {
           TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
           HashMap map = new HashMap();
           map.put(
               "descriptionOfService", context.getRequest().getParameter(
-                  "descriptionOfService" + i));
+              "descriptionOfService" + i));
           map.put(
               "activityDateTimeZone", context.getRequest().getParameter(
-                  "activityDate" + i + "TimeZone"));
+              "activityDate" + i + "TimeZone"));
           map.put(
               "activityDate", context.getRequest().getParameter(
-                  "activityDate" + i));
+              "activityDate" + i));
           map.put("request", context.getRequest());
           map.put("parseItem", "" + i);
           isValid = this.validateObject(
@@ -313,12 +317,12 @@ public final class AccountTicketActivityLog extends CFSModule {
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
       //Check access permission to organization record
-      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()) {
         if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
           return ("PermissionError");
         }
       } else {
-          return ("PermissionError");
+        return ("PermissionError");
       }
       thisMaintenance.setModifiedBy(getUserId(context));
       thisMaintenance.setTravelTowardsServiceContract(
@@ -348,20 +352,21 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       isValid = this.validateObject(context, db, thisMaintenance);
-      for (int i = 1; context.getRequest().getParameter("activityDate" + i) != null; i++) {
+      for (int i = 1; context.getRequest().getParameter("activityDate" + i) != null; i++)
+      {
         if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(
             ""))) {
           TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
           HashMap map = new HashMap();
           map.put(
               "descriptionOfService", context.getRequest().getParameter(
-                  "descriptionOfService" + i));
+              "descriptionOfService" + i));
           map.put(
               "activityDateTimeZone", context.getRequest().getParameter(
-                  "activityDate" + i + "TimeZone"));
+              "activityDate" + i + "TimeZone"));
           map.put(
               "activityDate", context.getRequest().getParameter(
-                  "activityDate" + i));
+              "activityDate" + i));
           map.put("request", context.getRequest());
           map.put("parseItem", "" + i);
           isValid = this.validateObject(
@@ -422,12 +427,12 @@ public final class AccountTicketActivityLog extends CFSModule {
       context.getRequest().setAttribute("activityDetails", thisMaintenance);
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
       //Check access permission to organization record
-      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()) {
         if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
           return ("PermissionError");
         }
       } else {
-          return ("PermissionError");
+        return ("PermissionError");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -466,12 +471,12 @@ public final class AccountTicketActivityLog extends CFSModule {
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
       //Check access permission to organization record
-      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()) {
         if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
           return ("PermissionError");
         }
       } else {
-          return ("PermissionError");
+        return ("PermissionError");
       }
       DependencyList dependencies = new DependencyList();
       dependencies = thisMaintenance.processDependencies();
@@ -481,7 +486,7 @@ public final class AccountTicketActivityLog extends CFSModule {
           systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.formHeader"));
       htmlDialog.addButton(
-          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + 
+          systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId +
           RequestUtils.addLinkParams(context.getRequest(), "popup|popupType") + "'");
       htmlDialog.addButton(
           systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
@@ -524,12 +529,12 @@ public final class AccountTicketActivityLog extends CFSModule {
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, formId);
       //Check access permission to organization record
-      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()){
+      if (thisMaintenance.getLinkTicketId() == thisTicket.getId()) {
         if (!isRecordAccessPermitted(context, db, thisTicket.getOrgId())) {
           return ("PermissionError");
         }
       } else {
-          return ("PermissionError");
+        return ("PermissionError");
       }
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
@@ -537,7 +542,7 @@ public final class AccountTicketActivityLog extends CFSModule {
     } catch (Exception e) {
       context.getRequest().setAttribute(
           "actionError", systemStatus.getLabel(
-              "object.validation.actionError.noteDeletion"));
+          "object.validation.actionError.noteDeletion"));
       context.getRequest().setAttribute(
           "refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId);
       return ("DeleteError");
@@ -549,14 +554,14 @@ public final class AccountTicketActivityLog extends CFSModule {
     if (recordDeleted) {
       context.getRequest().setAttribute(
           "refreshUrl", "AccountTicketActivityLog.do?command=List&id=" + ticketId
-          +(inline != null && "inline".equals(inline) ? "&popup=true":""));
+          + (inline != null && "inline".equals(inline) ? "&popup=true" : ""));
       return "DeleteOK";
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
     context.getRequest().setAttribute(
         "refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId
-        +(inline != null && "inline".equals(inline) ? "&popup=true":""));
+        + (inline != null && "inline".equals(inline) ? "&popup=true" : ""));
     return "DeleteOK";
   }
 

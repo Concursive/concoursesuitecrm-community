@@ -15,8 +15,8 @@
  */
 package org.aspcfs.modules.system.base;
 
-import org.aspcfs.controller.ApplicationPrefs;
 import com.darkhorseventures.framework.hooks.CustomHook;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
  * Class for reading the application version information
@@ -27,9 +27,9 @@ import com.darkhorseventures.framework.hooks.CustomHook;
  * @created July 31, 2003
  */
 public class ApplicationVersion {
-  public final static String VERSION = "Centric CRM 4.2 Community Beta (2007-09-04)";
-  public final static String APP_VERSION = "2007-09-04";
-  public final static String DB_VERSION = "2007-09-04";
+  public final static String VERSION = "Centric CRM 4.2 Community Beta (2007-10-03)";
+  public final static String APP_VERSION = "2007-10-03";
+  public final static String DB_VERSION = "2007-10-03";
   public final static String RELEASE = "4.2";
 
 
@@ -40,7 +40,11 @@ public class ApplicationVersion {
    * @return The outOfDate value
    */
   public static boolean isOutOfDate(ApplicationPrefs prefs) {
-    return CustomHook.isOutOfDate(prefs);
+    if (!"true".equals(prefs.get("MANUAL_UPGRADE"))) {
+      return CustomHook.isOutOfDate(prefs);
+    } else {
+      return false;
+    }
   }
 
 

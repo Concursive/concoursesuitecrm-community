@@ -17,14 +17,26 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.actionplans.base.*" %>
-<%@ page import="org.aspcfs.modules.admin.base.*" %>
-<jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
-<jsp:useBean id="SubList1" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
-<jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
-<jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
-<jsp:useBean id="actionPlans" class="org.aspcfs.modules.actionplans.base.ActionPlanList" scope="request"/>
-<jsp:useBean id="assignment" class="org.aspcfs.modules.troubletickets.base.TicketCategoryAssignment" scope="request"/>
+<jsp:useBean id="CategoryList"
+             class="org.aspcfs.modules.troubletickets.base.TicketCategoryList"
+             scope="request"/>
+<jsp:useBean id="SubList1"
+             class="org.aspcfs.modules.troubletickets.base.TicketCategoryList"
+             scope="request"/>
+<jsp:useBean id="SubList2"
+             class="org.aspcfs.modules.troubletickets.base.TicketCategoryList"
+             scope="request"/>
+<jsp:useBean id="SubList3"
+             class="org.aspcfs.modules.troubletickets.base.TicketCategoryList"
+             scope="request"/>
+<jsp:useBean id="actionPlans"
+             class="org.aspcfs.modules.actionplans.base.ActionPlanList"
+             scope="request"/>
+<jsp:useBean id="assignment"
+             class="org.aspcfs.modules.troubletickets.base.TicketCategoryAssignment"
+             scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean"
+             scope="session"/>
 <body onload="page_init();">
 <script language="JavaScript">
 <%
@@ -36,8 +48,8 @@
 %>
 function newOpt(param, value) {
   var newOpt = parent.document.createElement("OPTION");
-	newOpt.text=param;
-	newOpt.value=value;
+  newOpt.text = param;
+  newOpt.value = value;
   return newOpt;
 }
 function page_init() {
@@ -89,7 +101,7 @@ function page_init() {
   resetList(parent.document.forms['<%= form %>'].elements['subCat3']);
 </dhv:include>
 </dhv:evaluate>
-  
+
 <dhv:evaluate if="<%= ((SubList2.size() > 0) || (subCat1 != null)) %>">
   var list2 = parent.document.forms['<%= form %>'].elements['subCat2'];
   list2.options.length = 0;
@@ -110,7 +122,7 @@ function page_init() {
   resetList(parent.document.forms['<%= form %>'].elements['subCat3']);
 </dhv:include>
 </dhv:evaluate>
-  
+
 <dhv:evaluate if="<%= ((SubList3.size() > 0) || (subCat2 != null)) %>">
   var list3 = parent.document.forms['<%= form %>'].elements['subCat3'];
   list3.options.length = 0;
@@ -127,6 +139,8 @@ function page_init() {
   }
 %>
 </dhv:evaluate>
+
+<dhv:evaluate if="<%= (!User.getUserRecord().isPortalUser()) %>" >
 <dhv:include name="tickets.actionPlans" none="true">
   resetActionPlanList(parent.document.forms['<%= form %>'].actionPlanId);
 <dhv:evaluate if="<%= actionPlans != null && actionPlans.size() > 0 %>">
@@ -150,14 +164,14 @@ function page_init() {
   list4.options[list4.length] = newOpt("-- None --", "0");
 </dhv:evaluate>
 </dhv:include>
-//Ticket Category Assignment related code
+  //Ticket Category Assignment related code
 <dhv:include name="tickets.ticketcategory.assignment" none="true">
-var autoSetFieldsValue = parent.document.forms['<%= form %>'].autoSetFields.checked;
-if (autoSetFieldsValue) {
+  var autoSetFieldsValue = parent.document.forms['<%= form %>'].autoSetFields.checked;
+  if (autoSetFieldsValue) {
   <dhv:evaluate if="<%= assignment != null %>">
-  //first set the department.
+    //first set the department.
     var departmentAssignedWidget = parent.document.forms['<%= form %>'].departmentCode;
-    for (i=0;i<departmentAssignedWidget.length;i++) {
+    for (i = 0; i < departmentAssignedWidget.length; i++) {
       if (departmentAssignedWidget.options[i].value == '<%= assignment.getDepartmentId() %>') {
         departmentAssignedWidget.options.selectedIndex = i;
         break;
@@ -165,61 +179,62 @@ if (autoSetFieldsValue) {
     }
   //then set the user from the list of users
   <dhv:evaluate if="<%= assignment.getUsers() != null %>">
-      var resourceAssignedWidget = parent.document.forms['<%= form %>'].assignedTo;
-      resourceAssignedWidget.options.length = 0;
-      resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt(label("option.none","-- None --"), "0");
-    <%
-      Iterator resourceAssignedIterator = assignment.getUsers().iterator();
-      while (resourceAssignedIterator.hasNext()) {
-        User thisUser = (User)resourceAssignedIterator.next();
-        if (thisUser.getId() != 0) {
-          if (thisUser.getSiteId() == -1) {
-            if (thisUser.getId() == assignment.getAssignedTo()) {
-    %>
-      resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() %>", "<%= thisUser.getId() %>");
-      resourceAssignedWidget.options.selectedIndex = resourceAssignedWidget.length-1;
-          <%} else {%>
-      resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() %>", "<%= thisUser.getId() %>");
-      
-    <%
-            }
-          } else {
-            if (thisUser.getId() == assignment.getAssignedTo()) {
-    %>
-      resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() +"(" + thisUser.getSiteIdName() + ")"%>", "<%= thisUser.getId() %>");
-      resourceAssignedWidget.options.selectedIndex = resourceAssignedWidget.length-1;
-          <%} else {%>
-      resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() +"(" + thisUser.getSiteIdName() + ")"%>", "<%= thisUser.getId() %>");
-    <%
-            }
+    var resourceAssignedWidget = parent.document.forms['<%= form %>'].assignedTo;
+    resourceAssignedWidget.options.length = 0;
+    resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt(label("option.none", "-- None --"), "0");
+  <%
+    Iterator resourceAssignedIterator = assignment.getUsers().iterator();
+    while (resourceAssignedIterator.hasNext()) {
+      User thisUser = (User)resourceAssignedIterator.next();
+      if (thisUser.getId() != 0) {
+        if (thisUser.getSiteId() == -1) {
+          if (thisUser.getId() == assignment.getAssignedTo()) {
+  %>
+    resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() %>", "<%= thisUser.getId() %>");
+    resourceAssignedWidget.options.selectedIndex = resourceAssignedWidget.length - 1;
+  <%} else {%>
+    resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() %>", "<%= thisUser.getId() %>");
+
+  <%
+          }
+        } else {
+          if (thisUser.getId() == assignment.getAssignedTo()) {
+  %>
+    resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() +"(" + thisUser.getSiteIdName() + ")"%>", "<%= thisUser.getId() %>");
+    resourceAssignedWidget.options.selectedIndex = resourceAssignedWidget.length - 1;
+  <%} else {%>
+    resourceAssignedWidget.options[resourceAssignedWidget.length] = newOpt("<%= thisUser.getContact().getValidName() +"(" + thisUser.getSiteIdName() + ")"%>", "<%= thisUser.getId() %>");
+  <%
           }
         }
       }
-    %>
+    }
+  %>
   </dhv:evaluate>
-  //then set the user group
-  parent.document.forms['<%= form %>'].userGroupId.value='<%= assignment.getUserGroupId() %>';
+    //then set the user group
+    parent.document.forms['<%= form %>'].userGroupId.value = '<%= assignment.getUserGroupId() %>';
   <dhv:evaluate if="<%= assignment.getUserGroupId() == -1 %>">
-    parent.changeDivContent('changeUserGroup', label('none.selected','None Selected'));
+    parent.changeDivContent('changeUserGroup', label('none.selected', 'None Selected'));
   </dhv:evaluate>
   <dhv:evaluate if="<%= assignment.getUserGroupId() != -1 %>">
     parent.changeDivContent('changeUserGroup', '<%= assignment.getUserGroupName() %>');
   </dhv:evaluate>
   </dhv:evaluate>
   }
-  </dhv:include>
-  <dhv:evaluate if='<%= (assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim())) %>'>
-    try {
-      parent.updateAllUserLists();
-    } catch (oException) {
-    }
-  </dhv:evaluate>
-  <dhv:evaluate if='<%= !((assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim()))) %>'>
-    try {
-      parent.updateResolvedByUserList();
-    } catch(oException) {
-    }
-  </dhv:evaluate>
+</dhv:include>
+<dhv:evaluate if='<%= (assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim())) %>'>
+  try {
+    parent.updateAllUserLists();
+  } catch (oException) {
+  }
+</dhv:evaluate>
+<dhv:evaluate if='<%= !((assignment.getUsers() == null || assignment.getUsers().size() == 0) && (reset != null && "true".equals(reset.trim()))) %>'>
+  try {
+    parent.updateResolvedByUserList();
+  } catch(oException) {
+  }
+</dhv:evaluate>
+</dhv:evaluate>
 }
 
 function resetActionPlanList(list) {

@@ -17,37 +17,35 @@ package org.aspcfs.modules.troubletickets.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actionplans.base.*;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.FileUtils;
-import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.Constants;
 
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- * @author     partha
- * @created    October 19, 2005
- * @version    $Id: TroubleTicketActionPlans.java,v 1.1.4.11 2006/01/16 21:32:56
- *      partha Exp $
+ * @author partha
+ * @version $Id: TroubleTicketActionPlans.java,v 1.1.4.11 2006/01/16 21:32:56
+ *          partha Exp $
+ * @created October 19, 2005
  */
 public final class TroubleTicketActionPlans extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-view"))) {
@@ -58,10 +56,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-view"))) {
@@ -91,17 +89,21 @@ public final class TroubleTicketActionPlans extends CFSModule {
       if ("all".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
       } else if ("my".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
         planWorkList.setOwner(this.getUserId(context));
-      } else if ("mymanaged".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
+      } else
+      if ("mymanaged".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
         planWorkList.setManager(this.getUserId(context));
-      } else if ("mywaiting".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
+      } else
+      if ("mywaiting".equals(planWorkListInfo.getFilterValue("listFilter1"))) {
         planWorkList.setCurrentStepOwner(this.getUserId(context));
       }
 
       if ("all".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
         planWorkList.setEnabled(Constants.UNDEFINED);
-      } else if ("true".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
+      } else
+      if ("true".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
         planWorkList.setEnabled(Constants.TRUE);
-      } else if ("false".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
+      } else
+      if ("false".equals(planWorkListInfo.getFilterValue("listFilter2"))) {
         planWorkList.setEnabled(Constants.FALSE);
       }
 
@@ -126,10 +128,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-delete"))) {
@@ -155,10 +157,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-add"))) {
@@ -194,10 +196,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-add"))) {
@@ -274,16 +276,19 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-view"))) {
       return ("PermissionError");
     }
     String ticketId = context.getRequest().getParameter("ticketId");
+    Ticket t = new Ticket();
+    t.setId(ticketId);
+    context.getRequest().setAttribute("tickets", t);
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -308,7 +313,7 @@ public final class TroubleTicketActionPlans extends CFSModule {
       planWork.queryRecord(db, Integer.parseInt(actionPlanId));
       planWork.buildStepLinks();
       context.getRequest().setAttribute("actionPlanWork", planWork);
-      
+
       //Build plan with just the global phases
       ActionPlanWork globalPlanWork = new ActionPlanWork();
       globalPlanWork.setBuildPhaseWork(true);
@@ -328,7 +333,7 @@ public final class TroubleTicketActionPlans extends CFSModule {
       context.getRequest().setAttribute("constants", ActionPlan.buildConstants(db));
       String notAttached = context.getRequest().getParameter("notAttached");
       if (notAttached != null && "true".equals(notAttached.trim())) {
-        context.getRequest().setAttribute("actionWarning",thisSystem.getLabel("","The recipient was not added to the active campaign"));
+        context.getRequest().setAttribute("actionWarning", thisSystem.getLabel("", "The recipient was not added to the active campaign"));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -342,10 +347,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyStatus(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -381,10 +386,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateStatus(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -427,8 +432,8 @@ public final class TroubleTicketActionPlans extends CFSModule {
         oldItem = new ActionItemWork();
         oldItem.setPlanWork(planWork);
         oldItem.queryRecord(db, itemWork.getId());
-				if (Integer.parseInt(statusId) == ActionPlanWork.COMPLETED){
-					itemWork.checkPreviousSteps(db, planWork);
+        if (Integer.parseInt(statusId) == ActionPlanWork.COMPLETED) {
+          itemWork.checkPreviousSteps(db, planWork);
         }
         if (statusId != null && Integer.parseInt(statusId) > 0) {
           itemWork.setStatusId(statusId);
@@ -473,7 +478,7 @@ public final class TroubleTicketActionPlans extends CFSModule {
               // random phase to random phase translation
               sendEmailForAllNewSteps = true;
             } else
-                if (!nextPhaseWork.getPhase().getRandom() && nextPhaseWork.noStepComplete()) {
+            if (!nextPhaseWork.getPhase().getRandom() && nextPhaseWork.noStepComplete()) {
               // random phase to serial phase translation
               if (nextPhaseWork.getItemWorkList().size() > 0) {
                 nextItem = (ActionItemWork) nextPhaseWork.getItemWorkList().get(0);
@@ -516,10 +521,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateRating(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -553,10 +558,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAttach(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -567,10 +572,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandViewNotes(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -581,10 +586,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandReassign(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -595,10 +600,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRestart(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -609,10 +614,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandEnable(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -623,10 +628,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandRevertStatus(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {
@@ -637,10 +642,10 @@ public final class TroubleTicketActionPlans extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateGlobalStatus(ActionContext context) {
     if (!(hasPermission(context, "tickets-action-plans-edit"))) {

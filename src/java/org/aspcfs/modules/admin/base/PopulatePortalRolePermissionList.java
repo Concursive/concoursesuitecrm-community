@@ -25,63 +25,65 @@ import java.sql.SQLException;
  */
 public class PopulatePortalRolePermissionList {
 
-	private PermissionList permissionList = null;
+  private PermissionList permissionList = null;
 
-	public PopulatePortalRolePermissionList() {
-		permissionList = new PermissionList();
-	}
+  public PopulatePortalRolePermissionList() {
+    permissionList = new PermissionList();
+  }
 
-	public PermissionList populatePortalPermissions(Connection db)
-			throws SQLException {
-		buildAccountPermissions(db);
-		buildProjectPermissions(db);
-		buildDocumentPermissions(db);
-		return permissionList;
-	}
+  public PermissionList populatePortalPermissions(Connection db)
+      throws SQLException {
+    buildAccountPermissions(db);
+    buildProjectPermissions(db);
+    buildDocumentPermissions(db);
+    return permissionList;
+  }
 
-	public void buildAccountPermissions(Connection db) throws SQLException {
-		addPermission(db, "accounts", true);
-		addPermission(db, "accounts-accounts", true);
-		addPermission(db, "accounts-accounts-contacts", true);
-		addPermission(db, "accounts-service-contracts", true);
-		addPermission(db, "accounts-assets", true);
-		addPermission(db, "accounts-accounts-tickets", true, true, false, false);
-		addPermission(db, "accounts-accounts-tickets-maintenance-report", true);
-		addPermission(db, "accounts-accounts-tickets-activity-log", true);
-		addPermission(db, "accounts-accounts-documents", true, true, false, false);
-		addPermission(db, "accounts-accounts-shareddocuments", true);
+  public void buildAccountPermissions(Connection db) throws SQLException {
+    addPermission(db, "accounts", true);
+    addPermission(db, "accounts-accounts", true);
+    addPermission(db, "accounts-accounts-contacts", true);
+    addPermission(db, "accounts-service-contracts", true);
+    addPermission(db, "accounts-assets", true);
+    addPermission(db, "accounts-accounts-tickets", true, true, false, false);
+    addPermission(db, "accounts-accounts-tickets-maintenance-report", true);
+    addPermission(db, "accounts-accounts-tickets-activity-log", true);
+    addPermission(db, "accounts-accounts-tickets-documents", true, true, true, false);
+    addPermission(db, "accounts-accounts-tickets-reseller-restriction", true, false, false, false);
+    addPermission(db, "accounts-accounts-documents", true, true, false, false);
+    addPermission(db, "accounts-accounts-shareddocuments", true);
 
-	}
+  }
 
-	public void buildProjectPermissions(Connection db) throws SQLException {
-		addPermission(db, "projects", true);
-		addPermission(db, "projects-personal", true);
-		addPermission(db, "projects-enterprise", true);
-		addPermission(db, "projects-projects", true);
+  public void buildProjectPermissions(Connection db) throws SQLException {
+    addPermission(db, "projects", true);
+    addPermission(db, "projects-personal", true);
+    addPermission(db, "projects-enterprise", true);
+    addPermission(db, "projects-projects", true);
 
-	}
+  }
 
-	public void buildDocumentPermissions(Connection db) throws SQLException {
-		addPermission(db, "documents", true);
-		addPermission(db, "documents_documentstore", true);
+  public void buildDocumentPermissions(Connection db) throws SQLException {
+    addPermission(db, "documents", true);
+    addPermission(db, "documents_documentstore", true);
 
-	}
+  }
 
-	public void addPermission(Connection db, String permission, boolean view)
-			throws SQLException {
-		addPermission(db, permission, view, false, false, false);
-	}
+  public void addPermission(Connection db, String permission, boolean view)
+      throws SQLException {
+    addPermission(db, permission, view, false, false, false);
+  }
 
-	public void addPermission(Connection db, String name, boolean view,
-			boolean add, boolean edit, boolean delete) throws SQLException {
-		Permission permission = new Permission(db, name);
-		if (permission != null) {
-			permission.setView(view);
-			permission.setEdit(edit);
-			permission.setAdd(add);
-			permission.setDelete(delete);
-			permissionList.add(permission);
-		}
-	}
+  public void addPermission(Connection db, String name, boolean view,
+                            boolean add, boolean edit, boolean delete) throws SQLException {
+    Permission permission = new Permission(db, name);
+    if (permission != null) {
+      permission.setView(view);
+      permission.setEdit(edit);
+      permission.setAdd(add);
+      permission.setDelete(delete);
+      permissionList.add(permission);
+    }
+  }
 
 }

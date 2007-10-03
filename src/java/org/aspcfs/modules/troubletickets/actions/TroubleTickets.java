@@ -267,9 +267,9 @@ public final class TroubleTickets extends CFSModule {
     } else if (ownerCriteria.equals("allTickets")) {
       ticketReport.setSiteId(siteId);
     }
-		if (siteId == -1){
-			ticketReport.setSiteId(context.getRequest().getParameter("searchcodeSiteId"));
-		}
+    if (siteId == -1) {
+      ticketReport.setSiteId(context.getRequest().getParameter("searchcodeSiteId"));
+    }
     try {
       db = this.getConnection(context);
       isValid = exportListInfo.getIsValid();
@@ -739,6 +739,11 @@ public final class TroubleTickets extends CFSModule {
       }
       actionPlans.addAtleastOne(db, workList);
 
+      Organization SubmiterOrg = new Organization(db, newTic.getSubmitterId());
+      context.getRequest().setAttribute("SubmiterOrgDetails", SubmiterOrg);
+      Contact SubmiterContact = new Contact(db, newTic.getSubmitterContactId());
+      context.getRequest().setAttribute("SubmitterContact", SubmiterContact);
+
       context.getRequest().setAttribute("actionPlans", actionPlans);
       context.getRequest().setAttribute("TicketDetails", newTic);
       addRecentItem(context, newTic);
@@ -851,6 +856,10 @@ public final class TroubleTickets extends CFSModule {
       ticketCategoryList.setExclusiveToSite(true);
       ticketCategoryList.buildList(db);
       context.getRequest().setAttribute("ticketCategoryList", ticketCategoryList);
+      Organization SubmiterOrg = new Organization(db, newTic.getSubmitterId());
+      context.getRequest().setAttribute("SubmitterOrgDetails", SubmiterOrg);
+      Contact SubmiterContact = new Contact(db, newTic.getSubmitterContactId());
+      context.getRequest().setAttribute("SubmitterContact", SubmiterContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -1027,7 +1036,7 @@ public final class TroubleTickets extends CFSModule {
       createdByMeList.setEnteredBy(user.getId());
       createdByMeList.setSiteId(user.getSiteId());
       if (user.getSiteId() != -1) {
-				createdByMeList.setExclusiveToSite(true);
+        createdByMeList.setExclusiveToSite(true);
         createdByMeList.setIncludeAllSites(false);
       }
       createdByMeList.setOnlyOpen(true);
@@ -1053,7 +1062,7 @@ public final class TroubleTickets extends CFSModule {
     if (sectionId == null || userGroupTicketInfo.getExpandedSelection() == true) {
       userGroupTicketList.setPagedListInfo(userGroupTicketInfo);
       userGroupTicketList.setInMyUserGroups(user.getId());
-			userGroupTicketList.setIncludeAllSites(true);
+      userGroupTicketList.setIncludeAllSites(true);
       userGroupTicketList.setOnlyOpen(true);
     }
     //All Tickets
@@ -1107,6 +1116,7 @@ public final class TroubleTickets extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "ViewTickets", "View Tickets");
+
     context.getRequest().setAttribute("CreatedByMeList", createdByMeList);
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
     context.getRequest().setAttribute("OpenList", openList);
@@ -1251,7 +1261,6 @@ public final class TroubleTickets extends CFSModule {
     Ticket newTic = (Ticket) context.getFormBean();
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
-
     if (newContact != null && newContact.equals("on")) {
       //If there are any changes here, also check AccountTickets where a new contact is created
       nc = new Contact();
@@ -1308,6 +1317,10 @@ public final class TroubleTickets extends CFSModule {
           recordInserted = newTic.insert(db);
         }
       }
+      Organization SubmiterOrg = new Organization(db, newTic.getSubmitterId());
+      context.getRequest().setAttribute("SubmitterOrgDetails", SubmiterOrg);
+      Contact SubmiterContact = new Contact(db, newTic.getSubmitterContactId());
+      context.getRequest().setAttribute("SubmitterContact", SubmiterContact);
 
       if (recordInserted) {
         //Prepare the ticket for the response
@@ -1347,6 +1360,8 @@ public final class TroubleTickets extends CFSModule {
           Organization thisOrg = new Organization(db, newTic.getOrgId());
           newTic.setCompanyName(thisOrg.getName());
         }
+
+
       }
 
     } catch (Exception e) {
@@ -1391,6 +1406,11 @@ public final class TroubleTickets extends CFSModule {
     PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
     try {
       db = this.getConnection(context);
+      /* //Prepare submitter list form data
+     LookupList submitterList = new LookupList(db, "ticket_submitter");
+     submitterList.addItem(0, systemStatus.getLabel("calendar.any.4dashes", "-- Any --"));
+     context.getRequest().setAttribute("SubmitterList", submitterList);*/
+
       //Prepare severity list form data
       LookupList severityList = new LookupList(db, "ticket_severity");
       severityList.addItem(0, systemStatus.getLabel("calendar.any.4dashes", "-- Any --"));
@@ -1413,6 +1433,13 @@ public final class TroubleTickets extends CFSModule {
         String orgId = ticListInfo.getSearchOptionValue("searchcodeOrgId");
         Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrg);
+      }
+      //check if account/owner is already selected, if so build it
+      if (!"".equals(ticListInfo.getSearchOptionValue("searchcodeSubmitterOrgId")) && !"-1".equals(
+          ticListInfo.getSearchOptionValue("searchcodeSubmitterOrgId"))) {
+        String submitterOrgId = ticListInfo.getSearchOptionValue("searchcodeSubmitterOrgId");
+        Organization thisSubmitterOrg = new Organization(db, Integer.parseInt(submitterOrgId));
+        context.getRequest().setAttribute("SubmitterOrgDetails", thisSubmitterOrg);
       }
 
       if (!"".equals(ticListInfo.getSearchOptionValue("searchcodeUserGroupId")) && !"-1".equals(ticListInfo.getSearchOptionValue("searchcodeUserGroupId"))) {
@@ -1960,6 +1987,9 @@ public final class TroubleTickets extends CFSModule {
       String subCat3 = context.getRequest().getParameter("subCat3");
       db = this.getConnection(context);
       orgDetails = new Organization(db, Integer.parseInt(orgId));
+      if (!isRecordAccessPermitted(context, db, orgDetails.getId())) {
+        return ("PermissionError");
+      }
       plans = new ActionPlanList();
       plans.setSiteId(orgDetails.getSiteId());
       plans.setLinkObjectId(ActionPlan.getMapIdGivenConstantId(db, ActionPlan.TICKETS));
