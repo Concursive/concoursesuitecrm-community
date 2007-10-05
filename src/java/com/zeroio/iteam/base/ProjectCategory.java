@@ -113,7 +113,7 @@ public class ProjectCategory extends GenericBean {
   public void update(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE lookup_project_category " +
-        "SET description = ?, enabled = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+        "SET description = ?, enabled = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst.setString(++i, description);

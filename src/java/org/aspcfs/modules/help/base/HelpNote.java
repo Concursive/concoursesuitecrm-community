@@ -477,7 +477,8 @@ public class HelpNote extends GenericBean {
       int i = 0;
       pst = db.prepareStatement(
           "UPDATE help_notes " +
-          "SET modifiedby = ?, description = ?, enabled = ?, completedate = ?, completedby = ? " +
+          "SET modifiedby = ?, description = ?, enabled = ?, completedate = ?, completedby = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE note_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());

@@ -12,8 +12,14 @@ CREATE TABLE lookup_site_id (
   short_description VARCHAR(300),
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_site_id_entries BEFORE INSERT ON  lookup_site_id FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE `access` (
   user_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -42,8 +48,14 @@ CREATE TABLE `access` (
   hidden BOOLEAN DEFAULT false,
   site_id INT REFERENCES lookup_site_id(code),
   allow_webdav_access BOOLEAN DEFAULT true NOT NULL,
-  allow_httpapi_access BOOLEAN DEFAULT true NOT NULL
+  allow_httpapi_access BOOLEAN DEFAULT true NOT NULL,
+  temp_password VARCHAR(80),
+  temp_webdav_password VARCHAR(80)
 );
+
+CREATE TRIGGER access_entries BEFORE INSERT ON access FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_sic_codes(
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,8 +63,14 @@ CREATE TABLE lookup_sic_codes(
   default_item BOOLEAN DEFAULT false,
   level INTEGER,
   enabled BOOLEAN DEFAULT true,
-  constant_id INTEGER UNIQUE NOT NULL
+  constant_id INTEGER UNIQUE NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_sic_codes_entries BEFORE INSERT ON lookup_sic_codes FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_industry (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,17 +78,26 @@ CREATE TABLE lookup_industry (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_industry_entries BEFORE INSERT ON lookup_industry FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE access_log (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
   username VARCHAR(80) NOT NULL,
-  ip VARCHAR(15),
+  ip VARCHAR(30),
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   browser VARCHAR(255)
 );
+
+CREATE TRIGGER access_log_entries BEFORE INSERT ON  access_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 CREATE TABLE usage_log (
   usage_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,6 +108,9 @@ CREATE TABLE usage_log (
   record_size INT NULL
 );
 
+CREATE TRIGGER usage_log_entries BEFORE INSERT ON  usage_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
 CREATE TABLE lookup_contact_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -88,16 +118,28 @@ CREATE TABLE lookup_contact_types (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   user_id INT references `access`(user_id),
-  category INT NOT NULL DEFAULT 0
+  category INT NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_contact_types_entries BEFORE INSERT ON lookup_contact_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_account_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_account_types_entries BEFORE INSERT ON lookup_account_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE state (
   state_code CHAR(2) PRIMARY KEY NOT NULL,
@@ -110,72 +152,141 @@ CREATE TABLE lookup_department (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_department_entries BEFORE INSERT ON lookup_department FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_orgaddress_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_orgaddress_types_entries BEFORE INSERT ON lookup_orgaddress_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_orgemail_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_orgemail_types_entries BEFORE INSERT ON lookup_orgemail_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_orgphone_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_orgphone_types_entries BEFORE INSERT ON lookup_orgphone_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 
 CREATE TABLE lookup_im_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_im_types_entries BEFORE INSERT ON lookup_im_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_im_services (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_im_services_entries BEFORE INSERT ON lookup_im_services FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_contact_source (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_contact_source_entries BEFORE INSERT ON lookup_contact_source FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_contact_rating (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_contact_rating_entries BEFORE INSERT ON lookup_contact_rating FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
+CREATE TABLE lookup_contact_stage (
+  code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
+);
+
+CREATE TRIGGER lookup_contact_stage_entries BEFORE INSERT ON lookup_contact_stage FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_textmessage_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_textmessage_types_entries BEFORE INSERT ON lookup_textmessage_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 
 CREATE TABLE lookup_employment_types (
@@ -183,40 +294,70 @@ CREATE TABLE lookup_employment_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_employment_types_entries BEFORE INSERT ON lookup_employment_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_locale (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_locale_entries BEFORE INSERT ON lookup_locale FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_contactaddress_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_cntaddrs_tps_entries BEFORE INSERT ON lookup_contactaddress_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_contactemail_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_cntactemail_tps_entries BEFORE INSERT ON lookup_contactemail_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_contactphone_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_conphn_tps_entries BEFORE INSERT ON lookup_contactphone_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_access_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -225,24 +366,42 @@ CREATE TABLE lookup_access_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER,
   enabled BOOLEAN DEFAULT true,
-  rule_id INT NOT NULL
+  rule_id INT NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_access_types_entries BEFORE INSERT ON lookup_access_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_account_size (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_account_size_entries BEFORE INSERT ON lookup_account_size FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_segments (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_segments_entries BEFORE INSERT ON lookup_segments FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_sub_segment (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -250,16 +409,28 @@ CREATE TABLE lookup_sub_segment (
   segment_id  INT REFERENCES lookup_segments(code),
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_sub_segment_entries BEFORE INSERT ON lookup_sub_segment FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_title (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_title_entries BEFORE INSERT ON lookup_title FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_account_stage (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -270,6 +441,10 @@ CREATE TABLE lookup_account_stage (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_account_stage_entries BEFORE INSERT ON  lookup_account_stage FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE organization (
   org_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -325,10 +500,24 @@ CREATE TABLE organization (
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
   sic_description VARCHAR(300),
-  stage_id INTEGER REFERENCES lookup_account_stage(code)
+  stage_id INTEGER REFERENCES lookup_account_stage(code),
+  comments TEXT
 );
 
+CREATE TRIGGER organization_entries BEFORE INSERT ON  organization FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `orglist_name` ON `organization` (name);
+
+CREATE INDEX org_owner_idx ON organization(owner);
+CREATE INDEX org_enteredby_idx ON organization(enteredby);
+CREATE INDEX org_modifiedby_idx ON organization(modifiedby);
+CREATE INDEX org_industry_temp_code_idx ON organization(industry_temp_code);
+CREATE INDEX org_account_size_idx ON organization(account_size);
+CREATE INDEX org_org_id_miner_only_idx ON organization(org_id, miner_only);
+CREATE INDEX org_site_id_idx ON organization(site_id);
+CREATE INDEX org_status_id_idx ON organization(status_id);
 
 CREATE TABLE contact (
   contact_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -397,8 +586,13 @@ CREATE TABLE contact (
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
   year_started INTEGER,
-  sic_description VARCHAR(300)
+  sic_description VARCHAR(300),
+  stage INT REFERENCES lookup_contact_stage(code)
 );
+
+CREATE TRIGGER contact_entries BEFORE INSERT ON  contact FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE INDEX `contact_user_id_idx` USING BTREE ON `contact` (`user_id`);
 
@@ -422,6 +616,7 @@ create index contact_super on contact  (super);
 create index contact_user_id on contact  (user_id);
 create index contact_employee_id on contact (employee_id);
 create index contact_entered on contact (entered);
+CREATE INDEX contact_stage_idx ON contact(stage);
 
 CREATE TABLE contact_lead_skipped_map (
   map_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -454,6 +649,10 @@ CREATE TABLE role (
   role_type INT
 );
 
+CREATE TRIGGER role_entries BEFORE INSERT ON  role FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE permission_category (
   category_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   category VARCHAR(80),
@@ -470,10 +669,19 @@ CREATE TABLE permission_category (
   reports BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
 	logos BOOLEAN NOT NULL DEFAULT false,
-  constant INT NOT NULL,
+  constant INT UNIQUE NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
-  custom_list_views BOOLEAN NOT NULL DEFAULT false
+  custom_list_views BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL,
+  dashboards BOOLEAN DEFAULT false NOT NULL,
+  customtabs BOOLEAN DEFAULT false NOT NULL,
+  email_accounts BOOLEAN DEFAULT false NOT NULL
 );
+
+CREATE TRIGGER permission_category_entries BEFORE INSERT ON  permission_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE permission (
   permission_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -487,8 +695,18 @@ CREATE TABLE permission (
   level INT NOT NULL DEFAULT 0,
   enabled BOOLEAN NOT NULL DEFAULT true,
   active BOOLEAN NOT NULL DEFAULT true,
-  viewpoints BOOLEAN DEFAULT false
+  viewpoints BOOLEAN DEFAULT false,
+  permission_offline_view BOOLEAN NOT NULL DEFAULT false,
+  permission_offline_add BOOLEAN NOT NULL DEFAULT false,
+  permission_offline_edit BOOLEAN NOT NULL DEFAULT false,
+  permission_offline_delete BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER permission_entries BEFORE INSERT ON  permission FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE role_permission (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -497,9 +715,18 @@ CREATE TABLE role_permission (
   role_view BOOLEAN NOT NULL DEFAULT false,
   role_add BOOLEAN NOT NULL DEFAULT false,
   role_edit BOOLEAN NOT NULL DEFAULT false,
-  role_delete BOOLEAN NOT NULL DEFAULT false
+  role_delete BOOLEAN NOT NULL DEFAULT false,
+  role_offline_view BOOLEAN NOT NULL DEFAULT false,
+  role_offline_add BOOLEAN NOT NULL DEFAULT false,
+  role_offline_edit BOOLEAN NOT NULL DEFAULT false,
+  role_offline_delete BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER role_permission_entries BEFORE INSERT ON  role_permission FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_stage (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -507,16 +734,28 @@ CREATE TABLE lookup_stage (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_stage_entries BEFORE INSERT ON lookup_stage FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_delivery_options (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(100) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_delivery_options_entries BEFORE INSERT ON lookup_delivery_options FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE news (
   rec_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -552,6 +791,10 @@ CREATE TABLE organization_address (
   longitude FLOAT DEFAULT 0
 );
 
+CREATE TRIGGER organization_address_entries BEFORE INSERT ON  organization_address FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX organization_address_postalcode_idx ON organization_address(postalcode);
 
 
@@ -567,6 +810,10 @@ CREATE TABLE organization_emailaddress (
   primary_email BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE TRIGGER organization_emailaddress_entries BEFORE INSERT ON  organization_emailaddress FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE organization_phone (
   phone_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
@@ -579,6 +826,10 @@ CREATE TABLE organization_phone (
   modifiedby INT NOT NULL references `access`(user_id),
   primary_number BOOLEAN NOT NULL DEFAULT false
 );
+
+CREATE TRIGGER organization_phone_entries BEFORE INSERT ON  organization_phone FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE contact_address (
   address_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -602,6 +853,10 @@ CREATE TABLE contact_address (
   longitude FLOAT DEFAULT 0
 );
 
+CREATE TRIGGER contact_address_entries BEFORE INSERT ON  contact_address FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `contact_address_contact_id_idx` ON `contact_address` (contact_id);
 CREATE INDEX contact_address_postalcode_idx ON contact_address(postalcode);
 CREATE INDEX `contact_city_idx` on contact_address(city);
@@ -618,6 +873,10 @@ CREATE TABLE contact_emailaddress (
   modifiedby INT NOT NULL references `access`(user_id),
   primary_email BOOLEAN NOT NULL DEFAULT false
 );
+
+CREATE TRIGGER contact_emailaddress_entries BEFORE INSERT ON  contact_emailaddress FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE INDEX `contact_email_contact_id_idx` ON `contact_emailaddress` (contact_id);
 CREATE INDEX contact_email_prim_idx ON contact_emailaddress(primary_email);
@@ -636,6 +895,10 @@ CREATE TABLE contact_phone (
   primary_number BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE TRIGGER contact_phone_entries BEFORE INSERT ON  contact_phone FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `contact_phone_contact_id_idx` ON `contact_phone` (contact_id);
 
 CREATE TABLE contact_imaddress (
@@ -651,6 +914,10 @@ CREATE TABLE contact_imaddress (
   primary_im BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE TRIGGER contact_imaddress_entries BEFORE INSERT ON  contact_imaddress FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 
 CREATE TABLE contact_textmessageaddress (
   address_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -664,19 +931,29 @@ CREATE TABLE contact_textmessageaddress (
   textmessageaddress_type INT references lookup_textmessage_types(code)
 );
 
+CREATE TRIGGER contact_textmessageaddress_entries BEFORE INSERT ON  contact_textmessageaddress FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE notification (
   notification_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   notify_user INT NOT NULL,
   module VARCHAR(255) NOT NULL,
   item_id INT NOT NULL,
-  item_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  item_modified TIMESTAMP NULL,
   attempt TIMESTAMP NULL,
   notify_type VARCHAR(30),
   subject TEXT,
   message TEXT,
   result INT NOT NULL,
-  errorMessage TEXT
+  errorMessage TEXT,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER notification_entries BEFORE INSERT ON notification FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE cfsinbox_message (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -692,13 +969,24 @@ CREATE TABLE cfsinbox_message (
   delete_flag BOOLEAN default false
 );
 
+CREATE TRIGGER cfsinbox_message_entries BEFORE INSERT ON  cfsinbox_message FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE cfsinbox_messagelink (
   id INT NOT NULL REFERENCES cfsinbox_message(id),
   sent_to INT NOT NULL REFERENCES contact(contact_id),
   status INT NOT NULL DEFAULT 0,
   viewed TIMESTAMP NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  sent_from INT NOT NULL REFERENCES `access`(user_id)
+  sent_from INT REFERENCES `access`(user_id),
+  sent_to_mail_id varchar(255),
+  sent_from_mail_id varchar(255),
+  email_account_id INT,
+  replied_to_message_id INT,
+  item_id INT,
+  last_action INT,
+  replyto varchar(255)
 );
 
 CREATE TABLE account_type_levels (
@@ -709,13 +997,23 @@ CREATE TABLE account_type_levels (
   modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER account_type_levels_entries BEFORE INSERT ON  account_type_levels FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE contact_type_levels (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   contact_id INT NOT NULL REFERENCES contact(contact_id),
   type_id INT NOT NULL REFERENCES lookup_contact_types(code),
   level INTEGER not null,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER contact_type_levels_entries BEFORE INSERT ON  contact_type_levels FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 create index tcontactlevels_level on contact_type_levels (level);
 
 CREATE TABLE lookup_lists_lookup (
@@ -730,6 +1028,9 @@ CREATE TABLE lookup_lists_lookup (
   category_id INT NOT NULL
 );
 
+CREATE TRIGGER lookup_lists_lookup_entries BEFORE INSERT ON  lookup_lists_lookup FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
 CREATE TABLE webdav (
   id INT AUTO_INCREMENT PRIMARY KEY,
   category_id INT NOT NULL REFERENCES permission_category(category_id),
@@ -739,6 +1040,10 @@ CREATE TABLE webdav (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER webdav_entries BEFORE INSERT ON  webdav FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE category_editor_lookup (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -752,6 +1057,9 @@ CREATE TABLE category_editor_lookup (
   max_levels INT NOT NULL
 );
 
+CREATE TRIGGER category_editor_lookup_entries BEFORE INSERT ON  category_editor_lookup FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
 CREATE TABLE viewpoint(
   viewpoint_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL REFERENCES `access`(user_id),
@@ -762,6 +1070,10 @@ CREATE TABLE viewpoint(
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   enabled BOOLEAN DEFAULT true
 );
+
+CREATE TRIGGER viewpoint_entries BEFORE INSERT ON  viewpoint FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE viewpoint_permission (
   vp_permission_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -789,6 +1101,10 @@ CREATE TABLE report (
   custom BOOLEAN DEFAULT false
 );
 
+CREATE TRIGGER report_entries BEFORE INSERT ON  report FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE report_criteria (
   criteria_id INT AUTO_INCREMENT PRIMARY KEY,
   report_id INT NOT NULL REFERENCES report(report_id),
@@ -800,6 +1116,10 @@ CREATE TABLE report_criteria (
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   enabled BOOLEAN DEFAULT true
 );
+
+CREATE TRIGGER report_criteria_entries BEFORE INSERT ON  report_criteria FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE report_criteria_parameter (
   parameter_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -819,6 +1139,10 @@ CREATE TABLE lookup_report_type (
   modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER lookup_report_type_entries BEFORE INSERT ON  lookup_report_type FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE report_queue (
   queue_id INT AUTO_INCREMENT PRIMARY KEY,
   report_id INTEGER NOT NULL REFERENCES report(report_id),
@@ -832,6 +1156,9 @@ CREATE TABLE report_queue (
   output_type INTEGER REFERENCES lookup_report_type(code),
   email BOOLEAN DEFAULT false
 );
+
+CREATE TRIGGER report_queue_entries BEFORE INSERT ON  report_queue FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 CREATE TABLE report_queue_criteria (
   criteria_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -853,6 +1180,10 @@ CREATE TABLE action_list (
   enabled BOOLEAN NOT NULL DEFAULT true
 );
 
+CREATE TRIGGER action_list_entries BEFORE INSERT ON  action_list FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE action_item (
   item_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   action_id INT NOT NULL references action_list(action_id),
@@ -864,6 +1195,10 @@ CREATE TABLE action_item (
   modified TIMESTAMP NULL,
   enabled BOOLEAN NOT NULL DEFAULT true
 );
+
+CREATE TRIGGER action_item_entries BEFORE INSERT ON  action_item FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 
 CREATE TABLE action_item_log (
@@ -877,6 +1212,9 @@ CREATE TABLE action_item_log (
   modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER action_item_log_entries BEFORE INSERT ON  action_item_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE import(
   import_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -900,6 +1238,10 @@ CREATE TABLE import(
   comments TEXT
 );
 
+CREATE TRIGGER import_entries BEFORE INSERT ON  import FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `import_entered_idx` ON `import` (entered);
 CREATE INDEX `import_name_idx` ON `import` (name);
 
@@ -910,6 +1252,9 @@ CREATE TABLE database_version (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TRIGGER database_version_entries BEFORE INSERT ON  database_version FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
 -- relationships
 CREATE TABLE lookup_relationship_types (
   type_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -919,8 +1264,14 @@ CREATE TABLE lookup_relationship_types (
   reciprocal_name_2 VARCHAR(512),
   level INTEGER DEFAULT 0,
   default_item BOOLEAN DEFAULT false,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_rltship_types_entries BEFORE INSERT ON lookup_relationship_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE relationship (
   relationship_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -936,6 +1287,10 @@ CREATE TABLE relationship (
   trashed_date TIMESTAMP NULL
 );
 
+CREATE TRIGGER relationship_entries BEFORE INSERT ON  relationship FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Create a new table to group users
 CREATE TABLE user_group (
   group_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -949,6 +1304,10 @@ CREATE TABLE user_group (
   site_id INTEGER REFERENCES lookup_site_id(code)
 );
 
+CREATE TRIGGER user_group_entries BEFORE INSERT ON  user_group FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Create the user group map table
 CREATE TABLE user_group_map (
   group_map_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -958,6 +1317,9 @@ CREATE TABLE user_group_map (
   enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TRIGGER user_group_map_entries BEFORE INSERT ON  user_group_map FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 -- Custom List Views Editor
 CREATE TABLE custom_list_view_editor (
@@ -979,6 +1341,9 @@ CREATE TABLE custom_list_view (
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TRIGGER custom_list_view_entries BEFORE INSERT ON  custom_list_view FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
 -- Custom List View Field
 CREATE TABLE custom_list_view_field (
   field_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -986,3 +1351,17 @@ CREATE TABLE custom_list_view_field (
   name VARCHAR(80) NOT NULL
 );
 
+CREATE TABLE recent_items (
+	item_id INT AUTO_INCREMENT PRIMARY KEY,
+	link_module_id int NOT NULL,
+	link_item_id int NOT NULL,
+	url varchar(1000) NOT NULL,
+	item_name varchar(255) NOT NULL,
+	user_id int NOT NULL references access (user_id),
+	entered timestamp DEFAULT CURRENT_TIMESTAMP,
+	modified timestamp NULL
+);
+
+CREATE TRIGGER recent_items_entries BEFORE INSERT ON recent_items FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

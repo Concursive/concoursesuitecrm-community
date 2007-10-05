@@ -19,24 +19,23 @@ CREATE TABLE lookup_container_menu (
 --CREATE UNIQUE INDEX u_lcontmenu_cname ON lookup_container_menu (cname);
 
 CREATE TABLE lookup_webpage_priority (
-  code serial NOT NULL,
-  description character varying(300),
+  code SERIAL PRIMARY,
+  description VARCHAR(300),
   default_item boolean DEFAULT false,
   "level" integer,
   constant float,
   enabled boolean DEFAULT true,
   entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified timestamp(3)NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT lookup_webpage_prior_pkey PRIMARY KEY (code)
-) ;
+  modified timestamp(3)NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE SEQUENCE lookup_sitechange_freq_code_seq;
 CREATE TABLE lookup_sitechange_frequency (
   code INTEGER DEFAULT nextval('lookup_sitechange_freq_code_seq') NOT NULL PRIMARY KEY,
-  description character varying(300),
+  description VARCHAR(300),
   default_item boolean DEFAULT false,
   "level" integer,
-  constant character varying(300),
+  constant VARCHAR(300),
   enabled boolean DEFAULT true,
   entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP

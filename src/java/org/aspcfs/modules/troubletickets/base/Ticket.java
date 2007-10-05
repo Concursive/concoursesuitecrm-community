@@ -3123,12 +3123,8 @@ public class Ticket extends GenericBean {
       if (id > -1) {
         sql.append("ticketid, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, ");
+      sql.append("modified, ");
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       sql.append("?, ?, ?, ");
@@ -3137,9 +3133,13 @@ public class Ticket extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?) ");
       int i = 0;

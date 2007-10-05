@@ -339,9 +339,7 @@ public class ProcessLog extends GenericBean {
       if (id > -1) {
         sql.append("process_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("message ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -349,6 +347,8 @@ public class ProcessLog extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
 

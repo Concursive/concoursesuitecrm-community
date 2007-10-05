@@ -560,12 +560,7 @@ public class TeamMember {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO project_team ");
     sql.append("(project_id, user_id, userlevel, role_type, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     if (lastAccessed != null) {
       sql.append("last_accessed, ");
     }
@@ -573,9 +568,13 @@ public class TeamMember {
     sql.append("VALUES (?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (lastAccessed != null) {
       sql.append("?, ");
@@ -676,7 +675,7 @@ public class TeamMember {
     //Now update the team
     pst = db.prepareStatement(
         "UPDATE project_team " +
-        "SET userlevel = ? " +
+        "SET userlevel = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE project_id = ? " +
         "AND user_id = ? ");
     pst.setInt(1, userLevel);

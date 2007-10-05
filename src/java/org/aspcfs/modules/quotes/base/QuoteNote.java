@@ -311,26 +311,26 @@ public class QuoteNote extends GenericBean {
       sql.append("notes_id, ");
     }
 
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("enteredby, ");
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("modified, ");
     sql.append("modifiedby ) ");
     sql.append("VALUES (?, ?, ");
     if (id > -1) {
-      sql.append("?,");
+      sql.append("?, ");
     }
     if (entered != null) {
-      sql.append(" ?, ");
+      sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-    sql.append(" ?, ");
+    sql.append("?, ");
     if (modified != null) {
-      sql.append(" ?, ");
+      sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-    sql.append(" ? ) ");
+    sql.append("? ) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, ++i, this.getQuoteId());

@@ -161,12 +161,7 @@ public class ContactInstantMessageAddress extends InstantMessageAddress {
     if (this.getId() > -1) {
       sql.append("address_id, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
-    if (this.getModified() != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredby, modifiedby ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
     if (this.getId() > -1) {
@@ -174,9 +169,13 @@ public class ContactInstantMessageAddress extends InstantMessageAddress {
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (this.getModified() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -232,7 +231,7 @@ public class ContactInstantMessageAddress extends InstantMessageAddress {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_imaddress " +
         "SET imaddress_type = ?, imaddress_service = ?, imaddress = ?, primary_im = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE address_id = ? ");
     int i = 0;
     if (this.getAddressIMType() > -1) {

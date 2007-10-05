@@ -664,7 +664,7 @@ public class ActionPhaseWorkList extends ArrayList  implements SyncableList {
     String nullStr = null;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_phase_work " +
-            "SET start_date = ?, end_date = ?, status_id = ? " +
+            "SET start_date = ?, end_date = ?, status_id = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE phase_work_id = ? ");
     pst.setNull(1, java.sql.Types.DATE);
     pst.setNull(2, java.sql.Types.DATE);
@@ -737,7 +737,6 @@ public class ActionPhaseWorkList extends ArrayList  implements SyncableList {
   
   /**
    * @param  db                Description of the Parameter
-   * @param  pst               Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
   public PreparedStatement prepareList(Connection db) throws SQLException {

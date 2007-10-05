@@ -3,15 +3,10 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
-import com.darkhorseventures.framework.beans.GenericBean;
+import java.sql.*;
 
 /**
  * @author Olga.Kaptyug
@@ -354,24 +349,21 @@ public class MerchantPaymentGateway extends GenericBean {
     if (id > -1) {
       sql.append("merchant_payment_gateway_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    sql.append("enteredby, ");
-    if (modified != null) {
-      sql.append("modified, ");
-    }
-    sql.append("modifiedby )");
+    sql.append("entered, enteredby, modified, modifiedby )");
     sql.append("VALUES( ?, ?, ?, ");
     if (id > -1) {
       sql.append("?, ");
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ");
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("? )");
     int i = 0;

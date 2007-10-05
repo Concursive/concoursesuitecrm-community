@@ -412,7 +412,8 @@ public class SyncTable extends GenericBean {
   public void updateKey(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE sync_table " +
-        "SET object_key = ? " +
+        "SET object_key = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE system_id = ? AND element_name = ? ");
     int i = 0;
     pst.setString(++i, key);

@@ -490,7 +490,7 @@ public class RevenueDetail
         "UPDATE revenue " +
         "SET amount = ?, owner = ?, description = ?, " +
         "" + DatabaseUtils.addQuotes(db, "type")+ " = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
         "WHERE id = ? ");
     //if (!override) {
     //  sql.append("AND modified = ? ");

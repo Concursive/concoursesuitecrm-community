@@ -281,7 +281,7 @@ public class ProjectCategoryList extends ArrayList {
   public void updateLevel(Connection db, int id, int level) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE lookup_project_category " +
-        "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+        "SET modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE code = ? ");
     int i = 0;
     pst.setInt(++i, level);
@@ -294,7 +294,7 @@ public class ProjectCategoryList extends ArrayList {
   public void updateName(Connection db, int id, String name) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE lookup_project_category " +
-        "SET description = ? " +
+        "SET description = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE code = ? ");
     int i = 0;
     pst.setString(++i, name);

@@ -39,13 +39,8 @@ CREATE TABLE lookup_emailaccount_processing_behavior (
 );
 
 
-ALTER TABLE permission_category ADD CONSTRAINT permission_category_constant_uk UNIQUE(constant);
-
-ALTER TABLE permission_category ADD COLUMN email_accounts BOOLEAN DEFAULT false;
-
 --Email Account
-
-CREATE TABLE email_account ( 
+CREATE TABLE email_account (
   email_id SERIAL PRIMARY KEY,
   server_type INTEGER NOT NULL REFERENCES lookup_emailserver_types(code),  
   alias VARCHAR(255) NOT NULL,

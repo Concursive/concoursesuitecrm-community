@@ -505,7 +505,8 @@ public class Recipient extends GenericBean {
     String sql =
         "UPDATE scheduled_recipient " +
         "SET run_id = ?, status_id = ?, status = ?, status_date = ?, " +
-        "scheduled_date = ?, sent_date = ?, reply_date = ?, bounce_date = ? " +
+        "scheduled_date = ?, sent_date = ?, reply_date = ?, bounce_date = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE id = ? ";
     int i = 0;
     pst = db.prepareStatement(sql);

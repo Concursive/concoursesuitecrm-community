@@ -592,12 +592,7 @@ public class IssueReply extends GenericBean {
     if (id > -1) {
       sql.append("reply_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -605,9 +600,13 @@ public class IssueReply extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -639,6 +638,7 @@ public class IssueReply extends GenericBean {
           "UPDATE project_issues " +
           "SET reply_count = reply_count + 1, " +
           "last_reply_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
           "last_reply_by = ? " +
           "WHERE project_id = ? " +
           "AND issue_id = ? ");
@@ -653,6 +653,7 @@ public class IssueReply extends GenericBean {
           "UPDATE project_issues_categories " +
           "SET posts_count = posts_count + 1, " +
           "last_post_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
           "last_post_by = ? " +
           "WHERE project_id = ? " +
           "AND category_id = ? ");
@@ -772,7 +773,8 @@ public class IssueReply extends GenericBean {
         //Update the category count
         StringBuffer sql = new StringBuffer(
             "UPDATE project_issues_categories " +
-            "SET posts_count = posts_count - 1 ");
+            "SET posts_count = posts_count - 1 ," +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db));
         if (isLastReply && (previousReplyId != -1 || noRepliesLeft)) {
           sql.append(", last_post_date = ?, last_post_by = ? ");
         }
@@ -792,7 +794,8 @@ public class IssueReply extends GenericBean {
         i = 0;
         sql = new StringBuffer(
             "UPDATE project_issues " +
-            "SET reply_count = reply_count - 1 ");
+            "SET reply_count = reply_count - 1 ," +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db));
         if (isLastReply && (previousReplyId != -1 || noRepliesLeft)) {
           sql.append(", last_reply_date = ?, last_reply_by = ? ");
         }
@@ -854,7 +857,7 @@ public class IssueReply extends GenericBean {
     sql.append(
         "UPDATE project_issue_replies " +
         "SET subject = ?, " + DatabaseUtils.addQuotes(db, "message")+ " = ?, importance = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + 
         "WHERE reply_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;

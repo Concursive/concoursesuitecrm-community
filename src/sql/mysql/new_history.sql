@@ -32,3 +32,6 @@ CREATE TABLE history (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE TRIGGER history_entries BEFORE INSERT ON history FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

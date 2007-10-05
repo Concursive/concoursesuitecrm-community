@@ -519,12 +519,8 @@ public class Criteria extends GenericBean {
       if (id > -1) {
         sql.append("criteria_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, ");
+      sql.append("modified, ");
       sql.append("enabled) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -532,9 +528,13 @@ public class Criteria extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
       int i = 0;

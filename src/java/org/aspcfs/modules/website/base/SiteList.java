@@ -16,8 +16,8 @@
 package org.aspcfs.modules.website.base;
 
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -280,7 +280,7 @@ public class SiteList extends ArrayList {
    * @throws SQLException Description of the Exception
    */
   public static void disableOtherSites(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("UPDATE web_site SET enabled = ? ");
+    PreparedStatement pst = db.prepareStatement("UPDATE web_site SET enabled = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " );
     pst.setBoolean(1, false);
     pst.executeUpdate();
     pst.close();

@@ -24,8 +24,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Description of the Class
@@ -938,7 +938,8 @@ public class Site extends GenericBean {
   public void updateLogoImageId(Connection db, int newLogoImageId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
       "UPDATE web_site " +
-        "SET logo_image_id = ? " +
+        "SET logo_image_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE site_id = ?"
     );
     DatabaseUtils.setInt(pst, 1, newLogoImageId);
@@ -951,7 +952,8 @@ public class Site extends GenericBean {
   public void updateLayoutId(Connection db, int newLayoutId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
       "UPDATE web_site " +
-        "SET layout_id = ? " +
+        "SET layout_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE site_id = ?"
     );
     DatabaseUtils.setInt(pst, 1, newLayoutId);
@@ -964,7 +966,8 @@ public class Site extends GenericBean {
   public void updateStyleId(Connection db, int newStyleId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
       "UPDATE web_site " +
-        "SET style_id = ? " +
+        "SET style_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE site_id = ?"
     );
     DatabaseUtils.setInt(pst, 1, newStyleId);

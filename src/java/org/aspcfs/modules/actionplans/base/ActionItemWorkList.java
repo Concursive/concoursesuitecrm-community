@@ -671,7 +671,7 @@ public class ActionItemWorkList extends ArrayList  implements SyncableList {
   public void reset(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE action_item_work " +
-            "SET start_date = ?, end_date = ?, status_id = ? " +
+            "SET start_date = ?, end_date = ?, status_id = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE item_work_id = ? ");
     Iterator i = this.iterator();
     while (i.hasNext()) {

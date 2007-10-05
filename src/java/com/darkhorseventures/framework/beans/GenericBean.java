@@ -546,7 +546,7 @@ public class GenericBean implements Serializable {
    * @param  moduleFolderName  Description of the Parameter
    * @return                   The fileLibraryPath value
    */
-  public String getFileLibraryPath(String basePath, String moduleFolderName) {
+  public static final String getFileLibraryPath(String basePath, String moduleFolderName) {
     if (basePath.indexOf(moduleFolderName) == -1) {
       return (basePath + moduleFolderName + System.getProperty(
           "file.separator"));

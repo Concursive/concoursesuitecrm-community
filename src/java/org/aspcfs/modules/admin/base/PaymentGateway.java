@@ -3,12 +3,12 @@
  */
 package org.aspcfs.modules.admin.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * @author Olga.Kaptyug
@@ -314,7 +314,8 @@ public class PaymentGateway {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append("UPDATE lookup_payment_gateway SET description = ?, "
-        + " " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, constant_id = ? "
+        + " " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, constant_id = ?, modified = "
+        + DatabaseUtils.getCurrentTimestamp(db) + " "
         + "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

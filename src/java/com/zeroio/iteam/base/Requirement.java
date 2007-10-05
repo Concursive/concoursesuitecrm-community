@@ -1397,12 +1397,7 @@ public class Requirement extends GenericBean {
     if (id > -1) {
       sql.append("requirement_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy) ");
     sql.append(
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
@@ -1411,9 +1406,13 @@ public class Requirement extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
 
@@ -1577,7 +1576,7 @@ public class Requirement extends GenericBean {
         "SET submittedBy = ?, departmentBy = ?, shortDescription = ?, description = ?, " +
         " dateReceived = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, actual_loetype = ?, " +
         " startdate = ?, startdate_timezone = ?, deadline = ?, deadline_timezone = ?,  approvedBy = ?, " +
-        " approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        " approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE requirement_id = ? " +
         "AND project_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));

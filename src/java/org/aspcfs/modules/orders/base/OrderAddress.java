@@ -17,7 +17,6 @@ package org.aspcfs.modules.orders.base;
 
 import org.aspcfs.modules.base.Address;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.StateSelect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -162,13 +161,9 @@ public class OrderAddress extends Address {
     if (id > -1) {
       sql.append("address_id, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("enteredby, ");
-    if (this.getModified() != null) {
-      sql.append("modified, ");
-    }
+    sql.append("modified, ");
     sql.append("modifiedby ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -176,10 +171,14 @@ public class OrderAddress extends Address {
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ");
     if (this.getModified() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?) ");
     int i = 0;

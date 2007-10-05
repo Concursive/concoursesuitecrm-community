@@ -18,8 +18,14 @@ CREATE TABLE lookup_order_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_order_status_entries BEFORE INSERT ON lookup_order_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each order has a type which defines the flow of product to/from customer
 -- Example: New, Change, Upgrade/Downgrade, Disconnect, Move, Refund, Suspend, Unsuspend, Re-Run
@@ -28,8 +34,14 @@ CREATE TABLE lookup_order_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_order_type_entries BEFORE INSERT ON lookup_order_type FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each order has terms in which the order was placed
 CREATE TABLE lookup_order_terms (
@@ -37,8 +49,14 @@ CREATE TABLE lookup_order_terms (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
 	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_order_terms_entries BEFORE INSERT ON lookup_order_terms FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each order has a type of origination
 -- Example: Online, Email, Incoming Phone Call, Outgoing Phone Call, Mail
@@ -47,8 +65,14 @@ CREATE TABLE lookup_order_source (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
 	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_order_source_entries BEFORE INSERT ON lookup_order_source FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- The details of an order are listed
 CREATE TABLE order_entry (
@@ -77,6 +101,10 @@ CREATE TABLE order_entry (
   approx_ship_date TIMESTAMP NULL,
   approx_delivery_date TIMESTAMP NULL
 );
+
+CREATE TRIGGER order_entry_entries BEFORE INSERT ON order_entry FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each order can contain multiple products
 CREATE TABLE order_product (
@@ -109,6 +137,10 @@ CREATE TABLE order_product_status (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER order_product_status_entries BEFORE INSERT ON order_product_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each product can have configurable options
 CREATE TABLE order_product_options (
@@ -157,8 +189,14 @@ CREATE TABLE lookup_orderaddress_types (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_orderaddress_types_entries BEFORE INSERT ON lookup_orderaddress_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE order_address (
 	address_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -178,6 +216,10 @@ CREATE TABLE order_address (
   addrline4 VARCHAR(300)
 );
 
+CREATE TRIGGER order_address_entries BEFORE INSERT ON order_address FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- The method in which a payment is made
 -- Example: Credit Card, EFT, Cash, Check, Money Order
 CREATE TABLE lookup_payment_methods (
@@ -185,8 +227,14 @@ CREATE TABLE lookup_payment_methods (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_payment_methods_entries BEFORE INSERT ON lookup_payment_methods FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Example: Visa, Master Card, Discover, American Express
 
@@ -195,8 +243,14 @@ CREATE TABLE lookup_creditcard_types (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_creditcard_types_entries BEFORE INSERT ON lookup_creditcard_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE payment_creditcard (
 	creditcard_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -214,6 +268,10 @@ CREATE TABLE payment_creditcard (
   order_id INTEGER REFERENCES order_entry(order_id)
 );
 
+CREATE TRIGGER payment_creditcard_entries BEFORE INSERT ON payment_creditcard FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE payment_eft (
 	bank_id INT AUTO_INCREMENT PRIMARY KEY,
 	bank_name VARCHAR(300),
@@ -227,6 +285,10 @@ CREATE TABLE payment_eft (
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   order_id INTEGER REFERENCES order_entry(order_id)
 );
+
+CREATE TRIGGER payment_eft_entries BEFORE INSERT ON payment_eft FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- List of products created by the ordering of a product
 CREATE TABLE customer_product (
@@ -245,6 +307,10 @@ CREATE TABLE customer_product (
   contact_id INTEGER
 );
 
+CREATE TRIGGER customer_product_entries BEFORE INSERT ON customer_product FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Some products get returned or are finished being used
 CREATE TABLE customer_product_history (
   history_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -261,6 +327,10 @@ CREATE TABLE customer_product_history (
   contact_id INTEGER
 );
 
+CREATE TRIGGER customer_product_history_entries BEFORE INSERT ON customer_product_history FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Each order_payment has an associated status
 -- Example: Pending, In Progress, Approved, Declined
 CREATE TABLE lookup_payment_status (
@@ -268,8 +338,14 @@ CREATE TABLE lookup_payment_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_payment_status_entries BEFORE INSERT ON lookup_payment_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE order_payment (
 	payment_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -291,6 +367,10 @@ CREATE TABLE order_payment (
   status_id INTEGER REFERENCES lookup_payment_status(code)
 );
 
+CREATE TRIGGER order_payment_entries BEFORE INSERT ON order_payment FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Each order_payment has a status, as the status changes,
 -- the previous status is stored here for reference and tracking
 CREATE TABLE order_payment_status (
@@ -302,6 +382,10 @@ CREATE TABLE order_payment_status (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER order_payment_status_entries BEFORE INSERT ON order_payment_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE credit_card (
   creditcard_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -318,14 +402,24 @@ CREATE TABLE credit_card (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE TRIGGER credit_card_entries BEFORE INSERT ON credit_card FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE lookup_payment_gateway (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description varchar(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level int DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  constant_id int
+  constant_id int,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_payment_gateway_entries BEFORE INSERT ON lookup_payment_gateway FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE merchant_payment_gateway (
   merchant_payment_gateway_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -337,3 +431,7 @@ CREATE TABLE merchant_payment_gateway (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER merchant_payment_gateway_entries BEFORE INSERT ON merchant_payment_gateway FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

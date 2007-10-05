@@ -19,7 +19,6 @@ import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.webdav.WebdavServlet;
-
 import org.apache.log4j.Logger;
 import org.aspcfs.controller.ObjectValidator;
 import org.aspcfs.controller.SystemStatus;
@@ -3309,7 +3308,7 @@ public class User extends GenericBean {
       sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + " SET ");
          if (newPassword != null) {
            sql.append("temp_password = ?, ");
-    	   sql.append("temp_webdav_password = ? ");
+    	   sql.append("temp_webdav_password = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
          }
            sql.append("WHERE user_id = ? ");
            int i = 0;
@@ -3346,11 +3345,11 @@ public class User extends GenericBean {
      StringBuffer sql = new StringBuffer();
      PreparedStatement ps = null;
      // Set password and webdav password
-     sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + 
-    		 	" SET " +
-       		" password = ?, " +
-       		" webdav_password = ? " +
-          " WHERE user_id = ? ");
+     sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
+    		 	"SET " +
+       		"password = ?, " +
+       		"webdav_password = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+          "WHERE user_id = ? ");
      ps = db.prepareStatement(sql.toString());
      ps.setString(++i, tempPassword);
      ps.setString(++i, tempWebdavPassword);
@@ -3361,11 +3360,11 @@ public class User extends GenericBean {
      i = 0;
      sql = new StringBuffer();
      //reset temporary passwords
-     sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + 
-     			" SET " +
-       		" temp_password = ?, " +
-       		" temp_webdav_password = ? " +
-       		" WHERE user_id = ? ");
+     sql.append("UPDATE " + DatabaseUtils.addQuotes(db, "access") + " " +
+     			"SET " +
+       		"temp_password = ?, " +
+       		"temp_webdav_password = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+       		"WHERE user_id = ? ");
      ps = db.prepareStatement(sql.toString());
      ps.setString(++i, null);
      ps.setString(++i, null);

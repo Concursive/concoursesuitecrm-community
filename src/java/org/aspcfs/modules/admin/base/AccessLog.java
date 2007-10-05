@@ -292,9 +292,7 @@ public class AccessLog extends GenericBean {
       if (id > -1) {
         sql.append("id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("browser ) ");
       sql.append("VALUES (?, ?, ?, ");
       if (id > -1) {
@@ -302,6 +300,8 @@ public class AccessLog extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
 

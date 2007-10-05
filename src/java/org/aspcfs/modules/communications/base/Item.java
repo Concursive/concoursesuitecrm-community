@@ -240,7 +240,8 @@ public class Item {
       }
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_items " +
-              "SET description = ? " +
+              "SET description = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE question_id = ? ");
       int i = 0;
       pst.setString(++i, description);

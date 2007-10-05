@@ -13,8 +13,14 @@ CREATE TABLE lookup_project_activity (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
-  template_id INTEGER DEFAULT 0
+  template_id INTEGER DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_activity_entries BEFORE INSERT ON lookup_project_activity FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_project_priority (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -24,8 +30,14 @@ CREATE TABLE lookup_project_priority (
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
   graphic VARCHAR(75),
-  type INTEGER NOT NULL
+  type INTEGER NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_priority_entries BEFORE INSERT ON lookup_project_priority FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_project_status (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,8 +47,14 @@ CREATE TABLE lookup_project_status (
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
   graphic VARCHAR(75),
-  type INTEGER NOT NULL
+  type INTEGER NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_status_entries BEFORE INSERT ON lookup_project_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_project_loe (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,8 +63,14 @@ CREATE TABLE lookup_project_loe (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_loe_entries BEFORE INSERT ON lookup_project_loe FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_project_role (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,8 +78,14 @@ CREATE TABLE lookup_project_role (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_role_entries BEFORE INSERT ON lookup_project_role FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_project_category (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -63,8 +93,14 @@ CREATE TABLE lookup_project_category (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_category_entries BEFORE INSERT ON lookup_project_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_news_template (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -78,8 +114,14 @@ CREATE TABLE lookup_news_template (
   load_article_linked_list BOOLEAN DEFAULT false,
   load_public_projects BOOLEAN DEFAULT false,
   load_article_category_list BOOLEAN DEFAULT false,
-  mapped_jsp VARCHAR(255) NOT NULL
+  mapped_jsp VARCHAR(255) NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_news_template_entries BEFORE INSERT ON lookup_news_template FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 
 CREATE TABLE projects (
@@ -141,6 +183,10 @@ CREATE TABLE projects (
   trashed_date TIMESTAMP NULL
 );
 
+CREATE TRIGGER projects_entries BEFORE INSERT ON projects FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `projects_idx` USING btree ON `projects` (`group_id`, `project_id`);
 
   
@@ -171,6 +217,10 @@ CREATE TABLE project_requirements (
   due_date_timezone VARCHAR(255)
 );
 
+CREATE TRIGGER project_requirements_entries BEFORE INSERT ON project_requirements FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE project_assignments_folder (
   folder_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   parent_id INTEGER NULL REFERENCES project_assignments_folder(folder_id),
@@ -182,6 +232,10 @@ CREATE TABLE project_assignments_folder (
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER project_assignments_folder_entries BEFORE INSERT ON project_assignments_folder FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE project_assignments (
   assignment_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -211,7 +265,11 @@ CREATE TABLE project_assignments (
   percent_complete INTEGER ,
   due_date_timezone VARCHAR(255)
 );
-  
+
+CREATE TRIGGER project_assignments_entries BEFORE INSERT ON project_assignments FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `project_assignments_cidx` USING btree ON `project_assignments` (`complete_date`, `user_assign_id`);
   
 CREATE INDEX proj_assign_req_id_idx ON project_assignments (requirement_id);
@@ -245,6 +303,10 @@ CREATE TABLE project_issues_categories (
   allow_files BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE TRIGGER project_issues_categories_entries BEFORE INSERT ON project_issues_categories FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE project_issues (
   issue_id INT AUTO_INCREMENT PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
@@ -261,7 +323,11 @@ CREATE TABLE project_issues (
   last_reply_date TIMESTAMP NULL,
   last_reply_by INTEGER
 );  
-  
+
+CREATE TRIGGER project_issues_entries BEFORE INSERT ON project_issues FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE project_issue_replies (
   reply_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   issue_id INTEGER NOT NULL REFERENCES project_issues,
@@ -274,6 +340,10 @@ CREATE TABLE project_issue_replies (
   modified TIMESTAMP NULL,
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER project_issue_replies_entries BEFORE INSERT ON project_issue_replies FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE project_folders (
   folder_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -289,6 +359,10 @@ CREATE TABLE project_folders (
   display INTEGER NULL
 );
   
+CREATE TRIGGER project_folders_entries BEFORE INSERT ON project_folders FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE project_files (
   item_id INT AUTO_INCREMENT PRIMARY KEY ,
   link_module_id INTEGER NOT NULL,
@@ -309,9 +383,14 @@ CREATE TABLE project_files (
   allow_portal_access BOOLEAN DEFAULT false
 );
 
+CREATE TRIGGER project_files_entries BEFORE INSERT ON project_files FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `project_files_cidx` USING btree ON `project_files` (`link_module_id`, `link_item_id`);
 
 CREATE TABLE project_files_version (
+  version_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   item_id INTEGER REFERENCES project_files(item_id),
   client_filename VARCHAR(255) NOT NULL,
   filename VARCHAR(255) NOT NULL,
@@ -327,12 +406,23 @@ CREATE TABLE project_files_version (
   allow_portal_access BOOLEAN DEFAULT false
 );
 
+CREATE TRIGGER project_files_version_entries BEFORE INSERT ON project_files_version FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE project_files_download (
+  download_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   item_id INTEGER NOT NULL REFERENCES project_files(item_id),
   version FLOAT DEFAULT 0 ,
   user_download_id INTEGER NULL REFERENCES `access`(user_id),
-  download_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  download_date TIMESTAMP NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER project_files_download_entries BEFORE INSERT ON project_files_download FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE project_files_thumbnail (
   item_id INTEGER REFERENCES project_files(item_id),
@@ -345,6 +435,9 @@ CREATE TABLE project_files_thumbnail (
   modifiedBy INTEGER NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE TRIGGER project_files_thumbnail_entries BEFORE INSERT ON project_files_thumbnail FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE project_team (
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
@@ -358,6 +451,11 @@ CREATE TABLE project_team (
   last_accessed TIMESTAMP NULL,
   role_type INTEGER
 );
+
+CREATE TRIGGER project_team_entries BEFORE INSERT ON project_team FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE UNIQUE INDEX project_team_uni_idx ON project_team (project_id, user_id);
 
 CREATE TABLE project_news_category (
@@ -368,6 +466,9 @@ CREATE TABLE project_news_category (
   level INTEGER NOT NULL DEFAULT 0,
   enabled BOOLEAN DEFAULT true
 );
+
+CREATE TRIGGER project_news_category_entries BEFORE INSERT ON project_news_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 CREATE TABLE project_news (
   news_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -397,6 +498,10 @@ CREATE TABLE project_news (
   template_id INTEGER REFERENCES lookup_news_template
 );
 
+CREATE TRIGGER project_news_entries BEFORE INSERT ON project_news FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE project_requirements_map (
   map_id INT AUTO_INCREMENT PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects,
@@ -415,8 +520,14 @@ CREATE TABLE lookup_project_permission_category (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
+  group_id INTEGER NOT NULL DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_prct_prm_ctgr_entries BEFORE INSERT ON lookup_project_permission_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_project_permission (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -427,8 +538,14 @@ CREATE TABLE lookup_project_permission (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   group_id INTEGER NOT NULL DEFAULT 0,
-  default_role INTEGER REFERENCES lookup_project_role(code)
+  default_role INTEGER REFERENCES lookup_project_role(code),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_project_prm_entries BEFORE INSERT ON lookup_project_permission FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE project_permissions (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -443,6 +560,9 @@ CREATE TABLE project_accounts (
   org_id INTEGER NOT NULL REFERENCES organization(org_id),
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TRIGGER project_accounts_entries BEFORE INSERT ON project_accounts FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 CREATE INDEX proj_acct_project_idx ON project_accounts (project_id);
 CREATE INDEX proj_acct_org_idx ON project_accounts (org_id);

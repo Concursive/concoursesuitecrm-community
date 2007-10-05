@@ -23,5 +23,5 @@ CREATE TABLE knowledge_base (
 	modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	modifiedby INT NOT NULL REFERENCES access(user_id),
 	status INTEGER NOT NULL DEFAULT 1 REFERENCES lookup_kb_status(code),
-	portal_access_allowed BOOLEAN  NOT NULL DEFAULT false
+	portal_access_allowed BOOLEAN NOT NULL DEFAULT false
 );

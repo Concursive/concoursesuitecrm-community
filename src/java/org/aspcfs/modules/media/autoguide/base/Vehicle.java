@@ -465,7 +465,7 @@ public class Vehicle {
     sql.append(
         "UPDATE autoguide_vehicle " +
         "SET year = ?, make_id = ?, model_id = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE vehicle_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;

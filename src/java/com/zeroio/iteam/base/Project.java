@@ -2257,12 +2257,7 @@ public class Project extends GenericBean {
       if (id > -1) {
         sql.append("project_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append(
           "title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone, " +
           "allow_guests, calendar_enabled, news_enabled, details_enabled, " +
@@ -2275,9 +2270,13 @@ public class Project extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append(
           "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
@@ -2388,7 +2387,7 @@ public class Project extends GenericBean {
         int j = 0;
         pst = db.prepareStatement(
             "UPDATE projects " +
-            "SET portal = ?, portal_key = ?, portal_page_type = ? " +
+            "SET portal = ?, portal_key = ?, portal_page_type = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE project_id = ? ");
         pst.setBoolean(++j, true);
         pst.setString(++j, portalKey);
@@ -2623,7 +2622,7 @@ public class Project extends GenericBean {
         "requestedDept = ?, requestDate = ?, requestDate_timezone = ?, " +
         "approvalDate = ?, closeDate = ?, owner = ?, est_closedate = ?, est_closedate_timezone = ?, budget = ?, " +
         "budget_currency = ?, " +
-        "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE project_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;
@@ -2692,7 +2691,7 @@ public class Project extends GenericBean {
           "tickets_enabled = ?, documents_enabled = ?, " +
           "calendar_label = ?, news_label = ?, details_label = ?, team_label = ?, accounts_label = ?, plan_label = ?, lists_label = ?, " +
           "discussion_label = ?, tickets_label = ?, documents_label = ?, " +
-          "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+          "modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE project_id = ? " +
           "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       int i = 0;
@@ -2729,7 +2728,7 @@ public class Project extends GenericBean {
       if (portal) {
         pst = db.prepareStatement(
             "UPDATE projects " +
-            "SET portal = ? " +
+            "SET portal = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE portal = ? " +
             "AND project_id <> ? ");
         pst.setBoolean(1, false);
@@ -2864,7 +2863,7 @@ public class Project extends GenericBean {
   public void accept(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_team " +
-        "SET status = ? " +
+        "SET status = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE project_id = ? " +
         "AND user_id = ? " +
         "AND status = ? ");
@@ -2887,7 +2886,7 @@ public class Project extends GenericBean {
   public void reject(Connection db, int userId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_team " +
-        "SET status = ? " +
+        "SET status = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE project_id = ? " +
         "AND user_id = ? " +
         "AND status = ? ");

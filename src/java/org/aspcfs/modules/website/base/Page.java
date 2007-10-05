@@ -965,7 +965,8 @@ public class Page extends GenericBean {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_page SET " +
               "active_page_version_id = ?,  " +
-              "construction_page_version_id = ? " +
+              "construction_page_version_id = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE page_id =  ? ");
       DatabaseUtils.setInt(pst, 1, -1);
       DatabaseUtils.setInt(pst, 2, -1);
@@ -996,7 +997,8 @@ public class Page extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "UPDATE web_page " +
-              "SET page_alias = ? " +
+              "SET page_alias = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE page_alias = ?"
       );
       DatabaseUtils.setInt(pst, ++i, -1);

@@ -24,7 +24,6 @@ import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.utils.web.LookupList;
 
 import java.sql.*;
-
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
@@ -252,7 +251,9 @@ public class LeadUtils {
     pst.close();
 
     pst = db.prepareStatement(
-        "UPDATE contact SET owner = ? WHERE contact_id = ?");
+        "UPDATE contact SET owner = ?, " + 
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE contact_id = ?");
     pst.setInt(1, userId);
     pst.setInt(2, contactId);
     int result = pst.executeUpdate();
@@ -316,7 +317,9 @@ public class LeadUtils {
     pst.close();
 
     pst = db.prepareStatement(
-        "UPDATE contact SET owner = ? WHERE contact_id = ?");
+        "UPDATE contact SET owner = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE contact_id = ?");
     pst.setInt(1, ownerId);
     pst.setInt(2, contactId);
     int result = pst.executeUpdate();

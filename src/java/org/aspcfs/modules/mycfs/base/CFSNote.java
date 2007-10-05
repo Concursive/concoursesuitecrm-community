@@ -16,13 +16,13 @@
 package org.aspcfs.modules.mycfs.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactHistory;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.controller.SystemStatus;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -1081,7 +1081,8 @@ public class CFSNote extends GenericBean {
            */
           pst = db.prepareStatement(
               "UPDATE cfsinbox_message " +
-                  "SET delete_flag = ? " +
+                  "SET delete_flag = ?, " +
+                  "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
                   "WHERE  id = ? ");
           pst.setBoolean(1, true);
           pst.setInt(2, this.getId());
@@ -1122,7 +1123,7 @@ public class CFSNote extends GenericBean {
 
     sql.append(
         "UPDATE cfsinbox_messagelink " +
-            "SET status = ?, viewed = CURRENT_TIMESTAMP " +
+            "SET status = ?, viewed = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE id = ? AND sent_to = ? ");
 
     int i = 0;
@@ -1157,7 +1158,7 @@ public class CFSNote extends GenericBean {
     sql.append(
         "UPDATE cfsinbox_message " +
             "SET subject = ?, body = ?, " +
-            "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
             "WHERE id = ? ");
     if (!override) {
       sql.append("AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));

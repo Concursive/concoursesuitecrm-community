@@ -725,7 +725,8 @@ public class Survey extends SurveyBase {
               "SET name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
               DatabaseUtils.addQuotes(db, "type") + " = ?, " +
               "enabled = ?, " +
-              "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+              "modifiedby = ? " +
               "WHERE survey_id = ? AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());

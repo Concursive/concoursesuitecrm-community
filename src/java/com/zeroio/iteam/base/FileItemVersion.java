@@ -721,8 +721,7 @@ public class FileItemVersion extends GenericBean {
     if (id > -1) {
       sql.append("version_id, ");
     }
-    sql.append("entered, modified, ");
-    sql.append("enteredBy, modifiedBy, allow_portal_access ) ");
+    sql.append("entered, modified, enteredBy, modifiedBy, allow_portal_access ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
       sql.append("?, ");

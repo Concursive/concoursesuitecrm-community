@@ -350,13 +350,13 @@ public class FileDownloadLog extends GenericBean {
     sql.append("VALUES (?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
-    }else{
-      sql.append("CURRENT_TIMESTAMP, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
-    }else{
-      sql.append("CURRENT_TIMESTAMP, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("? ) ");
     PreparedStatement pst = db.prepareStatement(sql.toString());

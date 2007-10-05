@@ -42,6 +42,9 @@ CREATE TABLE events (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TRIGGER events_entries BEFORE INSERT ON  events FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
 CREATE TABLE events_log (
   log_id INT AUTO_INCREMENT PRIMARY KEY,
   event_id INTEGER NOT NULL REFERENCES events(event_id),
@@ -50,3 +53,5 @@ CREATE TABLE events_log (
   message TEXT
 );
 
+CREATE TRIGGER events_log_entries BEFORE INSERT ON  events_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);

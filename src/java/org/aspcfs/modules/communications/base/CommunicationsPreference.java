@@ -847,13 +847,9 @@ public class CommunicationsPreference extends GenericBean {
     if (endTimeMinute != -1) {
       sql.append(", end_time_min ");
     }
-    if (entered != null) {
-      sql.append(", entered ");
-    }
+    sql.append(", entered ");
     sql.append(", enteredby ");
-    if (modified != null) {
-      sql.append(", modified ");
-    }
+    sql.append(", modified ");
     sql.append(
         ", modifiedby , enabled ) VALUES " +
         "(" + (id > -1 ? "?, " : "") + "?, ?, ?, ? ");
@@ -878,10 +874,14 @@ public class CommunicationsPreference extends GenericBean {
     }
     if (entered != null) {
       sql.append(", ? ");
+    } else {
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }
     sql.append(", ? ");
     if (modified != null) {
       sql.append(", ? ");
+    } else {
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }
     sql.append(", ?, ?)");
     int i = 0;

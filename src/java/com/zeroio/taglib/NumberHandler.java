@@ -84,15 +84,16 @@ public class NumberHandler extends TagSupport implements TryCatchFinally {
    */
   public int doStartTag() throws JspException {
     try {
-      if (value > -1) {
-        NumberFormat formatter = NumberFormat.getInstance(locale);
+/*      if (value > -1) {
+*/        NumberFormat formatter = NumberFormat.getInstance(locale);
         this.pageContext.getOut().write(formatter.format(value));
-      } else {
+        
+/*      } else {
         //no date found, output default
         if (defaultValue != null) {
           this.pageContext.getOut().write(defaultValue);
         }
-      }
+      }*/
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

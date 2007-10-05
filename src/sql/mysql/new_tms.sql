@@ -14,9 +14,14 @@ CREATE TABLE ticket_level (
   description VARCHAR(255) NOT NULL UNIQUE,
   default_item BOOLEAN DEFAULT false,
   level INT DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER ticket_level_entries BEFORE INSERT ON  ticket_level FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE ticket_severity (
   code INT AUTO_INCREMENT PRIMARY KEY
@@ -25,8 +30,13 @@ CREATE TABLE ticket_severity (
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER ticket_severity_entries BEFORE INSERT ON ticket_severity FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_ticketsource (
   code INT AUTO_INCREMENT PRIMARY KEY
@@ -34,8 +44,13 @@ CREATE TABLE lookup_ticketsource (
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER lookup_ticketsource_entries BEFORE INSERT ON lookup_ticketsource FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_ticket_status (
   code INT AUTO_INCREMENT PRIMARY KEY
@@ -43,8 +58,13 @@ CREATE TABLE lookup_ticket_status (
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER lookup_ticket_status_entries BEFORE INSERT ON lookup_ticket_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE ticket_priority (
   code INT AUTO_INCREMENT PRIMARY KEY
@@ -53,8 +73,13 @@ CREATE TABLE ticket_priority (
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER ticket_priority_entries BEFORE INSERT ON ticket_priority FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_ticket_escalation(
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY
@@ -62,7 +87,13 @@ CREATE TABLE lookup_ticket_escalation(
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_ticket_escalation_entries BEFORE INSERT ON lookup_ticket_escalation FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE ticket_category ( 
   id INT AUTO_INCREMENT PRIMARY KEY
@@ -74,7 +105,13 @@ CREATE TABLE ticket_category (
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
   ,site_id INTEGER REFERENCES lookup_site_id(code)
+  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER ticket_category_entries BEFORE INSERT ON ticket_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE ticket_category_draft (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,8 +123,14 @@ CREATE TABLE ticket_category_draft (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER ticket_category_draft_entries BEFORE INSERT ON ticket_category_draft FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Ticket Category Draft Assignment table
 CREATE TABLE ticket_category_draft_assignment (
@@ -145,6 +188,10 @@ CREATE TABLE ticket (
   -- integrity
 );
 
+CREATE TRIGGER ticket_entries BEFORE INSERT ON ticket FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `ticket_cidx` USING btree ON `ticket` (`assigned_to`, `closed`);
 CREATE INDEX `ticketlist_entered` ON `ticket` (entered);
 CREATE INDEX `ticket_problem_idx` ON `ticket` (problem(100));
@@ -176,6 +223,10 @@ CREATE TABLE ticketlog (
   -- integrity
 );
 
+CREATE TRIGGER ticketlog_entries BEFORE INSERT ON ticketlog FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE ticket_csstm_form(
   form_id INT AUTO_INCREMENT PRIMARY KEY,
   link_ticket_id INT REFERENCES ticket(ticketid), 
@@ -193,6 +244,10 @@ CREATE TABLE ticket_csstm_form(
   labor_towards_sc BOOLEAN DEFAULT true,
   alert_date_timezone VARCHAR(255)
 );
+
+CREATE TRIGGER ticket_csstm_form_entries BEFORE INSERT ON ticket_csstm_form FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE ticket_activity_item(
   item_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -217,6 +272,10 @@ CREATE TABLE ticket_sun_form(
   enabled boolean DEFAULT true
 );
 
+CREATE TRIGGER ticket_sun_form_entries BEFORE INSERT ON ticket_sun_form FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE trouble_asset_replacement(
   replacement_id INT AUTO_INCREMENT PRIMARY KEY,
   link_form_id INT REFERENCES ticket_sun_form(form_id),
@@ -237,8 +296,14 @@ CREATE TABLE lookup_ticket_cause (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_ticket_cause_entries BEFORE INSERT ON lookup_ticket_cause FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Ticket Resolution lookup
 CREATE TABLE lookup_ticket_resolution (
@@ -246,8 +311,14 @@ CREATE TABLE lookup_ticket_resolution (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_ticket_resolution_entries BEFORE INSERT ON lookup_ticket_resolution FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 --Ticket Defect table
 CREATE TABLE ticket_defect (
@@ -267,6 +338,11 @@ CREATE TABLE lookup_ticket_state (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER lookup_ticket_state_entries BEFORE INSERT ON lookup_ticket_state FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

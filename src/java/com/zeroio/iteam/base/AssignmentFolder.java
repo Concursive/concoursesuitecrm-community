@@ -687,22 +687,20 @@ public class AssignmentFolder extends GenericBean {
     if (id > -1) {
       sql.append("folder_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
-    sql.append("enteredBy, modifiedBy) ");
+    sql.append("entered, modified, enteredBy, modifiedBy) ");
     sql.append("VALUES (?, ?, ?, ?, ");
     if (id > -1) {
       sql.append("?,");
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -822,7 +820,8 @@ public class AssignmentFolder extends GenericBean {
       //Move assignments to the left
       PreparedStatement pst = db.prepareStatement(
           "UPDATE project_assignments " +
-              "SET folder_id = ? " +
+              "SET folder_id = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE folder_id = ? ");
       DatabaseUtils.setInt(pst, 1, parentId);
       pst.setInt(2, id);
@@ -831,7 +830,8 @@ public class AssignmentFolder extends GenericBean {
       //Move other folders to the left
       pst = db.prepareStatement(
           "UPDATE project_assignments_folder " +
-              "SET parent_id = ? " +
+              "SET parent_id = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE parent_id = ? ");
       DatabaseUtils.setInt(pst, 1, parentId);
       pst.setInt(2, id);
@@ -894,7 +894,7 @@ public class AssignmentFolder extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments_folder " +
             "SET name = ?, description = ?, " +
-            "modifiedBy = ?, modified = CURRENT_TIMESTAMP, parent_id = ? " +
+            "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", parent_id = ? " +
             "WHERE folder_id = ? " +
             "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     int i = 0;

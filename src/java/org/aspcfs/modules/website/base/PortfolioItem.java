@@ -16,8 +16,8 @@
 package org.aspcfs.modules.website.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.controller.SystemStatus;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
@@ -25,8 +25,6 @@ import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -161,13 +159,9 @@ public class PortfolioItem extends GenericBean {
       if (id > -1) {
         sql.append("item_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("enteredby, ");
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("modifiedby )");
       sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -175,10 +169,14 @@ public class PortfolioItem extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("? )");
       int i = 0;
@@ -455,7 +453,9 @@ public class PortfolioItem extends GenericBean {
         nextPosition.update(db);
       }
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE portfolio_item set portfolio_category_id = ? where item_id = ? ");
+          "UPDATE portfolio_item set portfolio_category_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+          "where item_id = ? ");
       DatabaseUtils.setInt(pst, 1, this.getCategoryId());
       pst.setInt(2, this.getId());
       pst.executeUpdate();

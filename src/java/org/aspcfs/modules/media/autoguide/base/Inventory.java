@@ -1019,7 +1019,7 @@ public class Inventory {
           "SET vehicle_id = ?, vin = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
           "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, selling_price_text = ?, " +
           "sold = ?, style = ?, status = ?, " +
-          "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+          "modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE inventory_id = ? " +
           "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? ");
       int i = 0;

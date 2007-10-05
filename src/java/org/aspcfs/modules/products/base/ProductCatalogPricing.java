@@ -996,13 +996,9 @@ public class ProductCatalogPricing extends GenericBean {
       if (id > -1) {
         sql.append("price_id, ");
       }
-      if (entered != null) {
-        sql.append(" entered, ");
-      }
+      sql.append(" entered, ");
       sql.append(" modifiedby, ");
-      if (modified != null) {
-        sql.append(" modified, ");
-      }
+      sql.append(" modified, ");
       sql.append(
           " start_date, expiration_date, enabled, cost_currency, cost_amount) ");
       sql.append(" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
@@ -1011,10 +1007,14 @@ public class ProductCatalogPricing extends GenericBean {
       }
       if (entered != null) {
         sql.append(" ?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append(" ?, ");
       if (modified != null) {
         sql.append(" ?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?, ?, ? )");
       int i = 0;
@@ -1193,7 +1193,8 @@ public class ProductCatalogPricing extends GenericBean {
     int resultCount = -1;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_catalog_pricing " +
-        "SET enabled = false " +
+        "SET enabled = false, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE product_catalog_pricing.product_id = ? ");
     pst.setInt(1, this.getProductId());
     resultCount = pst.executeUpdate();
@@ -1230,7 +1231,8 @@ public class ProductCatalogPricing extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "UPDATE product_catalog_pricing " +
-          "SET enabled = ? " +
+          "SET enabled = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE product_id = ? AND price_id = ? ");
       pst.setBoolean(++i, status);
       pst.setInt(++i, this.getProductId());

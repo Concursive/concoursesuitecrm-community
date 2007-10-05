@@ -1324,7 +1324,7 @@ public class ProductCategory extends GenericBean {
               " category_name,abbreviation, short_description, " +
               " long_description,type_id,thumbnail_image_id, " +
               " small_image_id, large_image_id,list_order, " +
-              " enteredby,");
+              " enteredby, ");
       if (id > -1) {
         sql.append("category_id, ");
       }
@@ -1334,14 +1334,10 @@ public class ProductCategory extends GenericBean {
       if (statusId > -1) {
         sql.append("status_id, ");
       }
-      if (entered != null) {
-        sql.append(" entered, ");
-      }
-      sql.append(" modifiedBy, ");
-      if (modified != null) {
-        sql.append(" modified, ");
-      }
-      sql.append(" start_date,expiration_date,enabled)");
+      sql.append("entered, ");
+      sql.append("modifiedBy, ");
+      sql.append("modified, ");
+      sql.append("start_date,expiration_date, enabled)");
       sql.append("VALUES ( ?,?,?,?,?,?,?,?,?,?,?,");
       if (id > -1) {
         sql.append("?, ");
@@ -1354,10 +1350,14 @@ public class ProductCategory extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
-        sql.append(" ?, ");
+        sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?,?,?)");
       int i = 0;
@@ -1472,7 +1472,8 @@ public class ProductCategory extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE product_category " +
-            "SET parent_id = ? " +
+            "SET parent_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE category_id = ? ");
     DatabaseUtils.setInt(pst, 1, parentId);
     pst.setInt(2, this.getId());
@@ -1889,7 +1890,8 @@ public class ProductCategory extends GenericBean {
         db.setAutoCommit(false);
       }
       String sql = "UPDATE product_category " +
-          "SET status_id = ? " +
+          "SET status_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE import_id = ? ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);

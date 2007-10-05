@@ -549,7 +549,8 @@ public class DemoAccount {
       pst = db.prepareStatement(
           "UPDATE access " +
           "SET username = ?, " +
-          "password = ? " +
+          "password = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE user_id = 2");
       pst.setString(1, getLoginName());
       pst.setString(2, PasswordHash.encrypt(this.getGeneratedPassword()));
@@ -559,7 +560,8 @@ public class DemoAccount {
       pst = db.prepareStatement(
           "UPDATE contact " +
           "SET namefirst = ?, " +
-          "namelast = ? " +
+          "namelast = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE user_id = 2");
       pst.setString(1, nameFirst);
       pst.setString(2, nameLast);
@@ -576,7 +578,8 @@ public class DemoAccount {
       // Organization table
       pst = db.prepareStatement(
           "UPDATE organization " +
-          "SET name = ? " +
+          "SET name = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE org_id = 0");
       pst.setString(1, organization);
       pst.execute();

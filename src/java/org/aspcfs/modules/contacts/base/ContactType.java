@@ -17,11 +17,7 @@ package org.aspcfs.modules.contacts.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  * Represents a ContactType
@@ -286,7 +282,8 @@ public class ContactType {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE lookup_contact_types " +
-              "SET enabled = ? " +
+              "SET enabled = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE code = ? ");
       int i = 0;
       pst.setBoolean(++i, tmp);
@@ -321,12 +318,12 @@ public class ContactType {
         ", entered, modified) " +
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?" + (userId > -1 ? ", ?" : ""));
     if(entered == null){
-      sql.append(", CURRENT_TIMESTAMP");
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }else{
       sql.append(", ?");
     }
     if(modified == null){
-      sql.append(", CURRENT_TIMESTAMP");
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }else{
       sql.append(", ?");
     }
@@ -371,7 +368,8 @@ public class ContactType {
     int i = 0;
     pst = db.prepareStatement(
         "UPDATE lookup_contact_types " +
-            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+            "SET " + DatabaseUtils.addQuotes(db, "level") + " = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE code = ? ");
     pst.setInt(++i, this.getLevel());
     pst.setInt(++i, this.getId());

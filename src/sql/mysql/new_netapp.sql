@@ -46,6 +46,10 @@ CREATE TABLE netapp_contractexpiration(
   modifiedBy INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE TRIGGER netapp_contractexpiration_entries BEFORE INSERT ON netapp_contractexpiration FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE netapp_contractexpiration_log(
   id INT AUTO_INCREMENT PRIMARY KEY,
   expiration_id INT REFERENCES netapp_contractexpiration(expiration_id),
@@ -59,3 +63,7 @@ CREATE TABLE netapp_contractexpiration_log(
   modified TIMESTAMP NULL,
   modifiedBy INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER netapp_contractexpiration_log_entries BEFORE INSERT ON netapp_contractexpiration_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

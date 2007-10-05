@@ -551,13 +551,14 @@ CREATE TABLE permission_category (
   reports BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
   logos BOOLEAN NOT NULL DEFAULT false,
-  constant INT NOT NULL,
+  constant INT UNIQUE NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
   custom_list_views BOOLEAN NOT NULL DEFAULT false,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   dashboards BOOLEAN DEFAULT false NOT NULL,
-  customtabs BOOLEAN DEFAULT false NOT NULL
+  customtabs BOOLEAN DEFAULT false NOT NULL,
+  email_accounts BOOLEAN DEFAULT false NOT NULL
 );
 
 CREATE TABLE permission (
@@ -811,10 +812,10 @@ CREATE TABLE cfsinbox_messagelink (
   sent_from INT REFERENCES access(user_id),
   sent_to_mail_id varchar(255),
   sent_from_mail_id varchar(255),
-  email_account_id int4,
-  replied_to_message_id int4,
-  item_id int4,
-  last_action int4,
+  email_account_id INT,
+  replied_to_message_id INT,
+  item_id INT,
+  last_action INT,
   replyto varchar(255)
 );
 
@@ -1120,4 +1121,4 @@ CREATE TABLE recent_items (
 	user_id int NOT NULL references access (user_id),
 	entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
+);

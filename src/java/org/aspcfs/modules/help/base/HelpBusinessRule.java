@@ -477,7 +477,8 @@ public class HelpBusinessRule extends GenericBean {
       int i = 0;
       pst = db.prepareStatement(
           "UPDATE help_business_rules " +
-          "SET modifiedby = ?, description = ?, enabled = ?, completedate = ?, completedby = ? " +
+          "SET modifiedby = ?, description = ?, enabled = ?, completedate = ?, completedby = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE rule_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());

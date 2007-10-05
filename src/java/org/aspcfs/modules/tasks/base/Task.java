@@ -1287,7 +1287,8 @@ public class Task extends GenericBean {
           "SET modifiedby = ?, priority = ?, description = ?, notes = ?, " +
           "sharing = ?, owner = ?, duedate = ?, duedate_timezone = ?, estimatedloe = ?, " +
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
-          "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "complete = ?, completedate = ?, " +
           "category_id = ?, trashed_date = ?, ticket_task_category_id = ? " +
           "WHERE task_id = ? AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ");
       int i = 0;
@@ -1669,7 +1670,8 @@ public class Task extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE task " +
-            "SET category_id = ? " +
+            "SET category_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE task_id = ? ");
     pst.setInt(++i, newCategoryId);
     pst.setInt(++i, id);
@@ -1688,7 +1690,8 @@ public class Task extends GenericBean {
   public static void markComplete(Connection db, int taskId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE task " +
-            "SET complete = ?, completedate = ? " +
+            "SET complete = ?, completedate = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE task_id = ? ");
     pst.setBoolean(1, true);
     pst.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
@@ -1708,7 +1711,8 @@ public class Task extends GenericBean {
   public static void markIncomplete(Connection db, int taskId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE task " +
-            "SET complete = ?, completedate = ? " +
+            "SET complete = ?, completedate = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE task_id = ? ");
     pst.setBoolean(1, false);
     pst.setNull(2, java.sql.Types.TIMESTAMP);
@@ -1774,7 +1778,7 @@ public class Task extends GenericBean {
     sql.append(
         "UPDATE task " +
             "SET trashed_date = ? , " +
-            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
             "modifiedby = ? " +
             "WHERE task_id = ? ");
     int i = 0;

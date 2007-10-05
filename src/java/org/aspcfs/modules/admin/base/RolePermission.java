@@ -515,7 +515,7 @@ public class RolePermission extends GenericBean {
         "UPDATE role_permission" +
         " SET role_offline_add = ?," +
         " role_offline_edit = ?," +
-        " role_offline_delete = ?"
+        " role_offline_delete = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db)+ " "
         );
     pst.setBoolean(++i, false);
     pst.setBoolean(++i, false);

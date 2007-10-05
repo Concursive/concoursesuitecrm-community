@@ -1022,12 +1022,7 @@ public class NewsArticle extends GenericBean {
     if (id > -1) {
       sql.append("news_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append(
         "enteredBy, modifiedBy, " +
         "start_date, start_date_timezone, end_date, end_date_timezone, allow_replies, " +
@@ -1038,9 +1033,13 @@ public class NewsArticle extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
@@ -1103,7 +1102,7 @@ public class NewsArticle extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news " +
         "SET subject = ?, intro = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP, " +
+        "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "start_date = ?, start_date_timezone = ?, end_date = ?, " +
         "end_date_timezone = ?, allow_replies = ?, allow_rating = ?, " +
         "priority_id = ?, enabled = ?, status = ?, category_id = ?, " +
@@ -1239,7 +1238,7 @@ public class NewsArticle extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news " +
         "SET " + DatabaseUtils.addQuotes(db, "message")+ " = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE news_id = ? ");
     pst.setString(++i, message);
     pst.setInt(++i, this.getModifiedBy());
@@ -1266,7 +1265,7 @@ public class NewsArticle extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news " +
         "SET " + DatabaseUtils.addQuotes(db, "message")+ " = null, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE news_id = ? ");
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, id);

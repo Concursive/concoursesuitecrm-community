@@ -53,6 +53,8 @@ CREATE TABLE business_process (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TRIGGER business_process_entries BEFORE INSERT ON  business_process FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 /* Components that have been added to the business_process from the library */
 
 CREATE TABLE business_process_component (
@@ -103,6 +105,8 @@ CREATE TABLE business_process_events (
   process_id INTEGER NOT NULL REFERENCES business_process
 );
 
+CREATE TRIGGER business_process_events_entries BEFORE INSERT ON business_process_events FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 /* Records when scheduled events have been executed */
 
 CREATE TABLE business_process_log (

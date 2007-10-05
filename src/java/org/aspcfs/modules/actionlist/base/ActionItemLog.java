@@ -507,7 +507,7 @@ public class ActionItemLog extends GenericBean {
       i = 0;
       pst = db.prepareStatement(
           "UPDATE action_item " +
-              "SET modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+              "SET modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
               "WHERE item_id = ? ");
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getItemId());

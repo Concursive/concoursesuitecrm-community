@@ -493,7 +493,7 @@ public class ActionItem extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_item " +
-              "SET completedate = ? " +
+              "SET completedate = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE item_id = ? ");
       if (this.getCompleteDate() != null && complete) {
         pst.setTimestamp(++i, this.getCompleteDate());

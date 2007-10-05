@@ -25,7 +25,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -726,12 +725,16 @@ public class RowColumnList extends ArrayList {
       if(insertSide!=null && insertSide.equals("Left")){
        pst = db.prepareStatement(
           "UPDATE web_row_column " +
-          "SET column_position = column_position + 1 where column_position>="+posID+" and page_row_id = ?");
+          "SET column_position = column_position + 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+          "where column_position>="+posID+" and page_row_id = ?");
        pst.setInt(1, pageRowId);
       }else if(insertSide!=null && insertSide.equals("Right")){
         pst = db.prepareStatement(
           "UPDATE web_row_column " +
-          "SET column_position = column_position + 1 where column_position>"+posID+" and page_row_id = ?");
+          "SET column_position = column_position + 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+          "where column_position>"+posID+" and page_row_id = ?");
        pst.setInt(1, pageRowId);
       }
       pst.executeUpdate();
@@ -740,7 +743,8 @@ public class RowColumnList extends ArrayList {
     } else {
        pst = db.prepareStatement(
           "UPDATE web_row_column " +
-          "SET column_position = column_position - 1 " +
+          "SET column_position = column_position - 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE page_row_id = ? " +
           "AND column_position > " +
           "(SELECT column_position FROM web_row_column WHERE row_column_id = ?) ");

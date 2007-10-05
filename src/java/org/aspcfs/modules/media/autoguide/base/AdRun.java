@@ -600,7 +600,7 @@ public class AdRun {
           "UPDATE autoguide_ad_run " +
           "SET run_date = ?, ad_type = ?, include_photo = ?, complete_date = ?, " +
           "completedby = ?, " +
-          "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
           "WHERE ad_run_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       int i = 0;
@@ -633,7 +633,8 @@ public class AdRun {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE autoguide_ad_run " +
-        "SET complete_date = CURRENT_TIMESTAMP, completedby = ? " +
+        "SET complete_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", completedby = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE ad_run_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -655,7 +656,8 @@ public class AdRun {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE autoguide_ad_run " +
-        "SET complete_date = ?, completedby = ? " +
+        "SET complete_date = ?, completedby = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE ad_run_id = ? AND completedby IN (" + intHierarchyList + ") ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;

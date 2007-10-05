@@ -647,13 +647,9 @@ public class Package extends GenericBean {
           "   long_description, thumbnail_image_id, " +
           "   small_image_id, large_image_id, list_order, " +
           "   enteredby, ");
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("modifiedBy, ");
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("start_date, expiration_date, enabled) ");
       sql.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -661,10 +657,14 @@ public class Package extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?) ");
       int i = 0;

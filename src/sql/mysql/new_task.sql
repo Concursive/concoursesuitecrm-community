@@ -11,32 +11,56 @@ CREATE TABLE lookup_task_priority (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_task_priority_entries BEFORE INSERT ON lookup_task_priority FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_task_loe (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_task_loe_entries BEFORE INSERT ON lookup_task_loe FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_task_category (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(255) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_task_category_entries BEFORE INSERT ON lookup_task_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_ticket_task_category (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(255) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_ticket_task_category_entries BEFORE INSERT ON lookup_ticket_task_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE task (
   task_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -62,6 +86,10 @@ CREATE TABLE task (
   trashed_date TIMESTAMP NULL,
   ticket_task_category_id INTEGER REFERENCES lookup_ticket_task_category(code)
 );
+
+CREATE TRIGGER task_entries BEFORE INSERT ON task FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE tasklink_contact (
   task_id INT NOT NULL REFERENCES task,

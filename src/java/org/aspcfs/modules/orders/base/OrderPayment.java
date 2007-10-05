@@ -759,13 +759,9 @@ public class OrderPayment extends GenericBean {
     if (id > -1) {
       sql.append("payment_id, ");
     }
-    if (entered != null) {
-      sql.append(" entered, ");
-    }
+    sql.append(" entered, ");
     sql.append(" enteredby, ");
-    if (modified != null) {
-      sql.append(" modified, ");
-    }
+    sql.append(" modified, ");
     sql.append(" modifiedby, date_to_process, creditcard_id, bank_id )");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ");
     if (id > -1) {
@@ -773,10 +769,14 @@ public class OrderPayment extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ");
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?, ?, ? )");
     int i = 0;

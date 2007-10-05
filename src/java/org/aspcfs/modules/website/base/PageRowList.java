@@ -774,7 +774,8 @@ public class PageRowList extends ArrayList {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_page_row " +
-          "SET row_position = row_position + 1 " +
+          "SET row_position = row_position + 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE page_row_id <> ? " +
           "AND " + (pageVersionId == -1 ? " row_column_id = ? " : "page_version_id = ? ") +
           "AND " + (changeAdjacentPosition ? "row_position >= " : "row_position > ") +
@@ -787,7 +788,8 @@ public class PageRowList extends ArrayList {
     } else {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_page_row " +
-          "SET row_position = row_position - 1 " +
+          "SET row_position = row_position - 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE " + (pageVersionId == -1 ? " row_column_id = ? " : "page_version_id = ? ") +
           "AND row_position > " +
           "(SELECT row_position FROM web_page_row WHERE page_row_id = ?) ");

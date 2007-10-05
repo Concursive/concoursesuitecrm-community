@@ -574,12 +574,7 @@ public class IssueCategory extends GenericBean {
     if (id > -1) {
       sql.append("category_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append(
         "enteredBy, modifiedBy, " +
         "topics_count, posts_count, last_post_date, last_post_by, allow_files) ");
@@ -589,9 +584,13 @@ public class IssueCategory extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;

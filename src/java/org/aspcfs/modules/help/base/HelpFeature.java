@@ -582,7 +582,8 @@ public class HelpFeature extends GenericBean {
           "UPDATE help_features " +
           "SET modifiedby = ?, description = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, " +
           (linkFeatureId > 0 ? " link_feature_id = ?, " : "") +
-          "completedate = ?, completedby = ? " +
+          "completedate = ?, completedby = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE feature_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());

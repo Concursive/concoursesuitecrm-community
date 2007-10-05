@@ -1806,13 +1806,7 @@ public class Assignment extends GenericBean {
       sql.append("assignment_id, ");
     }
 
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
-    sql.append("enteredBy, modifiedBy, folder_id ) ");
+    sql.append("entered, modified, enteredBy, modifiedBy, folder_id ) ");
     sql.append(
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -1820,9 +1814,13 @@ public class Assignment extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?, ?) ");
 
@@ -2009,7 +2007,7 @@ public class Assignment extends GenericBean {
             DatabaseUtils.addQuotes(db, "role") + " = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
             "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
             "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
-            "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
+            "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) +  ", folder_id = ? " +
             "WHERE assignment_id = ? " +
             "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
     int i = 0;
@@ -2138,7 +2136,7 @@ public class Assignment extends GenericBean {
     String sql =
         "UPDATE project_assignments " +
             "SET due_date = ?, due_date_timezone = ?, " +
-            "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+            "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) +  " " +
             "WHERE assignment_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     int i = 0;
@@ -2169,7 +2167,8 @@ public class Assignment extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_assignments " +
-            "SET folder_id = ? " +
+            "SET folder_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE assignment_id = ? ");
     if (newFolderId == 0) {
       pst.setNull(1, java.sql.Types.INTEGER);

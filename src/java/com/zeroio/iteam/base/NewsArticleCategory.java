@@ -233,7 +233,8 @@ public class NewsArticleCategory extends GenericBean {
   public void update(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_news_category " +
-        "SET project_id = ?, category_name = ?, enabled = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ? " +
+        "SET project_id = ?, category_name = ?, enabled = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " + 
+        DatabaseUtils.addQuotes(db, "level") + " = ? " +
         "WHERE category_id = ? ");
     int i = 0;
     pst.setInt(++i, projectId);

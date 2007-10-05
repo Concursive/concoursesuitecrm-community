@@ -16,16 +16,11 @@
 package org.aspcfs.modules.service.sync.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-
 import org.aspcfs.modules.service.base.SyncTable;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  *  Description of the Class
@@ -421,9 +416,7 @@ public class SyncPackageData extends GenericBean {
            + DatabaseUtils.addQuotes(db, "offset") + ", "
            + DatabaseUtils.addQuotes(db, "items") + ", "
            + "last_anchor, ");
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("next_anchor ) ");
       sql.append("VALUES (");
       if (id > -1) {
@@ -432,6 +425,8 @@ public class SyncPackageData extends GenericBean {
       sql.append("?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
 

@@ -374,7 +374,8 @@ public class HelpTip extends GenericBean {
       int i = 0;
       pst = db.prepareStatement(
           "UPDATE help_tips " +
-          "SET modifiedby = ?, description = ?, enabled = ? " +
+          "SET modifiedby = ?, description = ?, enabled = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE tip_id = ? AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());

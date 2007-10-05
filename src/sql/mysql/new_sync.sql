@@ -16,8 +16,14 @@ CREATE TABLE sync_client (
   modifiedby INT NOT NULL,
   anchor TIMESTAMP NULL,
   enabled BOOLEAN DEFAULT false,
-  code VARCHAR(255)
+  code VARCHAR(255),
+  user_id INT REFERENCES access(user_id),
+  package_file_id INT REFERENCES project_files(item_id)
 );
+
+CREATE TRIGGER sync_client_entries BEFORE INSERT ON sync_client FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE sync_system (
   system_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,6 +43,10 @@ CREATE TABLE sync_table (
   sync_item BOOLEAN DEFAULT false,
   object_key VARCHAR(50)
 );
+
+CREATE TRIGGER sync_table_entries BEFORE INSERT ON sync_table FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE sync_map (
   client_id INT NOT NULL REFERENCES sync_client(client_id),
@@ -60,9 +70,12 @@ CREATE TABLE sync_log (
   log_id INT AUTO_INCREMENT PRIMARY KEY,
   system_id INT NOT NULL REFERENCES sync_system(system_id),
   client_id INT NOT NULL REFERENCES sync_client(client_id),
-  ip VARCHAR(15),
+  ip VARCHAR(30),
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TRIGGER sync_log_entries BEFORE INSERT ON sync_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 CREATE TABLE sync_transaction_log (
   transaction_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -86,3 +99,39 @@ CREATE TABLE process_log (
   status INT,
   message TEXT
 );
+
+CREATE TRIGGER process_log_entries BEFORE INSERT ON process_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
+CREATE TABLE sync_package (
+  package_id INT AUTO_INCREMENT PRIMARY KEY,
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  type INT NOT NULL,
+  size INT DEFAULT 0,
+  status_id INT NOT NULL,
+  recipient INT NOT NULL,
+  status_date TIMESTAMP NULL,
+  last_anchor TIMESTAMP NULL,
+  next_anchor TIMESTAMP NULL,
+  package_file_id INT REFERENCES project_files(item_id),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER sync_package_entries BEFORE INSERT ON sync_package FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
+
+CREATE TABLE sync_package_data (
+  data_id INT AUTO_INCREMENT PRIMARY KEY,
+  package_id INT NOT NULL REFERENCES sync_package(package_id),
+  table_id INT NOT NULL REFERENCES sync_table(table_id),
+  action INT NOT NULL,
+  identity_start INT NOT NULL,
+  `offset` INT,
+  items INT,
+  last_anchor TIMESTAMP NULL,
+  next_anchor TIMESTAMP NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER sync_package_data_entries BEFORE INSERT ON sync_package_data FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);

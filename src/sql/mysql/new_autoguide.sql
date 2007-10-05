@@ -15,6 +15,10 @@ CREATE TABLE autoguide_make (
   modifiedby INT NOT NULL
 );
 
+CREATE TRIGGER autoguide_make_entries BEFORE INSERT ON  autoguide_make FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE autoguide_model (
   model_id INT AUTO_INCREMENT PRIMARY KEY,
   make_id INTEGER NOT NULL REFERENCES autoguide_make(make_id),
@@ -24,6 +28,10 @@ CREATE TABLE autoguide_model (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
 );
+
+CREATE TRIGGER autoguide_model_entries BEFORE INSERT ON  autoguide_model FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE autoguide_vehicle (
   vehicle_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -35,6 +43,10 @@ CREATE TABLE autoguide_vehicle (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL
 );
+
+CREATE TRIGGER autoguide_vehicle_entries BEFORE INSERT ON  autoguide_vehicle FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE autoguide_inventory (
   inventory_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -60,6 +72,10 @@ CREATE TABLE autoguide_inventory (
   modifiedby INT NOT NULL
 );
 
+CREATE TRIGGER autoguide_inventory_entries BEFORE INSERT ON  autoguide_inventory FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE autoguide_options (
   option_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   option_name VARCHAR(20) NOT NULL,
@@ -69,6 +85,10 @@ CREATE TABLE autoguide_options (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER autoguide_options_entries BEFORE INSERT ON  autoguide_options FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE autoguide_inventory_options (
   inventory_id INTEGER NOT NULL REFERENCES autoguide_inventory(inventory_id),
@@ -91,6 +111,10 @@ CREATE TABLE autoguide_ad_run (
   modifiedby INT NOT NULL
 );
 
+CREATE TRIGGER autoguide_ad_run_entries BEFORE INSERT ON  autoguide_ad_run FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE autoguide_ad_run_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(20) NOT NULL,
@@ -100,3 +124,7 @@ CREATE TABLE autoguide_ad_run_types (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER autoguide_ad_run_types_entries BEFORE INSERT ON  autoguide_ad_run_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

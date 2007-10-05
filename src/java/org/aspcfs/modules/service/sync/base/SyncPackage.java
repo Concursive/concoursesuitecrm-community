@@ -17,16 +17,10 @@ package org.aspcfs.modules.service.sync.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItem;
-
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-
+import java.sql.*;
 import java.util.Iterator;
 
 /**
@@ -535,9 +529,7 @@ public class SyncPackage extends GenericBean {
       if (statusDate != null) {
         sql.append("status_date, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("last_anchor, next_anchor, package_file_id) ");
       sql.append("VALUES (");
       if (id > -1) {
@@ -549,6 +541,8 @@ public class SyncPackage extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?) ");
 

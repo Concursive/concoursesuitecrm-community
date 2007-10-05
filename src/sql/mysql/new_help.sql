@@ -32,6 +32,10 @@ CREATE TABLE help_contents (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE TRIGGER help_contents_entries BEFORE INSERT ON  help_contents FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE help_tableof_contents (
   content_id INT AUTO_INCREMENT PRIMARY KEY,
   displaytext VARCHAR (255),
@@ -48,6 +52,10 @@ CREATE TABLE help_tableof_contents (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE TRIGGER help_tableof_contents_entries BEFORE INSERT ON  help_tableof_contents FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 
 CREATE TABLE help_tableofcontentitem_links (
   link_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,14 +68,24 @@ CREATE TABLE help_tableofcontentitem_links (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE TRIGGER help_tblofcntnttm_lnks_entries BEFORE INSERT ON  help_tableofcontentitem_links FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 
 CREATE TABLE lookup_help_features (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(1000) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_help_features_entries BEFORE INSERT ON  lookup_help_features FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE help_features (
   feature_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,6 +102,10 @@ CREATE TABLE help_features (
   level INTEGER DEFAULT 0
 );
 
+CREATE TRIGGER help_features_entries BEFORE INSERT ON  help_features FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE help_related_links (
   relatedlink_id INT AUTO_INCREMENT PRIMARY KEY,
   owning_module_id INT REFERENCES  help_module(module_id),
@@ -95,6 +117,10 @@ CREATE TABLE help_related_links (
   modified TIMESTAMP NULL,
   enabled boolean NOT NULL DEFAULT true
 );
+
+CREATE TRIGGER help_related_links_entries BEFORE INSERT ON  help_related_links FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE help_faqs (
   faq_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -110,6 +136,10 @@ CREATE TABLE help_faqs (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE TRIGGER help_faqs_entries BEFORE INSERT ON  help_faqs FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE help_business_rules (
   rule_id INT AUTO_INCREMENT PRIMARY KEY,
   link_help_id INT NOT NULL REFERENCES help_contents(help_id),
@@ -122,6 +152,10 @@ CREATE TABLE help_business_rules (
   completedby INT REFERENCES `access`(user_id),
   enabled boolean NOT NULL DEFAULT true
 );
+
+CREATE TRIGGER help_business_rules_entries BEFORE INSERT ON  help_business_rules FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE help_notes (
   note_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -136,6 +170,10 @@ CREATE TABLE help_notes (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE TRIGGER help_notes_entries BEFORE INSERT ON  help_notes FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE help_tips (
   tip_id INT AUTO_INCREMENT PRIMARY KEY,
   link_help_id INT NOT NULL REFERENCES help_contents(help_id),
@@ -145,4 +183,13 @@ CREATE TABLE help_tips (
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   enabled boolean NOT NULL DEFAULT true
+);
+
+CREATE TRIGGER help_tips_entries BEFORE INSERT ON  help_tips FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
+CREATE TABLE help_introduction_preference (
+  user_id INT NOT NULL REFERENCES `access`(user_id),
+  module_id INT NOT NULL REFERENCES help_module(module_id)
 );

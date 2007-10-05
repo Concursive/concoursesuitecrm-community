@@ -433,12 +433,7 @@ public class Viewpoint extends GenericBean {
       if (id > -1) {
         sql.append("viewpoint_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append("modifiedby) ");
       sql.append("VALUES (?, ?, ?, ");
       if (id > -1) {
@@ -446,9 +441,13 @@ public class Viewpoint extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
       int i = 0;
@@ -502,7 +501,7 @@ public class Viewpoint extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE viewpoint " +
         "SET vp_user_id = ?, " +
-        "modifiedby = ?, modified = CURRENT_TIMESTAMP, enabled = ? " +
+        "modifiedby = ?, modified = "+ DatabaseUtils.getCurrentTimestamp(db) + ", enabled = ? " +
         "WHERE viewpoint_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;

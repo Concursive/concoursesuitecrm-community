@@ -16,23 +16,17 @@
 package org.aspcfs.modules.troubletickets.base;
 
 import com.darkhorseventures.framework.beans.GenericBean;
-import com.zeroio.iteam.base.FileItemList;
 import com.zeroio.iteam.base.FileItem;
-import org.aspcfs.controller.SystemStatus;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.*;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.TimeZone;
-import java.util.Calendar;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Description of the Class
@@ -191,13 +185,9 @@ public class KnowledgeBase extends GenericBean {
       if (itemId != -1) {
         sql.append("item_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("enteredby, ");
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("modifiedby )");
       sql.append("VALUES (" + (id > -1 ? "?," : "") + " ?, ?, ?, ");
       if (itemId != -1) {
@@ -205,10 +195,14 @@ public class KnowledgeBase extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("? )");
       int i = 0;

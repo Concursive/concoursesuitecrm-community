@@ -1316,9 +1316,10 @@ public class ServiceContract extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE service_contract " +
-            "SET " +
-            "total_hours_remaining = total_hours_remaining + ? " +
-            "WHERE contract_id = ? ");
+        "SET " +
+        "total_hours_remaining = total_hours_remaining + ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE contract_id = ? ");
 
     pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -1351,10 +1352,10 @@ public class ServiceContract extends GenericBean {
       }
       sql.append(
           "UPDATE service_contract " +
-              "SET trashed_date = ? , " +
-              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , " +
-              "modifiedby = ? " +
-              "WHERE contract_id = ? ");
+          "SET trashed_date = ? , " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "modifiedby = ? " +
+          "WHERE contract_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       if (toTrash) {

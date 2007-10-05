@@ -15,12 +15,12 @@
  */
 package org.aspcfs.modules.reports.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.aspcfs.utils.DatabaseUtils;
 
 /**
  * Description of the Class
@@ -342,7 +342,8 @@ public class ReportType {
     StringBuffer sql = new StringBuffer();
     sql.append("UPDATE lookup_report_type SET description = ?, default_item = ?, "
         + " " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, "
-        + DatabaseUtils.addQuotes(db,"constant")+" = ? "
+        + DatabaseUtils.addQuotes(db,"constant")+" = ?, "
+        + "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " "
         + "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

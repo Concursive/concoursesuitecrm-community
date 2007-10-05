@@ -463,7 +463,8 @@ public class TaskCategory extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE lookup_task_category " +
-        "SET description = ?, default_item = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ? " +
+        "SET description = ?, default_item = ?, " + DatabaseUtils.addQuotes(db, "level") + " = ?, enabled = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE code = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());

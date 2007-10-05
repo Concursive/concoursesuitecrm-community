@@ -19,11 +19,7 @@ import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.service.sync.base.SyncPackage;
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -287,7 +283,7 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE sync_client " +
-        "SET anchor = ? ");
+        "SET anchor = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
     if (userId > -1) {
       sql.append(", user_id = ? ");
     }
@@ -714,7 +710,7 @@ public class SyncClient extends GenericBean {
         "UPDATE sync_client " +
         "SET " + DatabaseUtils.addQuotes(db, "type") + " = ?, " + DatabaseUtils.addQuotes(db, "version") + " = ?, code = ?, modifiedby = ?, " +
         "enabled = ?, " +
-        "modified = CURRENT_TIMESTAMP, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "user_id = ?, " +
         "package_file_id = ? " +
         "WHERE client_id = ? ");
@@ -741,7 +737,8 @@ public class SyncClient extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE sync_client " +
-        "SET client_id = ?" +
+        "SET client_id = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE client_id = ? ");
     pst = db.prepareStatement(sql.toString());
     pst.setInt(1, newId);

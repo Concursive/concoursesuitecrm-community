@@ -582,9 +582,7 @@ public class TransactionRecord extends GenericBean {
     if (id > -1) {
       sql.append("transaction_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("trans_id ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
     if (performedDate != null) {
@@ -598,6 +596,8 @@ public class TransactionRecord extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?) ");
     int i = 0;

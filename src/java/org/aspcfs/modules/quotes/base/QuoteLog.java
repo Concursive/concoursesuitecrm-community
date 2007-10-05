@@ -779,22 +779,21 @@ public class QuoteLog extends GenericBean {
       if (id > -1) {
         sql.append("id, ");
       }
-      if (entered != null) {
-        sql.append(" entered, ");
-      }
-      if (modified != null) {
-        sql.append(" modified, ");
-      }
-      sql.append(" enteredby, modifiedby) ");
+      sql.append("entered, modified, ");
+      sql.append("enteredby, modifiedby ) ");
       sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?, ");
       if (id > -1) {
         sql.append("?,");
       }
       if (entered != null) {
         sql.append("?,");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?,");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?,?) ");
       int i = 0;

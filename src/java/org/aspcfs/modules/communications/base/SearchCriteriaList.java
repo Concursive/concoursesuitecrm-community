@@ -852,12 +852,7 @@ public class SearchCriteriaList extends HashMap {
       if (id > -1) {
         sql.append("id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ");
       if (id > -1) {
@@ -865,9 +860,13 @@ public class SearchCriteriaList extends HashMap {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?) ");
       int i = 0;

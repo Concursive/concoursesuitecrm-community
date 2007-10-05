@@ -467,7 +467,8 @@ public class TabList extends ArrayList {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_tab " +
-          "SET tab_position = tab_position + 1 " +
+          "SET tab_position = tab_position + 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE tab_id <> ? " +
           "AND site_id = ? " +
           "AND " + (changeAdjacentPosition ? "tab_position >= " : "tab_position > ") +
@@ -480,7 +481,8 @@ public class TabList extends ArrayList {
     } else {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE web_tab " +
-          "SET tab_position = tab_position - 1 " +
+          "SET tab_position = tab_position - 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE site_id = ? " +
           "AND tab_position > " +
           "(SELECT tab_position FROM web_tab WHERE tab_id = ?) ");

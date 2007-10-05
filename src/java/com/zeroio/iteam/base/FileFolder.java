@@ -604,9 +604,7 @@ public class FileFolder extends GenericBean {
     if (id > -1) {
       sql.append("folder_id, ");
     }
-    sql.append("entered, modified, ");
-    sql.append(
-        "enteredBy, modifiedBy, " + DatabaseUtils.addQuotes(db, "display") + ") " +
+    sql.append("entered, modified, enteredBy, modifiedBy, " + DatabaseUtils.addQuotes(db, "display") + ") " +
         "VALUES (?, ?, ?, ?, ?, ");
     if (id > -1) {
       sql.append("?,");

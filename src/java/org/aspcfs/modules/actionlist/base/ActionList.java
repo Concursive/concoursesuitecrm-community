@@ -622,7 +622,7 @@ public class ActionList extends GenericBean {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_list " +
               "SET modifiedby = ?, description = ?, " +
-              "modified = CURRENT_TIMESTAMP, completedate = ?, owner = ? " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", completedate = ?, owner = ? " +
               "WHERE action_id = ? AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? "));
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getDescription());

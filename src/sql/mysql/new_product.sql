@@ -18,8 +18,14 @@ CREATE TABLE lookup_currency (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_currency_entries BEFORE INSERT ON lookup_currency FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each category can be associated with a type
 -- Example: Publication, Target Audience
@@ -29,8 +35,14 @@ CREATE TABLE lookup_product_category_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lokp_prdct_ctgo_tp_entries BEFORE INSERT ON lookup_product_category_type FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- A category groups one or more products
 -- Example: Name of a publication, Name of a target audience
@@ -57,12 +69,17 @@ CREATE TABLE product_category (
   status_id INTEGER
 );
 
+CREATE TRIGGER product_category_entries BEFORE INSERT ON product_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Each category can be associated with multiple categories
 CREATE TABLE product_category_map (
   id INT AUTO_INCREMENT PRIMARY KEY,
   category1_id INTEGER NOT NULL REFERENCES product_category(category_id),
   category2_id INTEGER NOT NULL REFERENCES product_category(category_id)
 );
+
 
 -- Each product can be associated with a type
 -- Example: Ad, Design Ad, Subscription
@@ -71,8 +88,14 @@ CREATE TABLE lookup_product_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_product_type_entries BEFORE INSERT ON lookup_product_type FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each product can have a manufacturer
 -- Example: Nokia, Compaq
@@ -81,8 +104,14 @@ CREATE TABLE lookup_product_manufacturer (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lkp_prdct_mnfctrr_entries BEFORE INSERT ON lookup_product_manufacturer FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each product can have a format
 -- Example: Physical, Digital
@@ -91,8 +120,14 @@ CREATE TABLE lookup_product_format (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_prdct_frmt_entries BEFORE INSERT ON lookup_product_format FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each product can have a shipping code for shipping company
 CREATE TABLE lookup_product_shipping (
@@ -100,8 +135,14 @@ CREATE TABLE lookup_product_shipping (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_prdct_shppng_entries BEFORE INSERT ON lookup_product_shipping FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each product can have an estimated shipping time
 -- Example: Ships within 24 hours
@@ -110,8 +151,14 @@ CREATE TABLE lookup_product_ship_time (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lkp_prdct_shp_tm_entries BEFORE INSERT ON lookup_product_ship_time FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each product can have a tax code
 CREATE TABLE lookup_product_tax (
@@ -119,8 +166,14 @@ CREATE TABLE lookup_product_tax (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lkp_prdct_tx_entries BEFORE INSERT ON lookup_product_tax FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each price is either fixed or recurring, if recurring then when?
 -- Example: Monthly, Weekly, Yearly, etc.
@@ -129,8 +182,14 @@ CREATE TABLE lookup_recurring_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lkp_rcrrng_tp_entries BEFORE INSERT ON lookup_recurring_type FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- The details of a product are listed
 -- If this product is to replace another product, then the parent_id is set
@@ -168,6 +227,10 @@ CREATE TABLE product_catalog (
   status_id INTEGER
 );
 
+CREATE TRIGGER product_catalog_entries BEFORE INSERT ON product_catalog FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Each product can have a price, which can change over time
 CREATE TABLE product_catalog_pricing (
   price_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -191,6 +254,10 @@ CREATE TABLE product_catalog_pricing (
   cost_amount FLOAT NOT NULL DEFAULT 0
 );
 
+CREATE TRIGGER product_catalog_pricing_entries BEFORE INSERT ON product_catalog_pricing FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- A package can consist of products with discounted prices
 CREATE TABLE package (
   package_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -212,6 +279,10 @@ CREATE TABLE package (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE TRIGGER package_entries BEFORE INSERT ON package FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Each package consists of one or more products
 CREATE TABLE package_products_map (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -230,6 +301,10 @@ CREATE TABLE package_products_map (
   expiration_date TIMESTAMP NULL
 );
 
+CREATE TRIGGER package_products_map_entries BEFORE INSERT ON package_products_map FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Each product can be associated with multiple categories
 CREATE TABLE product_catalog_category_map (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -244,8 +319,14 @@ CREATE TABLE lookup_product_conf_result (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_product_conf_result_entries BEFORE INSERT ON lookup_product_conf_result FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- A configurator allows options to be displayed, validated
 -- Example: A color configurator with 4 Options: None, B&W, Spot Color, Process Color
@@ -348,8 +429,14 @@ CREATE TABLE lookup_product_keyword (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_product_keyword_entries BEFORE INSERT ON lookup_product_keyword FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE product_keyword_map (
   product_id INTEGER NOT NULL REFERENCES product_catalog(product_id),
@@ -359,4 +446,33 @@ CREATE UNIQUE INDEX idx_pr_key_map ON product_keyword_map (product_id, keyword_i
 
 -- Each product_category can have "custom folders"
 -- TABLES ALREADY EXIST, MUST CREATE A CONSTANT ID
+
+-- Create Indexes
+
+create index product_category_map_cid on product_catalog_category_map (category_id);
+
+create index pcatalog_pid on product_catalog (parent_id);
+create index pcatalog_name on product_catalog (product_name);
+create index pcatalog_enteredby on product_catalog (enteredby);
+create index pcatalog_estimated_ship_time on product_catalog (estimated_ship_time);
+create index pcatalog_format_id on product_catalog (format_id);
+create index pcatalog_import_id on product_catalog (import_id);
+create index pcatalog_large_image_id on product_catalog (large_image_id);
+create index pcatalog_manufacturer_id on product_catalog (manufacturer_id);
+create index pcatalog_modifiedby on product_catalog (modifiedby);
+create index pcatalog_shipping_id on product_catalog (shipping_id);
+create index pcatalog_small_image_id on product_catalog (small_image_id);
+create index pcatalog_thumbnail_image_id on product_catalog (thumbnail_image_id);
+create index pcatalog_type_id on product_catalog (type_id);
+
+create index pcategory_enteredby on product_category (enteredby);
+create index pcategory_import_id on product_category (import_id);
+create index pcategory_large_image_id on product_category (large_image_id);
+create index pcategory_modifiedby on product_category (modifiedby);
+create index pcategory_parent_id on product_category (parent_id);
+create index pcategory_small_image_id on product_category (small_image_id);
+create index pcategory_thumbnail_image_id on product_category (thumbnail_image_id);
+create index pcategory_type_id on product_category (type_id);
+
+create index product_pricing_product_idx on  product_catalog_pricing (product_id);
 

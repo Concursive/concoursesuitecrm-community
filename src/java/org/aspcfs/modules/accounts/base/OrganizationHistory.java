@@ -764,20 +764,19 @@ public class OrganizationHistory extends GenericBean {
         (id > -1 ? "history_id, " : "") +
         "contact_id, org_id, link_object_id, link_item_id, " + DatabaseUtils.addQuotes(db, "level") + ", " +
         "status, " + DatabaseUtils.addQuotes(db, "type") + ", description, enabled, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append(
         "VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;

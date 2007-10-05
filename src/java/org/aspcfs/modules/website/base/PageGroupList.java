@@ -512,7 +512,8 @@ public class PageGroupList extends ArrayList {
     if (addition) {
       PreparedStatement pst = db.prepareStatement(
         "UPDATE web_page_group " +
-          "SET group_position = group_position + 1 " +
+          "SET group_position = group_position + 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE page_group_id <> ? " +
           "AND tab_id = ? " +
           "AND " + (changeAdjacentPosition ? "group_position >= " : "group_position > ") +
@@ -525,7 +526,8 @@ public class PageGroupList extends ArrayList {
     } else {
       PreparedStatement pst = db.prepareStatement(
         "UPDATE web_page_group " +
-          "SET group_position = group_position - 1 " +
+          "SET group_position = group_position - 1, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE tab_id = ? " +
           "AND group_position > " +
           "(SELECT group_position FROM web_page_group WHERE page_group_id = ?) ");

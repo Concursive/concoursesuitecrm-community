@@ -160,7 +160,7 @@ public class InstantCampaign extends Campaign {
           "SET status_id = ?, " +
           "status = ?, " +
           "modifiedby = ?, " +
-          "modified = CURRENT_TIMESTAMP " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
           "WHERE campaign_id = ? ");
       int i = 0;
       pst.setInt(++i, QUEUE);
@@ -191,7 +191,7 @@ public class InstantCampaign extends Campaign {
             "subject = ?, " +
             DatabaseUtils.addQuotes(db, "message")+ " = ?, " +
             "modifiedby = ?, " +
-            "modified = CURRENT_TIMESTAMP " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE campaign_id = ? ");
         i = 0;
         pst.setBoolean(++i, true);
@@ -227,7 +227,8 @@ public class InstantCampaign extends Campaign {
   public int updateInstantCampaignMessage(Connection db, Message tmpMessage) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE campaign " +
-        "SET " + DatabaseUtils.addQuotes(db, "message")+ " = ? " +
+        "SET " + DatabaseUtils.addQuotes(db, "message")+ " = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE campaign_id = ? ");
     int i = 0;
     pst.setString(++i, tmpMessage.getMessageText());

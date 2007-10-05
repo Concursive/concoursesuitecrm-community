@@ -790,7 +790,7 @@ public class HelpItem extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "UPDATE help_contents " +
-        "SET category_id = ? , link_module_id = ?, title = ?, description = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+        "SET category_id = ? , link_module_id = ?, title = ?, description = ?, modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE help_id = ? ");
     int i = 0;
     pst.setInt(++i, categoryId);

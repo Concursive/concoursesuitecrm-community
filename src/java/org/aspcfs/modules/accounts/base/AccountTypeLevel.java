@@ -281,19 +281,18 @@ public class AccountTypeLevel {
         db.setAutoCommit(false);
       }
       sql.append("INSERT INTO account_type_levels (org_id, type_id, ");
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
-      sql.append("" + DatabaseUtils.addQuotes(db, "level") + ") ");
+      sql.append("entered, modified, ");
+      sql.append(DatabaseUtils.addQuotes(db, "level") + ") ");
       sql.append("VALUES (?, ?, ");
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
       int i = 0;

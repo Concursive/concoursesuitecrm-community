@@ -262,7 +262,7 @@ public final class ProcessMaresa extends CFSModule {
           int i = 0;
           pst = db.prepareStatement(
               "UPDATE opportunity_header_maresa " +
-              "SET res_status = ?, res_payments = ?, event_type = ?, modified = CURRENT_TIMESTAMP " +
+              "SET res_status = ?, res_payments = ?, event_type = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE res_number = ? ");
 
           pst.setString(++i, status);
@@ -491,7 +491,9 @@ public final class ProcessMaresa extends CFSModule {
 
           pst = db.prepareStatement(
               "UPDATE opportunity_header " +
-              "SET " + DatabaseUtils.addQuotes(db, "lock")+ " = ? WHERE opp_id = ? ");
+              "SET " + DatabaseUtils.addQuotes(db, "lock")+ " = ?, " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+              "WHERE opp_id = ? ");
           pst.setBoolean(1, true);
           pst.setInt(2, oppHeader.getId());
           pst.execute();

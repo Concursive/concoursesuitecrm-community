@@ -919,7 +919,7 @@ public class Message extends GenericBean {
   /**
    *  Sets the MessageAttachments attribute of the Message object
    *
-   * @param  MessageAttachments  The new attachments value
+   * @param  attachments  The new messageAttachments value
    */
   public void setMessageAttachments(MessageAttachmentList attachments) {
     this.messageAttachments = attachments;
@@ -969,12 +969,7 @@ public class Message extends GenericBean {
       if (id > -1) {
         sql.append("id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("entered, modified, ");
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -982,9 +977,13 @@ public class Message extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?) ");
 

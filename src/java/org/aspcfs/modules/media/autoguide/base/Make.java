@@ -378,7 +378,7 @@ public class Make {
     sql.append(
         "UPDATE autoguide_make " +
         "SET make_name = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE make_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;

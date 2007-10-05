@@ -311,12 +311,11 @@ public class Thumbnail extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO project_files_thumbnail " +
             "(item_id, filename, " + DatabaseUtils.addQuotes(db, "version") + ", " + DatabaseUtils.addQuotes(db, "size") + ", " +
-            (entered != null ? "entered, " : "") +
-            (modified != null ? "modified, " : "") +
+            "entered, modified, " +
             "enteredBy, modifiedBy) " +
             "VALUES (?, ?, ?, ?, " +
-            (entered != null ? "?, " : "") +
-            (modified != null ? "?, " : "") +
+            (entered != null ? "?" : DatabaseUtils.getCurrentTimestamp(db)) + ", " +
+            (modified != null ? "?" : DatabaseUtils.getCurrentTimestamp(db)) + ", " +
             "?, ?) ");
     int i = 0;
     pst.setInt(++i, id);

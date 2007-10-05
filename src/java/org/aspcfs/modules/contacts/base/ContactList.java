@@ -5808,7 +5808,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
   public static void updateOrgName(Connection db, Organization thisOrg)
       throws SQLException {
     PreparedStatement pst = db.prepareStatement("UPDATE contact "
-        + "SET org_name = ? " + "WHERE org_id = ?");
+        + "SET org_name = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE org_id = ?");
     pst.setString(1, thisOrg.getName());
     pst.setInt(2, thisOrg.getOrgId());
     pst.executeUpdate();

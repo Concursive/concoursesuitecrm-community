@@ -671,12 +671,7 @@ public class DocumentStoreTeamMember {
     String tableName = DocumentStoreTeamMember.getTableName(tmpMemberType, db);
     sql.append("INSERT INTO " + tableName);
     sql.append(" (document_store_id, item_id, userlevel, role_type, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     if (lastAccessed != null) {
       sql.append("last_accessed, ");
     }
@@ -684,9 +679,13 @@ public class DocumentStoreTeamMember {
     sql.append("VALUES (?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (lastAccessed != null) {
       sql.append("?, ");
@@ -842,7 +841,8 @@ public class DocumentStoreTeamMember {
   public static void updateLastAccessed(Connection db, int tmpDocumentStoreId, int tmpItemId, int siteId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE document_store_user_member " +
-            "SET last_accessed = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "SET last_accessed = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE document_store_id = ? " +
             "AND item_id = ? AND site_id " + (siteId == -1 ? " IS NULL" : "= ? "));
     pst.setInt(1, tmpDocumentStoreId);

@@ -444,7 +444,7 @@ public class TicketDefect extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement("UPDATE ticket SET defect_id=? WHERE defect_id = ? ");
+    PreparedStatement pst = db.prepareStatement("UPDATE ticket SET defect_id=?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " WHERE defect_id = ? ");
     pst.setInt(1, -1);
     pst.setInt(2, this.getId());
     pst.executeUpdate();

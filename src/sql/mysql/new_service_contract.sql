@@ -11,80 +11,140 @@ CREATE TABLE lookup_asset_status(
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_asset_status_entries BEFORE INSERT ON lookup_asset_status FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_sc_category(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_sc_category_entries BEFORE INSERT ON lookup_sc_category FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_sc_type(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_sc_type_entries BEFORE INSERT ON lookup_sc_type FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_response_model(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_response_model_entries BEFORE INSERT ON lookup_response_model FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_phone_model(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_phone_model_entries BEFORE INSERT ON lookup_phone_model FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_onsite_model(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_onsite_model_entries BEFORE INSERT ON lookup_onsite_model FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_email_model(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_email_model_entries BEFORE INSERT ON lookup_email_model FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_hours_reason(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_hours_reason_entries BEFORE INSERT ON lookup_hours_reason FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_asset_manufacturer(
  code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_asset_manufacturer_entries BEFORE INSERT ON lookup_asset_manufacturer FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_asset_vendor(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_asset_vendor_entries BEFORE INSERT ON lookup_asset_vendor FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE service_contract (
   contract_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -113,8 +173,13 @@ CREATE TABLE service_contract (
   initial_start_date_timezone VARCHAR(255),
   current_start_date_timezone VARCHAR(255),
   current_end_date_timezone VARCHAR(255),
-  trashed_date TIMESTAMP NULL
-  );
+  trashed_date TIMESTAMP NULL,
+  submitter_id INT REFERENCES organization
+);
+
+CREATE TRIGGER service_contract_entries BEFORE INSERT ON service_contract FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE service_contract_hours (
   history_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -127,6 +192,10 @@ CREATE TABLE service_contract_hours (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER service_contract_hours_entries BEFORE INSERT ON service_contract_hours FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE service_contract_products(
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -200,13 +269,23 @@ CREATE TABLE asset (
   manufacturer_code INT REFERENCES lookup_asset_manufacturer(code)
 );
 
+CREATE TRIGGER asset_entries BEFORE INSERT ON asset FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE lookup_asset_materials(
  code INT AUTO_INCREMENT PRIMARY KEY,
  description VARCHAR(300),
  default_item BOOLEAN DEFAULT FALSE,
  level INTEGER,
- enabled BOOLEAN DEFAULT TRUE
+ enabled BOOLEAN DEFAULT TRUE,
+ entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_asset_materials_entries BEFORE INSERT ON lookup_asset_materials FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE asset_materials_map (
   map_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -216,3 +295,5 @@ CREATE TABLE asset_materials_map (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TRIGGER asset_materials_map_entries BEFORE INSERT ON asset_materials_map FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);

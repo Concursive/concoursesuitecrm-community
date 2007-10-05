@@ -1989,9 +1989,7 @@ public class ProductCatalog extends GenericBean {
       if (comments != null) {
         sql.append("comments, ");
       }
-      if (entered != null) {
-        sql.append(" entered, ");
-      }
+      sql.append(" entered, ");
       sql.append(" modifiedBy, ");
       sql.append(" modified, ");
       sql.append("start_date, expiration_date, enabled, " + DatabaseUtils.addQuotes(db, "active") + ")");
@@ -2011,12 +2009,14 @@ public class ProductCatalog extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
-        sql.append(" ?, ");
+        sql.append("?, ");
       } else {
-        sql.append(" " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+        sql.append( DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ?, ?, ? )");
       int i = 0;
@@ -2569,8 +2569,9 @@ public class ProductCatalog extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
-      String sql = "UPDATE product_catalog " + "SET status_id = ? "
-          + "WHERE import_id = ? ";
+      String sql = "UPDATE product_catalog " + "SET status_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+          "WHERE import_id = ? ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, status);

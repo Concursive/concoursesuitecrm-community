@@ -721,12 +721,7 @@ public class Issue extends GenericBean {
     if (id > -1) {
       sql.append("issue_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     if (replyDate != null) {
       sql.append("last_reply_date, ");
     }
@@ -739,9 +734,13 @@ public class Issue extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (replyDate != null) {
       sql.append("?, ");
@@ -784,6 +783,7 @@ public class Issue extends GenericBean {
           "SET topics_count = topics_count + 1, " +
           "posts_count = posts_count + 1, " +
           "last_post_date = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
           "last_post_by = ? " +
           "WHERE project_id = ? " +
           "AND category_id = ? ");
@@ -850,6 +850,7 @@ public class Issue extends GenericBean {
         pst = db.prepareStatement(
             "UPDATE project_issues_categories " +
             "SET posts_count = posts_count - " + (replyCount + 1) + ", " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
             "topics_count = topics_count - 1 " +
             "WHERE project_id = ? " +
             "AND category_id = ? ");
@@ -914,7 +915,7 @@ public class Issue extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_issues " +
         "SET subject = ?, " + DatabaseUtils.addQuotes(db, "message")+ " = ?, importance = ?, " +
-        "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedBy = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "WHERE issue_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     pst.setString(++i, subject);

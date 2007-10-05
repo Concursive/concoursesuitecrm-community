@@ -1408,7 +1408,8 @@ public class ContractExpiration extends GenericBean {
         db.setAutoCommit(false);
       }
       String sql = "UPDATE netapp_contractexpiration " +
-          "SET status_id = ? " +
+          "SET status_id = ?, " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +          
           "WHERE import_id = ? ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);

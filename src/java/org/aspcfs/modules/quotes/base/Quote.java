@@ -2038,13 +2038,9 @@ public class Quote extends GenericBean {
               "issued, short_description, notes, ticketid, product_id, " +
               "customer_product_id, opp_id, " + DatabaseUtils.addQuotes(db, "version")+ ", group_id, delivery_id, " +
               "email_address, phone_number, address, fax_number, submit_action, ");
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("enteredby, ");
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("modifiedby )");
       sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -2058,10 +2054,14 @@ public class Quote extends GenericBean {
       sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("? )");
       int i = 0;

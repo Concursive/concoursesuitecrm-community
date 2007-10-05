@@ -11,8 +11,14 @@ CREATE TABLE lookup_call_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_call_types_entries BEFORE INSERT ON lookup_call_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_call_priority (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,8 +26,14 @@ CREATE TABLE lookup_call_priority (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  weight INTEGER NOT NULL
+  weight INTEGER NOT NULL,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_call_priority_entries BEFORE INSERT ON lookup_call_priority FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_call_reminder (
   code INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,8 +41,14 @@ CREATE TABLE lookup_call_reminder (
   base_value INTEGER DEFAULT 0 NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_call_reminder_entries BEFORE INSERT ON lookup_call_reminder FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_call_result (
   result_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,8 +58,14 @@ CREATE TABLE lookup_call_result (
   next_required BOOLEAN NOT NULL DEFAULT false,
   next_days INT NOT NULL DEFAULT 0,
   next_call_type_id INTEGER,
-  canceled_type BOOLEAN NOT NULL DEFAULT false
+  canceled_type BOOLEAN NOT NULL DEFAULT false,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_call_result_entries BEFORE INSERT ON lookup_call_result FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_opportunity_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -49,8 +73,14 @@ CREATE TABLE lookup_opportunity_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_opportunity_types_entries BEFORE INSERT ON lookup_opportunity_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 --Environment - What stuff is the account already using
 CREATE TABLE lookup_opportunity_environment (
@@ -58,8 +88,14 @@ CREATE TABLE lookup_opportunity_environment (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_opportunity_environment_entries BEFORE INSERT ON lookup_opportunity_environment FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 --Competitors - Who else is competing for this business
 CREATE TABLE lookup_opportunity_competitors (
@@ -67,8 +103,14 @@ CREATE TABLE lookup_opportunity_competitors (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_opportunity_competitors_entries BEFORE INSERT ON lookup_opportunity_competitors FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 --Compelling Event - What event is driving the timeline for purchase
 CREATE TABLE lookup_opportunity_event_compelling (
@@ -76,8 +118,14 @@ CREATE TABLE lookup_opportunity_event_compelling (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_opportunity_event_compelling_entries BEFORE INSERT ON lookup_opportunity_event_compelling FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 --Budget - Where are they getting the money to pay for the purchasse
 CREATE TABLE lookup_opportunity_budget (
@@ -85,8 +133,14 @@ CREATE TABLE lookup_opportunity_budget (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified TIMESTAMP
 );
+
+CREATE TRIGGER lookup_opportunity_budget_entries BEFORE INSERT ON lookup_opportunity_budget FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE opportunity_header (
   opp_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -105,6 +159,10 @@ CREATE TABLE opportunity_header (
   custom1_integer INTEGER,
   site_id INTEGER REFERENCES lookup_site_id(code)
 );
+
+CREATE TRIGGER opportunity_header_entries BEFORE INSERT ON opportunity_header FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE INDEX `opp_contactlink_idx` ON `opportunity_header` (contactlink);
 CREATE INDEX `opp_header_contact_org_id_idx` ON `opportunity_header` (contact_org_id);
@@ -145,6 +203,10 @@ CREATE TABLE opportunity_component (
   status_id INTEGER
 );
 
+CREATE TRIGGER opportunity_component_entries BEFORE INSERT ON opportunity_component FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE INDEX `oppcomplist_header_idx` ON `opportunity_component` (opp_id);
 CREATE INDEX `oppcomplist_closedate` ON `opportunity_component` (closedate);
 CREATE INDEX `oppcomplist_description` ON `opportunity_component` (description);
@@ -158,6 +220,10 @@ CREATE TABLE opportunity_component_levels (
   modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER opportunity_component_levels_entries BEFORE INSERT ON opportunity_component_levels FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE call_log (
   call_id INT AUTO_INCREMENT PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
@@ -167,7 +233,6 @@ CREATE TABLE call_log (
   length INTEGER,
   subject VARCHAR(255),
   notes TEXT,
-  followup_date TIMESTAMP NULL,
   alertdate TIMESTAMP NULL,
   followup_notes TEXT,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -189,8 +254,26 @@ CREATE TABLE call_log (
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
   alertdate_timezone VARCHAR(255),
   trashed_date TIMESTAMP NULL,
-  followup_contact_id INT REFERENCES contact(contact_id)
+  followup_contact_id INT REFERENCES contact(contact_id),
+  followup_end_date TIMESTAMP,
+  followup_end_date_timezone VARCHAR(255),
+  followup_location VARCHAR(255),
+  followup_length INTEGER,
+  followup_length_duration INT REFERENCES lookup_call_reminder(code),
+  call_start_date TIMESTAMP,
+  call_start_date_timezone VARCHAR(255),
+  call_end_date TIMESTAMP,
+  call_end_date_timezone VARCHAR(255),
+  call_location VARCHAR(255),
+  call_length_duration INT REFERENCES lookup_call_reminder(code),
+  email_participants BOOLEAN DEFAULT false,
+  email_followup_participants BOOLEAN DEFAULT false
 );
+
+CREATE TRIGGER call_log_entries BEFORE INSERT ON call_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified),
+NEW.assign_date = IF (NEW.assign_date IS NULL OR NEW.assign_date = '0000-00-00 00:00:00', NEW.entered, NEW.assign_date);
 
 CREATE INDEX `call_log_cidx` USING BTREE ON `call_log` (`alertdate`, `enteredby`);
 CREATE INDEX `call_log_entered_idx` ON `call_log` (entered);
@@ -217,6 +300,26 @@ CREATE TABLE opportunity_component_log(
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   closedate_timezone VARCHAR(255),
-  closed TIMESTAMP NULL 
+  closed TIMESTAMP NULL,
+  modified TIMESTAMP
 );
 
+CREATE TRIGGER opportunity_component_log_entries BEFORE INSERT ON opportunity_component_log FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
+CREATE TABLE call_log_participant(
+  participant_id INT AUTO_INCREMENT PRIMARY KEY,
+  call_id INT NOT NULL REFERENCES call_log (call_id),
+  contact_id INT NOT NULL REFERENCES contact (contact_id),
+  is_available INT DEFAULT 1,
+  entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  modified timestamp,
+  enteredby INT NOT NULL REFERENCES `access` (user_id),
+  modifiedby INT NOT NULL REFERENCES `access` (user_id),
+  is_followup INT DEFAULT 0
+);
+
+CREATE TRIGGER call_log_participant_entries BEFORE INSERT ON call_log_participant FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

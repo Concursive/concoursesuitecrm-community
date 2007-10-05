@@ -15,9 +15,7 @@
  */
 package org.aspcfs.modules.website.base;
 
-import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.framework.beans.GenericBean;
-import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
@@ -25,8 +23,6 @@ import org.aspcfs.utils.DatabaseUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -160,13 +156,9 @@ public class PortfolioCategory extends GenericBean {
       if (id > -1) {
         sql.append("category_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("enteredby, ");
-      if (modified != null) {
-        sql.append("modified, ");
-      }
+      sql.append("modified, ");
       sql.append("modifiedby )");
       sql.append(" VALUES (?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -174,10 +166,14 @@ public class PortfolioCategory extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?, ");
       if (modified != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("? )");
       int i = 0;

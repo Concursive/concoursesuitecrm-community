@@ -858,13 +858,9 @@ public class CustomerProduct extends GenericBean {
     if (id > -1) {
       sql.append("customer_product_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("enteredby, ");
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("modified, ");
     sql.append("modifiedby, enabled) ");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -872,10 +868,14 @@ public class CustomerProduct extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ");
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ? )");
     int i = 0;

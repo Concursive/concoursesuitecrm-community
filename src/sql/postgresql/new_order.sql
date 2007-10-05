@@ -13,7 +13,7 @@ CREATE TABLE lookup_order_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -161,12 +161,7 @@ public class ContactTextMessageAddress extends TextMessageAddress {
     if (id > -1) {
       sql.append("address_id, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
-    if (this.getModified() != null) {
-      sql.append("modified, ");
-    }
+    sql.append("entered, modified, ");
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ");
     if (id > -1) {
@@ -174,9 +169,13 @@ public class ContactTextMessageAddress extends TextMessageAddress {
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     if (this.getModified() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ?) ");
     int i = 0;
@@ -228,7 +227,7 @@ public class ContactTextMessageAddress extends TextMessageAddress {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_textmessageaddress " +
         "SET textmessageaddress_type = ?, textmessageaddress = ?, primary_textmessage_address = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE address_id = ? ");
     int i = 0;
     if (this.getType() > -1) {

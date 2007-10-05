@@ -366,13 +366,13 @@ public class CustomListView extends GenericBean {
     id = DatabaseUtils.getNextSeq(db, "custom_list_view_view_id_seq");
     sql.append(
         "INSERT INTO custom_list_view (editor_id, name, description, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("is_default ) ");
     sql.append("VALUES (?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("? ) ");
     PreparedStatement pst = db.prepareStatement(sql.toString());

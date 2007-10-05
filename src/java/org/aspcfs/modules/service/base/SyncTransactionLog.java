@@ -278,9 +278,7 @@ public class SyncTransactionLog extends ArrayList {
       id = DatabaseUtils.getNextSeq(db, "sync_log_log_id_seq");
       sql.append(
           "INSERT INTO sync_log (" + (id > -1 ? "log_id, " : "") + "system_id, client_id, ip ");
-      if (entered != null) {
-        sql.append(", entered ");
-      }
+      sql.append(", entered ");
       sql.append(") ");
       sql.append("VALUES (?, ?, ? ");
       if (id > -1) {
@@ -288,6 +286,8 @@ public class SyncTransactionLog extends ArrayList {
       }
       if (entered != null) {
         sql.append(", ? ");
+      } else {
+        sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
       }
       sql.append(") ");
       int i = 0;

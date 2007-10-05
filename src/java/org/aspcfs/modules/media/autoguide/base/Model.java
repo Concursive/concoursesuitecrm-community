@@ -408,7 +408,7 @@ public class Model {
     sql.append(
         "UPDATE autoguide_model " +
         "SET make_id = ?, model_name = ?, modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE model_id = ? " +
         "AND modified " + ((this.getModified() == null)?"IS NULL ":"= ? "));
     int i = 0;

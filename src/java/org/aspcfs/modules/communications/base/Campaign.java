@@ -15,21 +15,8 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.accounts.base.OrganizationHistory;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionplans.base.ActionStepList;
@@ -46,8 +33,10 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.PasswordHash;
 import org.aspcfs.utils.Template;
 
-import com.darkhorseventures.framework.beans.GenericBean;
-import com.zeroio.iteam.base.FileItemList;
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  * Description of the Class
@@ -2266,9 +2255,7 @@ public class Campaign extends GenericBean {
       if (id > -1) {
         sql.append("campaign_id, ");
       }
-      if (entered != null) {
-        sql.append("entered, ");
-      }
+      sql.append("entered, ");
       sql.append("approvedby ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (id > -1) {
@@ -2276,6 +2263,8 @@ public class Campaign extends GenericBean {
       }
       if (entered != null) {
         sql.append("?, ");
+      } else {
+        sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
       }
       sql.append("?) ");
       int i = 0;
@@ -2427,7 +2416,7 @@ public class Campaign extends GenericBean {
       Statement st = db.createStatement();
       st.executeUpdate(
           "UPDATE campaign " +
-              "SET modified = CURRENT_TIMESTAMP " +
+          "SET modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE campaign_id = " + id);
       //"WHERE id = " + id);
       st.close();
@@ -2496,7 +2485,7 @@ public class Campaign extends GenericBean {
         Statement st = db.createStatement();
         st.executeUpdate(
             "UPDATE campaign " +
-                "SET modified = CURRENT_TIMESTAMP " +
+            "SET modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
                 "WHERE campaign_id = " + id);
         //"WHERE id = " + id);
         st.close();
@@ -2737,7 +2726,7 @@ public class Campaign extends GenericBean {
                 "status = ?, " +
                 "" + DatabaseUtils.addQuotes(db, "active") + " = ?, " +
                 "modifiedby = ?, " +
-                "modified = CURRENT_TIMESTAMP " +
+                "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
                 "WHERE campaign_id = ? " +
                 "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
         int i = 0;
@@ -2836,7 +2825,7 @@ public class Campaign extends GenericBean {
       }
       sql.append(
           "modifiedby = ?, " +
-              "modified = CURRENT_TIMESTAMP " +
+          "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE campaign_id = ? " +
               //"WHERE id = ? " +
               "AND modified " + ((this.getModified() == null) ? "IS NULL " : "= ? ") +
@@ -2934,7 +2923,7 @@ public class Campaign extends GenericBean {
                 "subject = ?, " +
                 "" + DatabaseUtils.addQuotes(db, "message") + " = ?, " +
                 "modifiedby = ?, " +
-                "modified = CURRENT_TIMESTAMP " +
+                "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
                 "WHERE campaign_id = ? ");
         //"WHERE id = ? ");
         i = 0;
@@ -3043,7 +3032,7 @@ public class Campaign extends GenericBean {
             "SET name = ?, " +
             "description = ?, " +
             "modifiedby = ?, " +
-            "modified = CURRENT_TIMESTAMP " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE campaign_id = " + id);
     //"WHERE id = " + id);
     int i = 0;
@@ -3080,7 +3069,7 @@ public class Campaign extends GenericBean {
             "subject = null, " +
             "" + DatabaseUtils.addQuotes(db, "message") + " = null, " +
             "modifiedby = ?, " +
-            "modified = CURRENT_TIMESTAMP " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE campaign_id = ? ");
     pst.setInt(++i, messageId);
     pst.setInt(++i, modifiedBy);
@@ -3113,7 +3102,7 @@ public class Campaign extends GenericBean {
       pst = db.prepareStatement(
           "UPDATE campaign " +
               "SET modifiedby = ?, " +
-              "modified = CURRENT_TIMESTAMP " +
+              "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
               "WHERE campaign_id = ? ");
       pst.setInt(1, modifiedBy);
       pst.setInt(2, this.id);
@@ -3189,7 +3178,7 @@ public class Campaign extends GenericBean {
       pst.close();
 
       if (hasAddressRequest) {
-        if (surveyId > -1) {
+      if (surveyId > -1) {
           pst = db.prepareStatement(
               "INSERT INTO campaign_survey_link " +
                   "(campaign_id, survey_id) VALUES (?, ?) ");
@@ -3230,7 +3219,7 @@ public class Campaign extends GenericBean {
             "SET message_id = ?, " +
             "active_date = ?, active_date_timezone = ?, " +
             "send_method_id = ?, " +
-            "modified = CURRENT_TIMESTAMP " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE campaign_id = " + id);
     //"WHERE id = " + id);
     pst.setInt(++i, messageId);
@@ -3282,7 +3271,7 @@ public class Campaign extends GenericBean {
     if (override && modified != null) {
       sql.append("modified = ?, ");
     } else {
-      sql.append("modified = CURRENT_TIMESTAMP, ");
+      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , ");
     }
     sql.append(
         "modifiedby = ?, " +
@@ -3440,7 +3429,8 @@ public class Campaign extends GenericBean {
   public int lockProcess(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE campaign " +
-            "SET status_id = ? " +
+            "SET status_id = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE campaign_id = ? " +
             "AND status_id = ? ");
     pst.setInt(1, statusId);
@@ -3553,7 +3543,8 @@ public class Campaign extends GenericBean {
         "UPDATE campaign SET " +
             "status_id = ?, " +
             "status = ?, " +
-            "active_date = " + currentTimestamp + " " +
+            "active_date = " + currentTimestamp + ", " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
             "WHERE campaign_id = ? ");
     pst.setInt(1, Campaign.QUEUE);
     pst.setString(2, Campaign.QUEUE_TEXT);

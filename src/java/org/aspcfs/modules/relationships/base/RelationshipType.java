@@ -17,11 +17,7 @@ package org.aspcfs.modules.relationships.base;
 
 import org.aspcfs.utils.DatabaseUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  * Represents a relationship type
@@ -425,12 +421,12 @@ public class RelationshipType {
     }
     sql.append("?");
     if(entered == null){
-      sql.append(", CURRENT_TIMESTAMP");
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }else{
       sql.append(", ?");
     }
     if(modified == null){
-      sql.append(", CURRENT_TIMESTAMP");
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }else{
       sql.append(", ?");
     }

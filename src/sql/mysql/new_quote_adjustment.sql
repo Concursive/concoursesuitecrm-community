@@ -15,8 +15,14 @@ CREATE TABLE lookup_quote_delivery (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_quote_delivery_entries BEFORE INSERT ON lookup_quote_delivery FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Each quote can have several conditions. They can be entered over the lifetime of a quote.
 -- Example: Condition 1, Condition 2 etc
@@ -25,8 +31,14 @@ CREATE TABLE lookup_quote_condition (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_quote_condition_entries BEFORE INSERT ON lookup_quote_condition FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Create a new table to group quote versions
 CREATE TABLE quote_group (
@@ -81,6 +93,10 @@ CREATE TABLE quotelog (
   closed TIMESTAMP NULL
 );
 
+CREATE TRIGGER quotelog_entries BEFORE INSERT ON quotelog FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 -- Create a new table to lookup quote remarks
 CREATE TABLE lookup_quote_remarks (
 -- Each quote can have several remarks. They can be entered over the lifetime of a quote.
@@ -89,8 +105,14 @@ CREATE TABLE lookup_quote_remarks (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true
+	enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_quote_remarks_entries BEFORE INSERT ON lookup_quote_remarks FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Create a new table to map remarks to a quote
 CREATE TABLE quote_remark (
@@ -111,3 +133,6 @@ CREATE TABLE quote_notes (
   modified TIMESTAMP NULL
 );
 
+CREATE TRIGGER quote_notes_entries BEFORE INSERT ON quote_notes FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

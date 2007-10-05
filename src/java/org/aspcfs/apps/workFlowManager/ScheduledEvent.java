@@ -570,9 +570,7 @@ public class ScheduledEvent implements Serializable {
     if (this.getEnabled()) {
       sql.append("enabled, ");
     }
-    if (this.getEntered() != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("process_id) VALUES( ");
     if (id > -1) {
       sql.append("?, ");
@@ -609,6 +607,8 @@ public class ScheduledEvent implements Serializable {
     }
     if (this.getEntered() != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?) ");
     int i = 0;

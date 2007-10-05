@@ -15,15 +15,10 @@
  */
 package org.aspcfs.modules.actionplans.base;
 
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 
-import com.darkhorseventures.framework.beans.GenericBean;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  * Description of the Class
@@ -203,20 +198,19 @@ public class ActionStepMap extends GenericBean {
     sql.append(
         "INSERT INTO step_action_map (" +
         (mapId > -1 ? "map_id, " : "") + "constant_id, action_constant_id");
-    if(this.getEntered() != null){
-      sql.append(", entered");
-    }
-    if(this.getModified() != null){
-      sql.append(", modified");
-    }
+    sql.append(", entered, modified");
     sql.append(
         ") VALUES (" +
         (mapId > -1 ? "?, " : "") + "?, ?");
     if(this.getEntered() != null){
       sql.append(", ?");
+    } else {
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }
     if(this.getModified() != null){
       sql.append(", ?");
+    } else {
+      sql.append(", " + DatabaseUtils.getCurrentTimestamp(db));
     }
     sql.append(") ");
 

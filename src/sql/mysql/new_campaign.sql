@@ -18,6 +18,9 @@ CREATE TABLE saved_criterialist (
   enabled BOOLEAN NOT NULL DEFAULT true
 );
 
+CREATE TRIGGER saved_criterialist_entries BEFORE INSERT ON  saved_criterialist FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE campaign (
   campaign_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,16 +51,26 @@ CREATE TABLE campaign (
   trashed_date TIMESTAMP NULL
 );
 
+CREATE TRIGGER campaign_entries BEFORE INSERT ON  campaign FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE campaign_run (
   id INT AUTO_INCREMENT PRIMARY KEY,
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   status INTEGER NOT NULL DEFAULT 0,
-  run_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  run_date TIMESTAMP NULL,
   total_contacts INTEGER DEFAULT 0,
   total_sent INTEGER DEFAULT 0,
   total_replied INTEGER DEFAULT 0,
-  total_bounced INTEGER DEFAULT 0
+  total_bounced INTEGER DEFAULT 0,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER campaign_run_entries BEFORE INSERT ON  campaign_run FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE excluded_recipient (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,16 +102,28 @@ CREATE TABLE scheduled_recipient (
   scheduled_date TIMESTAMP NULL,
   sent_date TIMESTAMP NULL,
   reply_date TIMESTAMP NULL,
-  bounce_date TIMESTAMP NULL
+  bounce_date TIMESTAMP NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER scheduled_recipient_entries BEFORE INSERT ON  scheduled_recipient FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_survey_types (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER lookup_survey_types_entries BEFORE INSERT ON  lookup_survey_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE survey (
   survey_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -115,6 +140,10 @@ CREATE TABLE survey (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER survey_entries BEFORE INSERT ON  survey FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE campaign_survey_link (
   campaign_id INT REFERENCES campaign(campaign_id),
@@ -153,6 +182,10 @@ CREATE TABLE active_survey (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE TRIGGER active_survey_entries BEFORE INSERT ON  active_survey FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE active_survey_questions (
   question_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   active_survey_id INT REFERENCES active_survey(active_survey_id),
@@ -186,6 +219,9 @@ CREATE TABLE active_survey_responses (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   address_updated INT
 );
+
+CREATE TRIGGER active_survey_responses_entries BEFORE INSERT ON  active_survey_responses FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
 
 CREATE TABLE active_survey_answers (
   answer_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -248,6 +284,10 @@ CREATE TABLE message (
   access_type INT REFERENCES lookup_access_types(code)
 );
 
+CREATE TRIGGER message_entries BEFORE INSERT ON  message FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE message_template (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
@@ -261,6 +301,10 @@ CREATE TABLE message_template (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE TRIGGER message_template_entries BEFORE INSERT ON  message_template FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE saved_criteriaelement (
   id INTEGER NOT NULL REFERENCES saved_criterialist(id),

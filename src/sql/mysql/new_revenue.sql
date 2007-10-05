@@ -11,18 +11,28 @@ CREATE TABLE lookup_revenue_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
-)
-;
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
+);
+
+CREATE TRIGGER lookup_revenue_types_entries BEFORE INSERT ON lookup_revenue_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE lookup_revenuedetail_types (
   code INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
-)
-;
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
+);
+
+CREATE TRIGGER lookup_revenuedetail_types_entries BEFORE INSERT ON lookup_revenuedetail_types FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE revenue (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,6 +50,10 @@ CREATE TABLE revenue (
   modifiedby INT NOT NULL references `access`(user_id)
 );
 
+CREATE TRIGGER revenue_entries BEFORE INSERT ON revenue FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+
 CREATE TABLE revenue_detail (
   id INT AUTO_INCREMENT PRIMARY KEY,
   revenue_id INT REFERENCES revenue(id),
@@ -53,4 +67,6 @@ CREATE TABLE revenue_detail (
   modifiedby INT NOT NULL references `access`(user_id)
 );
 
-
+CREATE TRIGGER revenue_detail_entries BEFORE INSERT ON revenue_detail FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);

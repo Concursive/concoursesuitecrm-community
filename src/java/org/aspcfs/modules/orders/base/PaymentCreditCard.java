@@ -556,13 +556,9 @@ public class PaymentCreditCard extends GenericBean {
     if (id > -1) {
       sql.append("creditcard_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("enteredby, ");
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("modified, ");
     sql.append("modifiedby, order_id )");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -570,10 +566,14 @@ public class PaymentCreditCard extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ");
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ? )");
     int i = 0;

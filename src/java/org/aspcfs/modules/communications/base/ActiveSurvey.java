@@ -606,7 +606,8 @@ public class ActiveSurvey extends SurveyBase {
             "SET campaign_id = ?, name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
             "" + DatabaseUtils.addQuotes(db, "type") + " = ?, " +
             "enabled = ?, " +
-            "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+            "modifiedby = ? " +
             "WHERE active_survey_id = ? ");
     pst.setInt(++i, campaignId);
     pst.setString(++i, this.getName());

@@ -15,17 +15,12 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import java.security.Key;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.PrivateString;
 
-import com.darkhorseventures.framework.beans.GenericBean;
+import java.security.Key;
+import java.sql.*;
 
 /**
  * This represents a Payment's Credit Card
@@ -564,13 +559,9 @@ public class CreditCard extends GenericBean {
     if (id > -1) {
       sql.append("creditcard_id, ");
     }
-    if (entered != null) {
-      sql.append("entered, ");
-    }
+    sql.append("entered, ");
     sql.append("enteredby, ");
-    if (modified != null) {
-      sql.append("modified, ");
-    }
+    sql.append("modified, ");
     sql.append("modifiedby )");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ");
     if (id > -1) {
@@ -578,10 +569,14 @@ public class CreditCard extends GenericBean {
     }
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("?, ");
     if (modified != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("? )");
     int i = 0;

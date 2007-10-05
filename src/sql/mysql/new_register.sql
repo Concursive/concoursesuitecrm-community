@@ -29,3 +29,6 @@ CREATE TABLE registration (
   key_hex TEXT
 );
 
+CREATE TRIGGER registration_entries BEFORE INSERT ON registration FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
