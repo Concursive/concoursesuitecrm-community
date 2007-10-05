@@ -792,23 +792,30 @@ CREATE TABLE cfsinbox_message (
   id SERIAL PRIMARY KEY,
   subject VARCHAR(255) DEFAULT NULL,
   body TEXT NOT NULL,
-  reply_id INT NOT NULL,
-  enteredby INT NOT NULL REFERENCES access(user_id),
-  sent TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reply_id INT,
+  enteredby INT REFERENCES access(user_id),
+  sent TIMESTAMP(3),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   type int not null default -1,
-  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modifiedby INT REFERENCES access(user_id),
   delete_flag BOOLEAN default false
 );
 
 CREATE TABLE cfsinbox_messagelink (
   id INT NOT NULL REFERENCES cfsinbox_message(id),
-  sent_to INT NOT NULL REFERENCES contact(contact_id),
+  sent_to INT REFERENCES contact(contact_id),
   status INT NOT NULL DEFAULT 0,
   viewed TIMESTAMP(3) DEFAULT NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
-  sent_from INT NOT NULL REFERENCES access(user_id)
+  sent_from INT REFERENCES access(user_id),
+  sent_to_mail_id varchar(255),
+  sent_from_mail_id varchar(255),
+  email_account_id int4,
+  replied_to_message_id int4,
+  item_id int4,
+  last_action int4,
+  replyto varchar(255)
 );
 
 CREATE TABLE account_type_levels (
@@ -1104,3 +1111,13 @@ CREATE TABLE custom_list_view_field (
   name VARCHAR(80) NOT NULL
 );
 
+CREATE TABLE recent_items (
+	item_id SERIAL PRIMARY KEY,
+	link_module_id int NOT NULL,
+	link_item_id int NOT NULL,
+	url varchar(1000) NOT NULL,
+	item_name varchar(255) NOT NULL,
+	user_id int NOT NULL references access (user_id),
+	entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+)

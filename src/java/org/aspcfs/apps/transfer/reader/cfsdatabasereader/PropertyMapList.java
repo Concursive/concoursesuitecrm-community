@@ -16,63 +16,74 @@
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
 import org.apache.log4j.Logger;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.aspcfs.apps.transfer.DataRecord;
 import org.aspcfs.apps.transfer.DataWriter;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- *  Contains a list of PropertyMaps, used to translate objects into XML
+ * Contains a list of PropertyMaps, used to translate objects into XML
  *
- * @author     matt rajkowski
- * @created    September 18, 2002
- * @version    $Id: PropertyMapList.java,v 1.14.2.1 2003/01/22 23:08:55 akhi_m
- *      Exp $
+ * @author matt rajkowski
+ * @version $Id: PropertyMapList.java,v 1.14.2.1 2003/01/22 23:08:55 akhi_m
+ *          Exp $
+ * @created September 18, 2002
  */
 public class PropertyMapList extends HashMap {
 
   private int count = 0;
   private static Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList.class);
-
+  private String configFile = null;
 
   /**
-   *  Constructor for the PropertyMapList object
+   * Constructor for the PropertyMapList object
    */
-  public PropertyMapList() { }
+  public PropertyMapList() {
+  }
 
 
   /**
-   *  Constructor for the PropertyMapList object
+   * Constructor for the PropertyMapList object
    *
-   * @param  configFile     Description of the Parameter
-   * @param  modules        Description of the Parameter
-   * @exception  Exception  Description of the Exception
-   * @throws  Exception     Description of the Exception
+   * @param configFile Description of the Parameter
+   * @param modules    Description of the Parameter
+   * @throws Exception Description of the Exception
+   * @throws Exception Description of the Exception
    */
   public PropertyMapList(String configFile, ArrayList modules) throws Exception {
+    this.configFile = configFile;
+    loadMap(new File(configFile).toURL(), modules);
+  }
+
+
+  public PropertyMapList(URL configFile, ArrayList modules) throws Exception {
     loadMap(configFile, modules);
   }
 
 
   /**
-   *  Populates this object by reading an XML file with mappings
+   * Populates this object by reading an XML file with mappings
    *
-   * @param  mapFile     Description of the Parameter
-   * @param  modules     Description of the Parameter
-   * @throws  Exception  Description of the Exception
+   * @param mapFile Description of the Parameter
+   * @param modules Description of the Parameter
+   * @throws Exception Description of the Exception
    */
-  public void loadMap(String mapFile, ArrayList modules) throws Exception {
-    File configFile = new File(mapFile);
-    XMLUtils xml = new XMLUtils(configFile);
+  public void loadMap(URL mapFile, ArrayList modules) throws Exception {
+    XMLUtils xml = new XMLUtils(mapFile);
 
     xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
     logger.info("PropertyMapList module count: " + modules.size());
@@ -100,7 +111,7 @@ public class PropertyMapList extends HashMap {
           }
         }
       }
-      
+
       //Get any property nodes
       NodeList nl = map.getChildNodes();
       for (int i = 0; i < nl.getLength(); i++) {
@@ -155,34 +166,15 @@ public class PropertyMapList extends HashMap {
         this.put((String) map.getAttribute("class"), mapProperties);
       }
     }
-
-    /*
-     *  /A mappings file may further refer to other config files that have mappings
-     *  if (xml.getFirstChild("configs") != null) {
-     *  ArrayList configs = new ArrayList();
-     *  xml.getAllChildrenText(xml.getFirstChild("configs"), "config", configs);
-     *  if (configs.size() > 0) {
-     *  logger.info("PropertyMapList config count: " + configs.size());
-     *  Iterator config = configs.iterator();
-     *  while (config.hasNext()) {
-     *  String configName = (String) config.next();
-     *  loadMap(
-     *  (configFile.getParentFile().getPath() +
-     *  System.getProperty("file.separator") +
-     *  configName), modules);
-     *  }
-     *  }
-     *  }
-     */
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   * @param  object  Description of the Parameter
-   * @param  action  Description of the Parameter
-   * @return         Description of the Return Value
+   * @param object Description of the Parameter
+   * @param action Description of the Parameter
+   * @return Description of the Return Value
    */
   public DataRecord createDataRecord(Object object, String action) {
     return createDataRecord(object, action, true);
@@ -190,13 +182,13 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   *  Creates a DataRecord object by comparing and extracting properties from an
-   *  object that must be in the loaded mappings
+   * Creates a DataRecord object by comparing and extracting properties from an
+   * object that must be in the loaded mappings
    *
-   * @param  object         Description of the Parameter
-   * @param  action         Description of the Parameter
-   * @param  performLookup  Description of the Parameter
-   * @return                Description of the Return Value
+   * @param object        Description of the Parameter
+   * @param action        Description of the Parameter
+   * @param performLookup Description of the Parameter
+   * @return Description of the Return Value
    */
   public DataRecord createDataRecord(Object object, String action, boolean performLookup) {
     if (this.containsKey(object.getClass().getName())) {
@@ -237,13 +229,13 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   *  Writes all of the objects in the supplied list to a writer by converting
-   *  them to Data Record objects first
+   * Writes all of the objects in the supplied list to a writer by converting
+   * them to Data Record objects first
    *
-   * @param  writer  Description of the Parameter
-   * @param  list    Description of the Parameter
-   * @param  action  Description of the Parameter
-   * @return         Description of the Return Value
+   * @param writer Description of the Parameter
+   * @param list   Description of the Parameter
+   * @param action Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean saveList(DataWriter writer, AbstractList list, String action) {
     logger.info(
@@ -261,10 +253,10 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   *  Gets the map attribute of the PropertyMapList object
+   * Gets the map attribute of the PropertyMapList object
    *
-   * @param  mapId  Description of the Parameter
-   * @return        The map value
+   * @param mapId Description of the Parameter
+   * @return The map value
    */
   public PropertyMap getMap(String mapId) {
     Iterator maps = this.keySet().iterator();
@@ -276,6 +268,51 @@ public class PropertyMapList extends HashMap {
       }
     }
     return null;
+  }
+
+  public PropertyMap getMapByTableName(String tableName) {
+    Iterator maps = this.keySet().iterator();
+    while (maps.hasNext()) {
+      String thisMapName = (String) maps.next();
+      PropertyMap thisMap = (PropertyMap) this.get(thisMapName);
+      if (tableName.equals(thisMap.getTable())) {
+        return thisMap;
+      }
+    }
+    return null;
+  }
+
+  public PropertyMap createMapping(String tableName, String[] fieldNames) throws Exception {
+    logger.info("Creating new mapping with table " + tableName);
+    PropertyMap propertyMap = new PropertyMap();
+    propertyMap.setTable(tableName);
+    propertyMap.createProperties(fieldNames);
+    return propertyMap;
+  }
+
+  public void save(PropertyMap[] propertyMaps) throws Exception {
+    if (configFile != null) {
+      XMLUtils xmlFile = new XMLUtils(new File(configFile));
+      Document dom = xmlFile.getDocument();
+      Element el = xmlFile.getFirstChild("mappings");
+      for (int i = 0; i < propertyMaps.length; i++) {
+        PropertyMap propertyMap = propertyMaps[i];
+        Element map = dom.createElement("map");
+        map.setAttribute("table", propertyMap.getTable());
+        el.appendChild(map);
+        Iterator j = propertyMap.iterator();
+        while (j.hasNext()) {
+          Property property = (Property) j.next();
+          Element field = dom.createElement("property");
+          field.setAttribute("field", property.getField());
+          field.setTextContent(" ");
+          map.appendChild(field);
+        }
+      }
+      OutputFormat format = new OutputFormat(dom);
+      XMLSerializer serializer = new XMLSerializer(new FileOutputStream(new File(configFile)), format);
+      serializer.serialize(dom);
+    }
   }
 }
 

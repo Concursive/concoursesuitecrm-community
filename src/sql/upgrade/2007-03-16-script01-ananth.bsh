@@ -2,6 +2,7 @@
   Upgrade script that adds a primary key to an existing database table.
 */
 
+import java.net.URL;
 import java.sql.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -12,11 +13,12 @@ import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.DatabaseSchemaUtils;
 
-String fs = System.getProperty("file.separator") ;
-String mapFile = prefsPath + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
-File importFile = new File(mapFile);
-if (!importFile.exists()) {
-  mapFile = prefsPath + "import-mappings.xml";
+URL mapFile = new URL(prefsURL.toString() + "cfs/transfer/import-mappings.xml");
+if ("file".equals(mapFile.getProtocol())) {
+  File file = new File(mapFile.getPath());
+  if (!file.exists()) {
+    mapFile = new URL(prefsURL.toString() + "import-mappings.xml");
+  }
 }
 
 PropertyMapList mappings = null;
@@ -37,15 +39,3 @@ primaryKeys.put("contactTypeLevels", "id"); //contact_type_levels
 primaryKeys.put("opportunityComponentLevels", "id"); //opportunity_component_levels
            
 DatabaseSchemaUtils.addPrimaryKey(db, mappings, primaryKeys);
-
-/*
-DatabaseMetaData dbmd = db.getMetaData();
-ResultSet columns = dbmd.getColumns(null, "%", "custom_field_data", "%");
-
-while (columns.next()) {
-  print("Column Name: " + columns.getString("COLUMN_NAME"));
-  print("Column Type: " + columns.getString("TYPE_NAME"));
-  print("Column Size: " + columns.getInt("COLUMN_SIZE"));
-  print("Allows Null: " + columns.getInt("NULLABLE"));
-}
-*/

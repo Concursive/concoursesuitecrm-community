@@ -18,6 +18,29 @@ CREATE TABLE lookup_container_menu (
 
 --CREATE UNIQUE INDEX u_lcontmenu_cname ON lookup_container_menu (cname);
 
+CREATE TABLE lookup_webpage_priority (
+  code serial NOT NULL,
+  description character varying(300),
+  default_item boolean DEFAULT false,
+  "level" integer,
+  constant float,
+  enabled boolean DEFAULT true,
+  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified timestamp(3)NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT lookup_webpage_prior_pkey PRIMARY KEY (code)
+) ;
+
+CREATE SEQUENCE lookup_sitechange_freq_code_seq;
+CREATE TABLE lookup_sitechange_frequency (
+  code INTEGER DEFAULT nextval('lookup_sitechange_freq_code_seq') NOT NULL PRIMARY KEY,
+  description character varying(300),
+  default_item boolean DEFAULT false,
+  "level" integer,
+  constant character varying(300),
+  enabled boolean DEFAULT true,
+  entered timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE web_layout (
   layout_id SERIAL PRIMARY KEY,
@@ -51,7 +74,9 @@ CREATE TABLE web_site (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  scripts TEXT,
+  "url" varchar (2000)
 );
 
 CREATE TABLE web_site_log (
@@ -129,7 +154,9 @@ CREATE TABLE web_page (
   page_alias INT REFERENCES web_page(page_id),
   link_module_id int REFERENCES permission_category (category_id),
   link_container_id int REFERENCES lookup_container_menu(code),
-  keywords VARCHAR(300)
+  keywords VARCHAR(300),
+  change_freq INT REFERENCES lookup_sitechange_frequency(code),
+  page_priority INT REFERENCES lookup_webpage_priority(code)
 );
 
 ALTER TABLE web_page_version ADD COLUMN page_id INT REFERENCES web_page(page_id);
@@ -294,4 +321,3 @@ create table web_icelet_publicwebsite (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id)
 );
-

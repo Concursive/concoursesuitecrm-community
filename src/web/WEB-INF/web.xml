@@ -9,81 +9,90 @@
 <web-app>
   <listener>
     <listener-class>
-     org.aspcfs.controller.ContextListener
+      org.aspcfs.controller.ContextListener
     </listener-class>
   </listener>
   <listener>
     <listener-class>
-     org.aspcfs.controller.ContextSessionListener
+      org.aspcfs.controller.ContextSessionListener
     </listener-class>
   </listener>
   <servlet>
+    <servlet-name>jsp</servlet-name>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+      <param-name>enablePooling</param-name>
+      <param-value>false</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
     <servlet-name>Controller</servlet-name>
     <display-name>Controller</display-name>
-    <servlet-class>com.darkhorseventures.framework.servlets.ControllerServlet</servlet-class>
+    <servlet-class>com.darkhorseventures.framework.servlets.ControllerServlet
+    </servlet-class>
     <init-param>
-        <param-name>ActionConfig</param-name>
-        <param-value>cfs-config.xml,cfs-config-globalactions.xml</param-value>
+      <param-name>ActionConfig</param-name>
+      <param-value>cfs-config.xml,cfs-config-globalactions.xml</param-value>
     </init-param>
     <init-param>
-        <param-name>ModuleConfig</param-name>
-        <param-value>cfs-modules.xml</param-value>
+      <param-name>ModuleConfig</param-name>
+      <param-value>cfs-modules.xml</param-value>
     </init-param>
     <init-param>
-        <param-name>ContainerMenuConfig</param-name>
-        <param-value>cfs-container_menus.xml</param-value>
+      <param-name>ContainerMenuConfig</param-name>
+      <param-value>cfs-container_menus.xml</param-value>
     </init-param>
     <init-param>
-        <param-name>DynamicFormConfig</param-name>
-        <param-value>cfs-dynamic_forms.xml</param-value>
+      <param-name>DynamicFormConfig</param-name>
+      <param-value>cfs-dynamic_forms.xml</param-value>
     </init-param>
     <init-param>
-        <param-name>PopulateAttributeName</param-name>
-        <param-value>auto-populate</param-value>
+      <param-name>PopulateAttributeName</param-name>
+      <param-value>auto-populate</param-value>
     </init-param>
     <init-param>
-        <param-name>UseXSLCache</param-name>
-        <param-value>false</param-value>
+      <param-name>UseXSLCache</param-name>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
-        <param-name>PopulateClassName</param-name>
-        <param-value>com.darkhorseventures.framework.beans.BeanUtils</param-value>
+      <param-name>PopulateClassName</param-name>
+      <param-value>com.darkhorseventures.framework.beans.BeanUtils</param-value>
     </init-param>
     <init-param>
-        <param-name>InitHook</param-name>
-        <param-value>org.aspcfs.controller.InitHook</param-value>
+      <param-name>InitHook</param-name>
+      <param-value>org.aspcfs.controller.InitHook</param-value>
     </init-param>
     <init-param>
-        <param-name>Hook</param-name>
-        <param-value>org.aspcfs.controller.SecurityHook</param-value>
+      <param-name>Hook</param-name>
+      <param-value>org.aspcfs.controller.SecurityHook</param-value>
     </init-param>
     <init-param>
-        <param-name>GlobalItemsHook</param-name>
-        <param-value>org.aspcfs.controller.GlobalItemsHook</param-value>
+      <param-name>GlobalItemsHook</param-name>
+      <param-value>org.aspcfs.controller.GlobalItemsHook</param-value>
     </init-param>
     <init-param>
-        <param-name>MainMenuHook</param-name>
-        <param-value>org.aspcfs.controller.MainMenuHook</param-value>
+      <param-name>MainMenuHook</param-name>
+      <param-value>org.aspcfs.controller.MainMenuHook</param-value>
     </init-param>
     <init-param>
-        <param-name>ClientSSLKeystore</param-name>
-        <param-value>@KEYSTORE@</param-value>
+      <param-name>ClientSSLKeystore</param-name>
+      <param-value>@KEYSTORE@</param-value>
     </init-param>
     <init-param>
-        <param-name>ClientSSLKeystorePassword</param-name>
-        <param-value>aspcfs</param-value>
+      <param-name>ClientSSLKeystorePassword</param-name>
+      <param-value>aspcfs</param-value>
     </init-param>
     <init-param>
-        <param-name>PreloadXSL</param-name>
-        <param-value>false</param-value>
+      <param-name>PreloadXSL</param-name>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
-        <param-name>CacheModules</param-name>
-        <param-value>true</param-value>
+      <param-name>CacheModules</param-name>
+      <param-value>true</param-value>
     </init-param>
     <init-param>
-        <param-name>listings</param-name>
-        <param-value>false</param-value>
+      <param-name>listings</param-name>
+      <param-value>false</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -92,16 +101,16 @@
     <display-name>Webdav</display-name>
     <servlet-class>com.zeroio.webdav.WebdavServlet</servlet-class>
     <init-param>
-          <param-name>listings</param-name>
-          <param-value>true</param-value>
+      <param-name>listings</param-name>
+      <param-value>true</param-value>
     </init-param>
     <init-param>
-          <param-name>readonly</param-name>
-          <param-value>false</param-value>
+      <param-name>readonly</param-name>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
-        <param-name>debug</param-name>
-        <param-value>2</param-value>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -195,10 +204,13 @@
   </servlet>
 
   <servlet>
-      <servlet-name>FolderGraphServlet</servlet-name>
-      <servlet-class>org.aspcfs.servlets.FolderGraphServlet</servlet-class>
+    <servlet-name>FolderGraphServlet</servlet-name>
+    <servlet-class>org.aspcfs.servlets.FolderGraphServlet</servlet-class>
   </servlet>
-
+  <servlet-mapping>
+    <servlet-name>jsp</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
+  </servlet-mapping>
   <!-- Portlet Mappings -->
   <servlet-mapping>
     <servlet-name>FolderPortlet</servlet-name>
@@ -239,8 +251,8 @@
 
   <!-- Servlet mappings -->
   <servlet-mapping>
-        <servlet-name>Controller</servlet-name>
-        <url-pattern>*.do</url-pattern>
+    <servlet-name>Controller</servlet-name>
+    <url-pattern>*.do</url-pattern>
   </servlet-mapping>
   <!-- The mapping for the webdav servlet -->
   <!-- Using /* as the mapping ensures that jasper, welcome files etc are
@@ -259,16 +271,16 @@
     <url-pattern>/url/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-      <servlet-name>FolderGraphServlet</servlet-name>
-      <url-pattern>/servlets/GraphServlet</url-pattern>
+    <servlet-name>FolderGraphServlet</servlet-name>
+    <url-pattern>/servlets/GraphServlet</url-pattern>
   </servlet-mapping>
-  
+
   <session-config>
-        <session-timeout>65</session-timeout>
+    <session-timeout>65</session-timeout>
   </session-config>
 
   <welcome-file-list>
-      <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
 
 </web-app>

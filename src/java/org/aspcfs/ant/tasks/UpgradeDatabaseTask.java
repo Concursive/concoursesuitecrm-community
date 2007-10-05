@@ -27,6 +27,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.StringUtils;
 
 import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,6 +66,7 @@ public class UpgradeDatabaseTask extends Task {
   private String languagePath = null;
   private String iceletsPath = null;
   private String prefsPath = null;
+  private URL prefsURL = null;
 
 
   /**
@@ -192,7 +194,13 @@ public class UpgradeDatabaseTask extends Task {
       iceletsPath = StringUtils.replace(iceletsPath, "\\", "\\\\");
       prefsPath = StringUtils.replace(prefsPath, "\\", "\\\\");
     }
-    System.out.println("Checking databases to process...");
+    if (prefsPath != null) {
+      try {
+        prefsURL = new File(prefsPath).toURL();
+      } catch (Exception e) {
+        throw new BuildException("prefsURL setter exception: " + prefsPath);
+      }
+    }
     try {
       //Create a Connection Pool to facilitate connections
       ConnectionPool sqlDriver = new ConnectionPool();
@@ -382,7 +390,7 @@ public class UpgradeDatabaseTask extends Task {
       script.set("fileLibraryPath", fileLibraryPath + fs);
       script.set("languagePath", languagePath + fs);
       script.set("iceletsPath", iceletsPath + fs);
-      script.set("prefsURL", prefsPath + fs);
+      script.set("prefsURL", prefsURL);
       script.set("locale", locale);
       // Determine if fileLibrary is part of WEB-INF path
       File directory = new File(fileLibraryPath + fs + dbName);

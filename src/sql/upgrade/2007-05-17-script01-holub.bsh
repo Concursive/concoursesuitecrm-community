@@ -83,15 +83,12 @@ String[][] permissinCategories =
 {"accounts-accounts-history","vaed"},
 {"accounts-dashboard","v---"},
 {"accounts-accounts-revenue","----"},
-{"accounts-autoguide-inventory","----"},
 {"accounts-service-contracts","vaed"},
 {"accounts-assets","vaed"},
 {"accounts-accounts-tickets-maintenance-report","vaed"},
 {"accounts-accounts-tickets-activity-log","vaed"},
 {"portal-user","v---"},
 {"accounts-quotes","vaed"},
-{"accounts-orders","----"},
-{"accounts-products","----"},
 {"accounts-accounts-contacts-imports","vaed"},
 {"accounts-accounts-relationships","vaed"},
 {"accounts-accounts-contact-updater","----"},
@@ -109,17 +106,10 @@ String[][] permissinCategories =
 {"product-catalog-product","----"},
 {"product-catalog-product-imports","vaed"},
 
-{"3"},
-{"autoguide","----"},
-{"autoguide-adruns","----"},
 
 {"420041017"},
 {"quotes","v---"},
 {"quotes-quotes","vaed"},
-
-{"420041018"},
-{"orders","----"},
-{"orders-orders","----"},
 
 {"6"},
 {"campaign","v---"},
@@ -182,10 +172,7 @@ String[][] permissinCategories =
 {"help","v---"},
 
 {"15"},
-{"qa","----"},
-
-{"5"},
-{"demo","----"}
+{"qa","----"}
 };
 
 int catConst = -1;
@@ -197,6 +184,7 @@ for(int i=0; i< permissinCategories.length; i++){
     int catId = PermissionCategory.getIdByConstant(catConst, db);
     if(catId > 0){
       for(int j=0; j< permissinCategories[i].length; j++){
+        print("Loading permission: " + permissinCategories[i][0]);
         Permission perm = new Permission(db, permissinCategories[i][0]);
         if(perm.getCategoryId() == catId){
           if(permissinCategories[i][1].charAt(0) != '-'){

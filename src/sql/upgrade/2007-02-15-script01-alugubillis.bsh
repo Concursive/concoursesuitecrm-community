@@ -1,0 +1,28 @@
+// Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+
+import java.sql.*;
+import org.aspcfs.utils.web.LookupElement;
+
+print("Inserting new lookup table data...");
+
+int level = 0;
+int constantId = 0;
+void insertElement(String tableName, String description) {
+ level += 10;
+ constantId +=1;
+ LookupElement element = new LookupElement();
+ element.setTableName(tableName);
+ element.setDescription(description);
+ element.setLevel(level);
+ element.setConstantId(constantId);
+ element.insert(db);
+}
+
+if (1==1) {
+ level = LookupElement.retrieveMaxLevel(db, "lookup_kb_status");
+ if (level == 0) {
+   insertElement("lookup_kb_status", "Draft");
+insertElement("lookup_kb_status", "Approved");
+   print("lookup_kb_status elements added");
+ }
+}

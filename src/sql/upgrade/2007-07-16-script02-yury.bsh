@@ -22,19 +22,19 @@ import org.aspcfs.utils.Dictionary;
   }
   
   // Load permission category for later use
-  PermissionCategory permissionCategory = new PermissionCategory(db, Constants.LEADS);
+  PermissionCategory permissionCategory = new PermissionCategory(db, PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_SALES));
 
   // See if permission already exists
   int existingId = Permission.lookupId(db, "sales-leads-calls");
     
   if (existingId == -1) {
 
-      level = PermissionList.retrieveMaxLevel(db, Constants.LEADS)  + 10;
+      level = PermissionList.retrieveMaxLevel(db, permissionCategory.getId())  + 10;
       print("New level to insert: " + level);
 
       // Insert a new permission so that user roles can access folders
       Permission permission = new Permission();
-      permission.setCategoryId(Constants.LEADS );
+      permission.setCategoryId(permissionCategory.getId());
       permission.setName("sales-leads-calls");
       permission.setDescription("Leads Calls");
       permission.setView(true);

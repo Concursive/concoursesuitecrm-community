@@ -32,17 +32,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 // Determine a safe URL for accessing the file resource
-URL mapFileURL = null;
-String fs = System.getProperty("file.separator") ;
-if (prefsURL != null) {
-  mapFileURL = new File(prefsURL + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml").toURL();
-} else {
-  String mapFile = prefsURL + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
-  File importFile = new File(mapFile);
-  if (!importFile.exists()) {
-    mapFile = prefsURL + "import-mappings.xml";
+URL mapFileURL = new URL(prefsURL.toString() + "cfs/transfer/import-mappings.xml");
+if ("file".equals(mapFileURL.getProtocol())) {
+  File file = new File(mapFileURL.getPath());
+  if (!file.exists()) {
+    mapFileURL = new URL(prefsURL.toString() + "import-mappings.xml");
   }
-  mapFileURL = (new File(mapFile)).toURL();
 }
 
 void insertLookupMapping(Connection db, String id) {

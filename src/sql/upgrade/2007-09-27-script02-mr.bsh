@@ -1,0 +1,59 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+*/
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String module = "Products and Services";
+int constant = PermissionCategory.PERMISSIONS_CAT_PRODUCTS_AND_SERVICES;
+int level = 300;
+boolean hasFolders = false;
+boolean hasLookups = false;
+boolean hasViewpoints = false;
+boolean hasCategories = false;
+boolean hasScheduledEvents = false;
+boolean hasObjectEvents = false;
+boolean hasReports = false;
+boolean enabled = false;
+boolean active = false;
+
+print("Adding " + module + " module if it doesn't exist");
+
+int moduleId = PermissionCategory.lookupId(db, constant);
+if (moduleId == -1) {
+  print("Category not found, inserting...");
+  PermissionCategory thisCategory = new PermissionCategory();
+  thisCategory.setCategory(module);
+  thisCategory.setConstant(constant);
+  thisCategory.setDescription(null);
+  thisCategory.setLevel(level);
+  thisCategory.setEnabled(enabled);
+  thisCategory.setActive(active);
+  thisCategory.setFolders(hasFolders);
+  thisCategory.setLookups(hasLookups);
+  thisCategory.setViewpoints(hasViewpoints);
+  thisCategory.setCategories(hasCategories);
+  thisCategory.setScheduledEvents(hasScheduledEvents);
+  thisCategory.setObjectEvents(hasObjectEvents);
+  thisCategory.setReports(hasReports);
+  thisCategory.insert(db);
+  
+  Permission permission = new Permission();
+  permission.setCategoryId(thisCategory.getId());
+  permission.setName("products");
+  permission.setDescription("Access to Products and Services module");
+  permission.setView(true);
+  permission.setAdd(false);
+  permission.setEdit(false);
+  permission.setDelete(false);
+  permission.setPermissionLevel(10);
+  permission.setEnabled(true);
+  permission.setActive(true);
+  permission.setViewpoints(false);
+  permission.insert(db);
+}
+
+print("Finished");

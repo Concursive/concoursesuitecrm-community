@@ -148,3 +148,8 @@ CREATE TABLE help_tips (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled boolean NOT NULL DEFAULT true
 );
+
+create table help_introduction_preference (
+		user_id INT NOT NULL REFERENCES access(user_id),
+		module_id INT NOT NULL REFERENCES help_module(module_id)
+	);

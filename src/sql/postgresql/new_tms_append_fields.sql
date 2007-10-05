@@ -34,3 +34,5 @@ ALTER TABLE ticket ADD COLUMN submitter_contact_id INT REFERENCES contact;
 -- ticketlog table
 ALTER TABLE ticketlog ADD COLUMN escalation_code INT REFERENCES lookup_ticket_escalation(code);
 ALTER TABLE ticketlog ADD COLUMN state_id INT REFERENCES lookup_ticket_state(code);
+ALTER TABLE ticketlog ADD COLUMN messages_deleted BOOLEAN DEFAULT false;
+ALTER TABLE ticketlog ADD COLUMN message_summary TEXT;

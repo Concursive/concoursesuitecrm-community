@@ -15,7 +15,8 @@ CREATE TABLE sites (
   driver VARCHAR(255) NOT NULL DEFAULT '',
   code VARCHAR(255),
   enabled BOOLEAN NOT NULL DEFAULT false,
-  language VARCHAR(11)
+  language VARCHAR(11),
+  dbalphaport VARCHAR(64)
 );
 
 

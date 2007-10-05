@@ -173,20 +173,20 @@ CREATE TABLE project_ticket_count (
 );
 
 CREATE TABLE ticketlog (
-  id serial PRIMARY KEY
-  ,ticketid INT REFERENCES ticket(ticketid)
-  ,assigned_to INT REFERENCES access(user_id)
-  ,comment TEXT
-  ,closed BOOLEAN
-  ,pri_code INT REFERENCES ticket_priority(code)
-  ,level_code INT 
-  ,department_code INT REFERENCES lookup_department(code)
-  ,cat_code INT
-  ,scode INT REFERENCES ticket_severity(code)
-  ,entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,enteredby INT NOT NULL REFERENCES access(user_id)
-  ,modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ,modifiedby INT NOT NULL REFERENCES access(user_id)
+  id serial PRIMARY KEY,
+  ticketid INT REFERENCES ticket(ticketid),
+  assigned_to INT REFERENCES access(user_id),
+  comment TEXT,
+  closed BOOLEAN,
+  pri_code INT REFERENCES ticket_priority(code),
+  level_code INT,
+  department_code INT REFERENCES lookup_department(code),
+  cat_code INT,
+  scode INT REFERENCES ticket_severity(code),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id)
   -- DO NOT PUT ANY MORE FIELDS IN THIS TABLE HERE
   -- THEY MUST BE APPENDED to new_tms_append_fields.sql because of referential
   -- integrity

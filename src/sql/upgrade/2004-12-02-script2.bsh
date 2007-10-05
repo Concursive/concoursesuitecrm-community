@@ -23,23 +23,9 @@ boolean active = true;
 
 print("Adding " + module + " module if it doesn't exist");
 
-//Check and insert a module
-boolean isNew = false;
-int moduleId = -1;
-st = db.createStatement();
-rs = st.executeQuery(
-  "SELECT category_id " +
-  "FROM permission_category " +
-  "WHERE category = '" + module + "'");
-if (rs.next()) {
-  moduleId = rs.getInt("category_id");
-}
-rs.close();
-st.close();
-//Insert the category if needed
+int moduleId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_DOCUMENTS);
 if (moduleId == -1) {
   print("Category not found, inserting...");
-  isNew = true;
   PermissionCategory thisCategory = new PermissionCategory();
   thisCategory.setCategory(module);
   thisCategory.setDescription(null);
@@ -54,6 +40,7 @@ if (moduleId == -1) {
   thisCategory.setObjectEvents(hasObjectEvents);
   thisCategory.setReports(hasReports);
   thisCategory.setWebdav(hasWebDAV);
+  thisCategory.setConstant(PermissionCategory.PERMISSION_CAT_DOCUMENTS);
   thisCategory.insert(db);
   moduleId = thisCategory.getId();
 }

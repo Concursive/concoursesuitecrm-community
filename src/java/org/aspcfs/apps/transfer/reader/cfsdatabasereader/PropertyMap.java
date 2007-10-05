@@ -15,7 +15,10 @@
  */
 package org.aspcfs.apps.transfer.reader.cfsdatabasereader;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Contains a list of Property objects and defines an object Mapping
@@ -25,6 +28,9 @@ import java.util.ArrayList;
  * @created September 18, 2002
  */
 public class PropertyMap extends ArrayList {
+
+	private static Logger logger = Logger.getLogger(org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMap.class);
+
   private String id = null;
   private String table = null;
   private String sequence = null;
@@ -150,5 +156,31 @@ public class PropertyMap extends ArrayList {
     return (uniqueField != null && !"".equals(uniqueField));
   }
 
-}
+  public Property getProperty(String fieldName) {
+  	Property result = null;
+  	Iterator i = this.iterator();
+  	while(i.hasNext()) {
+  		Property property = (Property) i.next();
+  		if (property.getField() != null && property.getField().equalsIgnoreCase(fieldName)) {
+  			result = property;
+  			break;
+  		}
+  	}
+  	return result;
+  }
 
+  public int createProperties(String[] fieldNames) {
+  	int count = 0;
+		for (int j = 0; j < fieldNames.length; j++) {
+			Property property = this.getProperty(fieldNames[j]);
+			if (property == null) {
+				property = new Property();
+				property.setField(fieldNames[j]);
+				this.add(property);
+				logger.info("Mapping new field " + fieldNames[j]);
+				count++;
+			}
+		}
+		return count;
+  }
+}

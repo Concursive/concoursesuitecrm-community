@@ -20,23 +20,9 @@ boolean hasReports = true;
 
 print("Adding " + module + " module if it doesn't exist");
 
-//Check and insert a module
-boolean isNew = false;
-int moduleId = -1;
-st = db.createStatement();
-rs = st.executeQuery(
-  "SELECT category_id " +
-  "FROM permission_category " +
-  "WHERE category = '" + module + "'");
-if (rs.next()) {
-  moduleId = rs.getInt("category_id");
-}
-rs.close();
-st.close();
-//Insert the category if needed
+int moduleId = PermissionCategory.lookupId(db, constant);
 if (moduleId == -1) {
   print("Category not found, inserting...");
-  isNew = true;
   PermissionCategory thisCategory = new PermissionCategory();
   thisCategory.setCategory(module);
   thisCategory.setConstant(constant);
@@ -51,6 +37,7 @@ if (moduleId == -1) {
   thisCategory.setScheduledEvents(hasScheduledEvents);
   thisCategory.setObjectEvents(hasObjectEvents);
   thisCategory.setReports(hasReports);
+  thisCategory.setConstant(constant);
   thisCategory.insert(db);
   moduleId = thisCategory.getId();
 }

@@ -6,7 +6,7 @@ import org.aspcfs.modules.admin.base.*;
 
 print("Inserting new lookup table...");
 
-int categoryId = PermissionCategory.lookupId(db, PERMISSION_CAT_SALES);
+int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_SALES);
 
 if (categoryId != -1) {
   if (1==1){

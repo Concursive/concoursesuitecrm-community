@@ -49,6 +49,7 @@ public class PermissionCategory extends GenericBean {
   private boolean webdav = false;
   private boolean logos = false;
   private boolean actionPlans = false;
+  private boolean emailAccounts = false;
   private boolean customListViews = false;
   private Timestamp entered = null;
   private Timestamp modified = null;
@@ -68,6 +69,10 @@ public class PermissionCategory extends GenericBean {
 
   //Constants for working with lookup lists
   //NOTE: currently all editable lookup lists need to be defined here
+
+  //my home page
+  public final static int PERMISSION_CAT_MY_HOME_PAGE = 14;
+
   //Leads
   public final static int PERMISSION_CAT_LEADS = 4;
   public final static int LOOKUP_LEADS_STAGE = 1;
@@ -99,6 +104,9 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_SEGMENTS = 722031447;
   public final static int LOOKUP_SUB_SEGMENT = 909200314;
   public final static int LOOKUP_ACCOUNTS_STAGE = 181206161;
+
+  // Products and Services
+  public final static int PERMISSIONS_CAT_PRODUCTS_AND_SERVICES = 420041014;
 
   // Service Contracts
   public final static int PERMISSION_CAT_SERVICE_CONTRACTS = 130041100;
@@ -194,7 +202,7 @@ public class PermissionCategory extends GenericBean {
   //Projects
   public final static int PERMISSION_CAT_PROJECTS = 714200712;
 
- //Global Folders
+  //Global Folders
   public final static int PERMISSION_CAT_GLOBAL_FOLDERS = 327071502;
 
   /**
@@ -876,6 +884,34 @@ public class PermissionCategory extends GenericBean {
   }
 
   /**
+   * Gets the emailAccounts attribute of the PermissionCategory object
+   *
+   * @return The emailAccounts value
+   */
+  public boolean getEmailAccounts() {
+    return emailAccounts;
+  }
+
+  /**
+   * Sets the emailAccounts attribute of the PermissionCategory object
+   *
+   * @param tmp The new emailAccounts value
+   */
+  public void setEmailAccounts(boolean tmp) {
+    this.emailAccounts = tmp;
+  }
+
+  /**
+   * Sets the emailAccounts attribute of the PermissionCategory object
+   *
+   * @param tmp The new emailAccounts value
+   */
+
+  public void setEmailAccounts(String tmp) {
+    this.emailAccounts = DatabaseUtils.parseBoolean(tmp);
+  }
+
+  /**
    * Inserts a permission category object into the database
    *
    * @param db Description of the Parameter
@@ -892,11 +928,11 @@ public class PermissionCategory extends GenericBean {
             DatabaseUtils.addQuotes(db, "level") +
             ", enabled, " + DatabaseUtils.addQuotes(db, "active") +
             ", lookups, folders, viewpoints, categories, scheduled_events, " +
-            "object_events, reports, webdav, logos, constant, action_plans, custom_list_views, dashboards, customtabs"
+            "object_events, reports, webdav, logos, constant, action_plans, custom_list_views, dashboards, customtabs, email_accounts"
     );
     sqlInsert.append(", entered, modified");
     sqlInsert.append(
-        ") VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+        ") VALUES (" + (id > -1 ? "?, " : "") + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
     );
     if (entered != null) {
       sqlInsert.append(", ?");
@@ -934,6 +970,7 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, customListViews);
     pst.setBoolean(++i, dashboards);
     pst.setBoolean(++i, customtabs);
+    pst.setBoolean(++i, emailAccounts);
     if (entered != null) {
       pst.setTimestamp(++i, entered);
     }
@@ -976,6 +1013,29 @@ public class PermissionCategory extends GenericBean {
     modified = rs.getTimestamp("modified");
     dashboards = rs.getBoolean("dashboards");
     customtabs = rs.getBoolean("customtabs");
+    emailAccounts = rs.getBoolean("email_accounts");
+  }
+
+
+  /**
+   * Enables or disables the permission report attribute based on the specified
+   * information
+   *
+   * @param db         Description of the Parameter
+   * @param categoryId Description of the Parameter
+   * @param categoryName    Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public static void updateCategoryAttribute(Connection db, int categoryId, String categoryName) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+            "SET category = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "WHERE category_id = ? ");
+    pst.setString(1, categoryName);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
   }
 
 
@@ -1105,6 +1165,27 @@ public class PermissionCategory extends GenericBean {
     pst.close();
   }
 
+
+  /**
+   * Description of the Method
+   *
+   * @param db         Description of the Parameter
+   * @param categoryId Description of the Parameter
+   * @param enabled    Description of the Parameter
+   * @throws SQLException Description of the Exception
+   */
+  public static void updateEmailAccountsAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+            "SET email_accounts = ?, " +
+            "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+            "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
+  }
+
   /**
    * Description of the Method
    *
@@ -1112,27 +1193,28 @@ public class PermissionCategory extends GenericBean {
    * @param db
    * @return Description of the Returned Value
    */
-  public static int getIdByConstant(int constant, Connection db){
+  public static int getIdByConstant(int constant, Connection db) {
     PreparedStatement pst = null;
     int id = -1;
-    try{
+    try {
       pst = db.prepareStatement(
-        "SELECT category_id " +
-        "FROM permission_category pc " +
-        "WHERE pc.constant = ? "
+          "SELECT category_id " +
+              "FROM permission_category pc " +
+              "WHERE pc.constant = ? "
       );
       pst.setInt(1, constant);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
         id = rs.getInt("category_id");
       }
-    }catch(Throwable e){
+    } catch (Throwable e) {
       return -1;
-    }finally{
-      if(pst!=null){
-        try{
+    } finally {
+      if (pst != null) {
+        try {
           pst.close();
-        }catch(SQLException se){}
+        } catch (SQLException se) {
+        }
       }
     }
     return id;
@@ -1178,5 +1260,24 @@ public class PermissionCategory extends GenericBean {
 
   public void setCustomtabs(String tmp) {
     this.customtabs = DatabaseUtils.parseBoolean(tmp);
+  }
+
+  /**
+   * Method to update the "enabled" field of the permission_category table
+   *
+   * @param db         Connection object
+   * @param categoryId CategoryId
+   * @param enabled    enabled
+   * @throws SQLException Description of the Exception
+   */
+  public static void updateEnabledAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+            "SET enabled = ? " +
+            "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
   }
 }

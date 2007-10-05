@@ -16,7 +16,7 @@ import org.aspcfs.utils.Dictionary;
 // Using the constant categoryId from permissions.xml, get the database id for
 // this module.  This allows for translated permission categories to be used...
 
-int categoryId = PermissionCategory.lookupId(db, Constants.CONTACTS);
+int categoryId = PermissionCategory.lookupId(db, PermissionCategory.PERMISSION_CAT_CONTACTS);
 print("Documents Category Id: " + categoryId);
 if (categoryId != -1) {
 

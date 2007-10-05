@@ -15,11 +15,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-String fs = System.getProperty("file.separator") ;
-String mapFile = prefsPath + fs + "cfs" + fs + "transfer" + fs + "import-mappings.xml";
-File importFile = new File(mapFile);
-if (!importFile.exists()) {
-  mapFile = prefsPath + "import-mappings.xml";
+URL mapFile = new URL(prefsURL.toString() + "cfs/transfer/import-mappings.xml");
+if ("file".equals(mapFile.getProtocol())) {
+  File file = new File(mapFile.getPath());
+  if (!file.exists()) {
+    mapFile = new URL(prefsURL.toString() + "import-mappings.xml");
+  }
 }
 
 int systemId = SyncSystem.getSystemId(db, "CFSHttpXMLWriter");
