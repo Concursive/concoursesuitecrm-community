@@ -19,7 +19,7 @@ CREATE TABLE lookup_container_menu (
 --CREATE UNIQUE INDEX u_lcontmenu_cname ON lookup_container_menu (cname);
 
 CREATE TABLE lookup_webpage_priority (
-  code SERIAL PRIMARY,
+  code SERIAL PRIMARY KEY,
   description VARCHAR(300),
   default_item boolean DEFAULT false,
   "level" integer,
