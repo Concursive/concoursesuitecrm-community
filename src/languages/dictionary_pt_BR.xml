@@ -4,6 +4,57 @@
 <param name="admin.aliasUser">
 <value><![CDATA[Apelidar Usuário]]></value>
 </param>
+<param name="admin.customListViews.totalColumns">
+<value><![CDATA[Total de Colunas]]></value>
+</param>
+<param name="admin.customListViews.viewName">
+<value><![CDATA[Visualizar Nome]]></value>
+</param>
+<param name="admin.group.withoutADepartment">
+<value><![CDATA[Sem um departamento]]></value>
+</param>
+<param name="admin.group.withoutAType">
+<value><![CDATA[Sem um tipo]]></value>
+</param>
+<param name="admin.ldap.attribute">
+<value><![CDATA[Atributo:]]></value>
+</param>
+<param name="admin.customListViews.addView">
+<value><![CDATA[Incluir Visão]]></value>
+</param>
+<param name="admin.actionPlan.deletePhase">
+<value><![CDATA[Excluir Fase]]></value>
+</param>
+<param name="admin.actionPlan.deleteStep">
+<value><![CDATA[Excluir Passo]]></value>
+</param>
+<param name="actionPlan.skipToThisStep">
+<value><![CDATA[Saltar para este passo]]></value>
+</param>
+<param name="actionPlan.steps">
+<value><![CDATA[Passos]]></value>
+</param>
+<param name="actionPlan.submittedBy">
+<value><![CDATA[Submetido por]]></value>
+</param>
+<param name="actionPlan.targetRelationship">
+<value><![CDATA[Relacionamento Alvo]]></value>
+</param>
+<param name="actionPlan.planManager.text">
+<value><![CDATA[Gerente do Plano]]></value>
+</param>
+<param name="actionPlan.prospect">
+<value><![CDATA[Prospect]]></value>
+</param>
+<param name="actionPlan.prospectName">
+<value><![CDATA[Nome do Prospect]]></value>
+</param>
+<param name="actionPlan.noStepsForPhase.text">
+<value><![CDATA[Nenhum passo encontrada para esta fase.]]></value>
+</param>
+<param name="actionPlan.reassign">
+<value><![CDATA[Reatribuindo]]></value>
+</param>
 <param name="actionPlan.notAvailable">
 <value><![CDATA[Indisponível]]></value>
 </param>
@@ -49,8 +100,8 @@
 <param name="actionPlan.modifyPhase">
 <value><![CDATA[Alterar Fase]]></value>
 </param>
-<param name="actionPlan.attachRelationship.text">
-<value><![CDATA[Incluir Relacionamento]]></value>
+<param name="admin.multipleSelectionListBox">
+<value><![CDATA[Lista de seleção múltipla]]></value>
 </param>
 <param name="actionPlan.businessSegment">
 <value><![CDATA[Segmento de Negócio]]></value>
@@ -100,8 +151,8 @@
 <param name="actionPlan.accountTypes">
 <value><![CDATA[Tipos de Empresa]]></value>
 </param>
-<param name="admin.multipleSelectionListBox">
-<value><![CDATA[Lista de seleção múltipla]]></value>
+<param name="actionPlan.actionPlan.colon">
+<value><![CDATA[Plano de Ação]]></value>
 </param>
 <param name="actionPlan.actionPlanDetails">
 <value><![CDATA[Detalhes do Plano de Ação]]></value>
@@ -144,108 +195,6 @@
 </param>
 <param name="usergroups.noUserGroupsFound.txt">
 <value><![CDATA[No user groups found.]]></value>
-</param>
-<param name="usergroups.notSet">
-<value><![CDATA[Not set]]></value>
-</param>
-<param name="usergroups.modifyUserGroup">
-<value><![CDATA[Modify User Group]]></value>
-</param>
-<param name="usergroups.manageGroups">
-<value><![CDATA[Manage Groups]]></value>
-</param>
-<param name="usergroups.groupUsers.colon">
-<value><![CDATA[Group Users:]]></value>
-</param>
-<param name="usergroups.groupUsers">
-<value><![CDATA[Group Users]]></value>
-</param>
-<param name="usergroups.groupUserList">
-<value><![CDATA[Group User List]]></value>
-</param>
-<param name="usergroups.addUserGroup">
-<value><![CDATA[Add User Group]]></value>
-</param>
-<param name="usergroups.addGroup">
-<value><![CDATA[Add Group]]></value>
-</param>
-<param name="usergroup.dependencies">
-<value><![CDATA[The group you are requesting to delete has the following dependencies within Centric CRM:]]></value>
-</param>
-<param name="usergroup.assignedGroup">
-<value><![CDATA[Assigned Group]]></value>
-</param>
-<param name="trails.configureActionPlans">
-<value><![CDATA[Configure Action Plans]]></value>
-</param>
-<param name="ticket.ticketTask.incomplete.bracket">
-<value><![CDATA[Ticket Tasks (Incomplete)]]></value>
-</param>
-<param name="tickets.viewKnowledgeBase">
-<value><![CDATA[View Knowledge Base]]></value>
-</param>
-<param name="tickets.userGroupTickets">
-<value><![CDATA[Assigned to one of my Groups]]></value>
-</param>
-<param name="tickets.ticketState">
-<value><![CDATA[Ticket State]]></value>
-</param>
-<param name="tickets.ticketCategoryMappedActionPlans.colon">
-<value><![CDATA[Mapped Action Plans for Category:]]></value>
-</param>
-<param name="tickets.ticketCategoryLevel4">
-<value><![CDATA[Ticket Category Level 4]]></value>
-</param>
-<param name="actionPlan.reassign">
-<value><![CDATA[Reatribuindo]]></value>
-</param>
-<param name="actionPlan.noStepsForPhase.text">
-<value><![CDATA[Nenhum passo encontrada para esta fase.]]></value>
-</param>
-<param name="actionPlan.prospectName">
-<value><![CDATA[Nome do Prospect]]></value>
-</param>
-<param name="actionPlan.prospect">
-<value><![CDATA[Prospect]]></value>
-</param>
-<param name="actionPlan.planManager.text">
-<value><![CDATA[Gerente do Plano]]></value>
-</param>
-<param name="actionPlan.targetRelationship">
-<value><![CDATA[Relacionamento Alvo]]></value>
-</param>
-<param name="actionPlan.submittedBy">
-<value><![CDATA[Submetido por]]></value>
-</param>
-<param name="actionPlan.steps">
-<value><![CDATA[Passos]]></value>
-</param>
-<param name="actionPlan.skipToThisStep">
-<value><![CDATA[Saltar para este passo]]></value>
-</param>
-<param name="admin.actionPlan.deleteStep">
-<value><![CDATA[Excluir Passo]]></value>
-</param>
-<param name="admin.actionPlan.deletePhase">
-<value><![CDATA[Excluir Fase]]></value>
-</param>
-<param name="admin.customListViews.addView">
-<value><![CDATA[Incluir Visão]]></value>
-</param>
-<param name="admin.ldap.attribute">
-<value><![CDATA[Atributo:]]></value>
-</param>
-<param name="admin.group.withoutAType">
-<value><![CDATA[Sem um tipo]]></value>
-</param>
-<param name="admin.group.withoutADepartment">
-<value><![CDATA[Sem um departamento]]></value>
-</param>
-<param name="admin.customListViews.viewName">
-<value><![CDATA[Visualizar Nome]]></value>
-</param>
-<param name="admin.customListViews.totalColumns">
-<value><![CDATA[Total de Colunas]]></value>
 </param>
 <param name="admin.customListViews.noViewsFound.text">
 <value><![CDATA[Nenhuma visão encontrada]]></value>
@@ -321,35 +270,14 @@
 <param name="accounts.accounts_contacts_oppcomponent_modify.UpdateOpportunity">
 <value><![CDATA[Atualizar Oportunidade]]></value>
 </param>
-<param name="account.stage">
-<value><![CDATA[Stage]]></value>
-</param>
-<param name="accounts.101to1000">
-<value><![CDATA[101-1000]]></value>
-</param>
-<param name="accounts.11to100">
-<value><![CDATA[11-100]]></value>
-</param>
-<param name="accounts.1to10">
-<value><![CDATA[1-10]]></value>
-</param>
-<param name="accounts.accountasset_include.DescriptionColon">
-<value><![CDATA[Description:]]></value>
-</param>
-<param name="accounts.accounts_add.business_name_two">
-<value><![CDATA[Business Name 2]]></value>
-</param>
-<param name="accounts.accounts_add.duns_number">
-<value><![CDATA[DUNS Number]]></value>
-</param>
 <param name="accounts.accounts_add.duns_type">
 <value><![CDATA[DUNS Type]]></value>
 </param>
-<param name="accounts.accounts_add.sicDescription">
-<value><![CDATA[SIC Description]]></value>
-</param>
 <param name="accounts.accounts_add.sic_code">
 <value><![CDATA[SIC]]></value>
+</param>
+<param name="accounts.accounts_add.sicDescription">
+<value><![CDATA[SIC Description]]></value>
 </param>
 <param name="accounts.accounts_add.subSegment">
 <value><![CDATA[Sub Segment]]></value>
@@ -357,14 +285,35 @@
 <param name="accounts.accounts_add.year_started">
 <value><![CDATA[Year Started]]></value>
 </param>
-<param name="accounts.accounts_contacts.IMPreference">
-<value><![CDATA[Instant Message Preference]]></value>
+<param name="accounts.accounts_contacts_add.AccountDeatils">
+<value><![CDATA[Account Details]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
+<value><![CDATA[Scheduled Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogActivity">
+<value><![CDATA[Log Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
 </param>
 <param name="accounts.accounts_contacts.emailPreference">
 <value><![CDATA[Email Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.fax">
 <value><![CDATA[Fax Preference]]></value>
+</param>
+<param name="accounts.accounts_contacts.IMPreference">
+<value><![CDATA[Instant Message Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.mailPreference">
 <value><![CDATA[Mail Preference]]></value>
@@ -393,56 +342,11 @@
 <param name="accounts.accounts_contacts.textMessagePreference">
 <value><![CDATA[Text Messages Preference]]></value>
 </param>
-<param name="accounts.accounts_contacts_add.AccountDeatils">
-<value><![CDATA[Account Details]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
-<value><![CDATA[Scheduled Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogActivity">
-<value><![CDATA[Log Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_portal_include.Enabled">
-<value><![CDATA[Enabled]]></value>
-</param>
 <param name="accounts.accounts_document_portal_include.ShareWithPortalUser">
 <value><![CDATA[Share With Portal User?]]></value>
 </param>
-<param name="accounts.accounts_stage.AccountsStage">
-<value><![CDATA[Account Stage]]></value>
-</param>
-<param name="accounts.accounts_stage.Cancelled">
-<value><![CDATA[Canceled]]></value>
-</param>
-<param name="accounts.accounts_stage.Complete">
-<value><![CDATA[Complete]]></value>
-</param>
-<param name="accounts.accounts_stage.New">
-<value><![CDATA[New]]></value>
-</param>
-<param name="accounts.accounts_stage.Working">
-<value><![CDATA[Working]]></value>
-</param>
 <param name="accounts.address.county">
 <value><![CDATA[County]]></value>
-</param>
-<param name="accounts.address.latitude">
-<value><![CDATA[Latitude]]></value>
-</param>
-<param name="accounts.address.longitude">
-<value><![CDATA[Longitude]]></value>
 </param>
 <param name="accounts.contacts.documents">
 <value><![CDATA[Contact Documents]]></value>
@@ -458,9 +362,6 @@
 </param>
 <param name="accounts.sharedDocuments">
 <value><![CDATA[Share Accounts Documents]]></value>
-</param>
-<param name="actionPlan.actions.colon">
-<value><![CDATA[Actions:]]></value>
 </param>
 <param name="actionPlan.assignedUserHierarchy.withName">
 <value><![CDATA[Within the hierarchy of ${username}]]></value>
@@ -597,11 +498,11 @@
 <param name="document.noDocumentsToDisplay">
 <value><![CDATA[There are currently no documents to display in this view.]]></value>
 </param>
-<param name="document.startDate">
-<value><![CDATA[Start Date]]></value>
-</param>
 <param name="documents.DocumentStoreList">
 <value><![CDATA[Document Store List]]></value>
+</param>
+<param name="document.startDate">
+<value><![CDATA[Start Date]]></value>
 </param>
 <param name="documents.team.noPortalUserMessage">
 <value><![CDATA[Portal Users contacts have not been added to the store]]></value>
@@ -690,6 +591,9 @@
 <param name="pagedListInfo.pagedListStatus.PortalUsers">
 <value><![CDATA[Portal Users]]></value>
 </param>
+<param name="productCategory.deleteMsg">
+<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
+</param>
 <param name="product.comments">
 <value><![CDATA[Comments]]></value>
 </param>
@@ -723,26 +627,17 @@
 <param name="product.productManufacturerTypes">
 <value><![CDATA[Product Manufacturer Types]]></value>
 </param>
-<param name="product.productShipTimes">
-<value><![CDATA[Product Ship Times]]></value>
-</param>
 <param name="product.productShippingTypes">
 <value><![CDATA[Product Shipping Types]]></value>
+</param>
+<param name="product.productShipTimes">
+<value><![CDATA[Product Ship Times]]></value>
 </param>
 <param name="product.productTaxTypes">
 <value><![CDATA[Product Tax Types]]></value>
 </param>
 <param name="product.productTypes">
 <value><![CDATA[Product Types]]></value>
-</param>
-<param name="product.searchStartDate">
-<value><![CDATA[Product Start Date]]></value>
-</param>
-<param name="product.status">
-<value><![CDATA[Status]]></value>
-</param>
-<param name="productCategory.deleteMsg">
-<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
 </param>
 <param name="products.accessType">
 <value><![CDATA[Access Type]]></value>
@@ -761,6 +656,9 @@
 </param>
 <param name="products.downloadFile">
 <value><![CDATA[Download File]]></value>
+</param>
+<param name="product.searchStartDate">
+<value><![CDATA[Product Start Date]]></value>
 </param>
 <param name="products.entered">
 <value><![CDATA[Entered]]></value>
@@ -807,14 +705,14 @@
 <param name="products.importDetails">
 <value><![CDATA[Import Details]]></value>
 </param>
+<param name="products.importedRecords">
+<value><![CDATA[Imported Records]]></value>
+</param>
 <param name="products.importNotProcessed.text">
 <value><![CDATA[Your file to import has been received, but has not been processed.]]></value>
 </param>
 <param name="products.importProperties">
 <value><![CDATA[Import Properties]]></value>
-</param>
-<param name="products.importedRecords">
-<value><![CDATA[Imported Records]]></value>
 </param>
 <param name="products.keywords">
 <value><![CDATA[Keyword(s)]]></value>
@@ -855,9 +753,6 @@
 <param name="products.productCatalog">
 <value><![CDATA[Product Catalog]]></value>
 </param>
-<param name="products.productSKU">
-<value><![CDATA[Product SKU]]></value>
-</param>
 <param name="products.product_catalog_listimports.failed">
 <value><![CDATA[Failed]]></value>
 </param>
@@ -870,11 +765,17 @@
 <param name="products.product_catalog_listimports.total">
 <value><![CDATA[Total]]></value>
 </param>
+<param name="products.productSKU">
+<value><![CDATA[Product SKU]]></value>
+</param>
 <param name="products.results">
 <value><![CDATA[Results]]></value>
 </param>
 <param name="products.site">
 <value><![CDATA[Site]]></value>
+</param>
+<param name="product.status">
+<value><![CDATA[Status]]></value>
 </param>
 <param name="products.toBeginProcessingUseProccessNow.text">
 <value><![CDATA[To begin processing, use the &quot;Process Now&quot; button.  However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.]]></value>
@@ -888,20 +789,20 @@
 <param name="products.viewImports">
 <value><![CDATA[View Imports]]></value>
 </param>
-<param name="project.portalUserTeamNotDefined">
-<value><![CDATA[Portal user team has not been defined]]></value>
-</param>
 <param name="project.portalrole">
 <value><![CDATA[PortalRole]]></value>
+</param>
+<param name="project.portalUserTeamNotDefined">
+<value><![CDATA[Portal user team has not been defined]]></value>
 </param>
 <param name="project.resolvedBy">
 <value><![CDATA[Resolved By]]></value>
 </param>
-<param name="project.searchAnAccountType.colon">
-<value><![CDATA[Search an Account:]]></value>
-</param>
 <param name="projects.center_assignments.AddAnActivity">
 <value><![CDATA[Add an Activity]]></value>
+</param>
+<param name="project.searchAnAccountType.colon">
+<value><![CDATA[Search an Account:]]></value>
 </param>
 <param name="quickactions.logActivity">
 <value><![CDATA[Log an Activity]]></value>
@@ -1056,11 +957,161 @@
 <param name="website.siteEditor">
 <value><![CDATA[Site Editor]]></value>
 </param>
+<param name="accounts.accounts_add.copyEmailPhoneAddress">
+<value><![CDATA[Copiar email, telefone e CEP]]></value>
+</param>
+<param name="accounts.accounts_add.AddressLine4">
+<value><![CDATA[Linha de Endereço 4]]></value>
+</param>
+<param name="accounts.accounts_add.accountSize">
+<value><![CDATA[Tamanho da Empresa]]></value>
+</param>
+<param name="accounts.accountInformationFilters">
+<value><![CDATA[Filtros de Informações de Empresa]]></value>
+</param>
+<param name="accounts.accounts_add.business_name_two">
+<value><![CDATA[Nome da Empresa 2]]></value>
+</param>
+<param name="accounts.accountasset_include.DescriptionColon">
+<value><![CDATA[Descrição:]]></value>
+</param>
+<param name="accounts.1to10">
+<value><![CDATA[1-10]]></value>
+</param>
+<param name="accounts.11to100">
+<value><![CDATA[11-100]]></value>
+</param>
+<param name="accounts.101to1000">
+<value><![CDATA[101-1000]]></value>
+</param>
+<param name="accounts.accounts_add.duns_number">
+<value><![CDATA[Número DUNS]]></value>
+</param>
+<param name="accounts.accounts_contacts_portal_include.Enabled">
+<value><![CDATA[Habilitado]]></value>
+</param>
+<param name="accounts.address.longitude">
+<value><![CDATA[Longitude]]></value>
+</param>
+<param name="accounts.address.latitude">
+<value><![CDATA[Latitude]]></value>
+</param>
+<param name="accounts.accounts_stage.Working">
+<value><![CDATA[Trabalhando]]></value>
+</param>
+<param name="accounts.accounts_stage.New">
+<value><![CDATA[Novo]]></value>
+</param>
+<param name="accounts.accounts_stage.Complete">
+<value><![CDATA[Concluído]]></value>
+</param>
+<param name="accounts.accounts_stage.Cancelled">
+<value><![CDATA[Cancelado]]></value>
+</param>
+<param name="accounts.accounts_stage.AccountsStage">
+<value><![CDATA[Estágio da Empresa]]></value>
+</param>
+<param name="accounts.contactInformationFilters">
+<value><![CDATA[Filtros de Informações de Contatos]]></value>
+</param>
+<param name="actionItem.updateStep.beginNext">
+<value><![CDATA[Iniciar o novo passo]]></value>
+</param>
+<param name="actionPlan.actions.colon">
+<value><![CDATA[Ações:]]></value>
+</param>
+<param name="account.stage">
+<value><![CDATA[Estágio]]></value>
+</param>
+<param name="actionPlan.addNote">
+<value><![CDATA[Incluir Nota]]></value>
+</param>
+<param name="actionPlan.addNewGroup">
+<value><![CDATA[Incluir Novo Grupo]]></value>
+</param>
+<param name="actionPlan.addMappings">
+<value><![CDATA[Incluir Mapeamento]]></value>
+</param>
+<param name="actionPlan.addAPhase">
+<value><![CDATA[Incluir uma Fase]]></value>
+</param>
+<param name="actionPlan.departmentMember.text">
+<value><![CDATA[Membros de um departamento específico]]></value>
+</param>
+<param name="actionPlan.daysInStage">
+<value><![CDATA[Dias no Estágio]]></value>
+</param>
+<param name="actionPlan.daysInPhase">
+<value><![CDATA[Dias na Fase]]></value>
+</param>
+<param name="actionPlan.daysActive">
+<value><![CDATA[Dias Ativo]]></value>
+</param>
+<param name="actionPlan.editGroups">
+<value><![CDATA[Editar Grupos]]></value>
+</param>
+<param name="actionPlan.noPhasesFound.text">
+<value><![CDATA[Nenhum plano encontrado.]]></value>
+</param>
+<param name="actionPlan.noAdditionalActionRequired.text">
+<value><![CDATA[&nbsp;]]></value>
+</param>
 <param name="admin.active">
 <value><![CDATA[Active]]></value>
 </param>
 <param name="accounts.accounts_contacts_opps_details.GuessAmount">
 <value><![CDATA[Total Previsto]]></value>
+</param>
+<param name="usergroups.notSet">
+<value><![CDATA[Not set]]></value>
+</param>
+<param name="usergroups.modifyUserGroup">
+<value><![CDATA[Modify User Group]]></value>
+</param>
+<param name="usergroups.manageGroups">
+<value><![CDATA[Manage Groups]]></value>
+</param>
+<param name="usergroups.groupUsers.colon">
+<value><![CDATA[Group Users:]]></value>
+</param>
+<param name="usergroups.groupUsers">
+<value><![CDATA[Group Users]]></value>
+</param>
+<param name="usergroups.groupUserList">
+<value><![CDATA[Group User List]]></value>
+</param>
+<param name="usergroups.addUserGroup">
+<value><![CDATA[Add User Group]]></value>
+</param>
+<param name="usergroups.addGroup">
+<value><![CDATA[Add Group]]></value>
+</param>
+<param name="usergroup.dependencies">
+<value><![CDATA[The group you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+</param>
+<param name="usergroup.assignedGroup">
+<value><![CDATA[Assigned Group]]></value>
+</param>
+<param name="trails.configureActionPlans">
+<value><![CDATA[Configure Action Plans]]></value>
+</param>
+<param name="ticket.ticketTask.incomplete.bracket">
+<value><![CDATA[Ticket Tasks (Incomplete)]]></value>
+</param>
+<param name="tickets.viewKnowledgeBase">
+<value><![CDATA[View Knowledge Base]]></value>
+</param>
+<param name="tickets.userGroupTickets">
+<value><![CDATA[Assigned to one of my Groups]]></value>
+</param>
+<param name="tickets.ticketState">
+<value><![CDATA[Ticket State]]></value>
+</param>
+<param name="tickets.ticketCategoryMappedActionPlans.colon">
+<value><![CDATA[Mapped Action Plans for Category:]]></value>
+</param>
+<param name="tickets.ticketCategoryLevel4">
+<value><![CDATA[Ticket Category Level 4]]></value>
 </param>
 <param name="tickets.ticketCategoryLevel3">
 <value><![CDATA[Ticket Category Level 3]]></value>
@@ -1655,14 +1706,11 @@
 <param name="actionPlan.planManager">
 <value><![CDATA[Plan Manager]]></value>
 </param>
-<param name="actionPlan.noPhasesFound.text">
-<value><![CDATA[No Phases found.]]></value>
+<param name="actionPlan.archivedDate">
+<value><![CDATA[Data de Arquivamento]]></value>
 </param>
 <param name="actionPlan.noElementsAvailable.text">
 <value><![CDATA[No elements available for mapping]]></value>
-</param>
-<param name="actionPlan.noAdditionalActionRequired.text">
-<value><![CDATA[&nbsp;]]></value>
 </param>
 <param name="actionPlan.myWaitingActionPlans">
 <value><![CDATA[Action Plans Waiting on Me]]></value>
@@ -1682,26 +1730,11 @@
 <param name="actionPlan.folderField.text">
 <value><![CDATA[* Folder Field]]></value>
 </param>
-<param name="actionPlan.editGroups">
-<value><![CDATA[Edit Groups]]></value>
-</param>
 <param name="actionPlan.disapprove">
 <value><![CDATA[Disapprove]]></value>
 </param>
 <param name="actionplan.dependencies">
 <value><![CDATA[The action plan you are requesting to delete has the following dependencies within Centric CRM:]]></value>
-</param>
-<param name="actionPlan.departmentMember.text">
-<value><![CDATA[Member of a specific department]]></value>
-</param>
-<param name="actionPlan.daysInStage">
-<value><![CDATA[Days in Stage]]></value>
-</param>
-<param name="actionPlan.daysInPhase">
-<value><![CDATA[Days in Phase]]></value>
-</param>
-<param name="actionPlan.daysActive">
-<value><![CDATA[Days Active]]></value>
 </param>
 <param name="actionPlan.attachOpportunity.text">
 <value><![CDATA[Attach Opportunity]]></value>
@@ -1742,23 +1775,8 @@
 <param name="actionPlan.assignedUserAndPlanManager.text">
 <value><![CDATA[Assigned User and Manager of the plan]]></value>
 </param>
-<param name="actionPlan.archivedDate">
-<value><![CDATA[Archived Date]]></value>
-</param>
 <param name="actionPlan.anyStatusPlans">
 <value><![CDATA[Any Status Plans]]></value>
-</param>
-<param name="actionPlan.addNote">
-<value><![CDATA[Add Note]]></value>
-</param>
-<param name="actionPlan.addNewGroup">
-<value><![CDATA[Add New Group]]></value>
-</param>
-<param name="actionPlan.addMappings">
-<value><![CDATA[Add Mappings]]></value>
-</param>
-<param name="actionPlan.addAPhase">
-<value><![CDATA[Add a Phase]]></value>
 </param>
 <param name="actionPlan.addActionStep">
 <value><![CDATA[Add Action Step]]></value>
@@ -1784,9 +1802,6 @@
 <param name="actionItem.updateStep.comment">
 <value><![CDATA[Updating this step will]]></value>
 </param>
-<param name="actionItem.updateStep.beginNext">
-<value><![CDATA[Begin the next step]]></value>
-</param>
 <param name="actionItem.updateStep.alertNextOwner">
 <value><![CDATA[Alert the next step's owner by email]]></value>
 </param>
@@ -1801,9 +1816,6 @@
 </param>
 <param name="accounts.contacts.folders.Permission">
 <value><![CDATA[Contact Folders]]></value>
-</param>
-<param name="accounts.contactInformationFilters">
-<value><![CDATA[Contact Information Filters]]></value>
 </param>
 <param name="accounts.assets.noMaterialsPresent.text">
 <value><![CDATA[No materials present for the asset]]></value>
@@ -1831,18 +1843,6 @@
 </param>
 <param name="accounts.accounts_add.directBill">
 <value><![CDATA[Direct Bill]]></value>
-</param>
-<param name="accounts.accounts_add.copyEmailPhoneAddress">
-<value><![CDATA[Copy email, phone and postal address]]></value>
-</param>
-<param name="accounts.accounts_add.AddressLine4">
-<value><![CDATA[Address Line 4]]></value>
-</param>
-<param name="accounts.accounts_add.accountSize">
-<value><![CDATA[Account Size]]></value>
-</param>
-<param name="accounts.accountInformationFilters">
-<value><![CDATA[Account Information Filters]]></value>
 </param>
 <param name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">
 <value><![CDATA[Todas as oportunidades abertas]]></value>
@@ -4908,9 +4908,6 @@
 <param name="campaign.answer">
 <value><![CDATA[Resposta]]></value>
 </param>
-<param name="accounts.assets.material">
-<value><![CDATA[Material]]></value>
-</param>
 <param name="accounts.accounts_contacts_oppcomponent.viewComponentLog">
 <value><![CDATA[View Component Log]]></value>
 </param>
@@ -4928,6 +4925,9 @@
 </param>
 <param name="opp.updateAComponent">
 <value><![CDATA[Atualizar um Componente]]></value>
+</param>
+<param name="accounts.assets.material">
+<value><![CDATA[Material]]></value>
 </param>
 <param name="website.website">
 <value><![CDATA[Website]]></value>
@@ -6605,8 +6605,8 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <param name="product.moveProduct">
 <value><![CDATA[Mover Produto]]></value>
 </param>
-<param name="actionPlan.actionPlan.colon">
-<value><![CDATA[Plano de Ação]]></value>
+<param name="actionPlan.attachRelationship.text">
+<value><![CDATA[Incluir Relacionamento]]></value>
 </param>
 <param name="product.modifyProduct">
 <value><![CDATA[Alterar Produto]]></value>

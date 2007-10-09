@@ -1084,9 +1084,6 @@
 <param name="pagedListInfo.pagedListStatus.Employees">
 <value><![CDATA[Сотрудники]]></value>
 </param>
-<param name="account.stage">
-<value><![CDATA[Stage]]></value>
-</param>
 <param name="accounts.101to1000">
 <value><![CDATA[101-1000]]></value>
 </param>
@@ -1108,11 +1105,11 @@
 <param name="accounts.accounts_add.duns_type">
 <value><![CDATA[DUNS Type]]></value>
 </param>
-<param name="accounts.accounts_add.sicDescription">
-<value><![CDATA[SIC Description]]></value>
-</param>
 <param name="accounts.accounts_add.sic_code">
 <value><![CDATA[SIC]]></value>
+</param>
+<param name="accounts.accounts_add.sicDescription">
+<value><![CDATA[SIC Description]]></value>
 </param>
 <param name="accounts.accounts_add.subSegment">
 <value><![CDATA[Sub Segment]]></value>
@@ -1120,14 +1117,35 @@
 <param name="accounts.accounts_add.year_started">
 <value><![CDATA[Year Started]]></value>
 </param>
-<param name="accounts.accounts_contacts.IMPreference">
-<value><![CDATA[Instant Message Preference]]></value>
+<param name="accounts.accounts_contacts_add.AccountDeatils">
+<value><![CDATA[Account Details]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
+<value><![CDATA[Scheduled Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogActivity">
+<value><![CDATA[Log Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
 </param>
 <param name="accounts.accounts_contacts.emailPreference">
 <value><![CDATA[Email Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.fax">
 <value><![CDATA[Fax Preference]]></value>
+</param>
+<param name="accounts.accounts_contacts.IMPreference">
+<value><![CDATA[Instant Message Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.mailPreference">
 <value><![CDATA[Mail Preference]]></value>
@@ -1153,32 +1171,11 @@
 <param name="accounts.accounts_contacts.phonePreference">
 <value><![CDATA[Phone Call Preference]]></value>
 </param>
-<param name="accounts.accounts_contacts.textMessagePreference">
-<value><![CDATA[Text Messages Preference]]></value>
-</param>
-<param name="accounts.accounts_contacts_add.AccountDeatils">
-<value><![CDATA[Account Details]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
-<value><![CDATA[Scheduled Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogActivity">
-<value><![CDATA[Log Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
 <param name="accounts.accounts_contacts_portal_include.Enabled">
 <value><![CDATA[Enabled]]></value>
+</param>
+<param name="accounts.accounts_contacts.textMessagePreference">
+<value><![CDATA[Text Messages Preference]]></value>
 </param>
 <param name="accounts.accounts_document_portal_include.ShareWithPortalUser">
 <value><![CDATA[Share With Portal User?]]></value>
@@ -1221,6 +1218,9 @@
 </param>
 <param name="accounts.sharedDocuments">
 <value><![CDATA[Share Accounts Documents]]></value>
+</param>
+<param name="account.stage">
+<value><![CDATA[Stage]]></value>
 </param>
 <param name="actionPlan.actions.colon">
 <value><![CDATA[Actions:]]></value>
@@ -1363,11 +1363,11 @@
 <param name="document.noDocumentsToDisplay">
 <value><![CDATA[There are currently no documents to display in this view.]]></value>
 </param>
-<param name="document.startDate">
-<value><![CDATA[Start Date]]></value>
-</param>
 <param name="documents.DocumentStoreList">
 <value><![CDATA[Document Store List]]></value>
+</param>
+<param name="document.startDate">
+<value><![CDATA[Start Date]]></value>
 </param>
 <param name="documents.team.noPortalUserMessage">
 <value><![CDATA[Portal Users contacts have not been added to the store]]></value>
@@ -1456,6 +1456,9 @@
 <param name="pagedListInfo.pagedListStatus.PortalUsers">
 <value><![CDATA[Portal Users]]></value>
 </param>
+<param name="productCategory.deleteMsg">
+<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
+</param>
 <param name="product.comments">
 <value><![CDATA[Comments]]></value>
 </param>
@@ -1489,26 +1492,17 @@
 <param name="product.productManufacturerTypes">
 <value><![CDATA[Product Manufacturer Types]]></value>
 </param>
-<param name="product.productShipTimes">
-<value><![CDATA[Product Ship Times]]></value>
-</param>
 <param name="product.productShippingTypes">
 <value><![CDATA[Product Shipping Types]]></value>
+</param>
+<param name="product.productShipTimes">
+<value><![CDATA[Product Ship Times]]></value>
 </param>
 <param name="product.productTaxTypes">
 <value><![CDATA[Product Tax Types]]></value>
 </param>
 <param name="product.productTypes">
 <value><![CDATA[Product Types]]></value>
-</param>
-<param name="product.searchStartDate">
-<value><![CDATA[Product Start Date]]></value>
-</param>
-<param name="product.status">
-<value><![CDATA[Status]]></value>
-</param>
-<param name="productCategory.deleteMsg">
-<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
 </param>
 <param name="products.accessType">
 <value><![CDATA[Access Type]]></value>
@@ -1527,6 +1521,9 @@
 </param>
 <param name="products.downloadFile">
 <value><![CDATA[Download File]]></value>
+</param>
+<param name="product.searchStartDate">
+<value><![CDATA[Product Start Date]]></value>
 </param>
 <param name="products.entered">
 <value><![CDATA[Entered]]></value>
@@ -1573,14 +1570,14 @@
 <param name="products.importDetails">
 <value><![CDATA[Import Details]]></value>
 </param>
+<param name="products.importedRecords">
+<value><![CDATA[Imported Records]]></value>
+</param>
 <param name="products.importNotProcessed.text">
 <value><![CDATA[Your file to import has been received, but has not been processed.]]></value>
 </param>
 <param name="products.importProperties">
 <value><![CDATA[Import Properties]]></value>
-</param>
-<param name="products.importedRecords">
-<value><![CDATA[Imported Records]]></value>
 </param>
 <param name="products.keywords">
 <value><![CDATA[Keyword(s)]]></value>
@@ -1621,9 +1618,6 @@
 <param name="products.productCatalog">
 <value><![CDATA[Product Catalog]]></value>
 </param>
-<param name="products.productSKU">
-<value><![CDATA[Product SKU]]></value>
-</param>
 <param name="products.product_catalog_listimports.failed">
 <value><![CDATA[Failed]]></value>
 </param>
@@ -1636,11 +1630,17 @@
 <param name="products.product_catalog_listimports.total">
 <value><![CDATA[Total]]></value>
 </param>
+<param name="products.productSKU">
+<value><![CDATA[Product SKU]]></value>
+</param>
 <param name="products.results">
 <value><![CDATA[Results]]></value>
 </param>
 <param name="products.site">
 <value><![CDATA[Site]]></value>
+</param>
+<param name="product.status">
+<value><![CDATA[Status]]></value>
 </param>
 <param name="products.toBeginProcessingUseProccessNow.text">
 <value><![CDATA[To begin processing, use the &quot;Process Now&quot; button.  However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.]]></value>
@@ -1654,20 +1654,20 @@
 <param name="products.viewImports">
 <value><![CDATA[View Imports]]></value>
 </param>
-<param name="project.portalUserTeamNotDefined">
-<value><![CDATA[Portal user team has not been defined]]></value>
-</param>
 <param name="project.portalrole">
 <value><![CDATA[PortalRole]]></value>
+</param>
+<param name="project.portalUserTeamNotDefined">
+<value><![CDATA[Portal user team has not been defined]]></value>
 </param>
 <param name="project.resolvedBy">
 <value><![CDATA[Resolved By]]></value>
 </param>
-<param name="project.searchAnAccountType.colon">
-<value><![CDATA[Search an Account:]]></value>
-</param>
 <param name="projects.center_assignments.AddAnActivity">
 <value><![CDATA[Add an Activity]]></value>
+</param>
+<param name="project.searchAnAccountType.colon">
+<value><![CDATA[Search an Account:]]></value>
 </param>
 <param name="quickactions.logActivity">
 <value><![CDATA[Log an Activity]]></value>

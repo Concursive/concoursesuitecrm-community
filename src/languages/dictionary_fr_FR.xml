@@ -4,6 +4,15 @@
 <param name="actionPlan.notAvailable">
 <value><![CDATA[Non disponible]]></value>
 </param>
+<param name="actionPlan.noPhasesFound.text">
+<value><![CDATA[Aucune phase trouvée]]></value>
+</param>
+<param name="actionPlan.memberOfTheRole.colon">
+<value><![CDATA[Membre du rôle]]></value>
+</param>
+<param name="actionPlan.currentPhase">
+<value><![CDATA[Phase courante]]></value>
+</param>
 <param name="actionPlan.addNewGroup">
 <value><![CDATA[Ajouter un nouveau groupe]]></value>
 </param>
@@ -31,8 +40,8 @@
 <param name="accounts.accounts_contacts.noEmailPlease">
 <value><![CDATA[Pas de courriel svp]]></value>
 </param>
-<param name="accounts.accounts_contacts.noFaxPlease">
-<value><![CDATA[Pas de fax svp]]></value>
+<param name="actionPlan.noAdditionalActionRequired.text">
+<value><![CDATA[&nbsp;]]></value>
 </param>
 <param name="accounts.accounts_contacts_listimports.Failed">
 <value><![CDATA[Echec]]></value>
@@ -40,8 +49,8 @@
 <param name="accounts.accounts_contacts_oppcomponent_list.Del">
 <value><![CDATA[Supprimer]]></value>
 </param>
-<param name="actionPlan.noAdditionalActionRequired.text">
-<value><![CDATA[&nbsp;]]></value>
+<param name="accounts.accounts_contacts_listimports.NoImportsFound">
+<value><![CDATA[Pas d'imports trouvés]]></value>
 </param>
 <param name="accounts.accounts_contacts_listimports.MyImports">
 <value><![CDATA[Mes imports]]></value>
@@ -183,24 +192,6 @@
 </param>
 <param name="account.asset">
 <value><![CDATA[Biens ou Patrimoine]]></value>
-</param>
-<param name="accounts.accountasset_include.ExpirationDate">
-<value><![CDATA[Date d'expiration]]></value>
-</param>
-<param name="accounts.accountasset_include.Description">
-<value><![CDATA[Description]]></value>
-</param>
-<param name="account.assetSerialNumber">
-<value><![CDATA[N° de série du biens ou patrimoine]]></value>
-</param>
-<param name="actionPlan.currentPhase">
-<value><![CDATA[Phase courante]]></value>
-</param>
-<param name="actionPlan.memberOfTheRole.colon">
-<value><![CDATA[Membre du rôle]]></value>
-</param>
-<param name="actionPlan.noPhasesFound.text">
-<value><![CDATA[Aucune phase trouvée]]></value>
 </param>
 <param name="actionPlan.noActionPlansFound.text">
 <value><![CDATA[Aucun plan d'actions trouvé.]]></value>
@@ -376,21 +367,6 @@
 <param name="admin.customListViews.addView">
 <value><![CDATA[Ajouter vue]]></value>
 </param>
-<param name="account.stage">
-<value><![CDATA[Stage]]></value>
-</param>
-<param name="accounts.101to1000">
-<value><![CDATA[101-1000]]></value>
-</param>
-<param name="accounts.11to100">
-<value><![CDATA[11-100]]></value>
-</param>
-<param name="accounts.1to10">
-<value><![CDATA[1-10]]></value>
-</param>
-<param name="accounts.accountasset_include.DescriptionColon">
-<value><![CDATA[Description:]]></value>
-</param>
 <param name="accounts.accounts_add.business_name_two">
 <value><![CDATA[Business Name 2]]></value>
 </param>
@@ -400,11 +376,11 @@
 <param name="accounts.accounts_add.duns_type">
 <value><![CDATA[DUNS Type]]></value>
 </param>
-<param name="accounts.accounts_add.sicDescription">
-<value><![CDATA[SIC Description]]></value>
-</param>
 <param name="accounts.accounts_add.sic_code">
 <value><![CDATA[SIC]]></value>
+</param>
+<param name="accounts.accounts_add.sicDescription">
+<value><![CDATA[SIC Description]]></value>
 </param>
 <param name="accounts.accounts_add.subSegment">
 <value><![CDATA[Sub Segment]]></value>
@@ -412,14 +388,32 @@
 <param name="accounts.accounts_add.year_started">
 <value><![CDATA[Year Started]]></value>
 </param>
-<param name="accounts.accounts_contacts.IMPreference">
-<value><![CDATA[Instant Message Preference]]></value>
+<param name="accounts.accounts_contacts_add.AccountDeatils">
+<value><![CDATA[Account Details]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
+<value><![CDATA[Scheduled Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogActivity">
+<value><![CDATA[Log Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
 </param>
 <param name="accounts.accounts_contacts.emailPreference">
 <value><![CDATA[Email Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.fax">
 <value><![CDATA[Fax Preference]]></value>
+</param>
+<param name="accounts.accounts_contacts.IMPreference">
+<value><![CDATA[Instant Message Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.mailPreference">
 <value><![CDATA[Mail Preference]]></value>
@@ -445,32 +439,11 @@
 <param name="accounts.accounts_contacts.phonePreference">
 <value><![CDATA[Phone Call Preference]]></value>
 </param>
-<param name="accounts.accounts_contacts.textMessagePreference">
-<value><![CDATA[Text Messages Preference]]></value>
-</param>
-<param name="accounts.accounts_contacts_add.AccountDeatils">
-<value><![CDATA[Account Details]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
-<value><![CDATA[Scheduled Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogActivity">
-<value><![CDATA[Log Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
 <param name="accounts.accounts_contacts_portal_include.Enabled">
 <value><![CDATA[Enabled]]></value>
+</param>
+<param name="accounts.accounts_contacts.textMessagePreference">
+<value><![CDATA[Text Messages Preference]]></value>
 </param>
 <param name="accounts.accounts_document_portal_include.ShareWithPortalUser">
 <value><![CDATA[Share With Portal User?]]></value>
@@ -484,14 +457,8 @@
 <param name="accounts.accounts_stage.Complete">
 <value><![CDATA[Complete]]></value>
 </param>
-<param name="accounts.accounts_stage.New">
-<value><![CDATA[New]]></value>
-</param>
 <param name="accounts.accounts_stage.Working">
 <value><![CDATA[Working]]></value>
-</param>
-<param name="accounts.address.county">
-<value><![CDATA[County]]></value>
 </param>
 <param name="accounts.address.latitude">
 <value><![CDATA[Latitude]]></value>
@@ -505,17 +472,14 @@
 <param name="accounts.documentStore">
 <value><![CDATA[Document store]]></value>
 </param>
-<param name="accounts.gt1000">
-<value><![CDATA[>1000]]></value>
-</param>
 <param name="accounts.industryTypes">
 <value><![CDATA[Industry Types]]></value>
 </param>
 <param name="accounts.sharedDocuments">
 <value><![CDATA[Share Accounts Documents]]></value>
 </param>
-<param name="actionPlan.actions.colon">
-<value><![CDATA[Actions:]]></value>
+<param name="account.stage">
+<value><![CDATA[Stage]]></value>
 </param>
 <param name="actionPlan.assignedUserHierarchy.withName">
 <value><![CDATA[Within the hierarchy of ${username}]]></value>
@@ -655,11 +619,11 @@
 <param name="document.noDocumentsToDisplay">
 <value><![CDATA[There are currently no documents to display in this view.]]></value>
 </param>
-<param name="document.startDate">
-<value><![CDATA[Start Date]]></value>
-</param>
 <param name="documents.DocumentStoreList">
 <value><![CDATA[Document Store List]]></value>
+</param>
+<param name="document.startDate">
+<value><![CDATA[Start Date]]></value>
 </param>
 <param name="documents.team.noPortalUserMessage">
 <value><![CDATA[Portal Users contacts have not been added to the store]]></value>
@@ -748,6 +712,9 @@
 <param name="pagedListInfo.pagedListStatus.PortalUsers">
 <value><![CDATA[Portal Users]]></value>
 </param>
+<param name="productCategory.deleteMsg">
+<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
+</param>
 <param name="product.comments">
 <value><![CDATA[Comments]]></value>
 </param>
@@ -781,26 +748,17 @@
 <param name="product.productManufacturerTypes">
 <value><![CDATA[Product Manufacturer Types]]></value>
 </param>
-<param name="product.productShipTimes">
-<value><![CDATA[Product Ship Times]]></value>
-</param>
 <param name="product.productShippingTypes">
 <value><![CDATA[Product Shipping Types]]></value>
+</param>
+<param name="product.productShipTimes">
+<value><![CDATA[Product Ship Times]]></value>
 </param>
 <param name="product.productTaxTypes">
 <value><![CDATA[Product Tax Types]]></value>
 </param>
 <param name="product.productTypes">
 <value><![CDATA[Product Types]]></value>
-</param>
-<param name="product.searchStartDate">
-<value><![CDATA[Product Start Date]]></value>
-</param>
-<param name="product.status">
-<value><![CDATA[Status]]></value>
-</param>
-<param name="productCategory.deleteMsg">
-<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
 </param>
 <param name="products.accessType">
 <value><![CDATA[Access Type]]></value>
@@ -819,6 +777,9 @@
 </param>
 <param name="products.downloadFile">
 <value><![CDATA[Download File]]></value>
+</param>
+<param name="product.searchStartDate">
+<value><![CDATA[Product Start Date]]></value>
 </param>
 <param name="products.entered">
 <value><![CDATA[Entered]]></value>
@@ -865,14 +826,14 @@
 <param name="products.importDetails">
 <value><![CDATA[Import Details]]></value>
 </param>
+<param name="products.importedRecords">
+<value><![CDATA[Imported Records]]></value>
+</param>
 <param name="products.importNotProcessed.text">
 <value><![CDATA[Your file to import has been received, but has not been processed.]]></value>
 </param>
 <param name="products.importProperties">
 <value><![CDATA[Import Properties]]></value>
-</param>
-<param name="products.importedRecords">
-<value><![CDATA[Imported Records]]></value>
 </param>
 <param name="products.keywords">
 <value><![CDATA[Keyword(s)]]></value>
@@ -913,9 +874,6 @@
 <param name="products.productCatalog">
 <value><![CDATA[Product Catalog]]></value>
 </param>
-<param name="products.productSKU">
-<value><![CDATA[Product SKU]]></value>
-</param>
 <param name="products.product_catalog_listimports.failed">
 <value><![CDATA[Failed]]></value>
 </param>
@@ -928,11 +886,17 @@
 <param name="products.product_catalog_listimports.total">
 <value><![CDATA[Total]]></value>
 </param>
+<param name="products.productSKU">
+<value><![CDATA[Product SKU]]></value>
+</param>
 <param name="products.results">
 <value><![CDATA[Results]]></value>
 </param>
 <param name="products.site">
 <value><![CDATA[Site]]></value>
+</param>
+<param name="product.status">
+<value><![CDATA[Status]]></value>
 </param>
 <param name="products.toBeginProcessingUseProccessNow.text">
 <value><![CDATA[To begin processing, use the &quot;Process Now&quot; button.  However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.]]></value>
@@ -946,20 +910,20 @@
 <param name="products.viewImports">
 <value><![CDATA[View Imports]]></value>
 </param>
-<param name="project.portalUserTeamNotDefined">
-<value><![CDATA[Portal user team has not been defined]]></value>
-</param>
 <param name="project.portalrole">
 <value><![CDATA[PortalRole]]></value>
+</param>
+<param name="project.portalUserTeamNotDefined">
+<value><![CDATA[Portal user team has not been defined]]></value>
 </param>
 <param name="project.resolvedBy">
 <value><![CDATA[Resolved By]]></value>
 </param>
-<param name="project.searchAnAccountType.colon">
-<value><![CDATA[Search an Account:]]></value>
-</param>
 <param name="projects.center_assignments.AddAnActivity">
 <value><![CDATA[Add an Activity]]></value>
+</param>
+<param name="project.searchAnAccountType.colon">
+<value><![CDATA[Search an Account:]]></value>
 </param>
 <param name="quickactions.logActivity">
 <value><![CDATA[Log an Activity]]></value>
@@ -1114,8 +1078,53 @@
 <param name="website.siteEditor">
 <value><![CDATA[Site Editor]]></value>
 </param>
+<param name="accounts.accountasset_include.DescriptionColon">
+<value><![CDATA[Description:]]></value>
+</param>
+<param name="accounts.1to10">
+<value><![CDATA[1-10]]></value>
+</param>
+<param name="accounts.11to100">
+<value><![CDATA[11-100]]></value>
+</param>
+<param name="accounts.101to1000">
+<value><![CDATA[101-1000]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
+<value><![CDATA[Plinifier une activité]]></value>
+</param>
+<param name="accounts.address.county">
+<value><![CDATA[Pays]]></value>
+</param>
+<param name="accounts.accounts_stage.New">
+<value><![CDATA[Nouveau]]></value>
+</param>
+<param name="accounts.gt1000">
+<value><![CDATA[>1000]]></value>
+</param>
+<param name="actionItem.updateStep.changeStatus">
+<value><![CDATA[Changer l'état à]]></value>
+</param>
+<param name="accounts.viewActivities">
+<value><![CDATA[Afficher les activités]]></value>
+</param>
+<param name="actionPlan.actions.colon">
+<value><![CDATA[Actions:]]></value>
+</param>
+<param name="actionPlan.addActionPlan">
+<value><![CDATA[Ajouter plan d'actions]]></value>
+</param>
 <param name="actionPlan.prospectName">
 <value><![CDATA[Nom du prospect]]></value>
+</param>
+<param name="accounts.accountasset_include.ExpirationDate">
+<value><![CDATA[Date d'expiration]]></value>
+</param>
+<param name="accounts.accountasset_include.Description">
+<value><![CDATA[Description]]></value>
+</param>
+<param name="account.assetSerialNumber">
+<value><![CDATA[N° de série du biens ou patrimoine]]></value>
 </param>
 <param name="accounts.accountasset_include.Category">
 <value><![CDATA[Catégorie]]></value>
@@ -1147,8 +1156,8 @@
 <param name="reports.helpdesk.assetsContract.assetModel">
 <value><![CDATA[Modèle]]></value>
 </param>
-<param name="object.validation.actionError.assetDeletion">
-<value><![CDATA[Des capitaux n'ont pas pu être supprimés en raison de l'intégrité référentielle.]]></value>
+<param name="reports.errorCreatingReport">
+<value><![CDATA[Erreur créant le rapport]]></value>
 </param>
 <param name="dependency.assets">
 <value><![CDATA[Biens ou patrimoine]]></value>
@@ -1156,8 +1165,8 @@
 <param name="reports.helpdesk.assetsContract.assetDescription">
 <value><![CDATA[Description]]></value>
 </param>
-<param name="reports.errorCreatingReport">
-<value><![CDATA[Erreur créant le rapport]]></value>
+<param name="reports.helpdesk.assetsContract.assetTag">
+<value><![CDATA[Étiquette De Capitaux]]></value>
 </param>
 <param name="accounts.accounts_add.segment">
 <value><![CDATA[segment]]></value>
@@ -1341,8 +1350,8 @@
 <param name="setup.LDAPFailed.text">
 <value><![CDATA[LDAP failed.  The following error was returned:]]></value>
 </param>
-<param name="setup.centricCRMLDAPTest">
-<value><![CDATA[Centric CRM LDAP Test]]></value>
+<param name="campaign.backToCampaignList">
+<value><![CDATA[De nouveau à la campagne Liste]]></value>
 </param>
 <param name="sales.leadsDashboard">
 <value><![CDATA[Leads Dashboard]]></value>
@@ -1350,8 +1359,8 @@
 <param name="sales.leads">
 <value><![CDATA[Leads]]></value>
 </param>
-<param name="campaign.backToCampaignList">
-<value><![CDATA[De nouveau à la campagne Liste]]></value>
+<param name="sales.assignLead">
+<value><![CDATA[Assign]]></value>
 </param>
 <param name="sales.actionPlans.stepsRandomExecution.text">
 <value><![CDATA[Steps can execute in random order]]></value>
@@ -1533,8 +1542,8 @@
 <param name="dependency.actionPhaseRecords">
 <value><![CDATA[Action Phase Records]]></value>
 </param>
-<param name="contacts.generalContacts.brackets.public">
-<value><![CDATA[General Contacts (Public)]]></value>
+<param name="setup.administrativeAccessAvailable.text">
+<value><![CDATA[<ul><li>Protection la base de données centrale de CRM</li><li>Protection le dossier central de CRM bibliothèque</li></ul>]]></value>
 </param>
 <param name="contacts.generalContacts.brackets.personal">
 <value><![CDATA[General Contacts (Personal)]]></value>
@@ -1542,8 +1551,8 @@
 <param name="contacts.generalContacts.brackets.controlledHierarchy">
 <value><![CDATA[General Contacts (Controlled Hierarchy)]]></value>
 </param>
-<param name="setup.administrativeAccessAvailable.text">
-<value><![CDATA[<ul><li>Protection la base de données centrale de CRM</li><li>Protection le dossier central de CRM bibliothèque</li></ul>]]></value>
+<param name="contacts.add.secretWord">
+<value><![CDATA[Secret Word]]></value>
 </param>
 <param name="communications.button.broadcast">
 <value><![CDATA[Broadcast]]></value>
@@ -1908,9 +1917,6 @@
 <param name="actionPlan.addActionStep">
 <value><![CDATA[Add Action Step]]></value>
 </param>
-<param name="actionPlan.addActionPlan">
-<value><![CDATA[Add Action Plan]]></value>
-</param>
 <param name="actionPlan.contactName">
 <value><![CDATA[Nom du contact]]></value>
 </param>
@@ -1926,17 +1932,11 @@
 <param name="actionItem.updateStep.comment">
 <value><![CDATA[Updating this step will]]></value>
 </param>
-<param name="actionItem.updateStep.changeStatus">
-<value><![CDATA[Change the status to]]></value>
-</param>
 <param name="actionItem.updateStep.beginNext">
 <value><![CDATA[Begin the next step]]></value>
 </param>
 <param name="actionItem.updateStep.alertNextOwner">
 <value><![CDATA[Alert the next step's owner by email]]></value>
-</param>
-<param name="accounts.viewActivities">
-<value><![CDATA[View Activities]]></value>
 </param>
 <param name="accounts.subAssets">
 <value><![CDATA[Sub-Assets]]></value>
@@ -6556,8 +6556,8 @@
 <param name="calendar.viewContactHistory">
 <value><![CDATA[Voir l'historique du contact]]></value>
 </param>
-<param name="accounts.accounts_contacts_listimports.NoImportsFound">
-<value><![CDATA[Pas d'imports trouvés]]></value>
+<param name="accounts.accounts_contacts.noFaxPlease">
+<value><![CDATA[Pas de fax svp]]></value>
 </param>
 <param name="calendar.recipients">
 <value><![CDATA[Destinataire(s)]]></value>
@@ -6652,8 +6652,8 @@
 <param name="calendar.Event">
 <value><![CDATA[Evénement]]></value>
 </param>
-<param name="reports.helpdesk.assetsContract.assetTag">
-<value><![CDATA[Étiquette De Capitaux]]></value>
+<param name="object.validation.actionError.assetDeletion">
+<value><![CDATA[Des capitaux n'ont pas pu être supprimés en raison de l'intégrité référentielle.]]></value>
 </param>
 <param name="calendar.Accounts">
 <value><![CDATA[Comptes]]></value>
@@ -6748,8 +6748,8 @@
 <param name="admin.serverURL">
 <value><![CDATA[URL du serveur]]></value>
 </param>
-<param name="sales.assignLead">
-<value><![CDATA[Assign]]></value>
+<param name="setup.centricCRMLDAPTest">
+<value><![CDATA[Centric CRM LDAP Test]]></value>
 </param>
 <param name="admin.step">
 <value><![CDATA[Etape]]></value>
@@ -6844,8 +6844,8 @@
 <param name="button.backToCampaignDetails">
 <value><![CDATA[Revenir aux détails de la campagne]]></value>
 </param>
-<param name="contacts.add.secretWord">
-<value><![CDATA[Secret Word]]></value>
+<param name="contacts.generalContacts.brackets.public">
+<value><![CDATA[General Contacts (Public)]]></value>
 </param>
 <param name="button.add">
 <value><![CDATA[Ajouter]]></value>

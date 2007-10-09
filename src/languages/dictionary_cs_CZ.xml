@@ -16,20 +16,20 @@
 <param name="quickactions.logActivity">
 <value><![CDATA[Log an Activity]]></value>
 </param>
-<param name="projects.center_assignments.AddAnActivity">
-<value><![CDATA[Add an Activity]]></value>
-</param>
 <param name="project.searchAnAccountType.colon">
 <value><![CDATA[Search an Account:]]></value>
+</param>
+<param name="projects.center_assignments.AddAnActivity">
+<value><![CDATA[Add an Activity]]></value>
 </param>
 <param name="project.resolvedBy">
 <value><![CDATA[Resolved By]]></value>
 </param>
-<param name="project.portalrole">
-<value><![CDATA[PortalRole]]></value>
-</param>
 <param name="project.portalUserTeamNotDefined">
 <value><![CDATA[Portal user team has not been defined]]></value>
+</param>
+<param name="project.portalrole">
+<value><![CDATA[PortalRole]]></value>
 </param>
 <param name="products.viewImports">
 <value><![CDATA[View Imports]]></value>
@@ -43,11 +43,17 @@
 <param name="products.toBeginProcessingUseProccessNow.text">
 <value><![CDATA[To begin processing, use the &quot;Process Now&quot; button.  However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.]]></value>
 </param>
+<param name="product.status">
+<value><![CDATA[Status]]></value>
+</param>
 <param name="products.site">
 <value><![CDATA[Site]]></value>
 </param>
 <param name="products.results">
 <value><![CDATA[Results]]></value>
+</param>
+<param name="products.productSKU">
+<value><![CDATA[Product SKU]]></value>
 </param>
 <param name="products.product_catalog_listimports.total">
 <value><![CDATA[Total]]></value>
@@ -55,14 +61,11 @@
 <param name="products.product_catalog_listimports.success">
 <value><![CDATA[Success]]></value>
 </param>
-<param name="products.product_catalog_listimports.noImportsFound.text">
-<value><![CDATA[No imports found.]]></value>
+<param name="batch.enable.userlogin">
+<value><![CDATA[Enable User Login]]></value>
 </param>
 <param name="products.product_catalog_listimports.failed">
 <value><![CDATA[Failed]]></value>
-</param>
-<param name="batch.enable.userlogin">
-<value><![CDATA[Enable User Login]]></value>
 </param>
 <param name="products.productCatalog">
 <value><![CDATA[Product Catalog]]></value>
@@ -100,9 +103,6 @@
 <param name="products.largeFilesUpload.text">
 <value><![CDATA[Large files may take a while to upload.]]></value>
 </param>
-<param name="products.keywords">
-<value><![CDATA[Keyword(s)]]></value>
-</param>
 <param name="qa.note">
 <value><![CDATA[Note]]></value>
 </param>
@@ -111,6 +111,9 @@
 </param>
 <param name="products.importNotProcessed.text">
 <value><![CDATA[Your file to import has been received, but has not been processed.]]></value>
+</param>
+<param name="products.importedRecords">
+<value><![CDATA[Imported Records]]></value>
 </param>
 <param name="products.importDetails">
 <value><![CDATA[Import Details]]></value>
@@ -130,11 +133,11 @@
 <param name="products.first5linesImportfile.text">
 <value><![CDATA[First 5 lines of the import file]]></value>
 </param>
-<param name="products.fileSize">
-<value><![CDATA[File Size]]></value>
-</param>
 <param name="admin.usage.usersEnabled.text">
 <value><![CDATA[${number} enabled users]]></value>
+</param>
+<param name="products.fileShouldBeInZIPformat.text">
+<value><![CDATA[* File should be in ZIP format.]]></value>
 </param>
 <param name="products.fileShouldBeInCSVformat.text">
 <value><![CDATA[* File should be in CSV format.]]></value>
@@ -142,11 +145,11 @@
 <param name="products.file">
 <value><![CDATA[File]]></value>
 </param>
-<param name="products.fieldMappings">
-<value><![CDATA[Field Mappings]]></value>
-</param>
 <param name="project.editList">
 <value><![CDATA[edit list]]></value>
+</param>
+<param name="products.field">
+<value><![CDATA[Field]]></value>
 </param>
 <param name="products.failedRecords">
 <value><![CDATA[Failed Records]]></value>
@@ -156,6 +159,9 @@
 </param>
 <param name="products.entered">
 <value><![CDATA[Entered]]></value>
+</param>
+<param name="product.searchStartDate">
+<value><![CDATA[Product Start Date]]></value>
 </param>
 <param name="products.downloadFile">
 <value><![CDATA[Download File]]></value>
@@ -175,20 +181,14 @@
 <param name="products.accessType">
 <value><![CDATA[Access Type]]></value>
 </param>
-<param name="productCategory.deleteMsg">
-<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
-</param>
-<param name="product.status">
-<value><![CDATA[Status]]></value>
-</param>
 <param name="tickets.search">
 <value><![CDATA[Search Tickets]]></value>
 </param>
-<param name="product.productTypes">
-<value><![CDATA[Product Types]]></value>
-</param>
 <param name="product.productTaxTypes">
 <value><![CDATA[Product Tax Types]]></value>
+</param>
+<param name="product.productShipTimes">
+<value><![CDATA[Product Ship Times]]></value>
 </param>
 <param name="product.productShippingTypes">
 <value><![CDATA[Product Shipping Types]]></value>
@@ -334,17 +334,14 @@
 <param name="website.siteEditor">
 <value><![CDATA[Site Editor]]></value>
 </param>
-<param name="product.productShipTimes">
-<value><![CDATA[Product Ship Times]]></value>
-</param>
 <param name="product.productManufacturerTypes">
 <value><![CDATA[Product Manufacturer Types]]></value>
 </param>
+<param name="product.productCount">
+<value><![CDATA[Products Count]]></value>
+</param>
 <param name="tickets.description2">
 <value><![CDATA[Description 2]]></value>
-</param>
-<param name="product.productCategoryTypes">
-<value><![CDATA[Product Category Types]]></value>
 </param>
 <param name="product.productCatalogImport">
 <value><![CDATA[Product Catalog Import]]></value>
@@ -369,6 +366,9 @@
 </param>
 <param name="product.comments">
 <value><![CDATA[Comments]]></value>
+</param>
+<param name="productCategory.deleteMsg">
+<value><![CDATA[Products associated with the category will be retained when the category is deleted.]]></value>
 </param>
 <param name="pagedListInfo.pagedListStatus.PortalUsers">
 <value><![CDATA[Portal Users]]></value>
@@ -457,11 +457,11 @@
 <param name="documents.team.noPortalUserMessage">
 <value><![CDATA[Portal Users contacts have not been added to the store]]></value>
 </param>
-<param name="documents.DocumentStoreList">
-<value><![CDATA[Document Store List]]></value>
-</param>
 <param name="document.startDate">
 <value><![CDATA[Start Date]]></value>
+</param>
+<param name="documents.DocumentStoreList">
+<value><![CDATA[Document Store List]]></value>
 </param>
 <param name="document.noDocumentsToDisplay">
 <value><![CDATA[There are currently no documents to display in this view.]]></value>
@@ -604,6 +604,9 @@
 <param name="actionPlan.actions.colon">
 <value><![CDATA[Actions:]]></value>
 </param>
+<param name="account.stage">
+<value><![CDATA[Stage]]></value>
+</param>
 <param name="accounts.sharedDocuments">
 <value><![CDATA[Share Accounts Documents]]></value>
 </param>
@@ -643,35 +646,14 @@
 <param name="accounts.accounts_stage.AccountsStage">
 <value><![CDATA[Account Stage]]></value>
 </param>
-<param name="accounts.accounts_document_portal_include.ShareWithPortalUser">
-<value><![CDATA[Share With Portal User?]]></value>
-</param>
 <param name="confirmdelete.ticketActivitiesHeader">
 <value><![CDATA[This ticket cannot be deleted because it is associated with one or more activity logs.]]></value>
 </param>
-<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_list.LogActivity">
-<value><![CDATA[Log Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
-<value><![CDATA[Scheduled Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
-<value><![CDATA[Schedule an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
-<value><![CDATA[Log an Activity]]></value>
-</param>
-<param name="accounts.accounts_contacts_add.AccountDeatils">
-<value><![CDATA[Account Details]]></value>
-</param>
 <param name="accounts.accounts_contacts.textMessagePreference">
 <value><![CDATA[Text Messages Preference]]></value>
+</param>
+<param name="accounts.accounts_contacts_portal_include.Enabled">
+<value><![CDATA[Enabled]]></value>
 </param>
 <param name="accounts.accounts_contacts.phonePreference">
 <value><![CDATA[Phone Call Preference]]></value>
@@ -697,14 +679,35 @@
 <param name="accounts.accounts_contacts.mailPreference">
 <value><![CDATA[Mail Preference]]></value>
 </param>
+<param name="accounts.accounts_contacts.IMPreference">
+<value><![CDATA[Instant Message Preference]]></value>
+</param>
 <param name="accounts.accounts_contacts.fax">
 <value><![CDATA[Fax Preference]]></value>
 </param>
 <param name="accounts.accounts_contacts.emailPreference">
 <value><![CDATA[Email Preference]]></value>
 </param>
-<param name="accounts.accounts_contacts.IMPreference">
-<value><![CDATA[Instant Message Preference]]></value>
+<param name="accounts.accounts_contacts_calls_list.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_list.LogActivity">
+<value><![CDATA[Log Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduledActivity">
+<value><![CDATA[Scheduled Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_details_followup_include.ScheduleAnActivity">
+<value><![CDATA[Schedule an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_calls_add.LogAnActivity">
+<value><![CDATA[Log an Activity]]></value>
+</param>
+<param name="accounts.accounts_contacts_add.AccountDeatils">
+<value><![CDATA[Account Details]]></value>
 </param>
 <param name="accounts.accounts_add.year_started">
 <value><![CDATA[Year Started]]></value>
@@ -712,11 +715,11 @@
 <param name="accounts.accounts_add.subSegment">
 <value><![CDATA[Sub Segment]]></value>
 </param>
-<param name="accounts.accounts_add.sic_code">
-<value><![CDATA[SIC]]></value>
-</param>
 <param name="accounts.accounts_add.sicDescription">
 <value><![CDATA[SIC Description]]></value>
+</param>
+<param name="accounts.accounts_add.sic_code">
+<value><![CDATA[SIC]]></value>
 </param>
 <param name="accounts.accounts_add.duns_type">
 <value><![CDATA[DUNS Type]]></value>
@@ -727,20 +730,17 @@
 <param name="accounts.accounts_add.business_name_two">
 <value><![CDATA[Business Name 2]]></value>
 </param>
-<param name="accounts.accountasset_include.DescriptionColon">
-<value><![CDATA[Description:]]></value>
-</param>
 <param name="project.outlineNotApproved">
 <value><![CDATA[Outline Not Approved]]></value>
+</param>
+<param name="accounts.1to10">
+<value><![CDATA[1-10]]></value>
 </param>
 <param name="accounts.11to100">
 <value><![CDATA[11-100]]></value>
 </param>
 <param name="accounts.101to1000">
 <value><![CDATA[101-1000]]></value>
-</param>
-<param name="account.stage">
-<value><![CDATA[Stage]]></value>
 </param>
 <param name="actionPlan.attachLookupListMultiple.text">
 <value><![CDATA[Attach a Lookup List]]></value>
@@ -6165,8 +6165,8 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="contact.sorting">
 <value><![CDATA[Sorting]]></value>
 </param>
-<param name="products.productSKU">
-<value><![CDATA[Product SKU]]></value>
+<param name="products.product_catalog_listimports.noImportsFound.text">
+<value><![CDATA[No imports found.]]></value>
 </param>
 <param name="contacts.NoTextMessageAddresses">
 <value><![CDATA[No text message addresses entered]]></value>
@@ -6186,8 +6186,8 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="contacts.noContactEmailAddressFound">
 <value><![CDATA[No Contact Email Address found. Please add one.]]></value>
 </param>
-<param name="products.importedRecords">
-<value><![CDATA[Imported Records]]></value>
+<param name="products.keywords">
+<value><![CDATA[Keyword(s)]]></value>
 </param>
 <param name="contacts.NoAddresses">
 <value><![CDATA[No addresses entered.]]></value>
@@ -6201,14 +6201,14 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="contacts.myProjects">
 <value><![CDATA[My Projects]]></value>
 </param>
-<param name="products.fileShouldBeInZIPformat.text">
-<value><![CDATA[* File should be in ZIP format.]]></value>
+<param name="products.fileSize">
+<value><![CDATA[File Size]]></value>
 </param>
 <param name="contacts.messageConfirmation">
 <value><![CDATA[Message Confirmation]]></value>
 </param>
-<param name="products.field">
-<value><![CDATA[Field]]></value>
+<param name="products.fieldMappings">
+<value><![CDATA[Field Mappings]]></value>
 </param>
 <param name="contact.sendReminder">
 <value><![CDATA[Send a reminder]]></value>
@@ -6225,8 +6225,8 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="contact.searchContacts">
 <value><![CDATA[Search Contacts]]></value>
 </param>
-<param name="product.searchStartDate">
-<value><![CDATA[Product Start Date]]></value>
+<param name="product.productTypes">
+<value><![CDATA[Product Types]]></value>
 </param>
 <param name="contacts.details">
 <value><![CDATA[Details]]></value>
@@ -6234,8 +6234,8 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="contacts.contactsPhoneNumberList">
 <value><![CDATA[Contact Phone Number List]]></value>
 </param>
-<param name="product.productCount">
-<value><![CDATA[Products Count]]></value>
+<param name="product.productCategoryTypes">
+<value><![CDATA[Product Category Types]]></value>
 </param>
 <param name="contacts.contactAddressList">
 <value><![CDATA[Contact Address List]]></value>
@@ -6387,8 +6387,8 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="documents.details.modified">
 <value><![CDATA[Modified]]></value>
 </param>
-<param name="accounts.accounts_contacts_portal_include.Enabled">
-<value><![CDATA[Enabled]]></value>
+<param name="accounts.accounts_document_portal_include.ShareWithPortalUser">
+<value><![CDATA[Share With Portal User?]]></value>
 </param>
 <param name="documents.details.longDescription">
 <value><![CDATA[Long Description]]></value>
@@ -6429,8 +6429,8 @@ were available on a network file share.  Create a shared volume or folder to the
 <param name="documents.add.cancel">
 <value><![CDATA[Cancel]]></value>
 </param>
-<param name="accounts.1to10">
-<value><![CDATA[1-10]]></value>
+<param name="accounts.accountasset_include.DescriptionColon">
+<value><![CDATA[Description:]]></value>
 </param>
 <param name="dependency.tickets">
 <value><![CDATA[Tickets]]></value>
