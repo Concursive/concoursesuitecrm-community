@@ -19,9 +19,6 @@ import com.darkhorseventures.database.ConnectionPool;
 import com.darkhorseventures.framework.hooks.CustomHook;
 import org.aspcfs.modules.setup.utils.Prefs;
 import org.aspcfs.modules.system.base.ApplicationVersion;
-import org.aspcfs.modules.website.base.Icelet;
-import org.aspcfs.modules.website.base.IceletList;
-import org.aspcfs.modules.website.base.IceletPropertyMap;
 import org.aspcfs.utils.Dictionary;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.XMLUtils;
@@ -143,8 +140,6 @@ public class ApplicationPrefs {
       this.populateContext(context);
       // Load the localization prefs
       this.loadApplicationDictionary(context);
-      // Load the icelets
-      this.loadApplicationIcelets(context);
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
@@ -685,66 +680,6 @@ public class ApplicationPrefs {
 
 
   /**
-   * Description of the Method
-   *
-   * @param context Description of the Parameter
-   */
-  public void loadApplicationIcelets(ServletContext context) {
-    icelets.clear();
-    String language = this.get("SYSTEM.LANGUAGE");
-    if (language == null) {
-      language = "en_US";
-    }
-    addIcelets(context, language);
-  }
-
-
-  /**
-   * Adds a feature to the Icelet attribute of the ApplicationPrefs object
-   *
-   * @param context  The feature to be added to the Icelet attribute
-   * @param language The feature to be added to the Icelet attribute
-   */
-  public synchronized void addIcelets(ServletContext context, String language) {
-    if (language == null) {
-      System.out.println("ApplicationPrefs-> addDictionary: language cannot be null");
-    }
-    HashMap iceletMap = null;
-    if (!icelets.containsKey(language)) {
-      String iceletPath = "/WEB-INF/icelets/";
-      try {
-        if (language != null && !"en_US".equals(language) && !"".equals(language.trim())) {
-          // Override the text with a selected language
-          if (context.getResource(iceletPath + "icelet_" + language + ".xml") != null) {
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println(
-                  "ApplicationPrefs-> Loading icelets: " + language);
-            }
-            iceletMap = IceletList.load(context.getResource(iceletPath + "icelet_" + language + ".xml"));
-            icelets.put(language, iceletMap);
-          }
-        }
-        if (iceletMap == null) {
-          if (!icelets.containsKey("en_US")) {
-            //Icelets for the language specified could not be loaded. Load default language icelets instead
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println(
-                  "ApplicationPrefs-> Loading icelets (default): en_US");
-            }
-            iceletMap = IceletList.load(context.getResource(iceletPath + "icelet_en_US.xml"));
-            icelets.put("en_US", iceletMap); //TODO:en_US should be a constant
-          }
-        }
-      } catch (Exception e) {
-        e.printStackTrace(System.out);
-        System.out.println(
-            "ApplicationPrefs-> Language Error: " + e.getMessage());
-      }
-    }
-  }
-
-
-  /**
    * Gets the label attribute of the ApplicationPrefs object
    *
    * @param section   Description of the Parameter
@@ -809,53 +744,6 @@ public class ApplicationPrefs {
     return (HashMap) icelets.get(language);
   }
 
-
-  /**
-   * Gets the iceletFromClass attribute of the ApplicationPrefs object
-   *
-   * @param className Description of the Parameter
-   * @return The iceletFromClass value
-   */
-  public Icelet getIceletFromClass(String language, String className) {
-    if (icelets == null) {
-      return null;
-    }
-    //get icelets for the specific language
-    if (icelets.containsKey(language)) {
-      HashMap iceletMap = (HashMap) icelets.get(language);
-      //get icelet for the specific class
-      if (iceletMap != null) {
-        return (Icelet) iceletMap.get(className);
-      }
-    }
-    return null;
-  }
-
-
-  /**
-   * Gets the iceletProperties attribute of the ApplicationPrefs object
-   *
-   * @param className Description of the Parameter
-   * @return The iceletProperties value
-   */
-  public IceletPropertyMap getIceletPrefs(String language, String className) {
-    if (icelets == null) {
-      return null;
-    }
-    //get icelets for the specific language
-    if (icelets.containsKey(language)) {
-      HashMap iceletMap = (HashMap) icelets.get(language);
-      //get icelet for the specific class
-      if (iceletMap != null) {
-        Icelet icelet = (Icelet) iceletMap.get(className);
-        if (icelet != null) {
-          //get icelet properties for the specific icelet
-          return icelet.getIceletPropertyMap();
-        }
-      }
-    }
-    return null;
-  }
 
   public static String getRealPath(ServletContext context) {
     String dir = context.getRealPath("/");

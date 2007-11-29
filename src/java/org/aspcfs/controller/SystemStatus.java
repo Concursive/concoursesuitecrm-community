@@ -23,13 +23,8 @@ import com.zeroio.webdav.WebdavManager;
 import net.sf.asterisk.manager.ManagerConnection;
 import org.apache.log4j.Logger;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
-import org.aspcfs.modules.admin.actions.AdminDashboards;
 import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.base.ContainerMenu;
 import org.aspcfs.modules.service.base.SyncTableList;
-import org.aspcfs.modules.website.base.Page;
-import org.aspcfs.modules.website.base.PageList;
-import org.aspcfs.modules.website.base.PageRoleMapList;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.web.LookupList;
@@ -123,7 +118,7 @@ public class SystemStatus {
   private HashMap properties = null;
 
   // Logger.
-  private static final Logger LOGGER = Logger.getLogger(AdminDashboards.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(SystemStatus.class.getName());
 
   //XML Object Map (readOnly)
   SyncTableList systemObjectMap = null;
@@ -1513,135 +1508,12 @@ public class SystemStatus {
 
 
   /**
-   * Loading dashboards and custom tabs from tables.
-   *
-   * @param context
-   * @param db
-   * @throws SQLException
-   */
-  private void loadDashboards(ServletContext context, Connection db) throws SQLException {
-    PageList dashboards = new PageList();
-    dashboards.setDashboard(true);
-    dashboards.setEnabled(1);
-    dashboards.buildList(db);
-    Iterator i = dashboards.iterator();
-    while (i.hasNext()) {
-      Page dashboard = (Page) i.next();
-      String containerName = "dashboards" + dashboard.getLinkModuleId();
-      LinkedList menuItems = new LinkedList();
-      if (menu.get(containerName) == null) {
-        menu.put(containerName, menuItems);
-        HashMap propertyList = new HashMap();
-        propertyList.put("label", "Dashboards");
-        properties.put(containerName, propertyList);
-      }
-      menuItems = (LinkedList) menu.get(containerName);
-      PageRoleMapList pageRoleMapList = new PageRoleMapList();
-      pageRoleMapList.setWebPageId(dashboard.getId());
-      pageRoleMapList.buildList(db);
-      SubmenuItem item = new SubmenuItem();
-      item.setName(dashboard.getName());
-      item.setLongHtml(dashboard.getName());
-      item.setLink("Dashboards.do?command=ViewDashboard&dashboardId=" + dashboard.getId() + "&moduleId=" + dashboard.getLinkModuleId());
-      item.setRoleList(pageRoleMapList.buildRoleList(db));
-      item.setDashboard(true);
-      item.setPermission("dashboard");
-      menuItems.add(item);
-      menu.put(containerName, menuItems);
-    }
-  }
-
-  /**
-   * @param context
-   * @param db
-   * @throws SQLException
-   */
-  private void loadCustomTabs(ServletContext context, Connection db) throws SQLException {
-    PageList customtabs = new PageList();
-    customtabs.setCustomTab(true);
-    customtabs.setEnabled(1);
-    customtabs.buildList(db);
-    Iterator i = customtabs.iterator();
-    while (i.hasNext()) {
-      Page customtab = (Page) i.next();
-      ContainerMenu container = new ContainerMenu(db, customtab.getLinkContainerId());
-      LinkedList menuItems = (LinkedList) menu.get(container.getCname());
-      PageRoleMapList pageRoleMapList = new PageRoleMapList();
-      pageRoleMapList.setWebPageId(customtab.getId());
-      pageRoleMapList.buildList(db);
-      SubmenuItem item = new SubmenuItem();
-      item.setName(customtab.getName());
-      item.setLongHtml(customtab.getName());
-      item.setLink("CustomTabs.do?command=ViewCustomTab&customtabId=" + customtab.getId() + "&moduleId=" + container.getLinkModuleId());
-      item.setRoleList(pageRoleMapList.buildRoleList(db));
-      item.setCustomTab(true);
-      item.setPermission("customtab");
-      menuItems.add(item);
-      menu.put(container.getCname(), menuItems);
-    }
-  }
-
-  public void updateDashboards(ServletContext context, Connection db) {
-    PageList dashboards = new PageList();
-    dashboards.setDashboard(true);
-    try {
-      dashboards.buildList(db);
-      Iterator i = dashboards.iterator();
-      while (i.hasNext()) {
-        Page dashboard = (Page) i.next();
-        String containerName = "dashboards" + dashboard.getLinkModuleId();
-        menu.remove(containerName);
-      }
-      loadDashboards(context, db);
-    } catch (SQLException e) {
-      LOGGER.error(e, e);
-    }
-  }
-
-  private void updateCustomTabs(ServletContext context, Connection db) throws SQLException {
-    PageList customtabs = new PageList();
-    customtabs.setCustomTab(true);
-    customtabs.buildList(db);
-    Iterator i = customtabs.iterator();
-    while (i.hasNext()) {
-      Page customtab = (Page) i.next();
-      ContainerMenu container = new ContainerMenu(db, customtab.getLinkContainerId());
-      LinkedList menuItems = (LinkedList) menu.get(container.getCname());
-      LinkedList tmp = new LinkedList();
-      Iterator j = menuItems.iterator();
-      while (j.hasNext()) {
-        SubmenuItem menuItem = (SubmenuItem) j.next();
-        if (menuItem.isCustomTab()) {
-          tmp.add(menuItem);
-        }
-      }
-      menuItems.removeAll(tmp);
-    }
-    loadCustomTabs(context, db);
-  }
-
-  /**
-   * Refresh the information about dashboards and custom tabs if they are
-   * changed (added, deleted or change in permissions).
-   */
-  public void updateTabs(ServletContext context, Connection db) {
-    try {
-      updateDashboards(context, db);
-      updateCustomTabs(context, db);
-    } catch (SQLException e) {
-      LOGGER.error(e, e);
-    }
-  }
-
-  /**
    * @param context
    * @param db
    * @throws SQLException
    */
   public void loadTabs(ServletContext context, Connection db) throws SQLException {
     loadXML(context);
-    loadDashboards(context, db);
-    loadCustomTabs(context, db);
   }
 
   /**

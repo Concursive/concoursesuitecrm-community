@@ -21,9 +21,6 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -457,19 +454,6 @@ public class PagedListStatusHandler extends BodyTagSupport implements TryCatchFi
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(
           object);
 
-      // To handle PortletSession
-      if (pagedListInfo == null) {
-        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest().
-            getAttribute(org.apache.pluto.tags.Constants.PORTLET_REQUEST);
-        if (renderRequest != null) {
-          pagedListInfo = (PagedListInfo) renderRequest.getPortletSession().getAttribute(object);
-        }
-      }
-
-      RenderResponse renderResponse = (RenderResponse) pageContext.getRequest()
-          .getAttribute(org.apache.pluto.tags.Constants.PORTLET_RESPONSE);
-
-
       if (systemStatus != null) {
         if (systemStatus.getLabel(
             "pagedListInfo.pagedListStatus." + title) != null) {
@@ -707,12 +691,12 @@ public class PagedListStatusHandler extends BodyTagSupport implements TryCatchFi
                         pagedListInfo.getPreviousPageLink(
                             "<font class='underline'>" + systemStatus.getLabel(
                                 "label.previous") + "</font>", systemStatus.getLabel(
-                            "label.previous"), form, renderResponse) +
+                            "label.previous"), form) +
                         "|" +
                         pagedListInfo.getNextPageLink(
                             "<font class='underline'>" + systemStatus.getLabel(
                                 "label.next") + "</font>", systemStatus.getLabel(
-                            "label.next"), form, renderResponse) +
+                            "label.next"), form) +
                         "]");
               } else {
                 out.write(
@@ -721,13 +705,13 @@ public class PagedListStatusHandler extends BodyTagSupport implements TryCatchFi
                             "<font class='underline'>" + prefs.getLabel(
                                 "label.previous", prefs.get("SYSTEM.LANGUAGE")) + "</font>",
                             prefs.getLabel(
-                                "label.previous", prefs.get("SYSTEM.LANGUAGE")), form, renderResponse) +
+                                "label.previous", prefs.get("SYSTEM.LANGUAGE")), form) +
                         "|" +
                         pagedListInfo.getNextPageLink(
                             "<font class='underline'>" + prefs.getLabel(
                                 "label.next", prefs.get("SYSTEM.LANGUAGE")) + "</font>",
                             prefs.getLabel(
-                                "label.next", prefs.get("SYSTEM.LANGUAGE")), form, renderResponse) +
+                                "label.next", prefs.get("SYSTEM.LANGUAGE")), form) +
                         "]");
               }
               out.write(" ");

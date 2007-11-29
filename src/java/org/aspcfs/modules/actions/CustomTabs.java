@@ -18,15 +18,11 @@ package org.aspcfs.modules.actions;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Stack;
 import org.apache.log4j.Logger;
 import org.aspcfs.modules.base.ContainerMenu;
 import org.aspcfs.modules.base.ContainerMenuList;
 import org.aspcfs.modules.beans.ModuleBean;
-import org.aspcfs.modules.website.base.Page;
-import org.aspcfs.modules.website.base.PageRowList;
-import org.aspcfs.modules.website.framework.IceletManager;
 import org.aspcfs.taglib.ContainerMenuClass;
 import com.darkhorseventures.framework.actions.ActionContext;
 
@@ -73,26 +69,15 @@ public class CustomTabs extends CFSModule {
 		Connection db = null;
 		try {
 			db = this.getConnection(context);
-			Page page = new Page(db, Integer.parseInt(customtabId));
-			page.buildPageVersionToView(db);
-			page.getPageVersionToView().buildPageRowList(db);
-			PageRowList pageRowList = page.getPageVersionToView().getPageRowList();
 			ArrayList rowColumnList = new ArrayList();
-			pageRowList.buildRowsColumns(rowColumnList, 0);
-			IceletManager manager = IceletManager.getManager(context);
-			manager.prepare(context, page, db);
 			
 			ContainerMenuList container = new ContainerMenuList();
-			container.setContainerId(page.getLinkContainerId());
 			container.buildList(db);
 			String containerName = ((ContainerMenu)container.get(0)).getCname();
-			context.getRequest().setAttribute("Page", page);
 			context.getRequest().setAttribute("rowsColumns", rowColumnList);
-			context.getRequest().setAttribute("selectedCustomTab", page.getName());
 			context.getRequest().setAttribute("moduleId", moduleId);
 			context.getRequest().setAttribute("containerName", containerName);
 			ContainerMenuClass dhvcontainer = (ContainerMenuClass) stack.get(containerName);
-			dhvcontainer.setSelected(page.getName());
 			ContainerMenuClass tmpcont = dhvcontainer;
 			Stack dhvcontainers = new Stack();
 			HashMap tmp = new HashMap();

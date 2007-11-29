@@ -20,10 +20,6 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.beans.ModuleBean;
-import org.aspcfs.modules.website.base.Page;
-import org.aspcfs.modules.website.base.PageList;
-import org.aspcfs.modules.website.base.PageRowList;
-import org.aspcfs.modules.website.framework.IceletManager;
 import org.aspcfs.utils.UserUtils;
 import com.darkhorseventures.framework.actions.ActionContext;
 
@@ -56,24 +52,8 @@ public class Dashboards extends CFSModule {
 		Connection db = null;
 		try {
 			db = this.getConnection(context);
-			PageList dashboards = new PageList();
-			dashboards.setDashboard(true);
-			dashboards.setEnabled(1);
-			dashboards.setLinkModuleId(Integer.parseInt(moduleId));
 			User user = this.getUser(context, UserUtils.getUserId(context.getRequest()));
-			dashboards.setRoleId(user.getRoleId());
-			dashboards.buildList(db);
 			
-			if (dashboards.size() == 0) {
-				return "NoItems";
-			}
-			
-			Page page = (Page) dashboards.get(0);
-			context.getRequest().setAttribute("dashboardList", dashboards);
-			context.getRequest().setAttribute("selectedDashboard", page.getName());
-			context.getRequest().setAttribute("Page", page);
-      //updates dashboards container menu if dashboard's order has shuffled
-      this.getSystemStatus(context).updateTabs(context.getServletContext(),db);
 		} catch (Exception e) {
 			LOGGER.error(e, e);
 			context.getRequest().setAttribute("Error", e);
@@ -104,31 +84,8 @@ public class Dashboards extends CFSModule {
 		Connection db = null;
 		try {
 			db = this.getConnection(context);
-			Page page = null;
-			if (dashboardId == null) {
-				PageList dashboards = (PageList) context.getRequest().getAttribute("dashboardList");
-				if (dashboards == null) {
-					dashboards.setDashboard(true);
-					dashboards.setLinkModuleId(Integer.parseInt(moduleId));
-					dashboards.setEnabled(1);
-					User user = this.getUser(context, UserUtils.getUserId(context.getRequest()));
-					dashboards.setRoleId(user.getRoleId());
-					dashboards.buildList(db);
-				}
-				page = dashboards.size() != 0 ? (Page) dashboards.get(0) : null;
-			} else {
-				page = new Page(db, Integer.parseInt(dashboardId));
-			}
-			page.buildPageVersionToView(db);
-			page.getPageVersionToView().buildPageRowList(db);
-			PageRowList pageRowList = page.getPageVersionToView().getPageRowList();
 			ArrayList rowColumnList = new ArrayList();
-			pageRowList.buildRowsColumns(rowColumnList, 0);
-			IceletManager manager = IceletManager.getManager(context);
-			manager.prepare(context, page, db);
-			context.getRequest().setAttribute("Page", page);
 			context.getRequest().setAttribute("rowsColumns", rowColumnList);
-			context.getRequest().setAttribute("selectedDashboard", page.getName());
 			context.getRequest().setAttribute("moduleId", moduleId);
 			context.getRequest().setAttribute("viewContent", "true");
 		} catch (Exception e) {

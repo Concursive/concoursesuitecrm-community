@@ -21,9 +21,6 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderResponse;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
@@ -199,16 +196,6 @@ public class PagedListControlHandler extends TagSupport implements TryCatchFinal
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(object);
 
-      // To handle PortletSession
-      if (pagedListInfo == null) {
-        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest().getAttribute(org.apache.pluto.tags.Constants.PORTLET_REQUEST);
-        if (renderRequest != null) {
-          pagedListInfo = (PagedListInfo) renderRequest.getPortletSession().getAttribute(object);
-        }
-      }
-
-      RenderResponse renderResponse = (RenderResponse) pageContext.getRequest().getAttribute(org.apache.pluto.tags.Constants.PORTLET_RESPONSE);
-
       if (pagedListInfo != null) {
         pagedListInfo.setShowForm(showForm);
         pagedListInfo.setResetList(resetList);
@@ -232,10 +219,10 @@ public class PagedListControlHandler extends TagSupport implements TryCatchFinal
           map.put("${pagedListInfo.numberOfPages}", ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
           out.write("["
               + pagedListInfo.getPreviousPageLink("<font class='underline'>" + systemStatus.getLabel("label.previous") + "</font>", systemStatus
-              .getLabel("label.previous"), form, renderResponse)
+              .getLabel("label.previous"), form)
               + "|"
               + pagedListInfo.getNextPageLink("<font class='underline'>" + systemStatus.getLabel("label.next") + "</font>",
-              systemStatus.getLabel("label.next"), form, renderResponse) + "] ");
+              systemStatus.getLabel("label.next"), form) + "] ");
           out.write("<font color=\"" + fontColor + "\">");
           if (!abbreviate) {
             map.put("${pagedListInfo.itemsPerPageEntry}", pagedListInfo.getItemsPerPageEntry(systemStatus.getLabel("quotes.all", "All")));
@@ -246,8 +233,8 @@ public class PagedListControlHandler extends TagSupport implements TryCatchFinal
           }
           out.write("<input type=\"submit\" value=\"" + systemStatus.getLabel("button.go") + "\">");
         } else {
-          out.write("[" + pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous", form, renderResponse) + "|"
-              + pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next", form, renderResponse) + "] ");
+          out.write("[" + pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous", form) + "|"
+              + pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next", form) + "] ");
           out.write("<font color=\"" + fontColor + "\">");
           out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
           if (!abbreviate) {

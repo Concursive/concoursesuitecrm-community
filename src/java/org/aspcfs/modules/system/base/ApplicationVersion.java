@@ -27,10 +27,10 @@ import org.aspcfs.controller.ApplicationPrefs;
  * @created July 31, 2003
  */
 public class ApplicationVersion {
-  public final static String VERSION = "Centric CRM 4.2 Community Beta (2007-10-03)";
-  public final static String APP_VERSION = "2007-10-03";
-  public final static String DB_VERSION = "2007-10-03";
-  public final static String RELEASE = "4.2";
+  public final static String VERSION = "Centric CRM 5.0 Community Beta (2007-11-29)";
+  public final static String APP_VERSION = "2007-11-29";
+  public final static String DB_VERSION = "2007-11-29";
+  public final static String RELEASE = "5.0";
 
 
   /**

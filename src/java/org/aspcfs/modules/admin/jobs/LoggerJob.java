@@ -16,17 +16,9 @@
 package org.aspcfs.modules.admin.jobs;
 
 import com.darkhorseventures.database.ConnectionPool;
-import com.darkhorseventures.framework.actions.ActionContext;
-import com.zeroio.iteam.base.ProjectList;
 import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.system.base.SiteList;
-import org.aspcfs.modules.website.base.WebPageAccessLog;
-import org.aspcfs.modules.website.base.WebProductAccessLog;
-import org.aspcfs.modules.website.base.WebProductEmailLog;
-
 import org.aspcfs.utils.SiteUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -34,14 +26,8 @@ import org.quartz.SchedulerContext;
 import org.quartz.StatefulJob;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Iterator;
 
@@ -66,14 +52,10 @@ public class LoggerJob implements StatefulJob {
       ApplicationPrefs prefs = (ApplicationPrefs) schedulerContext.get(
           "ApplicationPrefs");
       cp = (ConnectionPool) schedulerContext.get("ConnectionPool");
-      Hashtable systemStatusList = (Hashtable) schedulerContext.get(
-          "SystemStatus");
       SiteList siteList = SiteUtils.getSiteList(prefs, cp);
       Iterator i = siteList.iterator();
       while (i.hasNext()) {
         Site thisSite = (Site) i.next();
-        SystemStatus thisSystem = (SystemStatus) systemStatusList.get(
-            thisSite.getConnectionElement().getUrl());
         if (thisSite != null) {
           db = cp.getConnection(thisSite.getConnectionElement());
           // WebPageAccess
@@ -84,16 +66,6 @@ public class LoggerJob implements StatefulJob {
                 "LoggerJob-> Logging site access at " + (new Timestamp(
                     Calendar.getInstance().getTimeInMillis()).toString()));
             }
-            Iterator itr = webPageAccessLogList.iterator();
-						PreparedStatement pst = WebPageAccessLog.prepareInsert(db);
-						while (itr.hasNext()) {
-							WebPageAccessLog webPageAccessLog = (WebPageAccessLog)itr.next();
-							webPageAccessLog.insert(db);
-							itr.remove();
-						}
-						WebPageAccessLog.closeInsert(pst);
-					}
-
 					Vector webProductAccessLogList = (Vector) schedulerContext.get("webProductAccessLog");
 					if (webProductAccessLogList.size() > 0) {
             if (System.getProperty("DEBUG") != null) {
@@ -101,16 +73,6 @@ public class LoggerJob implements StatefulJob {
                 "LoggerJob-> Logging product access at " + (new Timestamp(
                     Calendar.getInstance().getTimeInMillis()).toString()));
             }
-            Iterator itr = webProductAccessLogList.iterator();
-						PreparedStatement pst = WebProductAccessLog.prepareInsert(db);
-						while (itr.hasNext()) {
-							WebProductAccessLog webProductAccessLog = (WebProductAccessLog)itr.next();
-							webProductAccessLog.insertData(pst);
-							itr.remove();
-						}
-						WebProductAccessLog.closeInsert(pst);
-					}
-
 					Vector webProductEmailLogList = (Vector) schedulerContext.get("webProductEmailLog");
 					if (webProductEmailLogList.size() > 0) {
             if (System.getProperty("DEBUG") != null) {
@@ -118,20 +80,15 @@ public class LoggerJob implements StatefulJob {
                 "LoggerJob-> Logging product email access at " + (new Timestamp(
                     Calendar.getInstance().getTimeInMillis()).toString()));
             }
-            Iterator itr = webProductEmailLogList.iterator();
-						PreparedStatement pst = WebProductEmailLog.prepareInsert(db);
-						while (itr.hasNext()) {
-							WebProductEmailLog webProductEmailLog = (WebProductEmailLog)itr.next();
-							webProductEmailLog.insertData(pst);
-							itr.remove();
-						}
-						WebProductEmailLog.closeInsert(pst);
-					}
           cp.free(db);
           db = null;
+					}
+					}
+					}
         }
       }
-    } catch (Exception e) {
+    }
+catch (Exception e) {
       throw new JobExecutionException(e.getMessage());
     } finally {
       if (cp != null && db != null) {

@@ -20,13 +20,11 @@ import bsh.Interpreter;
 
 import org.apache.log4j.Logger;
 import org.aspcfs.apps.help.ImportHelp;
-import org.aspcfs.apps.icelets.ImportIcelets;
 import org.aspcfs.apps.lookuplists.ImportLookupLists;
 import org.aspcfs.apps.transfer.reader.cfs.InitPermissionsAndRoles;
 import org.aspcfs.apps.transfer.writer.cfsdatabasewriter.PermissionsAndRolesWriter;
 import org.aspcfs.modules.service.base.SyncClient;
 import org.aspcfs.modules.system.base.DatabaseVersion;
-import org.aspcfs.modules.website.base.IceletList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.service.utils.BackupUtils;
 
@@ -174,18 +172,6 @@ public class SetupUtils {
 
     // Workflow
     evalScript(script, new URL(setupURL + "init/workflow.bsh"));
-
-    // Icelets
-    String iceletFile = "icelet_en_US.xml";
-    URL checkIceletURL = new URL(setupURL + "../icelets/icelet_" + locale + ".xml");
-    if ("file".equals(checkIceletURL.getProtocol())) {
-      File file = new File(checkIceletURL.getPath());
-      if (file.exists()) {
-        iceletFile = "icelet_" + locale + ".xml";
-      }
-    }
-    HashMap iceletMap = IceletList.load(new URL(setupURL + "../icelets/" + iceletFile));
-    ImportIcelets.insertIceletList(db, iceletMap);
 
     // Help content
     ImportHelp help = new ImportHelp();
