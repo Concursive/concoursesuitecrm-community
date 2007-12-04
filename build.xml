@@ -805,13 +805,6 @@
         <include name="*.js"/>
       </fileset>
     </copy>
-    <!-- Copy the icelet files -->
-    <mkdir dir="${CENTRIC_HOME}/WEB-INF/icelets"/>
-    <copy todir="${CENTRIC_HOME}/WEB-INF/icelets">
-      <fileset dir="${src.dir}/icelets">
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
     <!-- Copy the font files-->
     <mkdir dir="${CENTRIC_HOME}/WEB-INF/fonts"/>
     <copy todir="${CENTRIC_HOME}/WEB-INF/fonts">
@@ -1131,12 +1124,6 @@
     </copy>
     <copy file="${src.sql.dir}/init/help.xml"
           todir="${dist.dir}/cfs/WEB-INF/setup/init"/>
-    <!-- Copy Icelets -->
-    <copy todir="${dist.dir}/cfs/WEB-INF/icelets" verbose="true">
-      <fileset dir="${src.dir}/icelets">
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
     <!-- Copy the instance property -->
     <copy file="${pref.dir}/cfs/war/instance.property"
           todir="${dist.dir}/cfs/WEB-INF"/>
@@ -1693,7 +1680,7 @@ a site has been deployed -->
   <target name="upgradedb" depends="init,log.upgradedb,taskdef.upgradeDatabase,taskdef.jasper,upgradedb.name,upgradedb.site,upgradedb.uptodate,build" description="Upgrades database using the specified script file">
     <fail unless="arg1">Missing arg1 -- the file to process</fail>
     <fail unless="arg2">Missing arg2 -- the database to upgrade</fail>
-    <upgradeDatabase sitecode="${GATEKEEPER.APPCODE}" driver="${GATEKEEPER.DRIVER}" url="${GATEKEEPER.URL}" user="${GATEKEEPER.USER}" password="${GATEKEEPER.PASSWORD}" servletJar="${servletJar}" fileLibraryPath="${CENTRIC_FILELIBRARY}" baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}" specificDatabase="${arg2}" locale="${LOCALE.NAME}" languagePath="${src.dir}${fs}languages" iceletsPath="${src.dir}${fs}icelets" prefsPath="${pref.dir}" params="mode=upgrade">
+    <upgradeDatabase sitecode="${GATEKEEPER.APPCODE}" driver="${GATEKEEPER.DRIVER}" url="${GATEKEEPER.URL}" user="${GATEKEEPER.USER}" password="${GATEKEEPER.PASSWORD}" servletJar="${servletJar}" fileLibraryPath="${CENTRIC_FILELIBRARY}" baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}" specificDatabase="${arg2}" locale="${LOCALE.NAME}" languagePath="${src.dir}${fs}languages" prefsPath="${pref.dir}" params="mode=upgrade">
     </upgradeDatabase>
   </target>
 
@@ -1759,12 +1746,6 @@ a site has been deployed -->
         <include name="workflow_*.xml"/>
       </fileset>
     </copy>
-    <mkdir dir="${dist.dir}/icelets"/>
-    <copy todir="${dist.dir}/icelets" verbose="true">
-      <fileset dir="${base.dir}/src/icelets">
-        <include name="icelet_*.xml"/>
-      </fileset>
-    </copy>
     <!-- Create the distributable .zip file -->
     <zip destfile="${dist.dir}/${zip.dir}.zip">
       <!-- main directory -->
@@ -1775,7 +1756,6 @@ a site has been deployed -->
       <zipfileset dir="${dist.dir}/data" prefix="${zip.dir}/data"/>
       <zipfileset dir="${dist.dir}/templates" prefix="${zip.dir}/templates"/>
       <zipfileset dir="${dist.dir}/workflow" prefix="${zip.dir}/workflow"/>
-      <zipfileset dir="${dist.dir}/icelets" prefix="${zip.dir}/icelets"/>
     </zip>
     <!-- delete temporary files -->
     <delete>

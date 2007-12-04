@@ -1,8 +1,0 @@
-Name: Standard
-Version: 1.0
-Vendor: Dark Horse Ventures L.L.C.
-Description: This template includes pages to welcome your visitors, showcase your past work, and capture contact information.
-Created: March 1, 2006
-Modified: March 1, 2006
-Layout: 2006051814
-Style: 2006051811

@@ -68,7 +68,7 @@ public class ContextSessionListener implements HttpSessionAttributeListener, Htt
   public void attributeAdded(HttpSessionBindingEvent event) {
     ServletContext context = event.getSession().getServletContext();
     if ("User".equals(event.getName())) {
-      // A user session has been created, can be a portal user of system user
+      // A user session has been created, can be a portal user or system user
       UserBean thisUser = (UserBean) event.getValue();
       thisUser.setSessionId(event.getSession().getId());
       // Track website users

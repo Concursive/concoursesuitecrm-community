@@ -115,88 +115,6 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <!-- Portlets -->
-  <servlet>
-    <servlet-name>FolderPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>FolderPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>FolderGraphPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>FolderGraphPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>AboutPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>AboutPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>ContactFormPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>ContactFormPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>HtmlContentPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>HtmlContentPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>PortfolioPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>PortfolioPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>ProductCatalogPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>ProductCatalogPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>CartPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>CartPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
-    <servlet-name>SpreadsheetPortlet</servlet-name>
-    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>SpreadsheetPortlet</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
   <servlet>
     <servlet-name>URL</servlet-name>
     <servlet-class>org.aspcfs.servlets.url.URLServlet</servlet-class>
@@ -211,44 +129,6 @@
     <servlet-name>jsp</servlet-name>
     <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
-  <!-- Portlet Mappings -->
-  <servlet-mapping>
-    <servlet-name>FolderPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/FolderPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>FolderGraphPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/FolderGraphPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AboutPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/AboutPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ContactFormPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/ContactFormPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>HtmlContentPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/HtmlContentPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>PortfolioPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/PortfolioPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ProductCatalogPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/ProductCatalogPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CartPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/CartPortlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SpreadsheetPortlet</servlet-name>
-    <url-pattern>/PlutoInvoker/SpreadsheetPortlet</url-pattern>
-  </servlet-mapping>
-
   <!-- Servlet mappings -->
   <servlet-mapping>
     <servlet-name>Controller</servlet-name>

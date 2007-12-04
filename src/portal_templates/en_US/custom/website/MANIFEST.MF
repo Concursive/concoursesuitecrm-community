@@ -1,8 +1,0 @@
-Name: Custom
-Version: 1.0
-Vendor: Dark Horse Ventures L.L.C
-Description: This is an example of a custom web site.
-Created: March 1, 2006
-Modified: March 1, 2006
-Layout: custom
-Style: custom

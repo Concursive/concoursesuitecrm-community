@@ -26,7 +26,6 @@ In this archive you will find the following directories:
 
 data          Default database data that is installed in Centric CRM
 dictionary    All of the user interfase phrases used in Centric CRM
-icelets       Used for web management system
 javascript    Warning text that is displayed to the website user
 permissions   The module names, permission names, and related module data
 templates     Dynamic messages that are used when sending email to users
@@ -71,24 +70,6 @@ last update.
 
 New translations may find it useful to work offline initially and then
 send the document to Centric CRM for processing.
-
-
-----------------------------------------------------------------------------
-| Directory: icelets                                                       |
-----------------------------------------------------------------------------
-
-File: icelets_*.js
-
-The web content management system reuses various components and presents
-configuration data to the user.
-
-- Translate the icelet "name"
-- Translate the icelet "description"
-- Translate the property "label"
-- Translate the property "description"
-- Translate the property "additionalText"
-- Translate the property "defaultValue" EXCEPT when true, false
-
 
 
 ----------------------------------------------------------------------------

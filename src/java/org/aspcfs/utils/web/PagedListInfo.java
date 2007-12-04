@@ -22,9 +22,6 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.UserUtils;
-
-import javax.portlet.PortletURL;
-import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -1131,10 +1128,6 @@ public class PagedListInfo implements Serializable {
    * @since 1.8
    */
   public String getPreviousPageLink(String linkOn, String linkOff, String formName) {
-    return getPreviousPageLink(linkOn, linkOff, "0", null);
-  }
-
-  public String getPreviousPageLink(String linkOn, String linkOff, String formName, RenderResponse response) {
     StringBuffer result = new StringBuffer();
     if (currentOffset > 0 && getItemsPerPage() != -1) {
       int newOffset = currentOffset - getItemsPerPage();
@@ -1148,20 +1141,9 @@ public class PagedListInfo implements Serializable {
       if (!getEnableJScript()) {
         //Normal link
         String thisLink = null;
-        if (response == null) {
           thisLink = link + "&pagedListInfoId=" + this.getId() +
               (getExpandedSelection() ? "&pagedListSectionId=" + this.getId() : "") +
               "&offset=" + (newOffset > 0 ? newOffset : 0);
-        } else {
-          PortletURL renderURL = response.createRenderURL();
-          HashMap params = (HashMap) renderParameters.clone();
-          params.put("pagedListInfoId", new String[]{this.getId()});
-          params.put("pagedListSectionId", new String[]{this.getId()});
-          params.put("offset", new String[]{String.valueOf(newOffset > 0 ? newOffset : 0)});
-          params.put("page", new String[]{String.valueOf(newOffset > 0 ? newOffset % 10 : 0)});
-          renderURL.setParameters(params);
-          thisLink = renderURL.toString();
-        }
         result.append(
             "<a href=\"" + scrollStart + thisLink + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();
@@ -1212,10 +1194,6 @@ public class PagedListInfo implements Serializable {
    * @since 1.8
    */
   public String getNextPageLink(String linkOn, String linkOff, String formName) {
-    return getNextPageLink(linkOn, linkOff, "0", null);
-  }
-
-  public String getNextPageLink(String linkOn, String linkOff, String formName, RenderResponse response) {
     StringBuffer result = new StringBuffer();
     if ((currentOffset + getItemsPerPage()) < maxRecords && getItemsPerPage() != -1)
     {
@@ -1229,19 +1207,9 @@ public class PagedListInfo implements Serializable {
       if (!getEnableJScript()) {
         //Normal link
         String thisLink = null;
-        if (response == null) {
           thisLink = link + "&pagedListInfoId=" + this.getId() +
               (getExpandedSelection() ? "&pagedListSectionId=" + this.getId() : "") +
               "&offset=" + (currentOffset + getItemsPerPage());
-        } else {
-          PortletURL renderURL = response.createRenderURL();
-          HashMap params = (HashMap) renderParameters.clone();
-          params.put("pagedListInfoId", new String[]{this.getId()});
-          params.put("pagedListSectionId", new String[]{this.getId()});
-          params.put("offset", new String[]{String.valueOf(currentOffset + getItemsPerPage())});
-          renderURL.setParameters(params);
-          thisLink = renderURL.toString();
-        }
         result.append(
             "<a href=\"" + scrollStart + thisLink + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();

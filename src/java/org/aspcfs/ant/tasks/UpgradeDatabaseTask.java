@@ -64,7 +64,6 @@ public class UpgradeDatabaseTask extends Task {
   private String locale = "";
   private String params = null;
   private String languagePath = null;
-  private String iceletsPath = null;
   private String prefsPath = null;
   private URL prefsURL = null;
 
@@ -171,10 +170,6 @@ public class UpgradeDatabaseTask extends Task {
     this.languagePath = languagePath;
   }
 
-  public void setIceletsPath(String iceletsPath) {
-    this.iceletsPath = iceletsPath;
-  }
-
   public void setPrefsPath(String prefsPath) {
     this.prefsPath = prefsPath;
   }
@@ -191,7 +186,6 @@ public class UpgradeDatabaseTask extends Task {
       servletJar = StringUtils.replace(servletJar, "\\", "\\\\");
       fileLibraryPath = StringUtils.replace(fileLibraryPath, "\\", "\\\\");
       languagePath = StringUtils.replace(languagePath, "\\", "\\\\");
-      iceletsPath = StringUtils.replace(iceletsPath, "\\", "\\\\");
       prefsPath = StringUtils.replace(prefsPath, "\\", "\\\\");
     }
     if (prefsPath != null) {
@@ -389,7 +383,6 @@ public class UpgradeDatabaseTask extends Task {
       script.set("db", db);
       script.set("fileLibraryPath", fileLibraryPath + fs);
       script.set("languagePath", languagePath + fs);
-      script.set("iceletsPath", iceletsPath + fs);
       script.set("prefsURL", prefsURL);
       script.set("locale", locale);
       // Determine if fileLibrary is part of WEB-INF path

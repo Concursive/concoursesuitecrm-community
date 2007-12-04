@@ -17,8 +17,6 @@ package org.aspcfs.servlets.url;
 
 import java.io.IOException;
 import java.sql.Connection;
-
-import javax.portlet.PortletRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

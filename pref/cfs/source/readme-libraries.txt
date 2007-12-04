@@ -74,14 +74,8 @@ This distribution includes the required Centric CRM 3rd party libraries:
   nekohtml.jar
   oracle-10.2.0.1.0-jdbc14.jar
   PDFBox-0.6.7.jar
-  pluto-container-1.1.0-beta1.jar
-  pluto-descriptor-api-1.1.0-beta1.jar
-  pluto-descriptor-impl-1.1.0-beta1.jar
-  pluto-portal-driver-1.1.0-beta1.jar
-  pluto-taglib-1.1.0-beta1.jar
   poi-3.0.1-FINAL-20070705.jar
   poi-scratchpad-3.0.1-FINAL-20070705.jar
-  portlet-api-1.0.jar
   postgresql-8.1-405.jdbc3.jar
   quartz-1.5.1.jar
   sjsxp-1.0.jar

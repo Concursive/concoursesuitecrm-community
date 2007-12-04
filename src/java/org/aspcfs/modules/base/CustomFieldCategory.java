@@ -78,14 +78,7 @@ public class CustomFieldCategory extends ArrayList {
 	private HashMap fieldAverages;
 	private boolean doTotal = false;
 	private boolean doAverage = false;
-	
-	//properties for Portlet preferences
-	private boolean canView = false;
-	private boolean canAdd = false;
-	private boolean canEdit = false;
-	private boolean canDelete = false;
-	private ArrayList displayInList = null;
-	
+		
 	//Resources
 	private int numberOfRecords = -1;
 	
@@ -138,43 +131,6 @@ public class CustomFieldCategory extends ArrayList {
 	}
 	
 	/**
-	 * sets the doTotal attribute of the CustomFieldCategory object
-	 *
-	 * @param tmp The new setCanView value
-	 */
-	public void setCanView(boolean tmp) {
-		this.canView = tmp;
-	}
-	
-	/**
-	 * Sets the setCanAdd attribute of the CustomFieldCategory object
-	 *
-	 * @param tmp The new setCanAdd value
-	 */
-	public void setCanAdd(boolean tmp) {
-		this.canAdd = tmp;
-	}
-	
-	/**
-	 * Sets the setCanEdit attribute of the CustomFieldCategory object
-	 *
-	 * @param tmp The new setCanEdit value
-	 */
-	public void setCanEdit(boolean tmp) {
-		this.canEdit = tmp;
-	}
-	
-	/**
-	 * Sets the setCanEdit attribute of the CustomFieldCategory object
-	 *
-	 * @param tmp The new setCanEdit value
-	 */
-	public void setCanDelete(boolean tmp) {
-		this.canDelete = tmp;
-	}
-	
-	
-	/**
 	 * Sets the onlyWarnings attribute of the CustomFieldCategory object
 	 *
 	 * @param tmp The new onlyWarnings value
@@ -222,43 +178,6 @@ public class CustomFieldCategory extends ArrayList {
 	public int getNumberOfRecords() {
 		return numberOfRecords;
 	}
-	
-	/**
-	 * Gets the getcanView attribute of the CustomFieldCategory object
-	 *
-	 * @return The getcanView value
-	 */
-	public boolean getCanView() {
-		return canView;
-	}
-	
-	/**
-	 * Gets the getCanAdd attribute of the CustomFieldCategory object
-	 *
-	 * @return The getCanAdd value
-	 */
-	public boolean getCanAdd() {
-		return canAdd;
-	}
-	
-	/**
-	 * Gets the getCanEdit attribute of the CustomFieldCategory object
-	 *
-	 * @return The getCanEdit value
-	 */
-	public boolean getCanEdit() {
-		return canEdit;
-	}
-	
-	/**
-	 * Gets the getCanDelete attribute of the CustomFieldCategory object
-	 *
-	 * @return The getCanDelete value
-	 */
-	public boolean getCanDelete() {
-		return canDelete;
-	}
-	
 	
 	/**
 	 * Constructor for the CustomFieldCategory object
@@ -424,25 +343,6 @@ public class CustomFieldCategory extends ArrayList {
 				return Float.toString(value);
 			}
 		} else return null;
-	}
-	
-	/**
-	 * Gets the displayInList of portlet prference
-	 *
-	 * @return displayInList value
-	 */
-	public ArrayList getDisplayInList() {
-		return displayInList;
-	}
-	
-	/**
-	 * Gets the displayInList of portlet prference
-	 *
-	 * @param displayInList sets new displayInList value
-	 */
-	
-	public void setDisplayInList(ArrayList displayInList) {
-		this.displayInList = displayInList;
 	}
 	
 	/**

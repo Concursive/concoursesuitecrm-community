@@ -50,7 +50,6 @@ public class ApplicationPrefs {
   private Map prefs = new LinkedHashMap();
   private String filename = null;
   private Map dictionaries = new HashMap();
-  private HashMap icelets = new HashMap();
 
 
   /**
@@ -729,19 +728,6 @@ public class ApplicationPrefs {
       }
     }
     return null;
-  }
-
-
-  /**
-   * Gets the icelets attribute of the ApplicationPrefs object
-   *
-   * @return The icelets value
-   */
-  public HashMap getIcelets(String language) {
-    if (icelets == null) {
-      return null;
-    }
-    return (HashMap) icelets.get(language);
   }
 
 

@@ -10,14 +10,7 @@ Notes:
 
 New:
 - Importing of Account Type and Contact Type
-- ALPHA: Global folders in Admin, managed by FolderPortlet and FolderGraph
-- ALPHA: Portlet driven module dashboards
-- ALPHA: Portlet driven account, contact and leads module custom tabs
-- Website public file attachments from a document store
 - Quickly complete an action plan feature
-- Website preview feature
-- Website meta-data
-- Website page alias feature
 - Centric CRM webapp in Offline mode
   - Permissions and Role permissions have offline settings
   - Added Sync capabilities for a Centric CRM Offline Client
@@ -29,9 +22,6 @@ New:
   for the user based on user's permissions
 - Reader/Writer combination to read sync data using sync reflection api
 - Added Sun Java Streaming XML Parser (SJSXP)
-
-Changed:
-- Website module is now enabled during install and upgrade
 
 Fixes:
 - Removed a "." from the LDAP utils to work with active directory, may cause
@@ -59,7 +49,6 @@ Fixes:
   end of name
 - Javascript sending unescaped text in some popup widgets
 - Container menus configured for concurrent multiple languages
-- Locales other than en_US reported error because icelet_*.xml was not found
 - Locales without AMPM worked incorrectly in communications scheduling
 
 
@@ -88,11 +77,6 @@ New features:
   activities, and "Schedule an Activitiy" for recording upcoming activities
 - IBM DB2 database support
 - IBM WAS-CE Websphere Application Server Community Edition support
-- Portal Role editor allows for admins to define roles and permissions for
-  portal users
-  - Added Projects to portal role
-  - Added Document Stores to portal role
-  - Added Account Documents to portal role
 - MySQL 5 database support
 - Apache Derby database support
 - InterBase database support
@@ -116,23 +100,6 @@ Developer changes:
 - Web Service additions
 - Arbitrary BeanShell scripts can be executed during workflow processing using
   RunScript component
-
-Unreleased features, target version to be determined:
-- Web Content Management module and Portal using Apache Pluto JSR-168 Embedded
-  Portlet Container
-  (must execute ant install.icelets before using)
-  - Added the following portlets:
-    - HTML Content portlet
-    - Contact Us Form portlet
-    - Image Gallery portlet
-    - Product Catalog portlet
-      - Email a friend with tiny URL
-      - Product search
-      - Receive a quote
-    - Cart Portlet
-      - Email cart
-      - Cart checkout
-  - Added a "hit" tracker for web pages, products, and emails
 
 
 ----------------------------------------------------------------------------

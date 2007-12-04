@@ -12473,52 +12473,6 @@ any data still directly associated with this disabled user gets re-assigned as s
       <value><![CDATA[Add an Activity]]></value>
     </param>
 
-    <!-- Dashboards -->
-    <param name="portlet.dashboard.admin.menu.ModifyDetails">
-      <value><![CDATA[Modify Details]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.menu.GrantPermissions">
-      <value><![CDATA[Grant Permissions]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.menu.Configure">
-      <value><![CDATA[Configure]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.menu.Delete">
-      <value><![CDATA[Delete]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.Dashboards">
-      <value><![CDATA[Dashboards]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.DashboardName">
-      <value><![CDATA[Dashboard Name]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.DashboardNotes">
-      <value><![CDATA[Dashboard Notes]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.Enabled">
-      <value><![CDATA[Enabled]]></value>
-    </param>
-    <param name="portlet.dashboard.admin.AddDashboard">
-      <value><![CDATA[Add Dashboard]]></value>
-    </param>
-        <param name="portlet.dashboard.admin.IfVisible">
-      <value><![CDATA[indicates if the Dashboard is visible]]></value>
-    </param>
-    <param name="portlet.graph.width">
-      <value><![CDATA[Width]]></value>
-    </param>
-    <param name="portlet.graph.height">
-      <value><![CDATA[Height]]></value>
-    </param>
-    <param name="portlet.spreadsheet.rows">
-      <value><![CDATA[Rows]]></value>
-    </param>
-    <param name="portlet.spreadsheet.columns">
-      <value><![CDATA[Columns]]></value>
-    </param>
-    <param name="portlet.spreadsheet.configure">
-      <value><![CDATA[Configure]]></value>
-    </param>
     <param name="permission.dashboard">
       <value><![CDATA[Configure Custom Dashboards]]></value>
     </param>
@@ -12530,37 +12484,6 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="workArea.note">
       <value><![CDATA[Note: Following special characters <.>?;'"[{]}&%$#@!`~ are not supported and should not contain more than 30 parameters in the work area formula.]]></value>
-    </param>
-  <!-- Custom Tabs  -->
-    <param name="portlet.customtab.admin.menu.ModifyDetails">
-      <value><![CDATA[Modify Details]]></value>
-    </param>
-    <param name="portlet.customtab.admin.menu.GrantPermissions">
-      <value><![CDATA[Grant Permissions]]></value>
-    </param>
-    <param name="portlet.customtab.admin.menu.Configure">
-      <value><![CDATA[Configure]]></value>
-    </param>
-    <param name="portlet.customtab.admin.menu.Delete">
-      <value><![CDATA[Delete]]></value>
-    </param>
-    <param name="portlet.customtab.admin.Customtabs">
-      <value><![CDATA[Dashboards]]></value>
-    </param>
-    <param name="portlet.customtab.admin.CustomtabName">
-      <value><![CDATA[Dashboard Name]]></value>
-    </param>
-    <param name="portlet.customtab.admin.CustomtabNotes">
-      <value><![CDATA[Dashboard Notes]]></value>
-    </param>
-    <param name="portlet.customtab.admin.Enabled">
-      <value><![CDATA[Enabled]]></value>
-    </param>
-    <param name="portlet.customtab.admin.ContainerMenu">
-      <value><![CDATA[Container Menu]]></value>
-    </param>
-    <param name="portlet.customtab.admin.IfVisible">
-      <value><![CDATA[indicates if the Custom Tab is visible]]></value>
     </param>
     <param name="permission.customtab">
       <value><![CDATA[Configure Custom Tabs]]></value>
@@ -12610,33 +12533,9 @@ any data still directly associated with this disabled user gets re-assigned as s
     <param name="folder.range.select">
      <value><![CDATA[12 Records Ago to Current]]></value>
     </param>
-    <param name="portlets.folder.fieldsInFolders">
-      <value><![CDATA[Fields in the Folder]]></value>
-    </param>
-    <param name="portlets.folder.fieldstoDisplyInList">
-      <value><![CDATA[Fields to Display in List]]></value>
-    </param>
-    <param name="portlets.folder.greaterthan">
-      <value><![CDATA[>>]]></value>
-    </param>
-    <param name="portlets.folder.lessthan">
-      <value><![CDATA[<<]]></value>
-    </param>
-    <param name="portlets.folder.Avg">
-      <value><![CDATA[Avg :]]></value>
-    </param>
-    <param name="portlets.folder.Total">
-      <value><![CDATA[Total :]]></value>
-    </param>
-    <param name="portlets.folder.group">
-      <value><![CDATA[Group:]]></value>
-    </param>
     <!-- Labels for Folder Graph Error messages -->
     <param name="graph.error.message">
      <value><![CDATA[Graph cannot be displayed because the parameters specified for the graph could not be interpreted.]]></value>
-    </param>
-    <param name="fields.delete.message">
-     <value><![CDATA[Portlet cannot be rendered because the field(s) it depends on has been removed.]]></value>
     </param>
   </config>
 
