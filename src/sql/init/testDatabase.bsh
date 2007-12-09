@@ -22,7 +22,7 @@ if (1==1) {
   demoAccount.setEmail("test@centriccrm.com");
   demoAccount.setIpAddress("127.0.0.1");
   demoAccount.setLanguage("en_US");
-  demoAccount.setBrowser("Centric CRM Database Test");
+  demoAccount.setBrowser("Concourse Suite Community Edition Database Test");
   // Install on the given database
   DemoData.install(db, demoAccount);
   print("Test complete.");
