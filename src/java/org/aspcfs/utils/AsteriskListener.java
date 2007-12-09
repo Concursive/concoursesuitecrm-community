@@ -167,8 +167,8 @@ public class AsteriskListener extends Thread implements ManagerEventHandler {
         //   Caller Id:
         //   Account Name:
         //   Contact Name:
-        //   View this account in Centric CRM
-        //   View this contact in Centric CRM
+        //   View this account in Concourse Suite Community Edition
+        //   View this contact in Concourse Suite Community Edition
 
         cp.free(db);
         connected = false;
@@ -212,11 +212,11 @@ public class AsteriskListener extends Thread implements ManagerEventHandler {
         message.append("Phone Number: " + phoneNumber.getNumber() + "\r\n");
         if (contact.getOrgId() > 0) {
           message.append("\r\n");
-          message.append("View this Account in Centric CRM" + "\r\n");
+          message.append("View this Account in Concourse Suite Community Edition" + "\r\n");
           message.append(systemStatus.getUrl() + "/Accounts.do?command=Details&orgId=" + contact.getOrgId() + "\r\n");
         }
         message.append("\r\n");
-        message.append("View this Contact in Centric CRM" + "\r\n");
+        message.append("View this Contact in Concourse Suite Community Edition" + "\r\n");
         message.append(systemStatus.getUrl() + "/ExternalContacts.do?command=ContactDetails&id=" + contact.getId() + "\r\n");
         // Send the message
         xmpp.createChat(imAddress).sendMessage(message.toString());

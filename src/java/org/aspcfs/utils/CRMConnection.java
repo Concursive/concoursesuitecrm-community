@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Transfers data to/from a Centric CRM server
+ * Transfers data to/from a Concourse Suite Community Edition server
  *
  * @author mrajkowski
  * @version $Id: CRMConnection.java 11311 2005-04-18 09:13:29 -0400 (Mon, 18

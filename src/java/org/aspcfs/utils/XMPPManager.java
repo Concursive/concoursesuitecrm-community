@@ -33,7 +33,7 @@ public class XMPPManager {
         xmppConnection.getRoster().setSubscriptionMode(Roster.SUBSCRIPTION_ACCEPT_ALL);
         Presence presence = new Presence(Presence.Type.UNAVAILABLE);
         presence.setMode(Presence.Mode.AWAY);
-        presence.setStatus("Monitoring Centric CRM");
+        presence.setStatus("Monitoring Concourse Suite Community Edition");
         xmppConnection.sendPacket(presence);
       } catch (Exception e) {
         e.printStackTrace(System.out);

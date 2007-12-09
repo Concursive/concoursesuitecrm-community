@@ -1,16 +1,16 @@
 /*
  *  Copyright(c) 2005 TBWA\Worldwide IT
- *  Copyright(c) 2005 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  Copyright(c) 2005 Concursive Corporation (http://www.concursive.com/) All
  *  rights reserved. This material cannot be distributed without written
- *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  permission from Concursive Corporation. Permission to use, copy, and modify
  *  this material for internal use is hereby granted, provided that the above
- *  copyright notice and this permission notice appear in all copies. DARK HORSE
- *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  copyright notice and this permission notice appear in all copies. CONCURSIVE
+ *  CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
  *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
  *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
  *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
- *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
  *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
@@ -46,11 +46,11 @@ public class LDAPUtils {
   public static int authenticateUser(ApplicationPrefs prefs, Connection db,
       LoginBean bean) {
     String searchValue = null;
-    // Use Centric CRM Login Id
+    // Use Concourse Suite Community Edition Login Id
     if ("username".equals(prefs.get("LDAP.CENTRIC_CRM.FIELD"))) {
       searchValue = bean.getUsername();
     }
-    // Use Centric CRM user's email address
+    // Use Concourse Suite Community Edition user's email address
     try {
       if ("email".equals(prefs.get("LDAP.CENTRIC_CRM.FIELD"))) {
         ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
