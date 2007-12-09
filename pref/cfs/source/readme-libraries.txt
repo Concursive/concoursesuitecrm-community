@@ -1,4 +1,4 @@
-Centric CRM Community Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
+Concourse Suite Community Edition Community Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
 ----------------------------------------------------------------------------
@@ -8,20 +8,20 @@ $Id$
 This software is licensed under the Centric Public License (CPL).
 You should have received a copy of the CPL with this source code package in
 the LICENSE file. If you did not receive a copy of the CPL, you may download
-it from http://www.centriccrm.com. Compiling or using this software
+it from http://www.concursive.com. Compiling or using this software
 signifies your acceptance of the  Centric Public License.
 
-Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
 rights reserved. This material cannot be distributed without written
-permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+permission from Concursive Corporation. Permission to use, copy, and modify
 this material for internal use is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies. DARK HORSE
-VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+copyright notice and this permission notice appear in all copies. CONCURSIVE
+CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
 IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
 PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
 INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
 ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
 DAMAGES RELATING TO THE SOFTWARE.
 
@@ -30,7 +30,7 @@ DAMAGES RELATING TO THE SOFTWARE.
 | INTRODUCTION                                                             |
 ----------------------------------------------------------------------------
 
-This distribution includes the required Centric CRM 3rd party libraries:
+This distribution includes the required Concourse Suite Community Edition 3rd party libraries:
 
   activation-1.1.jar
   asterisk-java-0.2.jar
@@ -93,8 +93,8 @@ This distribution includes the required Centric CRM 3rd party libraries:
 | ABOUT THIS SOFTWARE                                                      |
 ----------------------------------------------------------------------------
 
-Centric CRM licenses libraries and code from the following projects, some
-are proprietary in which Dark Horse Ventures has been granted a license
+Concourse Suite Community Edition licenses libraries and code from the following projects, some
+are proprietary in which Concursive Corporation has been granted a license
 to redistribute, some are Open Source and are used according to the project
 license:
 

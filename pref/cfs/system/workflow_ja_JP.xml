@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workflow>
-  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  <!-- Hooks decide which items can be hooked in Concourse Suite Community Edition, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
@@ -41,9 +41,9 @@
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
             <parameter name="notification.userGroupToNotify" value="${previous.userGroupId}"/>
-            <parameter name="notification.subject">Centric CRM チケットは閉じました: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition チケットは閉じました: ${this.paddedTicketId}</parameter>
 <parameter name="notification.body"><![CDATA[
-<strong>Centric CRMの中の以下のチケットは閉じられました:</strong>
+<strong>Concourse Suite Community Editionの中の以下のチケットは閉じられました:</strong>
 <Br/>
 --- チケットの詳細 ---<br /><br />
 <strong>チケット#</strong> ${this.paddedTicketId}
@@ -67,9 +67,9 @@
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM 割り当てられたチケット: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition 割り当てられたチケット: ${this.paddedTicketId}</parameter>
             <parameter name="notification.body"><![CDATA[
-<strong>Centric CRMの中の以下のチケットはあなたに割り当てられました:</strong>
+<strong>Concourse Suite Community Editionの中の以下のチケットはあなたに割り当てられました:</strong>
 <br /><br />
 --- チケットの詳細 ---<br /><br />
 <strong>チケット #</strong> ${this.paddedTicketId}<br />
@@ -89,9 +89,9 @@
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userGroupToNotify" value="${this.userGroupId}"/>
             <parameter name="notification.skipUsers" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM 割り当てられたチケット: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition 割り当てられたチケット: ${this.paddedTicketId}</parameter>
             <parameter name="notification.body"><![CDATA[
-<strong>Centric CRMの中の以下のチケットは割り当てられました: ${ticketAssignedToContact.nameFirstLast}</strong>
+<strong>Concourse Suite Community Editionの中の以下のチケットは割り当てられました: ${ticketAssignedToContact.nameFirstLast}</strong>
 <br />
 --- チケットの詳細 ---<br /><br />
 <strong>チケット #</strong> ${this.paddedTicketId}<br />
@@ -132,7 +132,7 @@
             <parameter name="notification.roleTo" value="${step.roleId}"/>
             <parameter name="notification.departments.to" value="${step.departmentId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-            <parameter name="notification.subject">Centric CRM: 動作ステップ完成警戒</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: 動作ステップ完成警戒</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>以下の動作ステップは終了しました</strong><br />
 <br />
@@ -156,7 +156,7 @@
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -173,7 +173,7 @@ Centric CRM<br />
             <parameter name="notification.roleTo" value="${step.roleId}"/>
             <parameter name="notification.departments.to" value="${step.departmentId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-            <parameter name="notification.subject">Centric CRM: 動作ステップ警戒</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: 動作ステップ警戒</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>以下の動作ステップはあなたの注意を必要とします</strong><br />
 <br />
@@ -197,7 +197,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -210,7 +210,7 @@ Centric CRM<br />
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.skipUsers" value="${this.ownerId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId}"/>
-            <parameter name="notification.subject">Centric CRM: 動作ステップ警戒</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: 動作ステップ警戒</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>以下の動作ステップはあなたの注意を必要とします</strong><br />
 <br />
@@ -234,7 +234,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -275,11 +275,11 @@ Centric CRM<br />
             <!-- not implemented
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
             -->
-            <parameter name="notification.subject">Centric CRM のチケットレポートが割り当てられなかった (${objects.size})</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition のチケットレポートが割り当てられなかった (${objects.size})</parameter>
             <parameter name="notification.body"><![CDATA[
 **これは自動メッセージ**です。
 <Br/>
-Centric CRMの中の以下のチケットは、割り当てられないで、注意を必要とします:
+Concourse Suite Community Editionの中の以下のチケットは、割り当てられないで、注意を必要とします:
 <Br/>
 ]]></parameter>
             <parameter name="report.ticket.content"><![CDATA[

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workflow>
-  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  <!-- Hooks decide which items can be hooked in Concourse Suite Community Edition, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
@@ -41,8 +41,8 @@
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
             <parameter name="notification.userGroupToNotify" value="${previous.userGroupId}"/>
-            <parameter name="notification.subject">Centric CRM oznacba zaprta: ${this.paddedTicketId}</parameter>
-<parameter name="notification.body"><![CDATA[Oznacba v Centric CRM je zakljucena:<br />
+            <parameter name="notification.subject">Concourse Suite Community Edition oznacba zaprta: ${this.paddedTicketId}</parameter>
+<parameter name="notification.body"><![CDATA[Oznacba v Concourse Suite Community Edition je zakljucena:<br />
 <br />
 --- Podrobnosti oznacbe ---<br />
 <br />
@@ -65,8 +65,8 @@ Resitev: ${this.solution}<br />
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM oznacba dodeljena: ${this.paddedTicketId}</parameter>
-            <parameter name="notification.body"><![CDATA[Oznacba v Centric CRM je bila dodeljena tebi od:
+            <parameter name="notification.subject">Concourse Suite Community Edition oznacba dodeljena: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.body"><![CDATA[Oznacba v Concourse Suite Community Edition je bila dodeljena tebi od:
 <br />
 --- Podrobnosti oznacbe ---<br />
 <br />
@@ -87,8 +87,8 @@ Komentarji: ${this.comment}<br />
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userGroupToNotify" value="${this.userGroupId}"/>
             <parameter name="notification.skipUsers" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM oznacba dodeljena: ${this.paddedTicketId}</parameter>
-            <parameter name="notification.body"><![CDATA[Oznacba v Centric CRM je bila dodeljena tebi od:
+            <parameter name="notification.subject">Concourse Suite Community Edition oznacba dodeljena: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.body"><![CDATA[Oznacba v Concourse Suite Community Edition je bila dodeljena tebi od:
 <br />
 --- Podrobnosti oznacbe ---<br />
 <br />
@@ -130,7 +130,7 @@ Komentarji: ${this.comment}<br />
             <parameter name="notification.roleTo" value="${step.roleId}"/>
             <parameter name="notification.departments.to" value="${step.departmentId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-            <parameter name="notification.subject">Centric CRM: Action Step Completion Alert</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: Action Step Completion Alert</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>The following Action Step has been completed</strong><br />
 <br />
@@ -154,7 +154,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -171,7 +171,7 @@ Centric CRM<br />
             <parameter name="notification.roleTo" value="${step.roleId}"/>
             <parameter name="notification.departments.to" value="${step.departmentId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-            <parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: Action Step Alert</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>The following Action Step requires your attention</strong><br />
 <br />
@@ -195,7 +195,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -208,7 +208,7 @@ Centric CRM<br />
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.skipUsers" value="${this.ownerId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId}"/>
-            <parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: Action Step Alert</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>The following Action Step requires your attention</strong><br />
 <br />
@@ -232,7 +232,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -273,10 +273,10 @@ Centric CRM<br />
             <!-- not implemented
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
             -->
-            <parameter name="notification.subject">Centric CRM porocilo o nedodeljeni oznacbi (${objects.size})</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition porocilo o nedodeljeni oznacbi (${objects.size})</parameter>
             <parameter name="notification.body"><![CDATA[** To je avtomatsko sporocilo **<br />
 <br />
-Naslednje oznacbe v Centric CRM so nedodeljene in potrebujejo pozornost:<br />
+Naslednje oznacbe v Concourse Suite Community Edition so nedodeljene in potrebujejo pozornost:<br />
 
 ]]></parameter>
             <parameter name="report.ticket.content"><![CDATA[----- Podrobnosti oznacbe -----<br />

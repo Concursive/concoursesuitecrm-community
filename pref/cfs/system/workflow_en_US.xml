@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workflow>
-	<!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+	<!-- Hooks decide which items can be hooked in Concourse Suite Community Edition, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
 	<hooks>
@@ -45,9 +45,9 @@
 						<parameter name="notification.itemModified" value="${this.modified}"/>
 						<parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
 						<parameter name="notification.userGroupToNotify" value="${previous.userGroupId}"/>
-						<parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedTicketId}</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition Ticket Closed: ${this.paddedTicketId}</parameter>
 						<parameter name="notification.body"><![CDATA[
-<strong>The following ticket in Centric CRM has been closed:</strong>
+<strong>The following ticket in Concourse Suite Community Edition has been closed:</strong>
 <br />
 --- Ticket Details ---<br />
 <br />
@@ -70,9 +70,9 @@ Solution: ${this.solution}<br />
 						<parameter name="notification.itemId" value="${this.id}"/>
 						<parameter name="notification.itemModified" value="${this.modified}"/>
 						<parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-						<parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedTicketId}</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition Ticket Assigned: ${this.paddedTicketId}</parameter>
 						<parameter name="notification.body"><![CDATA[
-<strong>The following ticket in Centric CRM has been assigned to you:</strong>
+<strong>The following ticket in Concourse Suite Community Edition has been assigned to you:</strong>
 <br /><br />
 --- Ticket Details ---<br />
 <br />
@@ -93,9 +93,9 @@ Comment: ${this.comment}<br />
 						<parameter name="notification.itemModified" value="${this.modified}"/>
 						<parameter name="notification.userGroupToNotify" value="${this.userGroupId}"/>
 						<parameter name="notification.skipUsers" value="${this.assignedTo}"/>
-						<parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedTicketId}</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition Ticket Assigned: ${this.paddedTicketId}</parameter>
 						<parameter name="notification.body"><![CDATA[
-<strong>The following ticket in Centric CRM has been assigned to: ${ticketAssignedToContact.nameFirstLast}</strong>
+<strong>The following ticket in Concourse Suite Community Edition has been assigned to: ${ticketAssignedToContact.nameFirstLast}</strong>
 <br />
 --- Ticket Details ---<br />
 <br />
@@ -136,7 +136,7 @@ Comment: ${this.comment}<br />
 						<parameter name="notification.roleTo" value="${step.roleId}"/>
 						<parameter name="notification.departments.to" value="${step.departmentId}"/>
 						<parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-						<parameter name="notification.subject">Centric CRM: Action Step Completion Alert</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition: Action Step Completion Alert</parameter>
 						<parameter name="notification.body"><![CDATA[
 <strong>The following Action Step has been completed</strong><br />
 <br />
@@ -160,7 +160,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
 					</parameters>
 				</component>
@@ -177,7 +177,7 @@ Centric CRM<br />
 						<parameter name="notification.roleTo" value="${step.roleId}"/>
 						<parameter name="notification.departments.to" value="${step.departmentId}"/>
 						<parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-						<parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition: Action Step Alert</parameter>
 						<parameter name="notification.body"><![CDATA[
 <strong>The following Action Step requires your attention</strong><br />
 <br />
@@ -201,7 +201,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
 					</parameters>
 				</component>
@@ -214,7 +214,7 @@ Centric CRM<br />
 						<parameter name="notification.itemModified" value="${this.modified}"/>
 						<parameter name="notification.skipUsers" value="${this.ownerId}"/>
 						<parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId}"/>
-						<parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition: Action Step Alert</parameter>
 						<parameter name="notification.body"><![CDATA[
 <strong>The following Action Step requires your attention</strong><br />
 <br />
@@ -238,7 +238,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
 					</parameters>
 				</component>
@@ -277,11 +277,11 @@ Centric CRM<br />
 						<!-- not implemented
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
             -->
-						<parameter name="notification.subject">Centric CRM Unassigned Ticket Report (${objects.size})</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition Unassigned Ticket Report (${objects.size})</parameter>
 						<parameter name="notification.body"><![CDATA[
 ** This is an automated message **
 <br />
-The following tickets in Centric CRM are unassigned and need attention:<br />
+The following tickets in Concourse Suite Community Edition are unassigned and need attention:<br />
 
 ]]></parameter>
 						<parameter name="report.ticket.content"><![CDATA[
@@ -308,7 +308,7 @@ Comment: ${this.comment}<br />
 			<components>
 				<component id="1" parent="" if="true" class="org.aspcfs.modules.contacts.components.EmailActivityParticipants">
 					<parameters>
-						<parameter name="notification.subject">Centric CRM: Activity assigment</parameter>
+						<parameter name="notification.subject">Concourse Suite Community Edition: Activity assigment</parameter>
 						<parameter name="notification.body"><![CDATA[<strong>You are invited to the following activity:</strong>
 <br/><br/>
 --- Activity Details ---<br/>

@@ -31,7 +31,7 @@ ${noPostalAddresses=Nessun indirizzo postale.<br />}
 <body>
 Ciao ${invite.name},<br />
 <br />
-${user.name} ha iniziato il seguente progetto Centric CRM e sta richiedendo che
+${user.name} ha iniziato il seguente progetto Concourse Suite Community Edition e sta richiedendo che
 tu partecipi a:<br />
 <br />
 Nome Progetto: ${project.name}<br />
@@ -45,7 +45,7 @@ Una volta collegato, naviga fino al modulo Progetti e scegli di vedere i tuoi in
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
     <!-- Project Management News Email -->
@@ -77,7 +77,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
     <!-- Opportunity Alerts -->
@@ -87,7 +87,7 @@ Centric CRM<br />
 * THIS IS AN AUTOMATED MESSAGE, PLEASE DO NOT REPLY<br />
 <br />
 <br />
-The following opportunity component in Centric CRM has an alert set:<br />
+The following opportunity component in Concourse Suite Community Edition has an alert set:<br />
 <br />
 <table border="0">
   <tr>
@@ -139,7 +139,7 @@ The following opportunity component in Centric CRM has an alert set:<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
 
@@ -173,7 +173,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
 
@@ -207,7 +207,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
 <!-- Action Plan Assignment Email -->
@@ -236,7 +236,7 @@ Click <a href="${link}">here</a> to view the Action Plan
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
@@ -270,7 +270,7 @@ Click <a href="${link}">here</a> to view the Action Plan
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
@@ -300,7 +300,7 @@ Click <a href="${link}">here</a> to view the Action Plan
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
@@ -330,41 +330,41 @@ Click <a href="${link}">here</a> to view the Action Plan
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
 <!-- New User Email Alert -->
-<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Centric CRM Account Information]]></map>
+<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Concourse Suite Community Edition Account Information]]></map>
 <map id="newuser.alert.email.body" displayName="User Account Alert Email"><![CDATA[
 <body>
-This message details information about your Centric CRM account.<br />
+This message details information about your Concourse Suite Community Edition account.<br />
 <br />
-Your Centric CRM user account password has been reset by ${modUserName}.<br />
+Your Concourse Suite Community Edition user account password has been reset by ${modUserName}.<br />
 <br />
 Please login with the following information:<br />
 <br />
 User Name: ${user.username}<br />
 Password: ${user.password} <br />
 <br />
-It is recomended that you change your password the next time you login to Centric CRM.<br />
+It is recomended that you change your password the next time you login to Concourse Suite Community Edition.<br />
 <br />
 <br />
 Click <a href="${url}">here</a> to visit the site.<br />
 ${url}<br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
-<map id="report.email.subject" displayName="Report Email"><![CDATA[Centric CRM Report]]></map>
+<map id="report.email.subject" displayName="Report Email"><![CDATA[Concourse Suite Community Edition Report]]></map>
 <map id="report.alert.email.body" displayName="Report Email"><![CDATA[
 <body>
 The attached report was generated and emailed as requested...<br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>

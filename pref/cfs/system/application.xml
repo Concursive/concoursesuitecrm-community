@@ -1,5 +1,5 @@
 <workflow>
-  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  <!-- Hooks decide which items can be hooked in Concourse Suite Community Edition, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
@@ -213,7 +213,7 @@
   
     <process name="dhv.application.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="8">
       <parameters>
-        <!-- Global parameters for the process override the defaults from Centric CRM -->
+        <!-- Global parameters for the process override the defaults from Concourse Suite Community Edition -->
         <!--
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>

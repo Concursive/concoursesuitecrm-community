@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
-Created-By: Dark Horse Ventures LLC
-Comment: Centric CRM Web Application binary edition Thu Feb 10 13:00:00 EST 2005
-Implementation-Title: Centric CRM
+Created-By: Concursive Corporation
+Comment: Concourse Suite Community Edition Web Application binary edition Thu Feb 10 13:00:00 EST 2005
+Implementation-Title: Concourse Suite Community Edition
 Implementation-Version: 3.0
-Implementation-Vendor: Dark Horse Ventures LLC
-Implementation-URL: http://www.centriccrm.com
+Implementation-Vendor: Concursive Corporation
+Implementation-URL: http://www.concursive.com
 

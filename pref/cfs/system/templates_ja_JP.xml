@@ -41,7 +41,7 @@ ${noPostalAddresses=No postal address on record.<br />}
 <body>
 こんにちは ${invite.name},<br />
 <br />
-${user.name} 以下のCentric CRMが映し出すセットアップを持って、あなたが参加するのを要求しています:<br />
+${user.name} 以下のConcourse Suite Community Editionが映し出すセットアップを持って、あなたが参加するのを要求しています:<br />
 <br />
 プロジェクト名: ${project.name}<br />
 プロジェクト記述: ${project.description}<br />
@@ -53,7 +53,7 @@ ${user.name} 以下のCentric CRMが映し出すセットアップを持って�
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
     <!-- Project Management News Email -->
@@ -85,7 +85,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
 
@@ -119,7 +119,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
 
@@ -153,7 +153,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]></map>
 <!-- Action Plan Assignment Email -->
@@ -182,7 +182,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
@@ -216,7 +216,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
@@ -246,7 +246,7 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
@@ -276,41 +276,41 @@ Centric CRM<br />
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
 <!-- New User Email Alert -->
-<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Centric CRMアカウント情報]]></map>
+<map id="newuser.alert.email.subject" displayName="User Account Alert Email"><![CDATA[Concourse Suite Community Editionアカウント情報]]></map>
 <map id="newuser.alert.email.body" displayName="User Account Alert Email"><![CDATA[
 <body>
-あなたのCentric CRMに関するこのメッセージ詳細情報は説明されます。<br />
+あなたのConcourse Suite Community Editionに関するこのメッセージ詳細情報は説明されます。<br />
 <br />
-あなたのCentric CRMユーザアカウントパスワードは${modUserName}によってリセットされました。<br />
+あなたのConcourse Suite Community Editionユーザアカウントパスワードは${modUserName}によってリセットされました。<br />
 <br />
 以下の情報で、ログインしてください:<br />
 <br />
 ユーザ名: ${user.username}<br />
 パスワード: ${user.password} <br />
 <br />
-あなたがCentric CRMにログインする次の時にパスワードを変えるのは、お勧めです。.<br />
+あなたがConcourse Suite Community Editionにログインする次の時にパスワードを変えるのは、お勧めです。.<br />
 <br />
 <br />
 ここで<a href="${url}">クリック${endUrl}して、サイトを見て.
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>
-<map id="report.email.subject" displayName="Report Email"><![CDATA[Centric CRM Report]]></map>
+<map id="report.email.subject" displayName="Report Email"><![CDATA[Concourse Suite Community Edition Report]]></map>
 <map id="report.alert.email.body" displayName="Report Email"><![CDATA[
 <body>
 The attached report was generated and emailed as requested...<br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 </body>
 ]]>
 </map>

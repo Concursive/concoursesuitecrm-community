@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workflow>
-  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
+  <!-- Hooks decide which items can be hooked in Concourse Suite Community Edition, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
@@ -41,8 +41,8 @@
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
             <parameter name="notification.userGroupToNotify" value="${previous.userGroupId}"/>
-            <parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedTicketId}</parameter>
-<parameter name="notification.body"><![CDATA[Folgender Beleg aus dem Centric CRM wurde geschlossen:
+            <parameter name="notification.subject">Concourse Suite Community Edition Ticket Closed: ${this.paddedTicketId}</parameter>
+<parameter name="notification.body"><![CDATA[Folgender Beleg aus dem Concourse Suite Community Edition wurde geschlossen:
 <br />
 --- Belegdetails ---<br />
 <br />
@@ -65,7 +65,7 @@ Lösung: ${this.solution}<br />
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition Ticket Assigned: ${this.paddedTicketId}</parameter>
             <parameter name="notification.body"><![CDATA[Folgender Beleg aus dem CRM wurde Ihnen zugeordnet:
 <br /><br />
 --- Belegdetails ---<br />
@@ -87,7 +87,7 @@ Kommentar: ${this.comment}<br />
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userGroupToNotify" value="${this.userGroupId}"/>
             <parameter name="notification.skipUsers" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedTicketId}</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition Ticket Assigned: ${this.paddedTicketId}</parameter>
             <parameter name="notification.body"><![CDATA[Folgender Beleg aus dem CRM wurde Ihnen zugeordnet: ${ticketAssignedToContact.nameFirstLast}
 <br /><br />
 --- Belegdetails ---<br />
@@ -130,7 +130,7 @@ Kommentar: ${this.comment}<br />
             <parameter name="notification.roleTo" value="${step.roleId}"/>
             <parameter name="notification.departments.to" value="${step.departmentId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-            <parameter name="notification.subject">Centric CRM: Action Step Completion Alert</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: Action Step Completion Alert</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>The following Action Step has been completed</strong><br />
 <br />
@@ -154,7 +154,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -171,7 +171,7 @@ Centric CRM<br />
             <parameter name="notification.roleTo" value="${step.roleId}"/>
             <parameter name="notification.departments.to" value="${step.departmentId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId},${step.groupId}"/>
-            <parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: Action Step Alert</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>The following Action Step requires your attention</strong><br />
 <br />
@@ -195,7 +195,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -208,7 +208,7 @@ Centric CRM<br />
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.skipUsers" value="${this.ownerId}"/>
             <parameter name="notification.userGroupToNotify" value="${stepTicket.userGroupId}"/>
-            <parameter name="notification.subject">Centric CRM: Action Step Alert</parameter>
+            <parameter name="notification.subject">Concourse Suite Community Edition: Action Step Alert</parameter>
 <parameter name="notification.body"><![CDATA[
 <strong>The following Action Step requires your attention</strong><br />
 <br />
@@ -232,7 +232,7 @@ Click <a href="${actionPlanURL.description}${actionPlanURL.name}">here</a> to vi
 <br />
 <br />
 _____________________________________________________________________________________________<br />
-Centric CRM<br />
+Concourse Suite Community Edition<br />
 ]]></parameter>
           </parameters>
         </component>
@@ -280,7 +280,7 @@ Centric CRM<br />
             <parameter name="notification.subject">Bericht über im CRM nichtzugeordnete Belege (${objects.size})</parameter>
             <parameter name="notification.body"><![CDATA[** Diese Nachricht wurde automatisch generiert **
 
-Folgende Belege sind in Centric CRM niemandem zugeordnet:
+Folgende Belege sind in Concourse Suite Community Edition niemandem zugeordnet:
 
 ]]></parameter>
             <parameter name="report.ticket.content"><![CDATA[----- Belegdetails -----<br />

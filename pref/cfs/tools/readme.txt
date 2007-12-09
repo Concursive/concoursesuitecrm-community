@@ -1,7 +1,7 @@
-Centric CRM Tools; build: @BUILD.NUMBER@; @BUILD.DATE@
+Concourse Suite Community Edition Tools; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM Tools 4.1
+Concourse Suite Community Edition Tools 4.1
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
@@ -10,20 +10,20 @@ Centric CRM Tools 4.1
 This software is licensed under the Centric Public License (CPL).  
 You should have received a copy of the CPL with this source code package in
 the LICENSE file. If you did not receive a copy of the CPL, you may download
-it from http://www.centriccrm.com. Compiling or using this software
+it from http://www.concursive.com. Compiling or using this software
 signifies your acceptance of the  Centric Public License.
 
-Copyright(c) 2004-2006 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+Copyright(c) 2004-2006 Concursive Corporation (http://www.concursive.com/) All
 rights reserved. This material cannot be distributed without written
-permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+permission from Concursive Corporation. Permission to use, copy, and modify
 this material for internal use is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies. DARK HORSE
-VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+copyright notice and this permission notice appear in all copies. CONCURSIVE
+CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
 IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
 PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
 INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
 ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
 DAMAGES RELATING TO THE SOFTWARE.
 
@@ -32,13 +32,13 @@ DAMAGES RELATING TO THE SOFTWARE.
 | INTRODUCTION                                                             |
 ----------------------------------------------------------------------------
 
-Centric CRM Tools includes multi-platform code to communicate with the
-Centric CRM application using HTTP.
+Concourse Suite Community Edition Tools includes multi-platform code to communicate with the
+Concourse Suite Community Edition application using HTTP.
 
 For example, you can capture leads or tickets from your existing web site
-and send them straight into Centric CRM by using the "save" method.
+and send them straight into Concourse Suite Community Edition by using the "save" method.
 
-You can also read data from Centric CRM by using the "load" method.
+You can also read data from Concourse Suite Community Edition by using the "load" method.
 
   Methods supported:
   
@@ -48,8 +48,8 @@ You can also read data from Centric CRM by using the "load" method.
     DataRecord.DELETE
     DataRecord.GET_DATETIME
 
-More information can be found in the Centric CRM Community...
-http://www.centriccrm.com/Portal.do?key=community
+More information can be found in the Concourse Suite Community Edition Community...
+http://www.concursive.com/Portal.do?key=community
 
 
 ----------------------------------------------------------------------------
@@ -58,12 +58,12 @@ http://www.centriccrm.com/Portal.do?key=community
 
 v4.1
   September 28, 2006
-  Updated against Centric CRM 4.1
+  Updated against Concourse Suite Community Edition 4.1
   Adds MD5 password hash for user-based clients
 
 v4.0
   April 18, 2006
-  Updated against Centric CRM 4.0
+  Updated against Concourse Suite Community Edition 4.0
 
 v0.2
   June 17, 2005
@@ -82,15 +82,15 @@ v0.1
 The centric_crm_tools.jar can be used with any Java 1.4 or 1.5 application.
 You will need to have the Java Servlet-API in your classpath.
 
-In Centric CRM 4.1 and newer, the API can be accessed by imitating a user
+In Concourse Suite Community Edition 4.1 and newer, the API can be accessed by imitating a user
 of the system.  This allows for remote user-based access which enforces that
 user's permissions.
 
-In Centric CRM 4.0 and newer, a "client" will need to be configured under the
-Admin module to provide remote access to Centric CRM.  The client can
+In Concourse Suite Community Edition 4.0 and newer, a "client" will need to be configured under the
+Admin module to provide remote access to Concourse Suite Community Edition.  The client can
 perform any action and is not user-specific.
 
-In versions prior to 4.0, the Centric CRM database needs to be modified
+In versions prior to 4.0, the Concourse Suite Community Edition database needs to be modified
 manually:
 
 *  In the [sync_client] table, an arbitrary client should be inserted
@@ -186,10 +186,10 @@ System.out.println(crm.getLastResponse());
          customFieldData
 
 
-2. Another example might be to retrieve information from Centric CRM first,
+2. Another example might be to retrieve information from Concourse Suite Community Edition first,
    if a record exists, then decide to create a new record or append to it.
    Consider the following:
 
-   - Ask Centric CRM for a contact list in which the contact's email address
+   - Ask Concourse Suite Community Edition for a contact list in which the contact's email address
      is a match.
    - If a match is returned, then submit a ticket related to that contact
