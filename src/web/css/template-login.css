@@ -3,10 +3,135 @@ BODY {
   font-size: 10pt;
   background: white;
   color: #000000;
+  margin: 0px;
 }
-TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A { 
+TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A {
   font-family: verdana, arial, sans-serif;
   font-size: 10pt;
   color: #000000;
 }
 
+.loginContainer {
+  margin-left: auto;
+  margin-right: auto;
+  width: 640px;
+  height: 214px;
+  border: solid 1px black;
+  position: relative;
+}
+
+.loginContainer .message {
+  bottom: 1px;
+  color: red;
+  position: absolute;
+  right: 10px;
+  text-align: right;
+  z-index: 5;
+  width: 385px;
+}
+
+.loginContainer .fieldsContainer {
+  position: absolute;
+  top: 35px;
+  right: 0px;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.fieldLabel {
+  color: #666666;
+  font-size: 12pt;
+  font-weight: bold;
+  vertical-align: top;
+  font-variant: small-caps;
+}
+
+.loginContainer .fieldsContainer input {
+  width: 176px;
+  border: solid 1px #B3B3B3;
+  margin-bottom: 4px;
+}
+
+.loginContainer .logoContainer {
+  left: 10px;
+  position: absolute;
+  top: 7px;
+  _top: 5px;
+  z-index: 2;
+}
+
+.loginContainer .information .nameAndSecurity {
+  font-size: 13pt;
+  font-weight: bold;
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  text-align: right;
+}
+
+.loginContainer .information .licencing {
+  bottom: 0px;
+  font-size: 8pt;
+  left: 0px;
+  padding: 5px;
+  position: absolute;
+  z-index: 2;
+}
+
+.loginContainer .loginBar {
+  height: 123px;
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background-image: url(../images/loginBarBackground.png);
+  background-repeat: repeat-x;
+  background-position: top left;
+}
+
+.loginContainer .forgottenPassword {
+  position: absolute;
+  right: 10px;
+  bottom: 100px;
+}
+
+.loginContainer .buttonContainer {
+  position:absolute;
+  right: 10px;
+  bottom: 54px;
+
+}
+
+.loginContainer .invalidScheme {
+  position:absolute;
+  right: 10px;
+  bottom: 54px;
+  width: 364px !important;
+  text-align: right;
+}
+
+.upgradeSystem, .passwordSent {
+  position: absolute;
+  right: 10px;
+  top: 25px;
+  width: 300px;
+  text-align: right;
+}
+
+.passwordSent {
+  margin-top: 10px;
+  width: 364px !important
+}
+
+.upgradeSystem input {
+  margin-top: 4px;
+}
+
+.forgottenPasswordHeading {
+  font-size: 13pt;
+  font-weight: bold;
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  text-align: right;
+}
