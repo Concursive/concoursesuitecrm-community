@@ -2275,7 +2275,7 @@ public class Assignment extends GenericBean {
     //write the event
     webcal.append("BEGIN:VEVENT" + CRLF);
     webcal.append(
-        "UID:www.centriccrm.com-projects-assignment-events" + this.getId() + CRLF);
+        "UID:www.concursive.com-projects-assignment-events" + this.getId() + CRLF);
 
     if (created != null) {
       webcal.append("DTSTAMP:" + ICalendar.getDateTimeUTC(created) + CRLF);

@@ -1,15 +1,15 @@
 /*
- *  Copyright(c) 2005 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+ *  Copyright(c) 2005 Concursive Corporation (http://www.concursive.com/) All
  *  rights reserved. This material cannot be distributed without written
- *  permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+ *  permission from Concursive Corporation. Permission to use, copy, and modify
  *  this material for internal use is hereby granted, provided that the above
- *  copyright notice and this permission notice appear in all copies. DARK HORSE
- *  VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+ *  copyright notice and this permission notice appear in all copies. CONCURSIVE
+ *  CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
  *  IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
  *  PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
  *  INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
- *  EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+ *  EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
  *  ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
  *  DAMAGES RELATING TO THE SOFTWARE.
  */
@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Represents an ICalendar Object(.ics) for a particular Centric CRM User's
+ * Represents an ICalendar Object(.ics) for a particular Concourse Suite Community Edition User's
  * Calendar of Events. The calendar consists of various components like events,
  * alarms, todo lists and others. The calendar has a sequence of properties
  * followed by one or more components.<p>
@@ -295,7 +295,7 @@ public class ICalendar {
     buffer.append("CALSCALE:GREGORIAN" + CRLF);
     buffer.append(
         "X-WR-CALNAME:" + user.getContact().getNameFirstLast() + CRLF);
-    buffer.append("PRODID:Centric CRM" + CRLF);
+    buffer.append("PRODID:Concourse Suite Community Edition" + CRLF);
     buffer.append("METHOD:PUBLISH" + CRLF);
     buffer.append(
         "X-WR-TIMEZONE:" + companyCalendar.getTimeZone().getID() + CRLF);
