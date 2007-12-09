@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -36,11 +36,11 @@
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
     <td><b><dhv:label name="admin.license.question">Have you upgraded your license?</dhv:label></b><br />
-<dhv:label name="admin.license.text">Every Centric CRM application instance requires a license agreement from Dark Horse Ventures.
+<dhv:label name="admin.license.text">Every Concourse Suite Community Edition application instance requires a license agreement from Concursive Corporation.
 If changes have been made to the license, for example, 
 additional seats have been purchased, then the installed license should be updated to
 reflect those changes.</dhv:label>
-<dhv:label name="admin.modifyLicense.contactForUpgrade.text" param="url=<a href=\"http://www.centriccrm.com\" target=\"_blank\">|end=</a>">Contact <a href="http://www.centriccrm.com" target="_blank">www.centriccrm.com</a> for upgrade information</dhv:label>
+<dhv:label name="admin.modifyLicense.contactForUpgrade.text" param="url=<a href=\"http://www.concursive.com\" target=\"_blank\">|end=</a>">Contact <a href="http://www.concursive.com" target="_blank">www.concursive.com</a> for upgrade information</dhv:label>
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

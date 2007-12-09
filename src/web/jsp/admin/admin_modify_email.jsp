@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -33,7 +33,7 @@
 <table class="note" cellspacing="0">
 <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td><b><dhv:label name="admin.emailServer.question" param="bold=</b>|break=<br />">Which email server should Centric CRM use?</b><br />Centric CRM sends various notifications to users by email.  Centric CRM can also be used to send email to contacts that have been entered into the Contacts and Accounts modules.</dhv:label>
+    <td><b><dhv:label name="admin.emailServer.question" param="bold=</b>|break=<br />">Which email server should Concourse Suite Community Edition use?</b><br />Concourse Suite Community Edition sends various notifications to users by email.  Concourse Suite Community Edition can also be used to send email to contacts that have been entered into the Contacts and Accounts modules.</dhv:label>
 <ul><li><dhv:label name="admin.emailServer.note">The specified server must allow this server to relay email</dhv:label></li></ul>
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
