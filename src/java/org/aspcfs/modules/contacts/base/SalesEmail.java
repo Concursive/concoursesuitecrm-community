@@ -60,7 +60,7 @@ public class SalesEmail {
     messageSubject.addParseElement("\r\n", "");
     messageSubject.addParseElement("\r", "");
     messageSubject.addParseElement("\n", "");
-    messageSubject.addParseElement("${" + type + ".email.subject}", "Centric CRM: Lead Assigned");
+    messageSubject.addParseElement("${" + type + ".email.subject}", "Concourse Suite Community Edition: Lead Assigned");
     subject = messageSubject.getParsedText();
     // Construct the body
     Template messageBody = new Template();
@@ -100,7 +100,7 @@ public class SalesEmail {
     messageSubject.addParseElement("\r\n", "");
     messageSubject.addParseElement("\r", "");
     messageSubject.addParseElement("\n", "");
-    messageSubject.addParseElement("${leads.worked.email.subject}", "Centric CRM: Prospect Assigned");
+    messageSubject.addParseElement("${leads.worked.email.subject}", "Concourse Suite Community Edition: Prospect Assigned");
     subject = messageSubject.getParsedText();
     // Construct the body
     Template messageBody = new Template();
