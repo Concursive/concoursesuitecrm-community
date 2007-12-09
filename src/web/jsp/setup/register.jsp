@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -83,8 +83,8 @@
   <tr>
     <td>
       <dhv:label name="setup.requestRegistrationLicense.label">To request a registration license, fill out the following information.</dhv:label><br>
-      <dhv:label name="setup.requestRegistrationLicense.text"><ul><li>The information below will be sent to Dark Horse Ventures and processed</li><li>A license file will be sent by email to the address specified below</li><li>In good faith, Dark Horse Ventures provides this software and entitles you to use it according to the license agreement</li><li>Anonymous email addresses will not be accepted when processing registrations</li><li>Your email address and contact information will not be provided to others without your consent</li></ul></dhv:label>
-      <dhv:label name="setup.darkHorseVenturesTeam">The Dark Horse Ventures Team</dhv:label>
+      <dhv:label name="setup.requestRegistrationLicense.text"><ul><li>The information below will be sent to Concursive Corporation and processed</li><li>A license file will be sent by email to the address specified below</li><li>In good faith, Concursive Corporation provides this software and entitles you to use it according to the license agreement</li><li>Anonymous email addresses will not be accepted when processing registrations</li><li>Your email address and contact information will not be provided to others without your consent</li></ul></dhv:label>
+      <dhv:label name="setup.darkHorseVenturesTeam">The Concursive Corporation Team</dhv:label>
       <br>&nbsp;
     </td>
   </tr>

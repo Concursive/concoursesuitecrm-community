@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004-2006 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004-2006 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -31,7 +31,7 @@
 <form name="language" action="Setup.do?command=Welcome" method="post" onsubmit="return checkForm(this);">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th colspan="2"><dhv:label name="setup.centricCRMInstallation">Centric CRM Installation</dhv:label></th>
+    <th colspan="2"><dhv:label name="setup.centricCRMInstallation">Concourse Suite Community Edition Installation</dhv:label></th>
   </tr>
   <tr>
     <td colspan="2">

@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -25,7 +25,7 @@
 %>
 <table width="100%" border="0">
   <tr>
-    <td><b><dhv:label name="setup.centricCRMInstallation">Centric CRM Installation</dhv:label></b></td>
+    <td><b><dhv:label name="setup.centricCRMInstallation">Concourse Suite Community Edition Installation</dhv:label></b></td>
   </tr>
 </table>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
@@ -70,10 +70,10 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.acquireRetainAndServiceCustomers.text">Acquire, retain, and service your customers with Centric CRM.</dhv:label><br>
+      <dhv:label name="setup.acquireRetainAndServiceCustomers.text">Acquire, retain, and service your customers with Concourse Suite Community Edition.</dhv:label><br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.learnMore.text">Learn more about our products</dhv:label></a><br>
+      <a href="http://www.concursive.com" target="_blank"><dhv:label name="setup.learnMore.text">Learn more about our products</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -111,7 +111,7 @@
       <dhv:label name="setup.backupReminder.text">Remember to make backups of your data.</dhv:label><br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.fileBackupHelp">File Backup Help</dhv:label></a><br>
+      <a href="http://www.concursive.com" target="_blank"><dhv:label name="setup.fileBackupHelp">File Backup Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -128,9 +128,9 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.sendmailHelp">Sendmail Help</dhv:label></a><br>
+      <a href="http://www.concursive.com" target="_blank"><dhv:label name="setup.sendmailHelp">Sendmail Help</dhv:label></a><br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.hylafaxHelp">HylaFax Help</dhv:label></a><br>
+      <a href="http://www.concursive.com" target="_blank"><dhv:label name="setup.hylafaxHelp">HylaFax Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -147,7 +147,7 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.postgreSQLHelp">PostgreSQL Help</dhv:label></a><br>
+      <a href="http://www.concursive.com" target="_blank"><dhv:label name="setup.postgreSQLHelp">PostgreSQL Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -158,13 +158,13 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      <dhv:label name="setup.centricCRMResources">Centric CRM Resources</dhv:label>
+      <dhv:label name="setup.centricCRMResources">Concourse Suite Community Edition Resources</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.centricCRMHelp">Centric CRM Help</dhv:label></a><br>
+      <a href="http://www.concursive.com" target="_blank"><dhv:label name="setup.centricCRMHelp">Concourse Suite Community Edition Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>

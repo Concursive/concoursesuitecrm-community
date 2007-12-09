@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -27,7 +27,7 @@
     <td>
       <dhv:label name="setup.licenseAccepted">License accepted!</dhv:label><br>
       <br>
-      <dhv:label name="setup.timeToConfigureSystemSettings.text">Now it's time to configure some of the system settings before you can begin using Centric CRM.</dhv:label><br>
+      <dhv:label name="setup.timeToConfigureSystemSettings.text">Now it's time to configure some of the system settings before you can begin using Concourse Suite Community Edition.</dhv:label><br>
       <br>
       <dhv:label name="setup.configurationIncludes.colon">Configuration includes the following steps:</dhv:label><br>
       <br>
@@ -61,7 +61,7 @@
             <dhv:label name="setup.step4.colon">Step 4:</dhv:label>
           </td>
           <td>
-            <dhv:label name="setup.setupCentricCRMAdminUserAccount">Setup the Centric CRM administrative user account</dhv:label>
+            <dhv:label name="setup.setupCentricCRMAdminUserAccount">Setup the Concourse Suite Community Edition administrative user account</dhv:label>
           </td>
         </tr>
       </table>

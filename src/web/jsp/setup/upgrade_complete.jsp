@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -24,7 +24,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      <dhv:label name="setup.centricCRMUpgradeComplete">Centric CRM Upgrade Complete!</dhv:label>
+      <dhv:label name="setup.centricCRMUpgradeComplete">Concourse Suite Community Edition Upgrade Complete!</dhv:label>
     </th>
   </tr>
   <tr>
@@ -69,11 +69,11 @@ String step = (String) installs.next();
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.jspPagesNotYetCompiled.text">Since the JavaServerPages have not yet been compiled, you should choose to precompile the JSPs so that the application works without compile delays. Compiling will occur in the background and you can continue to use Centric CRM.</dhv:label><br />
+      <dhv:label name="setup.jspPagesNotYetCompiled.text">Since the JavaServerPages have not yet been compiled, you should choose to precompile the JSPs so that the application works without compile delays. Compiling will occur in the background and you can continue to use Concourse Suite Community Edition.</dhv:label><br />
       <br />
       <input type="button" value="<dhv:label name="button.precompileJsps">Precompile JSPs</dhv:label>" onClick="javascript:popURL('setup/precompile.html','CRM_Compile','500','325','yes','yes')"/><br />
       <br />
-      <input type="button" value="<dhv:label name="button.continueToCentricCRMR">Continue to Centric CRM ></dhv:label>" onClick="window.location.href='index.jsp'" />
+      <input type="button" value="<dhv:label name="button.continueToCentricCRMR">Continue to Concourse Suite Community Edition ></dhv:label>" onClick="window.location.href='index.jsp'" />
     </td>
   </tr>
 </table>

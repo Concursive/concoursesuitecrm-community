@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -91,14 +91,14 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      <dhv:label name="setup.configuration.step3to4">Centric CRM Configuration (Step 3 of 4)<br />Database Settings &amp; Installation</dhv:label>
+      <dhv:label name="setup.configuration.step3to4">Concourse Suite Community Edition Configuration (Step 3 of 4)<br />Database Settings &amp; Installation</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.centricCRM.usesDatabase.text">Centric CRM stores and retrieves data using a database.</dhv:label><br>
+      <dhv:label name="setup.centricCRM.usesDatabase.text">Concourse Suite Community Edition stores and retrieves data using a database.</dhv:label><br>
       <br>
-      <dhv:label name="setup.configureDatabase.url.text" param="postgres=<a href=\"http://www.postgresql.org\" target=\"_new\">|end=</a>|mssql=<a href=\"http://www.microsoft.com/sql\" target=\"_new\">">Centric CRM works best with the Open Source database server <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>. You can also use <a href="http://www.microsoft.com/sql" target="_new">Microsoft SQL Server</a>.</dhv:label>
+      <dhv:label name="setup.configureDatabase.url.text" param="postgres=<a href=\"http://www.postgresql.org\" target=\"_new\">|end=</a>|mssql=<a href=\"http://www.microsoft.com/sql\" target=\"_new\">">Concourse Suite Community Edition works best with the Open Source database server <a href="http://www.postgresql.org" target="_new">PostgreSQL</a>. You can also use <a href="http://www.microsoft.com/sql" target="_new">Microsoft SQL Server</a>.</dhv:label>
       <dhv:label name="setup.databaseServerInstallation.text"><ul><li>Before continuing, the database server must be installed and functional</li><li>The database administrator should create a user called "centric_crm"</li><li>The database administrator should create a new database, with UNICODE encoding, called "centric_crm"</li><li>The centric_crm user must have full permissions on the centric_crm database</li><li>Once configured, enter the database connection information below, then press continue to verify the settings</li></ul></dhv:label>
     </td>
   </tr>

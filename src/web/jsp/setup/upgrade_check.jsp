@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -41,7 +41,7 @@
 <form name="configure" method="POST" action="Upgrade.do?command=PerformUpgrade" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th><dhv:label name="setup.centricCRMUpgrade">Centric CRM Upgrade</dhv:label></th>
+    <th><dhv:label name="setup.centricCRMUpgrade">Concourse Suite Community Edition Upgrade</dhv:label></th>
   </tr>
   <tr>
     <td nowrap>
@@ -80,7 +80,7 @@
         <input type="submit" value="Upgrade >"/>
       </span>
       <span id="progress" name="progress" style="display:none">
-        <font color="blue"><b><dhv:label name="setup.pleaseWaitUpgrading.text">Please Wait... upgrading Centric CRM!</dhv:label></b></font>
+        <font color="blue"><b><dhv:label name="setup.pleaseWaitUpgrading.text">Please Wait... upgrading Concourse Suite Community Edition!</dhv:label></b></font>
       </span>
     </td>
   </tr>

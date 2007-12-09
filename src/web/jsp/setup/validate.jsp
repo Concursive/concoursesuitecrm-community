@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -36,10 +36,10 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.ifRegisteredLicenceByEmail.text">If you have already registered for Centric CRM, you should have received a license file by email.</dhv:label><br>
+      <dhv:label name="setup.ifRegisteredLicenceByEmail.text">If you have already registered for Concourse Suite Community Edition, you should have received a license file by email.</dhv:label><br>
       <ul>
       <li><dhv:label name="setup.licenseOnlyUsedOnSystem.text">The license can only be used on the system that requested it</dhv:label></li>
-      <li><dhv:label name="setup.installationIssues.license.text" param="license=<a href=\"Setup.do?command=Register\">|endLicense=</a>">If you have misplaced your license or you are installing Centric CRM on a different server, then you can <a href="Setup.do?command=Register">request a new license</a> to be sent by email</dhv:label></li>
+      <li><dhv:label name="setup.installationIssues.license.text" param="license=<a href=\"Setup.do?command=Register\">|endLicense=</a>">If you have misplaced your license or you are installing Concourse Suite Community Edition on a different server, then you can <a href="Setup.do?command=Register">request a new license</a> to be sent by email</dhv:label></li>
       </ul>
     </td>
   </tr>

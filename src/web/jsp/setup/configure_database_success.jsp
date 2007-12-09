@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -32,7 +32,7 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      <dhv:label name="setup.configuration.step3to4">Centric CRM Configuration (Step 3 of 4)<br />Database Settings &amp; Installation</dhv:label>
+      <dhv:label name="setup.configuration.step3to4">Concourse Suite Community Edition Configuration (Step 3 of 4)<br />Database Settings &amp; Installation</dhv:label>
     </th>
   </tr>
   <tr>
@@ -46,11 +46,11 @@
 <dhv:evaluate if="<%= hasText(APP_VERSION) %>">
   <tr>
     <td>
-      <dhv:label name="setup.createDatabaseTables.text">Centric CRM will now create all of the necessary database tables and initial data in the following database:</dhv:label><br>
+      <dhv:label name="setup.createDatabaseTables.text">Concourse Suite Community Edition will now create all of the necessary database tables and initial data in the following database:</dhv:label><br>
       <br>
       <b><%= toHtmlValue(database.getUrl()) %></b><br>
       <br>
-      If restoring from a Centric CRM XML backup file, specify the file on the local server to restore from:<br/>
+      If restoring from a Concourse Suite Community Edition XML backup file, specify the file on the local server to restore from:<br/>
       <input type="text" name="backupFile" value="" size="40" /><br />
       <br />
       <dhv:label name="setup.takesFewMinutes.text">This can take a few minutes depending on connectivity to the database, select Continue to begin.</dhv:label><br>
@@ -67,7 +67,7 @@
 <dhv:evaluate if="<%= !hasText(APP_VERSION) %>">
   <tr>
     <td>
-      The Centric CRM Community Edition requires that the necessary database tables and initial data have been installed using &quot;ant installdb&quot; in the following database:<br />
+      The Concourse Suite Community Edition Community Edition requires that the necessary database tables and initial data have been installed using &quot;ant installdb&quot; in the following database:<br />
       <br>
       <b><%= toHtmlValue(database.getUrl()) %></b><br>
       <br>

@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -31,12 +31,12 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      <dhv:label name="setup.centricCRM.step2of4">Centric CRM Configuration (Step 2 of 4)<br />Server Settings</dhv:label>
+      <dhv:label name="setup.centricCRM.step2of4">Concourse Suite Community Edition Configuration (Step 2 of 4)<br />Server Settings</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.serversServicesMustBeDefined.text">Centric CRM interacts with various servers and services that must be defined.</dhv:label><br>
+      <dhv:label name="setup.serversServicesMustBeDefined.text">Concourse Suite Community Edition interacts with various servers and services that must be defined.</dhv:label><br>
       &nbsp;<br>
     </td>
   </tr>
@@ -46,7 +46,7 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.defaultTimezone.question">Each user in Centric CRM can configure the time zone in which they are currently in.<br /> What should the default time zone be set to for new users?</dhv:label><br>
+      <dhv:label name="setup.defaultTimezone.question">Each user in Concourse Suite Community Edition can configure the time zone in which they are currently in.<br /> What should the default time zone be set to for new users?</dhv:label><br>
       <dhv:label name="setup.defaultTimezone.text"><ul><li>Users will still be able to change their time zone, but for new users this setting will be used as the default</li><li>Dates and times will be displayed according to the user's configured time zone</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
@@ -68,7 +68,7 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.defaultLocale.question">All locale formatting in Centric CRM is currently defaulted to a single locale. Which language and locale should Centric CRM use?</dhv:label>
+      <dhv:label name="setup.defaultLocale.question">All locale formatting in Concourse Suite Community Edition is currently defaulted to a single locale. Which language and locale should Concourse Suite Community Edition use?</dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -89,7 +89,7 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.defaultCountry.question">Which country should Centric CRM use as the default for mailing addresses?</dhv:label>
+      <dhv:label name="setup.defaultCountry.question">Which country should Concourse Suite Community Edition use as the default for mailing addresses?</dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -109,7 +109,7 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.defaultCurrency.question">All money in Centric CRM is currently defaulted to a single currency. Which currency should Centric CRM use?</dhv:label>
+      <dhv:label name="setup.defaultCurrency.question">All money in Concourse Suite Community Edition is currently defaulted to a single currency. Which currency should Concourse Suite Community Edition use?</dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -130,7 +130,7 @@
   </tr>
   <tr>
     <td>
-      <dhv:label name="setup.emailServer.question">Centric CRM sends various notifications to users by email.  Centric CRM can also be used to send email to contacts that have been entered into Centric CRM.<br />Which email server should Centric CRM use?</dhv:label><br>
+      <dhv:label name="setup.emailServer.question">Concourse Suite Community Edition sends various notifications to users by email.  Concourse Suite Community Edition can also be used to send email to contacts that have been entered into Concourse Suite Community Edition.<br />Which email server should Concourse Suite Community Edition use?</dhv:label><br>
       <ul>
       <li><dhv:label name="setup.specifiedServerRelayEmail.text">The specified server must allow this server to relay email</dhv:label></li>
       </ul>
@@ -179,11 +179,11 @@
   <tr>
     <td>
       <dhv:label name="setup.systemEmailURL.question">For system emails, what URL should be included to allow the user to return back to the site?</dhv:label><br>
-      <dhv:label name="setup.systemEmailURL.text"><ul><li>The URL must exist in your DNS so that users can connect</li><li>Optionally, you can specify the IP address</li><li>Include the full URL path to get to the Centric CRM web application, excluding HTTP:// or HTTPS://</li><li>Clicking the Test button will attempt to bring up a Centric CRM confirmation page located on this server</li></ul></dhv:label>
+      <dhv:label name="setup.systemEmailURL.text"><ul><li>The URL must exist in your DNS so that users can connect</li><li>Optionally, you can specify the IP address</li><li>Include the full URL path to get to the Concourse Suite Community Edition web application, excluding HTTP:// or HTTPS://</li><li>Clicking the Test button will attempt to bring up a Concourse Suite Community Edition confirmation page located on this server</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            <dhv:label name="admin.centricCrmUrl">Centric CRM URL</dhv:label>:
+            <dhv:label name="admin.centricCrmUrl">Concourse Suite Community Edition URL</dhv:label>:
           </td>
           <td>
             http:// <input type="text" size="40" name="url" value="<%= toHtmlValue(server.getUrl()) %>"/><font color="red">*</font>
@@ -224,8 +224,8 @@
             <dhv:label name="admin.ldap.userMapping">User Mapping:</dhv:label>
           </td>
           <td>
-            <input type="radio" name="ldapCentricCRMField" value="username" <%= ("username".equals(server.getLdapCentricCRMField()) ? "checked" : "") %> /><dhv:label name="admin.ldap.useCentricLogin">Use user's Centric CRM login</dhv:label><br />
-            <input type="radio" name="ldapCentricCRMField" value="email" <%= ("email".equals(server.getLdapCentricCRMField()) ? "checked" : "") %> /><dhv:label name="admin.ldap.useUserEmail">Lookup user's primary email from Centric CRM records</dhv:label><br />
+            <input type="radio" name="ldapCentricCRMField" value="username" <%= ("username".equals(server.getLdapCentricCRMField()) ? "checked" : "") %> /><dhv:label name="admin.ldap.useCentricLogin">Use user's Concourse Suite Community Edition login</dhv:label><br />
+            <input type="radio" name="ldapCentricCRMField" value="email" <%= ("email".equals(server.getLdapCentricCRMField()) ? "checked" : "") %> /><dhv:label name="admin.ldap.useUserEmail">Lookup user's primary email from Concourse Suite Community Edition records</dhv:label><br />
           </td>
         </tr>
         <tr>
@@ -405,7 +405,7 @@
   <tr>
     <td>
       <dhv:label name="setup.xmpp.question">For monitoring user presence and performing inbound screen-pops for Asterisk calls, which XMPP server should be used?</dhv:label><br>
-      <dhv:label name="setup.xmpp.text"><ul><li>Centric CRM will use the following user to subscribe and communicate with users using instant messaging</li></ul></dhv:label>
+      <dhv:label name="setup.xmpp.text"><ul><li>Concourse Suite Community Edition will use the following user to subscribe and communicate with users using instant messaging</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
@@ -467,9 +467,9 @@
   <tr>
     <td>
       <font color="red">* </font><b><dhv:label name="setup.hylafaxServerRequirements.text">The HylaFax server application requires Linux or Unix and has further software and hardware requirements.</dhv:label></b><br>
-      <dhv:label name="setup.userCapabilitySendFaxes.text">Users may have the capability to send faxes using Centric CRM.</dhv:label><br>
+      <dhv:label name="setup.userCapabilitySendFaxes.text">Users may have the capability to send faxes using Concourse Suite Community Edition.</dhv:label><br>
       <dhv:label name="setup.configureServer.faxingComponent.text" param="hylafax=<a href=\"http://www.hylafax.org\" target=\"_new\">|end=</a>">The faxing component requires a properly configured <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.</dhv:label>
-      <dhv:label name="setup.faxServer.question">Which fax server should Centric CRM use?</dhv:label><br>
+      <dhv:label name="setup.faxServer.question">Which fax server should Concourse Suite Community Edition use?</dhv:label><br>
       <dhv:label name="setup.faxServer.text"><ul><li>The specified server must allow this server to send faxes</li><li>Leave blank if faxing will not be used</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
