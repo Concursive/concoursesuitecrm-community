@@ -478,7 +478,7 @@ public class DemoAccount {
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     int i = 0;
     pst.setString(++i, "cfs");
-    pst.setString(++i, "account" + id + ".demo.centriccrm.com");
+    pst.setString(++i, "account" + id + ".demo.concursive.com");
     pst.setString(++i, "jdbc:postgresql://127.0.0.1:5432/demo_" + id);
     pst.setString(++i, getDatabaseName());
     pst.setInt(++i, 5432);

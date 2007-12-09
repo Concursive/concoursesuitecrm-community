@@ -913,7 +913,7 @@ public class DemoData {
     campaign.setMessageId(message1Id);
     campaign.setReplyTo("boballen@fictitiousco.com");
     campaign.setSubject("This month's happenings at Shoe World");
-    campaign.setMessage("<img src=\"images/demo/master_logo_sdcwinter.gif\" width=\"300\" height=\"65\" alt=\"Shoes.com\" border=\"0\" /><br /><br />Dear ${firstname},<br /><br />    Below are a few of the new things we thought you might want to know about as a member of our Gold Shoe Club.<br /><br /><ul><li>New store ours on Friday:  Now from 8:00 AM to 7 PM</li><li>The cocktail bar will even be open on Sundays</li><li>Our new price list will be out on the 12'th</li><li>Sign-up for pre-ordering can be done by clicking on the survey link below</li></ul>Sincerely,<br /><br />Frank Jones<br />VP/Key Accounts<br /><br><br>You can take the survey at the following web-site: <a href=\"ProcessSurvey.do?id=${surveyId=1}\">http://demo.centriccrm.com/ProcessSurvey.do?id=${surveyId=1}</a>");
+    campaign.setMessage("<img src=\"images/demo/master_logo_sdcwinter.gif\" width=\"300\" height=\"65\" alt=\"Shoes.com\" border=\"0\" /><br /><br />Dear ${firstname},<br /><br />    Below are a few of the new things we thought you might want to know about as a member of our Gold Shoe Club.<br /><br /><ul><li>New store ours on Friday:  Now from 8:00 AM to 7 PM</li><li>The cocktail bar will even be open on Sundays</li><li>Our new price list will be out on the 12'th</li><li>Sign-up for pre-ordering can be done by clicking on the survey link below</li></ul>Sincerely,<br /><br />Frank Jones<br />VP/Key Accounts<br /><br><br>You can take the survey at the following web-site: <a href=\"ProcessSurvey.do?id=${surveyId=1}\">http://demo.concursive.com/ProcessSurvey.do?id=${surveyId=1}</a>");
     campaign.setStatusId(Campaign.FINISHED);
     campaign.setStatus("Messages Sent");
     campaign.setActive(true);
@@ -3811,7 +3811,7 @@ public class DemoData {
           assignment.setRequirementId(requirement.getId());
           assignment.setIndent(1);
           assignment.setUserAssignedId(user1Id);
-          assignment.setRole("Complete asset information form in Centric CRM");
+          assignment.setRole("Complete asset information form in Concourse Suite Community Edition");
           assignment.setEstimatedLoe(1);
           assignment.setEstimatedLoeTypeId(2);
           assignment.setActualLoeTypeId(2);
