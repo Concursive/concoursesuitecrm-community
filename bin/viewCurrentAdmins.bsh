@@ -52,15 +52,15 @@ emailUser(String email) {
   mail.addReplyTo("demo@darkhorsecrm.com");
   mail.setSubject("Dark Horse CRM Demo Server Upgraded");
   mail.setBody(
-      "This message is to inform you that we have upgraded our Centric CRM demo server " +
+      "This message is to inform you that we have upgraded our Concourse Suite Community Edition demo server " +
       "with a new version.  Any demo accounts that you may have been using have been " +
       "removed." + CRLF +
       CRLF +
       "If you would like to extend your evaluation, feel free to setup another " +
       "demo account so that you can experience the new features. " + CRLF +
       CRLF +
-      "If you have any questions about Centric CRM, please visit our web site." + CRLF +
-      "http://www.centriccrm.com");
+      "If you have any questions about Concourse Suite Community Edition, please visit our web site." + CRLF +
+      "http://www.concursive.com");
   int mailSent = mail.send();
   if (mailSent == 2) {
     print(" * Mail error: " + mail.getErrorMsg());

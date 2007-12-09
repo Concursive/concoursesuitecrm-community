@@ -1,15 +1,15 @@
 <%--
-  - Copyright(c) 2007 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2007 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -39,7 +39,7 @@
 <%@ include file="initPage.jsp" %>
 <html>
 <head>
-<title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label></title>
+<title><dhv:label name="templates.CentricCRM">Concourse Suite Community Edition</dhv:label></title>
 </head>
 <link rel="stylesheet" href="css/template-login.css" type="text/css">
 <script language="JavaScript">
@@ -83,7 +83,7 @@
               <tr>
                 <td colspan="4" align="center">
                   <dhv:evaluate if='<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>'>
-                    <img src="images/centric/logo-centric.gif" width="295" height="66" alt="" border="0" />
+                    <img src="images/centric/concourseSuiteCommunity.gif" width="218" height="50" alt="" border="0" />
                   </dhv:evaluate>
                   <dhv:evaluate if='<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>'>
                     <%= applicationPrefs.get("LAYOUT.JSP.LOGIN.LOGO") %>
@@ -154,7 +154,7 @@
         <tr>
           <td align="center">
             <%= toHtml(applicationPrefs.get("VERSION")) %><br />
-            &#169; Copyright 2000-2007 Centric CRM &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
+            &#169; Copyright 2000-2007 Concourse Suite Community Edition &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
           </td>
         </tr>
       </table>

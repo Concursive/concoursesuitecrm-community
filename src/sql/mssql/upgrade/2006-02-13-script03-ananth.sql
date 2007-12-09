@@ -1,4 +1,4 @@
---Fields to allow external access to centric crm
+--Fields to allow external access to Concourse Suite Community Edition
 ALTER TABLE access ADD allow_webdav_access BIT DEFAULT 1;
 ALTER TABLE access ADD allow_httpapi_access BIT DEFAULT 1;
 

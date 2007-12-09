@@ -18,7 +18,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <script type="text/javascript">
   function showMessage(selectedUser, user) {
-    msg = "Viewing your Centric CRM calendar offline requires an iCalendar compliant desktop application. " + 
+    msg = "Viewing your Concourse Suite Community Edition calendar offline requires an iCalendar compliant desktop application. " +
                "These applications include Mozilla Sunbird, Apple iCal, and possibly others." + "\r\n\r\n" +
                "This feature may not work on your system.";
     if(confirm(label("webcal.message", msg))) {

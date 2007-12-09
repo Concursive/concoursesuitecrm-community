@@ -1,7 +1,7 @@
 /* ====================================================================
- * Copyright (c) 2000-2006 Dark Horse Ventures, LLC.  All rights reserved.
+ * Copyright (c) 2000-2006 Concursive Corporation.  All rights reserved.
  *
- * This software is made available by agreeing to the Dark Horse Ventures
+ * This software is made available by agreeing to the Concursive Corporation
  * Centric Public License and cannot be redistributed outside of this
  * agreement.
  * ====================================================================
@@ -41,22 +41,22 @@ You may modify your copy or copies of the Program or any portion of it, thus
 forming a work based on the Program, for internal use only.
 
 If the distribution and/or use of the Program is restricted in certain countries
-either by patents or by copyrighted interfaces, Dark Horse Ventures may add an
+either by patents or by copyrighted interfaces, Concursive Corporation may add an
 explicit geographical distribution limitation excluding those countries, so that
 distribution is permitted only in or among countries not thus excluded. In such
 case, this License incorporates the limitation as if written in the body of this
 License.
 
-Dark Horse Ventures may publish revised and/or new versions of the Centric
+Concursive Corporation may publish revised and/or new versions of the Centric
 Public License from time to time. Such new versions will be similar in spirit to
 the present version, but may differ in detail to address new problems or concerns.
 
 Each version is given a distinguishing version number. If the Program specifies
 a version number of this License which applies to it and "any later version",
 you have the option of following the terms and conditions either of that version
-or of any later version published by Dark Horse Ventures. If the Program does
+or of any later version published by Concursive Corporation. If the Program does
 not specify a version number of this License, you may choose any version ever
-published by Dark Horse Ventures.
+published by Concursive Corporation.
 
 If any portion of this license is held invalid or unenforceable under any
 particular circumstance, the balance of the license is intended to apply and the

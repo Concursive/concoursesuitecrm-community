@@ -8,7 +8,7 @@
 <head>
 <%@ include file="initPage.jsp" %>
 <META HTTP-EQUIV="refresh" content="2;URL=https://<%= getServerUrl(request) %>">
-<title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label></title>
+<title><dhv:label name="templates.CentricCRM">Concourse Suite Community Edition</dhv:label></title>
 </head>
 <body>
 <center><dhv:label name="calendar.redirectingToSecureLogin.text">Redirecting to secure login...</dhv:label></center>

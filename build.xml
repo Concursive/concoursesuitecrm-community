@@ -14,9 +14,9 @@
    made by the installation and you will be notified of the file to modify.
 
    The build process needs write access to the destination web-app folder and
-   the fileLibrary configured in Centric CRM
+   the fileLibrary configured in Concourse Suite Community Edition
 -->
-<project name="Centric Suite" default="usage" basedir=".">
+<project name="Concourse Suite Community Edition" default="usage" basedir=".">
 
   <!-- enable environment variables -->
   <property environment="env"/>
@@ -221,7 +221,7 @@
       B. Use environment variables
 
       1. Create an environment variable CENTRIC_HOME which points to Tomcat's
-      Centric CRM webapp directory.
+      Concourse Suite Community Edition webapp directory.
 
       Ex. "export CENTRIC_HOME=/path/to/apache-tomcat/webapps/centric"
       Ex. "Using System in Control Panel set CENTRIC_HOME=c:\Program
@@ -253,9 +253,9 @@
       B. Use environment variables
 
       1. Create an environment variable CENTRIC_FILELIBRARY which points to
-      Centric CRM's target fileLibrary.
+      Concourse Suite Community Edition's target fileLibrary.
       The fileLibrary should be separate from CENTRIC_HOME because it contains
-      custom files for Centric CRM.
+      custom files for Concourse Suite Community Edition.
 
       Ex. "export CENTRIC_FILELIBRARY=/var/lib/centric_crm/fileLibrary"
       Ex. "export CENTRIC_FILELIBRARY=/Library/Application\
@@ -1689,8 +1689,8 @@ a site has been deployed -->
     <mkdir dir="${build.docs.dir}"/>
     <javadoc sourcepath="${src.classes.dir}" packagenames="com.*,org.*" destdir="${build.docs.dir}" maxmemory="128m" breakiterator="true" author="true" version="true" excludepackagenames="javax.servlet">
       <tag name="created" description="Date file was created"/>
-      <header>Centric CRM</header>
-      <footer>Copyright 2001-2006 Dark Horse Ventures, LLC</footer>
+      <header>Concourse Suite Community Edition</header>
+      <footer>Copyright 2001-2006 Concursive Corporation</footer>
       <classpath>
         <path refid="cfs2.classpath"/>
         <!--

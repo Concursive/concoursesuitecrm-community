@@ -29,7 +29,7 @@ demoAccount.setPassword("password");
 demoAccount.setIpAddress("127.0.0.1");
 demoAccount.setLanguage("en_US");
 demoAccount.setRoleId(1);
-demoAccount.setBrowser("Centric CRM Database Test");
+demoAccount.setBrowser("Concourse Suite Community Edition Database Test");
 
 // Validate arguments
 if (bsh.args.length == 0 || bsh.args.length < 2) {

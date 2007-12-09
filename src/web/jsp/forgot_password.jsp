@@ -1,15 +1,15 @@
 <%--
-  - Copyright(c) 2007 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2007 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -41,7 +41,7 @@
 <%@ include file="initPage.jsp" %>
 <html>
 <head>
-<title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label></title>
+<title><dhv:label name="templates.CentricCRM">Concourse Suite Community Edition</dhv:label></title>
 </head>
 <link rel="stylesheet" href="css/template-login.css" type="text/css">
 <script language="JavaScript">
@@ -66,117 +66,79 @@
 %>">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
   <tr>
-    <td height="7%" valign="top" width="100%">
+    <td height="20%" valign="top" width="100%">
       &nbsp;
     </td>
   </tr>
   <tr>
-    <td height="85%" width="100%" valign="top">
+    <td height="85%" width="100%" valign="top" align="center">
       <%-- Content --%>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr> 
-          <td width="9%" height="26"><img src="images/sidespace.gif" width="97" height="1"></td>
-          <td width="1%" height="26" colspan="3">&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan="4">
           <form name="login" method="GET" action="Login.do">
             <input type="hidden" name="command" value="GenerateTemporaryPassword" />
-            <table width="100%" cellspacing="1" cellpadding="3" border="0">
-              <tr>
-                <td colspan="4" align="center">
+            <div class="loginContainer forgottenPasswordContainer">
+              <div class="logoContainer">
                   <dhv:evaluate if='<%= !applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>'>
-                    <img src="images/centric/logo-centric.gif" width="295" height="66" alt="" border="0" />
+		  <img src="images/concourseSuiteCommunitySplash.png" width="216" height="206" alt="" border="0" />
                   </dhv:evaluate>
                   <dhv:evaluate if='<%= applicationPrefs.has("LAYOUT.JSP.LOGIN.LOGO") %>'>
                     <%= applicationPrefs.get("LAYOUT.JSP.LOGIN.LOGO") %>
                   </dhv:evaluate>
-                </td>
-              </tr>
-              <tr>
-                <td align="center" valign="center" colspan="4">
-                <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
-                <tr><td align="center">
-                  <font size="2"><strong>
-                      <dhv:label name="login.forgot">Forgot Password?</dhv:label>
-                  </font>
-                </td></tr>
-                </table>
-                </td>
-              </tr>
+              </div>
+              <div class="loginBar"> </div>
+              <div class="message">
+                <dhv:evaluate if='<%= "No".equals(retu) %>'>
+                  Invalid username information<br/>
+                </dhv:evaluate>
+	        <dhv:evaluate if="<%= hasText(LoginBean.getMessage()) %>">
+	          <%= toHtml(LoginBean.getMessage()) %>
+	        </dhv:evaluate>
+              </div>
+              <div class="message">
+	        <dhv:evaluate if="<%= hasText(LoginBean.getMessage()) %>">
+	          <%= toHtml(LoginBean.getMessage()) %>
+	        </dhv:evaluate>
+              </div>
 <%
   String scheme = request.getScheme();
-  if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL")) && 
+  if ("true".equals((String)getServletConfig().getServletContext().getAttribute("ForceSSL")) &&
      scheme.equals("http")) {
-%>              
-              <tr> 
-                <td align="center" colspan="4">
-                  <font size="2"><dhv:label name="calendar.siteSecureConnections.text">This site is configured for secure connections only</dhv:label></font><br />
-                  <font size="2"><a href="https://<%= getServerUrl(request) %>"><dhv:label name="calendar.goToSecureLogin">Go to Secure Login</dhv:label></a></font>
-                </td>
-              </tr>
+%>
+                <div class="invalidScheme">
+                  <dhv:label name="calendar.siteSecureConnections.text">This site is configured for secure connections only</dhv:label><br/>
+                  <a href="https://<%= getServerUrl(request) %>"><dhv:label name="calendar.goToSecureLogin">Go to Secure Login</dhv:label></a>
+                </div>
 <%} else {%>
-              <tr>
-                <td align="center" colspan="4">
-                
-              <table style="border:1px #EFEFEF solid" align="center" width="50%">
-              <tr><td colspan="2">&nbsp;</td></tr>
-
-              <tr><td align="center">
-              <table border="0">
-              <dhv:evaluate if='<%= "No".equals(retu) %>'>
-              <tr>
-                <td align="right"></td>
-                <td>
-                  <font size="2" color=red>Invalid username information</font>
-                </td>
-              </tr>
-              </dhv:evaluate>
               <dhv:evaluate if='<%= "Yes".equals(forgo) %>'>
-              <tr>
-                <td align="right">
-                  <font size="2"><dhv:label name="login.enterYourUsername">Enter your Username</dhv:label>:</font>
-                </td>
-                <td>
-                  <font size="2"><input type="text" name="username" value="<%= toHtmlValue(LoginBean.getUsername()) %>" size="20">&nbsp;</font>
-                </td>
-              </tr>
-			  <tr>
-                <td align="right">&nbsp;</td>
-                <td>
+                <div class="fieldsContainer">
+                  <span class="fieldLabel"><dhv:label name="login.enterYourUsername">Enter your Username</dhv:label>:</span>
+                  <input type="text" name="username" value="<%= toHtmlValue(LoginBean.getUsername()) %>" size="20">
+                </div>
+                <div class="buttonContainer">
                   <input type="submit" value="<dhv:label name="login.emailPassword">Email Password</dhv:label>">
-                </td>
-              </tr>
+                </div>
               </dhv:evaluate>
+
+
+
+              <div class="information">
+                <div class="forgottenPasswordHeading">
+                  <dhv:label name="login.forgot">Forgot Password?</dhv:label>
+		</div>
+              </div>
               <dhv:evaluate if='<%= "No".equals(forgo) %>'>
-              <tr>
-                <td align="right">
-                  <font size="2" color="red"><dhv:label name="login.ugradeSystem">* To use recovery password feature please upgrade Your system</dhv:label></font>
-                </td>
-              </tr>
-			  <tr>
-                <td align="center">
-                  <br /><input type="button" value="<dhv:label name="login.proceedToLogin">Proceed to Login</dhv:label>" onClick="returntologin()">
-                </td>
-              </tr>
+                <div class="upgradeSystem">
+                  <span><dhv:label name="login.ugradeSystem">* To use recovery password feature please upgrade Your system</dhv:label></span><br/>
+                  <input type="button" value="<dhv:label name="login.proceedToLogin">Proceed to Login</dhv:label>" onClick="returntologin()">
+                </div>
               </dhv:evaluate>
-              </table>
-              </td></tr>
-              <tr><td colspan="2">&nbsp;</td></tr>
-              </table>
-              </td>
-            </tr>
 <%}%>
-            </table>
+            </div>
             <dhv:evaluate if='<%= LoginBean.getRedirectTo() != null %>'>
               <input type="hidden" name="redirectTo" value="<%= LoginBean.getRedirectTo() %>" />
             </dhv:evaluate>
           </form>
           </td>
         </tr>
-      </table>
-    </td>
-  </tr>
   <tr>
     <td height="8%" valign="top" width="100%">
       <%-- Copyright --%>
@@ -184,7 +146,7 @@
         <tr>
           <td align="center">
             <%= toHtml(applicationPrefs.get("VERSION")) %><br />
-            &#169; Copyright 2000-2007 Centric CRM &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
+            &#169; Copyright 2000-2007 Concourse Suite Community Edition &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
           </td>
         </tr>
       </table>

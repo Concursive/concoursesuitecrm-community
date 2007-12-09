@@ -1,5 +1,5 @@
 //upgrade script to delete the Account Action Plan Step Action - Attach Activity.
-//This is specific for Centric CRM 4.0 release
+//This is specific for Concourse Suite Community Edition 4.0 release
 import org.aspcfs.modules.actionplans.base.*;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.utils.web.LookupList;
