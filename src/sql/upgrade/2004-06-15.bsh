@@ -1,4 +1,4 @@
-// Script (C) 2004 Dark Horse Ventures, all rights reserved
+// Script (C) 2004 Concursive Corporation, all rights reserved
 import java.sql.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.admin.base.*;

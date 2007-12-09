@@ -1,4 +1,4 @@
--- Script (C) 2005 Dark Horse Ventures, all rights reserved
+-- Script (C) 2005 Concursive Corporation, all rights reserved
 -- Database upgrade v3.0 (2005-03-28)
 
 -- access --

@@ -1,4 +1,4 @@
--- Script (C) 2004 Dark Horse Ventures, all rights reserved
+-- Script (C) 2004 Concursive Corporation, all rights reserved
 -- Database upgrade v2.8 (2004-06-15)
 
 ALTER TABLE organization ADD [import_id] [int] NULL;

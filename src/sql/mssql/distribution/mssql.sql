@@ -1,4 +1,4 @@
--- Copyright (C) 2006 Dark Horse Ventures LLC, all rights reserved
+-- Copyright (C) 2006 Concursive Corporation, all rights reserved
 
 SET ANSI_NULLS ON
 GO

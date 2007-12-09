@@ -1,4 +1,4 @@
--- Script (C) 2006 Dark Horse Ventures LLC, all rights reserved
+-- Script (C) 2006 Concursive Corporation, all rights reserved
 
 CREATE TABLE lookup_site_id (
     code serial NOT NULL,

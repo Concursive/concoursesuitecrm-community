@@ -1,4 +1,4 @@
--- Script (C) 2004 Dark Horse Ventures, all rights reserved
+-- Script (C) 2004 Concursive Corporation, all rights reserved
 -- Database upgrade v3.0 (2004-11-19)
 --
 -- NOTE: This is a preliminary script and does not yet

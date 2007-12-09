@@ -1,4 +1,4 @@
--- Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+-- Script (C) 2005 Concursive Corporation, all rights reserved
 -- Database upgrade v2.9.2 (2005-01-14)
 
 UPDATE call_log

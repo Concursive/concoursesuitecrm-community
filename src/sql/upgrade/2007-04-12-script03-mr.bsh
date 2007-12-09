@@ -1,4 +1,4 @@
-// Script (C) 2007 Dark Horse Ventures LLC, all rights reserved
+// Script (C) 2007 Concursive Corporation, all rights reserved
 
 import java.sql.*;
 import org.aspcfs.modules.base.ContainerMenu;

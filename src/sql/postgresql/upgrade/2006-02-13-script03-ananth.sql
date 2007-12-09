@@ -1,4 +1,4 @@
---Fields to allow external access to centric crm
+--Fields to allow external access to Concourse Suite Community Edition
 ALTER TABLE access ADD COLUMN allow_webdav_access BOOLEAN;
 ALTER TABLE access ADD COLUMN allow_httpapi_access BOOLEAN;
 

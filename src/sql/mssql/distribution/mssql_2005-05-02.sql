@@ -1,4 +1,4 @@
--- Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+-- Script (C) 2005 Concursive Corporation, all rights reserved
 -- Database upgrade v3.0.1 (2005-05-02)
 
 DELETE FROM role_permission WHERE permission_id IN (SELECT permission_id FROM permission WHERE permission = 'orders' and category_id IN (SELECT category_id FROM permission_category WHERE constant = 420041017));

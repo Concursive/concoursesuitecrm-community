@@ -1,4 +1,4 @@
--- Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+-- Script (C) 2005 Concursive Corporation, all rights reserved
 -- Database upgrade v3.2 part 1 (2005-08-23)
 
 -- Action Plan datastructure

@@ -1,4 +1,4 @@
-// Script (C) 2006 Dark Horse Ventures LLC, all rights reserved
+// Script (C) 2006 Concursive Corporation, all rights reserved
 
 import org.aspcfs.utils.DatabaseUtils;
 import java.sql.*;

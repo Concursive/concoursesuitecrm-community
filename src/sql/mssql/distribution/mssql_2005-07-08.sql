@@ -1,4 +1,4 @@
--- Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
+-- Script (C) 2005 Concursive Corporation, all rights reserved
 -- Database upgrade v3.1 (2005-07-08)
 
 DELETE FROM events WHERE task = 'org.aspcfs.apps.users.UserCleanup#doTask';
