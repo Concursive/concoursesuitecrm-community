@@ -6,7 +6,7 @@
  permission from Matt Rajkowski
 --%>
 <%--
- Portions Copyright 2001-2004 Dark Horse Ventures
+ Portions Copyright 2001-2004 Concursive Corporation
  Use as licensed.
 --%>
 <%-- This jsp shows a calendar to the user and sends the selected date back
