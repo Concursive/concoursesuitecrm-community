@@ -1,15 +1,15 @@
 <%-- 
-  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - Copyright(c) 2004 Concursive Corporation (http://www.concursive.com/) All
   - rights reserved. This material cannot be distributed without written
-  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - permission from Concursive Corporation. Permission to use, copy, and modify
   - this material for internal use is hereby granted, provided that the above
-  - copyright notice and this permission notice appear in all copies. DARK HORSE
-  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - copyright notice and this permission notice appear in all copies. CONCURSIVE
+  - CORPORATION MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
   - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
   - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
   - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
   - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
-  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - EVENT SHALL CONCURSIVE CORPORATION OR ANY OF ITS AFFILIATES BE LIABLE FOR
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
@@ -67,7 +67,7 @@
           <td>
             <dhv:evaluate if="<%= SyncUtils.isSyncConflict(applicationPrefs) %>">
               <dhv:label name="login.offline.invalid.state">
-                The Offline Centric CRM system is in an invalid state. Your prior sync was not successful
+                The Offline Concourse Suite Community Edition system is in an invalid state. Your prior sync was not successful
                 and the database might be in an un-reliable state. You can continue to review your
                 offline data, but will not be able to perform any future syncs and add, edit or delete
                 data. You need to re-install the system by clicking on "Reload" on your Desktop Client.
@@ -76,7 +76,7 @@
             <dhv:evaluate if="<%= !SyncUtils.isSyncConflict(applicationPrefs) %>">
               <dhv:label name="login.offline.msg">
 	              You are currently logged in using offline mode. Some of the features have been turned off intentionally and may
-	              not be available during offline mode. When you regain connectivity, you can perform a sync with your Centric CRM
+	              not be available during offline mode. When you regain connectivity, you can perform a sync with your Concourse Suite Community Edition
 	              Server to be up-to-date.
 	            </dhv:label><br /><br />
 	          <dhv:label name="login.offline.lastSyncedOn">Last Synced on</dhv:label>: <%= syncClient.getAnchor() %>&nbsp;&nbsp;
