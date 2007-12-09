@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Esconder",
       "label.any":                      "Cualquiera",
       "specify.contact":                "- Por favor especifique un contacto\r\n",
-      "webcal.message":                 "Ver su calendario de Centric CRM 'Fuera de Línea' requiere una aplicación de escritorio compatible con iCalendar. Estas aplicaciones pueden ser Mozilla Sunbird, Apple iCal, y posiblemente otros.   \r\n\r\nEsta funcionalidad podría no funcionar en su sistema.",
+      "webcal.message":                 "Ver su calendario de Concourse Suite Community Edition 'Fuera de Línea' requiere una aplicación de escritorio compatible con iCalendar. Estas aplicaciones pueden ser Mozilla Sunbird, Apple iCal, y posiblemente otros.   \r\n\r\nEsta funcionalidad podría no funcionar en su sistema.",
       "cannot.assign":                  "La Guía no pudo ser asignada. Por favor salte la Guía actual",
       "confirm.delete.lead":            "¿Está seguro que desea eliminar esta Guía?",
       "check.postalcode":               "- Por favor ingrese un código postal válido\r\n",

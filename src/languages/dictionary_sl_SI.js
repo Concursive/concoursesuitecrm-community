@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Skrij",
       "label.any":                      "Katerikoli",
       "specify.contact":                "- Prosimo, izberite kontakt\r\n",
-      "webcal.message":                 "Za ogled vasega Centric CRM kolendarja brez internetne povezave potrebujete iCalendar, ki je prijazna namizna aplikacija. Ta aplikacija vsebuje Mozilla Sunbird, Apple iCal, in druge.\r\n\r\nTa aplikacije mogoce ne bo delovala na vasem sistemu.",
+      "webcal.message":                 "Za ogled vasega Concourse Suite Community Edition kolendarja brez internetne povezave potrebujete iCalendar, ki je prijazna namizna aplikacija. Ta aplikacija vsebuje Mozilla Sunbird, Apple iCal, in druge.\r\n\r\nTa aplikacije mogoce ne bo delovala na vasem sistemu.",
       "cannot.assign":                  "Tega napotka ne moremo dodeliti. Prosimo preskocite na naslednjega.",
       "confirm.delete.lead":            "Ali ste prepricani, da zelite izbrisati ta napotek?",
       "check.postalcode":               "- Prosimo vpisite veljavno postno stevilko\r\n",

@@ -1,18 +1,18 @@
-Centric CRM Language Pack; build: @BUILD.NUMBER@; @BUILD.DATE@
+Concourse Suite Community Edition Language Pack; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id: readme.txt 17418 2006-11-16 14:21:13Z matt $
 
-Centric CRM Language Pack
+Concourse Suite Community Edition Language Pack
 
 ----------------------------------------------------------------------------
 | INTRODUCTION                                                             |
 ----------------------------------------------------------------------------
 
-Translations in Centric CRM are made from several supporting files.  This
+Translations in Concourse Suite Community Edition are made from several supporting files.  This
 archive includes everything that is needed.  Once the files are ready to be
-submitted, they can be posted to the www.centriccrm.com web site.
+submitted, they can be posted to the www.concursive.com web site.
 
-To learn more about translating, visit the Centric CRM Language Gateway:
-http://www.centriccrm.com/Translation.do
+To learn more about translating, visit the Concourse Suite Community Edition Language Gateway:
+http://www.concursive.com/Translation.do
 
 
 ----------------------------------------------------------------------------
@@ -24,8 +24,8 @@ files ending in en_US are for US English.
 
 In this archive you will find the following directories:
 
-data          Default database data that is installed in Centric CRM
-dictionary    All of the user interfase phrases used in Centric CRM
+data          Default database data that is installed in Concourse Suite Community Edition
+dictionary    All of the user interfase phrases used in Concourse Suite Community Edition
 javascript    Warning text that is displayed to the website user
 permissions   The module names, permission names, and related module data
 templates     Dynamic messages that are used when sending email to users
@@ -38,7 +38,7 @@ workflow      Dynamic events that are used when interacting with business
 ----------------------------------------------------------------------------
 
 Care must be taken when working with these application files directly.  The
-Centric CRM application will be reading them and expecting certain mandatory
+Concourse Suite Community Edition application will be reading them and expecting certain mandatory
 programming code to be intact.
 
 When editing these files, color-syntax is useful, so you might use an
@@ -52,7 +52,7 @@ editor like JEdit from http://www.jedit.org
 File: lookuplists_*.xml
 
 Contains a translatable file that is used during the installation of a new
-Centric CRM database.  These items are commonly viewed in a drop-down list
+Concourse Suite Community Edition database.  These items are commonly viewed in a drop-down list
 to the user.
 
 
@@ -63,13 +63,13 @@ to the user.
 File: dictionary_*.xml
 
 The phrase dictionary contains the majority of text that is displayed in
-Centric CRM.  This file can be edited online using the Centric CRM
+Concourse Suite Community Edition.  This file can be edited online using the Concourse Suite Community Edition
 Language gateway.  This allows one or more developers to work on the
 translation at the same time, and to just work on the changes since the
 last update.
 
 New translations may find it useful to work offline initially and then
-send the document to Centric CRM for processing.
+send the document to Concourse Suite Community Edition for processing.
 
 
 ----------------------------------------------------------------------------

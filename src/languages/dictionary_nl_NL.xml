@@ -958,7 +958,7 @@
 <value><![CDATA[Ga naar deze Document opslag]]></value>
 </param>
 <param name="setup.restoreDatabaseToBackup.text">
-<value><![CDATA[Als u het systeem snel weer online wil brengen, kunt u de database restoren van uw laatste backup en vervolgens de vorige versie van Centric CRM weer online brengen]]></value>
+<value><![CDATA[Als u het systeem snel weer online wil brengen, kunt u de database restoren van uw laatste backup en vervolgens de vorige versie van Concourse Suite Community Edition weer online brengen]]></value>
 </param>
 <param name="accounts.accountSource">
 <value><![CDATA[Klant Bron]]></value>
@@ -1003,7 +1003,7 @@
 <value><![CDATA[Converteren naar een Klant]]></value>
 </param>
 <param name="admin.emailServer.question">
-<value><![CDATA[Welke email server moet gebruikt worden door Centric CRM? ${bold}${break}Door Centric CRM worden verschillende notificaties verzonden naar gebruikers per email. Tevens kan Centric CRM worden gebruikt om emails te versturen naar contacten die aanwezig zijn in het adresboek van de Contacten en Accounts Modules.]]></value>
+<value><![CDATA[Welke email server moet gebruikt worden door Concourse Suite Community Edition? ${bold}${break}Door Concourse Suite Community Edition worden verschillende notificaties verzonden naar gebruikers per email. Tevens kan Concourse Suite Community Edition worden gebruikt om emails te versturen naar contacten die aanwezig zijn in het adresboek van de Contacten en Accounts Modules.]]></value>
 </param>
 <param name="admin.addUserAccount">
 <value><![CDATA[Gebruikers Account Klant Toevoegen]]></value>
@@ -1096,7 +1096,7 @@
 <value><![CDATA[Login Account aangemaakt]]></value>
 </param>
 <param name="setup.setupCentricCRMAdminUserAccount">
-<value><![CDATA[Maak het Centric CRM beheers account aan]]></value>
+<value><![CDATA[Maak het Concourse Suite Community Edition beheers account aan]]></value>
 </param>
 <param name="setup.profile.description">
 <value><![CDATA[Een profiel maakt het mogelijk om uw account online bij te werken en is een naam waarmee u wil verwijzen naar dit systeem]]></value>
@@ -1168,7 +1168,7 @@
 <value><![CDATA[Onsite Service Model:]]></value>
 </param>
 <param name="ticket.problem.userDisabled">
-<value><![CDATA[Centric CRM gebruiker ${thisUser.username} is buiten werking gesteld door ${thisRec.username}.
+<value><![CDATA[Concourse Suite Community Edition gebruiker ${thisUser.username} is buiten werking gesteld door ${thisRec.username}.
       Omdat u de direct leidinggevende bent van ${thisUser.username}, wordt u gewaarschuwd.  Het is essentieel dat
     dat die nog gekoppeld zijn aan deze gebruiker zo spoedig mogelijk worden toegewezen aan een andere gebruiker.
     ]]></value>
@@ -1264,7 +1264,7 @@
 <value><![CDATA[Snel een taak toevoegen]]></value>
 </param>
 <param name="templates.CentricCRM">
-<value><![CDATA[Centric CRM]]></value>
+<value><![CDATA[Concourse Suite Community Edition]]></value>
 </param>
 <param name="ticket.age">
 <value><![CDATA[Leeftijd]]></value>
@@ -1330,7 +1330,7 @@
 <value><![CDATA[Taak forwarden]]></value>
 </param>
 <param name="setup.welcomeToCentricCRM.label">
-<value><![CDATA[Welkom in Centric CRM]]></value>
+<value><![CDATA[Welkom in Concourse Suite Community Edition]]></value>
 </param>
 <param name="account.sc.modifyServiceContract">
 <value><![CDATA[Service Contract Wijzigen]]></value>
@@ -1354,10 +1354,10 @@
 <value><![CDATA[Controle]]></value>
 </param>
 <param name="setup.welcome.setupProcessGuide.text">
-<value><![CDATA[Registratie van deze applicatie bij Dark Horse Ventures is verplicht voor de installatie, ongeacht of u in bezit bent van een licentie. Het registratie proces is simpel: <ul><li>Verbinding met het internet is noodzakelijk</li><li>De vrij beschikbare versie van Centric CRM bevat licenties voor 5 gebruikers</li><li>U moet instemmen met de Centric CRM licentie overeenkomst</li><li>De centric CRM beheerder zal informatie ontvangen over updates op het moment dat deeze beschikbaar komt</li></ul>]]></value>
+<value><![CDATA[Registratie van deze applicatie bij Concursive Corporation is verplicht voor de installatie, ongeacht of u in bezit bent van een licentie. Het registratie proces is simpel: <ul><li>Verbinding met het internet is noodzakelijk</li><li>De vrij beschikbare versie van Concourse Suite Community Edition bevat licenties voor 5 gebruikers</li><li>U moet instemmen met de Concourse Suite Community Edition licentie overeenkomst</li><li>De Concourse Suite Community Edition beheerder zal informatie ontvangen over updates op het moment dat deeze beschikbaar komt</li></ul>]]></value>
 </param>
 <param name="setup.welcome.setupProcessGuide.notes">
-<value><![CDATA[Om te kunnen starten met Centric CRM moeten verschillende stappen worden doorlopen. <br /><br /> Hoewel de installatie binnen enkele minuten kan worden voltooid, kunt u ervoor kiezen om op een later tijdstip door te gaan, mocht u de setup afbreken.<br /><br />]]></value>
+<value><![CDATA[Om te kunnen starten met Concourse Suite Community Edition moeten verschillende stappen worden doorlopen. <br /><br /> Hoewel de installatie binnen enkele minuten kan worden voltooid, kunt u ervoor kiezen om op een later tijdstip door te gaan, mocht u de setup afbreken.<br /><br />]]></value>
 </param>
 <param name="dynamicForm.survey.introductionText">
 <value><![CDATA[Introductie Tekst]]></value>
@@ -1369,10 +1369,10 @@
 <value><![CDATA[Database Gebruiker Wachtwoord:]]></value>
 </param>
 <param name="setup.timeToConfigureSystemSettings.text">
-<value><![CDATA[Nu moeten de systeem instellingen worden geconfigureerd voor Centric CRM kan worden gebruikt]]></value>
+<value><![CDATA[Nu moeten de systeem instellingen worden geconfigureerd voor Concourse Suite Community Edition kan worden gebruikt]]></value>
 </param>
 <param name="setup.upgradeFailed">
-<value><![CDATA[Centric CRM Upgrade mislukt!!!!]]></value>
+<value><![CDATA[Concourse Suite Community Edition Upgrade mislukt!!!!]]></value>
 </param>
 <param name="setup.testSuccessful.text">
 <value><![CDATA[Test gelukt. <br /> De url is correct geconfigureerd om de web applicatie te bekijken.]]></value>
@@ -1381,7 +1381,7 @@
 <value><![CDATA[Gebruik een proxy server om contact te maken met internet]]></value>
 </param>
 <param name="setup.usersFileStore.question">
-<value><![CDATA[Gebruikers kunnen bestanden laden en aanmaken op de server. <br /> Waar moet Centric CRM de bestanden opslaan die worden aangemaakt?]]></value>
+<value><![CDATA[Gebruikers kunnen bestanden laden en aanmaken op de server. <br /> Waar moet Concourse Suite Community Edition de bestanden opslaan die worden aangemaakt?]]></value>
 </param>
 <param name="setup.upgradeTo.colon">
 <value><![CDATA[Upgrade Naar:]]></value>
@@ -1393,7 +1393,7 @@
 <value><![CDATA[Gebruik SSL (poort443) om informatie te versturen]]></value>
 </param>
 <param name="setup.timeToConfigureServerSettings.text">
-<value><![CDATA[Nu moeten de Centric CRM server instellingen worden geconfigureerd.]]></value>
+<value><![CDATA[Nu moeten de Concourse Suite Community Edition server instellingen worden geconfigureerd.]]></value>
 </param>
 <param name="dynamicForm.survey.editItems">
 <value><![CDATA[Items Bewerken]]></value>
@@ -1417,7 +1417,7 @@
 <value><![CDATA[Suggesties]]></value>
 </param>
 <param name="setup.systemEmailURL.text">
-<value><![CDATA[<ul><li>De URL moet aanwezig zijn in uw DNS zodat gebruikers kunnen inloggen</li><li>Optioneel kunt u een IP adres gebruiken</li><li>Gebruik het volledige URL pad om in te loggen in CRM, exclusief HTTP:// of HTTPS://</li><li>Door te klikken op de Test knop zal gepoogd worden om een Centric CRM bevestigings pagina te tonen die aanwezig is op de serveer</li></ul>]]></value>
+<value><![CDATA[<ul><li>De URL moet aanwezig zijn in uw DNS zodat gebruikers kunnen inloggen</li><li>Optioneel kunt u een IP adres gebruiken</li><li>Gebruik het volledige URL pad om in te loggen in CRM, exclusief HTTP:// of HTTPS://</li><li>Door te klikken op de Test knop zal gepoogd worden om een Concourse Suite Community Edition bevestigings pagina te tonen die aanwezig is op de serveer</li></ul>]]></value>
 </param>
 <param name="setup.systemAlreadyUpgraded.text">
 <value><![CDATA[Dit systeem is reeds geupgraded. Doorgaan houdt in dat dit systeem als geupgraded wordt aangegeven waardoor gebruikers kunnen inloggen.]]></value>
@@ -1448,7 +1448,7 @@
 <value><![CDATA[Instellingen Bewaard!]]></value>
 </param>
 <param name="setup.serversServicesMustBeDefined.text">
-<value><![CDATA[Centric CRM interacteerd met verschillende servers en services die moeten worden gedefinieerd.]]></value>
+<value><![CDATA[Concourse Suite Community Edition interacteerd met verschillende servers en services die moeten worden gedefinieerd.]]></value>
 </param>
 <param name="setup.sqlServer">
 <value><![CDATA[Microsoft SQL Server]]></value>
@@ -1502,7 +1502,7 @@
 <value><![CDATA[Sendmail Help]]></value>
 </param>
 <param name="setup.requestRegistrationLicense.text">
-<value><![CDATA[<ul><li>De onderstaande informatie wordt verzonden naar Dark Horse Ventures en daar verwerkt</li><li> Een licentie bestand wordt naar het aangegeven email adres verstuurd</li><li>U mag de software gebruiken conform de licentie overeenkomst</li><li>Anonyme email adressen worden niet geaccepteerd </li><li>Uw email adres wordt niet aan derden doorgegeven zonder uw toestemming</li></ul>]]></value>
+<value><![CDATA[<ul><li>De onderstaande informatie wordt verzonden naar Concursive Corporation en daar verwerkt</li><li> Een licentie bestand wordt naar het aangegeven email adres verstuurd</li><li>U mag de software gebruiken conform de licentie overeenkomst</li><li>Anonyme email adressen worden niet geaccepteerd </li><li>Uw email adres wordt niet aan derden doorgegeven zonder uw toestemming</li></ul>]]></value>
 </param>
 <param name="setup.reasonsToReceiveMessage.label">
 <value><![CDATA[U ontvangt dit bericht om een van de volgende redenen:]]></value>
@@ -1511,7 +1511,7 @@
 <value><![CDATA[Profiel:]]></value>
 </param>
 <param name="setup.registrationInformationSubmitted.text">
-<value><![CDATA[Uw registratie informatie is verzonden naar Dark Horse Ventures, LLC.]]></value>
+<value><![CDATA[Uw registratie informatie is verzonden naar Concursive Corporation.]]></value>
 </param>
 <param name="setup.relativeURL.example">
 <value><![CDATA[(bijv: crm.uwbedrijf.nl${contextPath})]]></value>
@@ -1523,7 +1523,7 @@
 <value><![CDATA[Privacy wordt door ons als belangrijk ervaren. <br/><br /> Uw informatie wordt niet doorgespeeld naar derde partijen.]]></value>
 </param>
 <param name="setup.reasonsToReceiveMessage.text">
-<value><![CDATA[<ul><li>U bent een beheerder bezig met het upgraden van Centric CRM, bent u gereed om door te gaan met de upgarde?</li> <li>U bent een gebruiker die verwacht om te kunnen inloggen, op dit moment wordt de software geupgraded door de beheerder. Mocht dit scherm lang blijven staan, controleer dan of u een bericht heeft ontvangen van de beheerder of neem contact met hem op.</li><li>Als er geen upgrade is gepland, is er een configuratie probleem dat moet worden opgelost. Mocht dit het geval zijn, dan kunt u doorgaan met het upgrade proces om de installatie te controleren</li></ul>]]></value>
+<value><![CDATA[<ul><li>U bent een beheerder bezig met het upgraden van Concourse Suite Community Edition, bent u gereed om door te gaan met de upgarde?</li> <li>U bent een gebruiker die verwacht om te kunnen inloggen, op dit moment wordt de software geupgraded door de beheerder. Mocht dit scherm lang blijven staan, controleer dan of u een bericht heeft ontvangen van de beheerder of neem contact met hem op.</li><li>Als er geen upgrade is gepland, is er een configuratie probleem dat moet worden opgelost. Mocht dit het geval zijn, dan kunt u doorgaan met het upgrade proces om de installatie te controleren</li></ul>]]></value>
 </param>
 <param name="setup.proxyPort">
 <value><![CDATA[Proxy Poort]]></value>
@@ -1544,7 +1544,7 @@
 <value><![CDATA[Paste uw licentie in het text veld om door te gaan]]></value>
 </param>
 <param name="setup.pleaseWaitUpgrading.text">
-<value><![CDATA[Geduld AUB...Centric CRM wordt geupgraded!]]></value>
+<value><![CDATA[Geduld AUB...Concourse Suite Community Edition wordt geupgraded!]]></value>
 </param>
 <param name="setup.noScriptsCompletedSuccessfully">
 <value><![CDATA[Geen scripts zijn succesvol afgerond]]></value>
@@ -1574,7 +1574,7 @@
 <value><![CDATA[Geen scripts uitgevoerd]]></value>
 </param>
 <param name="setup.nextStepDatabaseConnection.text">
-<value><![CDATA[De volgende stap is het configureren en controleren van de Centric CRM database connectie]]></value>
+<value><![CDATA[De volgende stap is het configureren en controleren van de Concourse Suite Community Edition database connectie]]></value>
 </param>
 <param name="setup.mustMatchPreviousPassword.brackets">
 <value><![CDATA[(Moet gelijk zijn aan het vorige wachtwoord)]]></value>
@@ -1604,10 +1604,10 @@
 <value><![CDATA[De Licentie kan alleen worden gebruikt op het systeem die de licentie heeft aangevraagd]]></value>
 </param>
 <param name="setup.furtherConfiguration.text">
-<value><![CDATA[Additionele configuratie kan worden uitgevoerd door het aanklikken van de Systeem Administratie tab in Centric CRM]]></value>
+<value><![CDATA[Additionele configuratie kan worden uitgevoerd door het aanklikken van de Systeem Administratie tab in Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.installationComplete.text">
-<value><![CDATA[Installatie is gereed en u kunt beginnen met het gebruiken van Centric CRM.]]></value>
+<value><![CDATA[Installatie is gereed en u kunt beginnen met het gebruiken van Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.ifRegisteredLicenceByEmail.text">
 <value><![CDATA[Als u reeds de registratie heeft ingevuld, zult u het licentie bestand ontvangen per email.]]></value>
@@ -1619,22 +1619,22 @@
 <value><![CDATA[Informatie]]></value>
 </param>
 <param name="setup.installationIssues.license.text">
-<value><![CDATA[Als u uw licentie kwijt bent of op een andere server Centric CRM installeert kunt u ${license}een nieuwe licentie aanvragen${endLicense} die u per email wordt toegezonden]]></value>
+<value><![CDATA[Als u uw licentie kwijt bent of op een andere server Concourse Suite Community Edition installeert kunt u ${license}een nieuwe licentie aanvragen${endLicense} die u per email wordt toegezonden]]></value>
 </param>
 <param name="setup.hylafaxHelp">
 <value><![CDATA[HylaFax Help]]></value>
 </param>
 <param name="setup.jspPrecompile.note">
-<value><![CDATA[Omdat de JavaServerPages niet zijn gecompileerd, moet u kiezen om de JSP's te precompileren, zodat de applicatie werkt zonder compile vertragingen. Compileren gebeurt in de achtergrond, u kunt Centric CRM blijven gebruiken.]]></value>
+<value><![CDATA[Omdat de JavaServerPages niet zijn gecompileerd, moet u kiezen om de JSP's te precompileren, zodat de applicatie werkt zonder compile vertragingen. Compileren gebeurt in de achtergrond, u kunt Concourse Suite Community Edition blijven gebruiken.]]></value>
 </param>
 <param name="setup.jvm">
 <value><![CDATA[JVM]]></value>
 </param>
 <param name="setup.installedVersionNeedsUpgrade.text">
-<value><![CDATA[De geinstalleerde versie van Centric CRM moet worden geupgraded.]]></value>
+<value><![CDATA[De geinstalleerde versie van Concourse Suite Community Edition moet worden geupgraded.]]></value>
 </param>
 <param name="setup.jspPagesNotYetCompiled.text">
-<value><![CDATA[Omdat de JavaServerPages niet zijn gecompileerd, moet u kiezen om de JSP's te precompileren, zodat de applicatie werkt zonder compile vertragingen. Compileren gebeurt in de achtergrond, u kunt Centric CRM blijven gebruiken.]]></value>
+<value><![CDATA[Omdat de JavaServerPages niet zijn gecompileerd, moet u kiezen om de JSP's te precompileren, zodat de applicatie werkt zonder compile vertragingen. Compileren gebeurt in de achtergrond, u kunt Concourse Suite Community Edition blijven gebruiken.]]></value>
 </param>
 <param name="setup.forSystemEmails.question">
 <value><![CDATA[Voor systeem emails, welk email adres moet worden gebruikt in het verstuurd door veld in de email?]]></value>
@@ -1649,7 +1649,7 @@
 <value><![CDATA[Vraag toevoegen]]></value>
 </param>
 <param name="setup.followingInformationAppearsEmployees.text">
-<value><![CDATA[De volgende informatie wordt getoond in Centric CRM onder Medewerkers en kan later worden aangepast indien noodzakelijk]]></value>
+<value><![CDATA[De volgende informatie wordt getoond in Concourse Suite Community Edition onder Medewerkers en kan later worden aangepast indien noodzakelijk]]></value>
 </param>
 <param name="setup.errorLog">
 <value><![CDATA[Error Log]]></value>
@@ -1692,22 +1692,22 @@
 </param>
 <param name="setup.defaultCurrency.question">
 <value><![CDATA[Alle monetaire eenheden binnen CRM staan standaard op een default currency.
-Welke valuta moet Centric CRM gebruiken?]]></value>
+Welke valuta moet Concourse Suite Community Edition gebruiken?]]></value>
 </param>
 <param name="setup.defaultLocale.question">
-<value><![CDATA[Alle taalelementen binnen Centric CRM staan op een enkele locale, 
-Welke locale moet Centric CRM gebruiken?]]></value>
+<value><![CDATA[Alle taalelementen binnen Concourse Suite Community Edition staan op een enkele locale,
+Welke locale moet Concourse Suite Community Edition gebruiken?]]></value>
 </param>
 <param name="setup.defaultEmailAddress">
 <value><![CDATA[Standaard Email Adres]]></value>
 </param>
 <param name="setup.emailServer.question">
-<value><![CDATA[Centric CRM verzend notificaties per email naar gebruikers. Vanuit Centric CRM
+<value><![CDATA[Concourse Suite Community Edition verzend notificaties per email naar gebruikers. Vanuit Concourse Suite Community Edition
 kan ook email worden verstuurd naar contacten. 
-Welke email server moet Centric CRM gebruiken? ]]></value>
+Welke email server moet Concourse Suite Community Edition gebruiken? ]]></value>
 </param>
 <param name="setup.defaultTimezone.question">
-<value><![CDATA[Elke gebruiker in Centric CRM kan zijn/haar eigen tijdzone gebruiken.</br> Wat moet de standaard Tijd zonde zijn voor nieuwe gebruikers?]]></value>
+<value><![CDATA[Elke gebruiker in Concourse Suite Community Edition kan zijn/haar eigen tijdzone gebruiken.</br> Wat moet de standaard Tijd zonde zijn voor nieuwe gebruikers?]]></value>
 </param>
 <param name="setup.defaultCurrency">
 <value><![CDATA[Standaard valuta]]></value>
@@ -1753,23 +1753,23 @@ Welke email server moet Centric CRM gebruiken? ]]></value>
 </ul> ]]></value>
 </param>
 <param name="setup.defaultCountry.question">
-<value><![CDATA[Welk Land moet Centric CRM gebruiken als standaard Mail adres]]></value>
+<value><![CDATA[Welk Land moet Concourse Suite Community Edition gebruiken als standaard Mail adres]]></value>
 </param>
 <param name="setup.databaseInconsistentState.text">
 <value><![CDATA[Uw database kan inconsistent zijn. U zult moeten controleren wat fout ging. Deze pagina bevat analyse informatie.]]></value>
 </param>
 <param name="setup.configuration.step3to4">
-<value><![CDATA[Centric CRM configuratie (stap 3 van 4) <br />
+<value><![CDATA[Concourse Suite Community Edition configuratie (stap 3 van 4) <br />
  Database Instellingen &amp; Installatie]]></value>
 </param>
 <param name="setup.createAdministratorAccount.text">
-<value><![CDATA[Maak een Centric CRM beheer account aan]]></value>
+<value><![CDATA[Maak een Concourse Suite Community Edition beheer account aan]]></value>
 </param>
 <param name="setup.confirmationByEmail.text">
 <value><![CDATA[Een conformatie bericht wordt u toegezonden inclusief een licentie voor dit systeem]]></value>
 </param>
 <param name="setup.createDatabaseTables.text">
-<value><![CDATA[Centric CRM zal nu alle tabellen en initiele data aanmaken in de volgende database:]]></value>
+<value><![CDATA[Concourse Suite Community Edition zal nu alle tabellen en initiele data aanmaken in de volgende database:]]></value>
 </param>
 <param name="setup.country.colon">
 <value><![CDATA[Land.]]></value>
@@ -1790,19 +1790,19 @@ Welke email server moet Centric CRM gebruiken? ]]></value>
 <value><![CDATA[Ga door met setup van een eerder gestarte sessie]]></value>
 </param>
 <param name="setup.darkHorseVenturesTeam">
-<value><![CDATA[Het Dark Horse Ventures Team]]></value>
+<value><![CDATA[Het Concursive Corporation Team]]></value>
 </param>
 <param name="setup.configureDatabase.url.text">
-<value><![CDATA[Centric CRM werkt het best met de open source database server ${postgres}PostgreSQL${end}. U kunt ook ${mssql}Microsoft SQL Server${end} gebruiken.]]></value>
+<value><![CDATA[Concourse Suite Community Edition werkt het best met de open source database server ${postgres}PostgreSQL${end}. U kunt ook ${mssql}Microsoft SQL Server${end} gebruiken.]]></value>
 </param>
 <param name="setup.centricCRM.step2of4">
-<value><![CDATA[Configuratie Centric CRM (Stap 2 van 4) <br /> Server settings]]></value>
+<value><![CDATA[Configuratie Concourse Suite Community Edition (Stap 2 van 4) <br /> Server settings]]></value>
 </param>
 <param name="setup.centricCRMUpgrade">
-<value><![CDATA[Centric CRM Upgrade]]></value>
+<value><![CDATA[Concourse Suite Community Edition Upgrade]]></value>
 </param>
 <param name="setup.centricCRMResources">
-<value><![CDATA[Centric CRM Middelen]]></value>
+<value><![CDATA[Concourse Suite Community Edition Middelen]]></value>
 </param>
 <param name="setup.companyName.colon">
 <value><![CDATA[Bedrijfs naam]]></value>
@@ -1811,25 +1811,25 @@ Welke email server moet Centric CRM gebruiken? ]]></value>
 <value><![CDATA[Kies een taal om door te gaan:]]></value>
 </param>
 <param name="setup.centricCRMInstallation">
-<value><![CDATA[Centric CRM Installatie]]></value>
+<value><![CDATA[Concourse Suite Community Edition Installatie]]></value>
 </param>
 <param name="setup.centricCRM.step4of4">
-<value><![CDATA[Configuratie Centric CRM (stap 4 van 4) <br /> Gebruikers instellingen]]></value>
+<value><![CDATA[Configuratie Concourse Suite Community Edition (stap 4 van 4) <br /> Gebruikers instellingen]]></value>
 </param>
 <param name="setup.centricCRMUpgradeComplete">
-<value><![CDATA[Centric CRM Upgrade gereed!]]></value>
+<value><![CDATA[Concourse Suite Community Edition Upgrade gereed!]]></value>
 </param>
 <param name="setup.centricCRMstoresUserDataAt.colon">
-<value><![CDATA[Centric CRM zal nu uw systeem en gebruikers data opslaan in:]]></value>
+<value><![CDATA[Concourse Suite Community Edition zal nu uw systeem en gebruikers data opslaan in:]]></value>
 </param>
 <param name="setup.centricCRMMailTest">
-<value><![CDATA[Centric CRM Mail Test]]></value>
+<value><![CDATA[Concourse Suite Community Edition Mail Test]]></value>
 </param>
 <param name="setup.centricCRM.step1of4.text">
-<value><![CDATA[Configuratie Centric CRM (stap 1 van 4)<br /> Bestand Library settings]]></value>
+<value><![CDATA[Configuratie Concourse Suite Community Edition (stap 1 van 4)<br /> Bestand Library settings]]></value>
 </param>
 <param name="setup.centricCRM.usesDatabase.text">
-<value><![CDATA[Centric CRM slaat data op en haalt deze weer op door gebruik te maken van een database]]></value>
+<value><![CDATA[Concourse Suite Community Edition slaat data op en haalt deze weer op door gebruik te maken van een database]]></value>
 </param>
 <param name="actionPlan.userAssignedToThePlan.text">
 <value><![CDATA[Gebruiker toegewezen aan het plan]]></value>
@@ -1838,12 +1838,12 @@ Welke email server moet Centric CRM gebruiken? ]]></value>
 <value><![CDATA[Als u een backup heeft gemaakt van het systeen en een systeem beheerder bent, kunt u doorgaan met de upgrade]]></value>
 </param>
 <param name="setup.administratorResponsibilities.text">
-<value><![CDATA[Een beheerder is benodigd om Centric CRM te beheren. De beheerder
+<value><![CDATA[Een beheerder is benodigd om Concourse Suite Community Edition te beheren. De beheerder
 is verantwoordelijk voor het toevoegen van gebruikers, beheer van gebruikers rechten en
-aanpassen van Centric CRM aan uw organisatie.]]></value>
+aanpassen van Concourse Suite Community Edition aan uw organisatie.]]></value>
 </param>
 <param name="setup.administrativeAccessAvailable.text">
-<value><![CDATA[<ul><li>Backup de Centric CRM database</li><li>Backup de Centric CRM bestands bibliotheek</li></ul>]]></value>
+<value><![CDATA[<ul><li>Backup de Concourse Suite Community Edition database</li><li>Backup de Concourse Suite Community Edition bestands bibliotheek</li></ul>]]></value>
 </param>
 <param name="search.totalResultsInOpportunities.text">
 <value><![CDATA[<strong>${OppSize}</strong>Resultaat in <strong>Opportunities</strong>]]></value>
@@ -1857,19 +1857,19 @@ om door te gaan met het upgrade proces. Om uw data te beschermen moet u
 de volgende stappen doorlopen voor door te gaan:]]></value>
 </param>
 <param name="setup.centricCRMDatabaseTables.text">
-<value><![CDATA[Centric CRM heeft nu alle benodigde tabellen en data geinstalleerd]]></value>
+<value><![CDATA[Concourse Suite Community Edition heeft nu alle benodigde tabellen en data geinstalleerd]]></value>
 </param>
 <param name="setup.caseSensitive.brackets">
 <value><![CDATA[(case sensitive)]]></value>
 </param>
 <param name="setup.centricCRMHelp">
-<value><![CDATA[Centric CRM Help]]></value>
+<value><![CDATA[Concourse Suite Community Edition Help]]></value>
 </param>
 <param name="search.totalResultsInEmployees.text">
 <value><![CDATA[<strong>${EmployeeSize}</strong> Resultaten in <strong>Medewerkers</strong>.]]></value>
 </param>
 <param name="setup.acquireRetainAndServiceCustomers.text">
-<value><![CDATA[Verwerf, behoud en verleen uw klanten met Centric CRM]]></value>
+<value><![CDATA[Verwerf, behoud en verleen uw klanten met Concourse Suite Community Edition]]></value>
 </param>
 <param name="search.totalResultsInContacts.text">
 <value><![CDATA[<strong>${ContactListSize}</strong> Resultaten in <strong>Contacten</strong>.]]></value>
@@ -3258,7 +3258,7 @@ de volgende stappen doorlopen voor door te gaan:]]></value>
 <value><![CDATA[Levering]]></value>
 </param>
 <param name="quotes.dependencies">
-<value><![CDATA[De offerte die u wil verwijderen heeft de volgende afhankelijkheden binnen Centric CRM:]]></value>
+<value><![CDATA[De offerte die u wil verwijderen heeft de volgende afhankelijkheden binnen Concourse Suite Community Edition:]]></value>
 </param>
 <param name="quotes.date">
 <value><![CDATA[Datum]]></value>
@@ -5294,7 +5294,7 @@ uitvoeren, terwijl een gast weinig kan.]]></value>
 <value><![CDATA[Volledig email adres is verplicht]]></value>
 </param>
 <param name="object.validation.actionError.unspecifiedErrorRejectedRegistration">
-<value><![CDATA[   Niet gespecificeerde fout: Centric CRM Server wees registratie af ${thisStatus.message}]]></value>
+<value><![CDATA[   Niet gespecificeerde fout: Concourse Suite Community Edition Server wees registratie af ${thisStatus.message}]]></value>
 </param>
 <param name="object.validation.actionError.reportDeletion">
 <value><![CDATA[Rapportage kan niet worden verwijderd omdat deze nog niet is verwerkt]]></value>
@@ -5309,7 +5309,7 @@ uitvoeren, terwijl een gast weinig kan.]]></value>
 <value><![CDATA[Gebruiker kon niet worden verwijderd omdat deze niet langer meer bestaat.]]></value>
 </param>
 <param name="object.validation.actionError.unspecifiedErrorNoResponse">
-<value><![CDATA[Niet gespecifeerde fout: Centric CRM Server geeft geen respons]]></value>
+<value><![CDATA[Niet gespecifeerde fout: Concourse Suite Community Edition Server geeft geen respons]]></value>
 </param>
 <param name="object.validation.actionError.viewPointDeletion">
 <value><![CDATA[Gezichtspunt kon niet worden verwijders omdat deze niet langer meer bestaat.]]></value>
@@ -5519,7 +5519,7 @@ uitvoeren, terwijl een gast weinig kan.]]></value>
 <value><![CDATA[Her-toewijzigen]]></value>
 </param>
 <param name="accounts.contacts.moveTitle">
-<value><![CDATA[Centric CRM: Verplaats Contact]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Verplaats Contact]]></value>
 </param>
 <param name="myitems.assignedProjectTickets">
 <value><![CDATA[Toegewezen Project Tickets]]></value>
@@ -5570,10 +5570,10 @@ uitvoeren, terwijl een gast weinig kan.]]></value>
 <value><![CDATA[Reden]]></value>
 </param>
 <param name="mail.subject.test">
-<value><![CDATA[Tekst Bericht van Centric CRM]]></value>
+<value><![CDATA[Tekst Bericht van Concourse Suite Community Edition]]></value>
 </param>
 <param name="mail.subject.crmRegistration">
-<value><![CDATA[Centric CRM Registratie]]></value>
+<value><![CDATA[Concourse Suite Community Edition Registratie]]></value>
 </param>
 <param name="mail.label.relevantNotes">
 <value><![CDATA[Relevante Notities:]]></value>
@@ -5654,7 +5654,7 @@ uitvoeren, terwijl een gast weinig kan.]]></value>
 <value><![CDATA[Uw self-service login informatie is veranderd. <br/><br/>]]></value>
 </param>
 <param name="mail.body.congratulations">
-<value><![CDATA[Gefeliciteerd, Mail vanuit Centric CRM werkt.]]></value>
+<value><![CDATA[Gefeliciteerd, Mail vanuit Concourse Suite Community Edition werkt.]]></value>
 </param>
 <param name="global.button.CancelPendingActivity">
 <value><![CDATA[Afbreken onderhanden activiteit]]></value>
@@ -5666,7 +5666,7 @@ uitvoeren, terwijl een gast weinig kan.]]></value>
 <value><![CDATA[Compleet]]></value>
 </param>
 <param name="mail.body.sentBy">
-<value><![CDATA[Het volgende bericht was verzonden naar uw Centric CRM Inbox door]]></value>
+<value><![CDATA[Het volgende bericht was verzonden naar uw Concourse Suite Community Edition Inbox door]]></value>
 </param>
 <param name="mail.body.newPasswordIs">
 <value><![CDATA[Uw nieuwe wachtwoord is: ${password}<br/><br/>]]></value>
@@ -5723,7 +5723,7 @@ U heeft niet voldoende bevoegdheden om deze actie uit te voeren.]]></value>
 <value><![CDATA[${li}Verwijder een gebruiker zodat een nieuwe kan worden toegevoegd
 of${sli}
       ${li}koop een licentie om het aantal gebruiker te verhogen${sli}
-      ${li}voor meer informatie ${urlStart}www.centriccrm.com${urlEnd}${sli}]]></value>
+      ${li}voor meer informatie ${urlStart}www.concursive.com${urlEnd}${sli}]]></value>
 </param>
 <param name="help.noDescriptionAvailable">
 <value><![CDATA[Geen omschrijving beschikbaar]]></value>
@@ -5918,7 +5918,7 @@ of${sli}
 <value><![CDATA[Deze contact persoon heeft geen toegang tot de portal]]></value>
 </param>
 <param name="admin.ldap.useUserEmail">
-<value><![CDATA[Opzoeken primaire email adres in Centric CRM]]></value>
+<value><![CDATA[Opzoeken primaire email adres in Concourse Suite Community Edition]]></value>
 </param>
 <param name="accounts.ImportDetails">
 <value><![CDATA[Details van de Import]]></value>
@@ -5927,7 +5927,7 @@ of${sli}
 <value><![CDATA[Details van het Bericht]]></value>
 </param>
 <param name="mail.body.newLoginInformation">
-<value><![CDATA[Dit bericht bevat informatie over uw CentricCRM account.<br /><br />
+<value><![CDATA[Dit bericht bevat informatie over uw Concourse Suite Community Edition account.<br /><br />
       uw wachtwoord is gereset door ${nameLastFirst}.<br /><br />
       Log AUB in met de volgende informatie:<br /><br />
       Gebruikersnaam: ${username} <br />
@@ -5971,7 +5971,7 @@ of${sli}
 <value><![CDATA[Naam Module:]]></value>
 </param>
 <param name="admin.ldap.useCentricLogin">
-<value><![CDATA[Gebruik het Centric CRM login van de gebruiker]]></value>
+<value><![CDATA[Gebruik het Concourse Suite Community Edition login van de gebruiker]]></value>
 </param>
 <param name="help.subsection.colon">
 <value><![CDATA[Sub-sectie: <b>${help.subsection}</b>]]></value>
@@ -6013,7 +6013,7 @@ of${sli}
 <value><![CDATA[Accounts Zoeken]]></value>
 </param>
 <param name="mail.body.emailContactWithBody">
-<value><![CDATA[Het volgende bericht is verzonden naar uw Centric CRM inbox door ${thisRecord.contact.nameFirstLast}.
+<value><![CDATA[Het volgende bericht is verzonden naar uw Concourse Suite Community Edition inbox door ${thisRecord.contact.nameFirstLast}.
       Dit bericht is gekopieerd naar uw inbox op verzoek van de verzender.<br /><br />--- Origineel Bericht ---<br /><br />" 
       ${thisNote.body}
     ]]></value>
@@ -6025,12 +6025,12 @@ of${sli}
 <value><![CDATA[Team Leden:]]></value>
 </param>
 <param name="mail.body.crmRegistration">
-<value><![CDATA[      Bedankt voor het registreren van Centric CRM. ${crlf} ${crlf} 
+<value><![CDATA[      Bedankt voor het registreren van Concourse Suite Community Edition. ${crlf} ${crlf}
       Voeg de licentie  in van het bijgevoegde bestand
-      (inclusief de <license> tags) In het Centric CRM licentie validatie veld. ${crlf} ${crlf} 
+      (inclusief de <license> tags) In het Concourse Suite Community Edition licentie validatie veld. ${crlf} ${crlf}
       Sommige mail servers hebben problemen met het licentie bestand, als dit het geval is
-      zend dan de applicatie naam en mail server naam naar CentricCRM. ${crlf} ${crlf} 
-      Het Centric CRM Team
+      zend dan de applicatie naam en mail server naam naar Concourse Suite Community Edition. ${crlf} ${crlf}
+      Het Concourse Suite Community Edition Team
     ]]></value>
 </param>
 <param name="documents.team.selectDocument_store">
@@ -6655,7 +6655,7 @@ of${sli}
 <value><![CDATA[Deze opportunitie kan niet worden verwijderd omdat het de afhankelijkheden bevat.]]></value>
 </param>
 <param name="confirmdelete.unableHeader">
-<value><![CDATA[Dit object kan niet worden verwijderd omdat het de volgende afhankelijkheden heeft binnen Centric CRM:]]></value>
+<value><![CDATA[Dit object kan niet worden verwijderd omdat het de volgende afhankelijkheden heeft binnen Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.question">
 <value><![CDATA[Weet u zeker dat u dit formulier wil verwijderen?]]></value>
@@ -6664,13 +6664,13 @@ of${sli}
 <value><![CDATA[Deze enquete kan niet worden verwijderd omdat minimaal een campagne er gebruik van maakt]]></value>
 </param>
 <param name="confirmdelete.opps.componenet.delete">
-<value><![CDATA[Centric CRM: Pijplijn Beheer]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Pijplijn Beheer]]></value>
 </param>
 <param name="confirmdelete.roleUserHeader">
 <value><![CDATA[Deze rol kan niet worden verwijderd omdat minimaal een gebruiker eraan is toegewezen.]]></value>
 </param>
 <param name="confirmdelete.title">
-<value><![CDATA[Centric CRM: Verwijderen Bevestigen]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Verwijderen Bevestigen]]></value>
 </param>
 <param name="confirmdelete.taskNotOwnerHeader">
 <value><![CDATA[U heeft geen authorisatie om deze taak te verwijderen omdat u niet de eigenaar ervan bent of de eigenaar aan u rapporteert.]]></value>
@@ -6691,13 +6691,13 @@ of${sli}
 <value><![CDATA[Wilt u A.U.B. uw opportunities verwijderen of hertoewijzen die gekoppeld zijn met dit contact]]></value>
 </param>
 <param name="confirmdelete.formHeader">
-<value><![CDATA[Het formulier dat u wil verwijderen heeft afhankelijkheden binnen Centric CRM:]]></value>
+<value><![CDATA[Het formulier dat u wil verwijderen heeft afhankelijkheden binnen Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.message.question">
 <value><![CDATA[Weet u zeker dat u dit formulier wil verwijderen]]></value>
 </param>
 <param name="confirmdelete.header3">
-<value><![CDATA[Het product dat u wil verwijderen heeft de volgende afhankelijkheden binnen Centric CRM:]]></value>
+<value><![CDATA[Het product dat u wil verwijderen heeft de volgende afhankelijkheden binnen Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.messageCampaignHeader">
 <value><![CDATA[Dit bericht kan niet worden verwijderd omdat minstens een campagne het gebruikt.]]></value>
@@ -6706,13 +6706,13 @@ of${sli}
 <value><![CDATA[Deze groep kan niet worden verwijderd omdat deze wordt gebruikt in minstens een campagne.]]></value>
 </param>
 <param name="confirmdelete.header">
-<value><![CDATA[Dit object heeft de volgende afhankelijkheden binnen Centric CRM]]></value>
+<value><![CDATA[Dit object heeft de volgende afhankelijkheden binnen Concourse Suite Community Edition]]></value>
 </param>
 <param name="confirmdelete.header2">
 <value><![CDATA[Weet u zeker dat u dit item wil verwijderen:]]></value>
 </param>
 <param name="confirmdelete.contact.opps.delete">
-<value><![CDATA[Centric CRM: Generieke Contacten Opportunities.]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Generieke Contacten Opportunities.]]></value>
 </param>
 <param name="ticket.noPermissionForForm.text">
 <value><![CDATA[U heeft geen toegang om dit formulier te bekijken]]></value>
@@ -6814,7 +6814,7 @@ of${sli}
 <value><![CDATA[Groepen Bouwen]]></value>
 </param>
 <param name="setup.userCapabilitySendFaxes.text">
-<value><![CDATA[Gebruikers kunnen faxen versturen vanuit Centric CRM]]></value>
+<value><![CDATA[Gebruikers kunnen faxen versturen vanuit Concourse Suite Community Edition]]></value>
 </param>
 <param name="campaign.updateMessage">
 <value><![CDATA[Update Berichten]]></value>
@@ -6937,7 +6937,7 @@ of${sli}
 <value><![CDATA[Selecteer groepen voor deze campagne]]></value>
 </param>
 <param name="setup.faxServer.question">
-<value><![CDATA[Welke fax server moet Centric CRM gebruiken?]]></value>
+<value><![CDATA[Welke fax server moet Concourse Suite Community Edition gebruiken?]]></value>
 </param>
 <param name="campaign.scheduledToRunOn">
 <value><![CDATA[Gepland om uitgevoerd te worden op]]></value>
@@ -7405,7 +7405,7 @@ of${sli}
 <value><![CDATA[Een Document Toevoegen]]></value>
 </param>
 <param name="calendar.webdavFolder.text">
-<value><![CDATA[Een web map maakt het mogelijk om documenten en data in Centric CRM alsof 
+<value><![CDATA[Een web map maakt het mogelijk om documenten en data in Concourse Suite Community Edition alsof
 ze beschikbaar zijn op een netwerk Bestands share. Op het moment dat de Web map is
 aangemaakt kunt u een gedeelde map aanmakken naar de volgende URL:]]></value>
 </param>
@@ -7857,7 +7857,7 @@ aangemaakt kunt u een gedeelde map aanmakken naar de volgende URL:]]></value>
 <value><![CDATA[Verwijder]]></value>
 </param>
 <param name="button.continueToCentricCRMR">
-<value><![CDATA[Doorgaan naar Centric CRM >]]></value>
+<value><![CDATA[Doorgaan naar Concourse Suite Community Edition >]]></value>
 </param>
 <param name="button.close">
 <value><![CDATA[Afsluiten]]></value>
@@ -7968,7 +7968,7 @@ aangemaakt kunt u een gedeelde map aanmakken naar de volgende URL:]]></value>
 <value><![CDATA[-- AUB Selecteren --]]></value>
 </param>
 <param name="alt.invitation.text">
-<value><![CDATA[Bezoek www.CentricCRM.com]]></value>
+<value><![CDATA[Bezoek www.concursive.com]]></value>
 </param>
 <param name="admin.webSessionTimeout.text">
 <value><![CDATA[Web Sessie Timeout (Tijdelijk)]]></value>
@@ -8082,7 +8082,7 @@ aangemaakt kunt u een gedeelde map aanmakken naar de volgende URL:]]></value>
 <value><![CDATA[Getriggerd Proces]]></value>
 </param>
 <param name="admin.url.note.3">
-<value><![CDATA[Als er geen domein naam is geconfigureerd, kunt u een IP adres specificeren, voeg het volledige pad toe naar de Centric CRM web applicatie]]></value>
+<value><![CDATA[Als er geen domein naam is geconfigureerd, kunt u een IP adres specificeren, voeg het volledige pad toe naar de Concourse Suite Community Edition web applicatie]]></value>
 </param>
 <param name="admin.timeout.text">
 <value><![CDATA[De sessie timeout is de tijd waarna een gebruiker automatisch wordt uitgelogd indien hij niet meer actief is in het systeem]]></value>
@@ -8286,7 +8286,7 @@ aangemaakt kunt u een gedeelde map aanmakken naar de volgende URL:]]></value>
 <value><![CDATA[Kleine Afbeelding]]></value>
 </param>
 <param name="admin.modifyLicense.contactForUpgrade.text">
-<value><![CDATA[Contact ${url}www.centriccrm.com${end} voor upgrade informatie]]></value>
+<value><![CDATA[Contact ${url}www.concursive.com${end} voor upgrade informatie]]></value>
 </param>
 <param name="admin.modifyEmailAddress">
 <value><![CDATA[Aanpassen Server Email Adres]]></value>
@@ -8370,7 +8370,7 @@ aangemaakt kunt u een gedeelde map aanmakken naar de volgende URL:]]></value>
 <value><![CDATA[Lijst Naam]]></value>
 </param>
 <param name="admin.license.text">
-<value><![CDATA[Elke Centric CRM aplicatie moet een licentie overeenkomst bevatten van Dark Horse Ventures.
+<value><![CDATA[Elke Concourse Suite Community Edition aplicatie moet een licentie overeenkomst bevatten van Concursive Corporation.
 Als er wijzigingen zijn gemaakt aan de licentie bijvoorbeeld omdat,
 Bijvoorbeeld omdat additionele seats zijn gekocht, dan moet de geinstalleerde worden geupdate om 
 deze wijzigingen te reflecteren.]]></value>
@@ -8424,7 +8424,7 @@ deze wijzigingen te reflecteren.]]></value>
 <value><![CDATA[--------Item Lijst------]]></value>
 </param>
 <param name="admin.faxServer.text">
-<value><![CDATA[Welke Fax server moet Centric CRM gebruiken? </b><br /> Gebruikers kunnen dan vervolgens faxen versturen via Centric CRM. <br /><font color="red">*</font> De HylaFax server applicatie benodigd Linux of Unix. <br/> De fax component verwacht een juist geconfigureerde ${server}HylaFax${end} server inclusief fax hardware.]]></value>
+<value><![CDATA[Welke Fax server moet Concourse Suite Community Edition gebruiken? </b><br /> Gebruikers kunnen dan vervolgens faxen versturen via Concourse Suite Community Edition. <br /><font color="red">*</font> De HylaFax server applicatie benodigd Linux of Unix. <br/> De fax component verwacht een juist geconfigureerde ${server}HylaFax${end} server inclusief fax hardware.]]></value>
 </param>
 <param name="admin.faxServer.note.1">
 <value><![CDATA[De gespecificeerde server moet het toestaan om Faxen te versturen]]></value>
@@ -8511,7 +8511,7 @@ deze wijzigingen te reflecteren.]]></value>
 <value><![CDATA[Drop-down Box]]></value>
 </param>
 <param name="admin.emailAddress.question">
-<value><![CDATA[Welk email adres moet worden opgenomen in het VERZENDER veld van alle emails verstuurd door Centric CRM?]]></value>
+<value><![CDATA[Welk email adres moet worden opgenomen in het VERZENDER veld van alle emails verstuurd door Concourse Suite Community Edition?]]></value>
 </param>
 <param name="admin.edition">
 <value><![CDATA[Editie]]></value>
@@ -8595,13 +8595,13 @@ deze wijzigingen te reflecteren.]]></value>
 <value><![CDATA[Configuratie]]></value>
 </param>
 <param name="admin.confirm.alert">
-<value><![CDATA[Centric CRM: Waarschuwing]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Waarschuwing]]></value>
 </param>
 <param name="admin.configurePermissions.text">
 <value><![CDATA[Configureer permissies voor deze rol.]]></value>
 </param>
 <param name="admin.confirm.title">
-<value><![CDATA[Centric CRM: Bevestig]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Bevestig]]></value>
 </param>
 <param name="admin.configureOptions">
 <value><![CDATA[Configuratie Opties]]></value>
@@ -8649,7 +8649,7 @@ deze wijzigingen te reflecteren.]]></value>
 <value><![CDATA[Contact Wijzigen]]></value>
 </param>
 <param name="admin.centricCrmUrl">
-<value><![CDATA[Centric CRM URL]]></value>
+<value><![CDATA[Concourse Suite Community Edition URL]]></value>
 </param>
 <param name="admin.clearContact">
 <value><![CDATA[Contact Schonen]]></value>
@@ -8910,7 +8910,7 @@ deze wijzigingen te reflecteren.]]></value>
 <value><![CDATA[Selecteer minimaal een contact om het bericht naar te verzenden]]></value>
 </param>
 <param name="accounts.contacts.unableToMoveHeader">
-<value><![CDATA[Dit contact kan niet verplaatst worden naar een andere Klant omdat het de volgende afhankelijkheden heeft binnen Centric CRM:
+<value><![CDATA[Dit contact kan niet verplaatst worden naar een andere Klant omdat het de volgende afhankelijkheden heeft binnen Concourse Suite Community Edition:
 Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]]></value>
 </param>
 <param name="contacts.noContactPhoneNumberFound">
@@ -8971,7 +8971,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Tekst Zoeken]]></value>
 </param>
 <param name="actionplan.dependencies">
-<value><![CDATA[Het actie plan dat u wil verwijderen heeft de volgende afhankelijkheden in Centric CRM:]]></value>
+<value><![CDATA[Het actie plan dat u wil verwijderen heeft de volgende afhankelijkheden in Concourse Suite Community Edition:]]></value>
 </param>
 <param name="categories.categoriesForSite">
 <value><![CDATA[Site Categoriën]]></value>
@@ -8983,7 +8983,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Organisatie:]]></value>
 </param>
 <param name="admin.confirm.alert.message">
-<value><![CDATA[De lijst kan niet worden geupdate, omdat de volgende categoriën afhankelijkheden hebben in Centric CRM:]]></value>
+<value><![CDATA[De lijst kan niet worden geupdate, omdat de volgende categoriën afhankelijkheden hebben in Concourse Suite Community Edition:]]></value>
 </param>
 <param name="accounts.accounts_add.segment">
 <value><![CDATA[Segment]]></value>
@@ -8995,7 +8995,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Lid van een specifieke Afdeling]]></value>
 </param>
 <param name="admin.confirm.categories.header">
-<value><![CDATA[De volgende categoriën hebben afhankelijkheden binnen Centric CRM:]]></value>
+<value><![CDATA[De volgende categoriën hebben afhankelijkheden binnen Concourse Suite Community Edition:]]></value>
 </param>
 <param name="accounts.contacts.opportunities.folders.Permission">
 <value><![CDATA[Contact Opportunity Mappen]]></value>
@@ -10908,7 +10908,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Werk Actie Plan]]></value>
 </param>
 <param name="actionstep.dependencies">
-<value><![CDATA[De actie stap die u wil verwijderen heeft de volgende afhankelijkheden binnen Centric CRM]]></value>
+<value><![CDATA[De actie stap die u wil verwijderen heeft de volgende afhankelijkheden binnen Concourse Suite Community Edition]]></value>
 </param>
 <param name="admin.actionPlan.addPhaseAfterPhase.text">
 <value><![CDATA[Een fase toevoegen achter deze fase]]></value>
@@ -11031,7 +11031,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Uw website bezoekers kunnen makkelijker kennis nemen van uw producten en services door voorbeelden van dit werk toe te voegen. Organiseer de voorbeelden door middel van categorieën. U kunt zoveel categorieën gebruiken als u zelf wenst, en categorieën binnen categorieën gebruiken.]]></value>
 </param>
 <param name="confirmreverttolead.title">
-<value><![CDATA[Centric CRM: Bevestig terugkeren naar Lead]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Bevestig terugkeren naar Lead]]></value>
 </param>
 <param name="accounts.accounts_contacts_add.ContactDetails">
 <value><![CDATA[Details Contact]]></value>
@@ -11166,7 +11166,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Object Class:]]></value>
 </param>
 <param name="centriccrm.accounts">
-<value><![CDATA[Centric CRM Accounts]]></value>
+<value><![CDATA[Concourse Suite Community Edition Accounts]]></value>
 </param>
 <param name="accounts.accountasset_include.ServiceContractNumber">
 <value><![CDATA[Service Contract Nummer]]></value>
@@ -11385,7 +11385,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Gebruikers Groep:]]></value>
 </param>
 <param name="contact.object.example">
-<value><![CDATA[Enterprise Centric CRM voor 2005 (Opp)]]></value>
+<value><![CDATA[Enterprise Concourse Suite Community Edition voor 2005 (Opp)]]></value>
 </param>
 <param name="contacts.NoInstantMessageAdresses">
 <value><![CDATA[Geen instant Message adres ingevoerd]]></value>
@@ -11445,7 +11445,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Eigenaar van de volgende stap]]></value>
 </param>
 <param name="actionphase.dependencies">
-<value><![CDATA[De actie fase die u wil verwijderen heeft de volgende afhankelijkheden binnen Centric CRM]]></value>
+<value><![CDATA[De actie fase die u wil verwijderen heeft de volgende afhankelijkheden binnen Concourse Suite Community Edition]]></value>
 </param>
 <param name="actionPlan.actionPlan.colon">
 <value><![CDATA[Actie Plan:]]></value>
@@ -11532,7 +11532,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Leads Dashboard]]></value>
 </param>
 <param name="setup.centricCRMLDAPTest">
-<value><![CDATA[Centric CRM LDAP Test]]></value>
+<value><![CDATA[Concourse Suite Community Edition LDAP Test]]></value>
 </param>
 <param name="setup.ldap">
 <value><![CDATA[LDAP Server]]></value>
@@ -11625,7 +11625,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Gebruiker verplichten om een Klant aan te maken of bij te voegen]]></value>
 </param>
 <param name="confirmdelete.account.opps.delete">
-<value><![CDATA[Centric CRM: Klant Management Opportunities]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Klant Management Opportunities]]></value>
 </param>
 <param name="accounts.accounts_add.AddressLine4">
 <value><![CDATA[Adres 4]]></value>
@@ -11730,7 +11730,7 @@ Verwijder of wijs de afhankelijkheid opnieuw toe om dit contact te verplaatsen ]
 <value><![CDATA[Defecten Bekijken]]></value>
 </param>
 <param name="confirmdelete.ticketActionPlansCanNotRevertAccounts">
-<value><![CDATA[Ticket Actie Plannen kunnen niet worden gebruikt om Klanten terug te verwijzen naar Leads binnen Centric CRM]]></value>
+<value><![CDATA[Ticket Actie Plannen kunnen niet worden gebruikt om Klanten terug te verwijzen naar Leads binnen Concourse Suite Community Edition]]></value>
 </param>
 <param name="contacts.companydirectory_confirm_importupload.Import">
 <value><![CDATA[Importeren]]></value>

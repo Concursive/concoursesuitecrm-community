@@ -206,7 +206,7 @@
 <value><![CDATA[Nome do Usuário:]]></value>
 </param>
 <param name="admin.ldap.useCentricLogin">
-<value><![CDATA[Usar login de usuários Centric CRM]]></value>
+<value><![CDATA[Usar login de usuários Concourse Suite Community Edition]]></value>
 </param>
 <param name="admin.ldap.url">
 <value><![CDATA[URL do Servidor LDAP]]></value>
@@ -259,7 +259,7 @@
 <param name="errors.toAddNewUser.points">
 <value><![CDATA[${li}Um usuário adicional poderá ser incluído se um usuário que não esteja usando o sistema for desabiliado ou${sli}
       ${li}Compre uma licença que amplie o múmero máximo de usuários${sli}
-      ${li}Para mais informações acesse ${urlStart}www.centriccrm.com${urlEnd}${sli}]]></value>
+      ${li}Para mais informações acesse ${urlStart}www.concursive.com${urlEnd}${sli}]]></value>
 </param>
 <param name="pagedListInfo.pagedListStatus.AccountContacts">
 <value><![CDATA[Contatos da Empresa]]></value>
@@ -1087,7 +1087,7 @@
 <value><![CDATA[Add Group]]></value>
 </param>
 <param name="usergroup.dependencies">
-<value><![CDATA[The group you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The group you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="usergroup.assignedGroup">
 <value><![CDATA[Assigned Group]]></value>
@@ -1236,7 +1236,7 @@
 <value><![CDATA[LDAP Server]]></value>
 </param>
 <param name="setup.centricCRMLDAPTest">
-<value><![CDATA[Centric CRM LDAP Test]]></value>
+<value><![CDATA[Concourse Suite Community Edition LDAP Test]]></value>
 </param>
 <param name="sales.leadsDashboard">
 <value><![CDATA[Leads Dashboard]]></value>
@@ -1530,7 +1530,7 @@
 <value><![CDATA[No action plan editors to configure.]]></value>
 </param>
 <param name="admin.ldap.useUserEmail">
-<value><![CDATA[Lookup user's primary email from Centric CRM records]]></value>
+<value><![CDATA[Lookup user's primary email from Concourse Suite Community Edition records]]></value>
 </param>
 <param name="admin.ldap.userMapping">
 <value><![CDATA[User Mapping:]]></value>
@@ -1614,7 +1614,7 @@
 <value><![CDATA[Add a Phase after this Phase]]></value>
 </param>
 <param name="actionstep.dependencies">
-<value><![CDATA[The action step you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The action step you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="actionPlan.workActionPlan">
 <value><![CDATA[Work Action Plan]]></value>
@@ -1734,7 +1734,7 @@
 <value><![CDATA[Disapprove]]></value>
 </param>
 <param name="actionplan.dependencies">
-<value><![CDATA[The action plan you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The action plan you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="actionPlan.attachOpportunity.text">
 <value><![CDATA[Attach Opportunity]]></value>
@@ -1794,7 +1794,7 @@
 <value><![CDATA[Activation Date]]></value>
 </param>
 <param name="actionphase.dependencies">
-<value><![CDATA[The action phase you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The action phase you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="actionItem.updateStep.ownerNext">
 <value><![CDATA[Owner of the next step]]></value>
@@ -2022,7 +2022,7 @@
 <value><![CDATA[Fechar ticket]]></value>
 </param>
 <param name="accounts.contacts.moveTitle">
-<value><![CDATA[Centric CRM: Mover Contato]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Mover Contato]]></value>
 </param>
 <param name="accounts.Action">
 <value><![CDATA[Ação]]></value>
@@ -2157,7 +2157,7 @@
 <value><![CDATA[Contato:]]></value>
 </param>
 <param name="admin.emailServer.question">
-<value><![CDATA[Qual servidor de email o Centric CRM deve usar?${bold}${break}O Centric CRM envia por email várias notificações aos usuários. Também pode ser usado para enviar emails para contatos que foram inseridos nos módulos Contatos e Empresas.]]></value>
+<value><![CDATA[Qual servidor de email o Concourse Suite Community Edition deve usar?${bold}${break}O Concourse Suite Community Edition envia por email várias notificações aos usuários. Também pode ser usado para enviar emails para contatos que foram inseridos nos módulos Contatos e Empresas.]]></value>
 </param>
 <param name="admin.emailServer.note">
 <value><![CDATA[O servidor especificado deve permitir este servidor transmitir email]]></value>
@@ -2166,7 +2166,7 @@
 <value><![CDATA[(ex: mail.suaempresa.com.br ou 127.0.0.1)]]></value>
 </param>
 <param name="admin.emailAddress.question">
-<value><![CDATA[Qual endereço de email deve estar no campo "DE" (remetente) de todos os emails enviados pelo Centric CRM?]]></value>
+<value><![CDATA[Qual endereço de email deve estar no campo "DE" (remetente) de todos os emails enviados pelo Concourse Suite Community Edition?]]></value>
 </param>
 <param name="admin.emailAddress.example">
 <value><![CDATA[(ex: centric_crm@suaempresa.com.br)]]></value>
@@ -2505,7 +2505,7 @@
 <value><![CDATA[Editar Tópico]]></value>
 </param>
 <param name="accounts.contacts.unableToMoveHeader">
-<value><![CDATA[        Este contato não pode ser movido para uma empresa diferente porque possui as seguintes dependências no Centric CRM:
+<value><![CDATA[        Este contato não pode ser movido para uma empresa diferente porque possui as seguintes dependências no Concourse Suite Community Edition:
         Por favor, exclua ou reatribua as dependências para mover este contato]]></value>
 </param>
 <param name="campaign.itemsToSelect.text.1">
@@ -3306,7 +3306,7 @@
 </param>
 <param name="ticket.problem.userDisabled">
 <value><![CDATA[
-      O usuário Centric CRM  ${thisUser.username} foi desabilitado por ${thisRec.username}.
+      O usuário Concourse Suite Community Edition  ${thisUser.username} foi desabilitado por ${thisRec.username}.
       Como gerente direto de ${thisUser.username}, você foi notificado. É essencial que
       todos os dados ainda associados diretamente a este usuário desabilitado sejam reatribuídos assim que possível.
     ]]></value>
@@ -3430,7 +3430,7 @@
 </param>
 <param name="object.validation.actionError.unspecifiedErrorRejectedRegistration">
 <value><![CDATA[
-      Erro não especificado: O servidor Centric CRM rejeitou o registro ${thisStatus.message} ]]></value>
+      Erro não especificado: O servidor Concourse Suite Community Edition rejeitou o registro ${thisStatus.message} ]]></value>
 </param>
 <param name="object.validation.actionError.reportCancellation">
 <value><![CDATA[O relatório não pôde ser cancelado porque o processamento já foi iniciado]]></value>
@@ -3488,7 +3488,7 @@
 <value><![CDATA[A categoria não pôde ser excluída devido à integridade referencial.]]></value>
 </param>
 <param name="object.validation.actionError.unspecifiedErrorNoResponse">
-<value><![CDATA[Erro não especificado: O servidor Centric CRM não respondeu ]]></value>
+<value><![CDATA[Erro não especificado: O servidor Concourse Suite Community Edition não respondeu ]]></value>
 </param>
 <param name="object.validation.actionError.contactNoEmail">
 <value><![CDATA[Este contato não possui um endereço de email válido associado]]></value>
@@ -3722,13 +3722,13 @@
 <value><![CDATA[Uma perspectiva duplicada não pode ser criada]]></value>
 </param>
 <param name="setup.installationIssues.license.text">
-<value><![CDATA[Se você perdeu sua licença ou está instalando o Centric CRM em um servidor diferente, então você pode ${license}requisitar uma nova licença${endLicense} para ser enviada por email]]></value>
+<value><![CDATA[Se você perdeu sua licença ou está instalando o Concourse Suite Community Edition em um servidor diferente, então você pode ${license}requisitar uma nova licença${endLicense} para ser enviada por email]]></value>
 </param>
 <param name="setup.configureServer.faxingComponent.text">
 <value><![CDATA[O componente de fax requer um servidor ${server}HylaFax${end} corretamente configurado, incluindo o hardware do fax.]]></value>
 </param>
 <param name="setup.configureDatabase.url.text">
-<value><![CDATA[O Centric CRM funciona melhor com o servidor de banco de dados Open Source ${postgres}PostgreSQL${end}. Você também pode utilizar o ${mssql}Microsoft SQL Server${end}.]]></value>
+<value><![CDATA[O Concourse Suite Community Edition funciona melhor com o servidor de banco de dados Open Source ${postgres}PostgreSQL${end}. Você também pode utilizar o ${mssql}Microsoft SQL Server${end}.]]></value>
 </param>
 <param name="reports.reportAdded.text">
 <value><![CDATA[O seguinte relatório foi incluído na fila de relatórios. O relatório pode ser recuperado da ${report}fila${end} depois que o servidor finalizar o seu processamento.]]></value>
@@ -3899,7 +3899,7 @@
 <value><![CDATA[Várias marcas retidas por seus respectivos proprietários.]]></value>
 </param>
 <param name="templates.CentricCRM">
-<value><![CDATA[Centric CRM]]></value>
+<value><![CDATA[Concourse Suite Community Edition]]></value>
 </param>
 <param name="tasks.linkContact">
 <value><![CDATA[Vincular Contato]]></value>
@@ -3968,16 +3968,16 @@
 <value><![CDATA[Requisite uma <b>nova</b> licença para esta instalação<br />]]></value>
 </param>
 <param name="setup.welcome.setupProcessGuide.text">
-<value><![CDATA[É necessário registrar esta aplicação na Dark Horse Ventures antes da instalação, se você já tem uma licença ou não.  Nós fizemos o processo de registro muito simples:<ul><li>Uma conexão Internet é requerida antes de continuar</li><li>A versão livre disponível do Centric CRM autorizará este sistema para um máximo de cinco (5) usuários</li><li>Você deve concordar com o Contrato de Licenciamento do Centric CRM</li><li>O administrador do Centric CRM receberá informações sobre as atualizações quanto estas forem disponibilizadas</li></ul>]]></value>
+<value><![CDATA[É necessário registrar esta aplicação na Concursive Corporation antes da instalação, se você já tem uma licença ou não.  Nós fizemos o processo de registro muito simples:<ul><li>Uma conexão Internet é requerida antes de continuar</li><li>A versão livre disponível do Concourse Suite Community Edition autorizará este sistema para um máximo de cinco (5) usuários</li><li>Você deve concordar com o Contrato de Licenciamento do Concourse Suite Community Edition</li><li>O administrador do Concourse Suite Community Edition receberá informações sobre as atualizações quanto estas forem disponibilizadas</li></ul>]]></value>
 </param>
 <param name="setup.welcome.setupProcessGuide.notes">
-<value><![CDATA[A fim de iniciar o uso do Centric CRM, o processo de instalação irá guiá-lo através de vários passos.<br /><br />Embora a instalação possa ser concluída em apenas alguns minutos, você terá a opção, a qualquer tempo durante a instalação, de continuar em um momento posterior.<br /><br />]]></value>
+<value><![CDATA[A fim de iniciar o uso do Concourse Suite Community Edition, o processo de instalação irá guiá-lo através de vários passos.<br /><br />Embora a instalação possa ser concluída em apenas alguns minutos, você terá a opção, a qualquer tempo durante a instalação, de continuar em um momento posterior.<br /><br />]]></value>
 </param>
 <param name="setup.welcomeToCentricCRM.label">
-<value><![CDATA[Bem-vindo ao Centric CRM]]></value>
+<value><![CDATA[Bem-vindo ao Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.setupCentricCRMAdminUserAccount">
-<value><![CDATA[Instalar a conta do usuário administrativo do Centric CRM]]></value>
+<value><![CDATA[Instalar a conta do usuário administrativo do Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.step4.colon">
 <value><![CDATA[Passo 4:]]></value>
@@ -4004,7 +4004,7 @@
 <value><![CDATA[A configuração inclui os seguintes passos:]]></value>
 </param>
 <param name="setup.timeToConfigureSystemSettings.text">
-<value><![CDATA[Agora é hora de configurar alguns parâmetros do sistema antes que você possa começar a usar o Centric CRM.]]></value>
+<value><![CDATA[Agora é hora de configurar alguns parâmetros do sistema antes que você possa começar a usar o Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.licenseAccepted">
 <value><![CDATA[Licença aceita!]]></value>
@@ -4022,7 +4022,7 @@
 <value><![CDATA[A licença pode somente ser usada no sistema que a requisitou]]></value>
 </param>
 <param name="setup.ifRegisteredLicenceByEmail.text">
-<value><![CDATA[Se você já está registrado no Centric CRM, você deveria ter recebido um arquivo de licença por email.]]></value>
+<value><![CDATA[Se você já está registrado no Concourse Suite Community Edition, você deveria ter recebido um arquivo de licença por email.]]></value>
 </param>
 <param name="setup.afterBackupContinueUpgrade.text">
 <value><![CDATA[Se você efetuou o backup de seu sistema e é um administrador, continue com o processo de atualização.]]></value>
@@ -4031,7 +4031,7 @@
 <value><![CDATA[Conectar com uma conta de administrador]]></value>
 </param>
 <param name="setup.administrativeAccessAvailable.text">
-<value><![CDATA[<ul><li>Efetuar o backup o banco de dados do Centric CRM</li><li>Efetuar o backup da biblioteca de arquivos do Centric CRM</li></ul>]]></value>
+<value><![CDATA[<ul><li>Efetuar o backup o banco de dados do Concourse Suite Community Edition</li><li>Efetuar o backup da biblioteca de arquivos do Concourse Suite Community Edition</li></ul>]]></value>
 </param>
 <param name="setup.administrativeAccessAvailable.label">
 <value><![CDATA[Se você tiver o acesso administrativo, então será requisitado para se conectar e
@@ -4039,13 +4039,13 @@
       os seguintes passos antes de continuar:]]></value>
 </param>
 <param name="setup.reasonsToReceiveMessage.text">
-<value><![CDATA[<ul><li>Você é um administrador no processo de atualização do Centric CRM e está pronto para prosseguir com o upgrade.</li><li>Voê é um usuário que aguarda estar apto a se conectar, entretanto, neste momento parece que o software está sendo atualizado pelo administrador. Se esta janela persistir, você pode rever os emails recebidos de seu administrador ou pode contatar seu administrador para mais informações.</li><li>Se uma atualização não foi planejada, então pode haver uma questão da configuração que precisa ser solucionada. Se este for o caso, então você pode tentar prosseguir com o processo de atualização para verificar sua instalação.</li></ul>]]></value>
+<value><![CDATA[<ul><li>Você é um administrador no processo de atualização do Concourse Suite Community Edition e está pronto para prosseguir com o upgrade.</li><li>Voê é um usuário que aguarda estar apto a se conectar, entretanto, neste momento parece que o software está sendo atualizado pelo administrador. Se esta janela persistir, você pode rever os emails recebidos de seu administrador ou pode contatar seu administrador para mais informações.</li><li>Se uma atualização não foi planejada, então pode haver uma questão da configuração que precisa ser solucionada. Se este for o caso, então você pode tentar prosseguir com o processo de atualização para verificar sua instalação.</li></ul>]]></value>
 </param>
 <param name="setup.reasonsToReceiveMessage.label">
 <value><![CDATA[Você está recebendo esta mensagem por uma das diversas razões:]]></value>
 </param>
 <param name="setup.installedVersionNeedsUpgrade.text">
-<value><![CDATA[A versão instalada do Centric CRM precisa ser atualizada.]]></value>
+<value><![CDATA[A versão instalada do Concourse Suite Community Edition precisa ser atualizada.]]></value>
 </param>
 <param name="setup.noScriptsCompletedSuccessfully">
 <value><![CDATA[Nenhum script concluído com sucesso]]></value>
@@ -4057,7 +4057,7 @@
 <value><![CDATA[Log de Erro]]></value>
 </param>
 <param name="setup.restoreDatabaseToBackup.text">
-<value><![CDATA[Se você tem pressa de ter o sistema funcionando, você pode restaurar a base de dados de seu último backup e então colocar a versão anterior do Centric CRM em funcionamento.]]></value>
+<value><![CDATA[Se você tem pressa de ter o sistema funcionando, você pode restaurar a base de dados de seu último backup e então colocar a versão anterior do Concourse Suite Community Edition em funcionamento.]]></value>
 </param>
 <param name="setup.suggestions">
 <value><![CDATA[Sugestões]]></value>
@@ -4066,13 +4066,13 @@
 <value><![CDATA[Seu banco de dados pode estar em um estado inconsistente. Você poderia procurar por auxílio, o que poderia ter dado errado. Esta página pode conter alguma informação útil durante essa análise.]]></value>
 </param>
 <param name="setup.upgradeFailed">
-<value><![CDATA[A atualização do Centric CRM falhou!]]></value>
+<value><![CDATA[A atualização do Concourse Suite Community Edition falhou!]]></value>
 </param>
 <param name="setup.errorOccuredDuringUpgrade">
 <value><![CDATA[Um erro correu durante a atualização!]]></value>
 </param>
 <param name="button.continueToCentricCRMR">
-<value><![CDATA[Continuar para Centric CRM >]]></value>
+<value><![CDATA[Continuar para Concourse Suite Community Edition >]]></value>
 </param>
 <param name="campaign.lastResponseReceived.colon">
 <value><![CDATA[Última Resposta Recebida: ${time}]]></value>
@@ -4097,10 +4097,10 @@
 <value><![CDATA[O sistema foi atualizado e os usuários podem se conectar agora. Siga por favor estes passos para se assegurar que o sistema esteja operacional]]></value>
 </param>
 <param name="setup.centricCRMUpgradeComplete">
-<value><![CDATA[A atualização do Centric CRM foi concluída!]]></value>
+<value><![CDATA[A atualização do Concourse Suite Community Edition foi concluída!]]></value>
 </param>
 <param name="setup.pleaseWaitUpgrading.text">
-<value><![CDATA[Por favor aguarde... atualizando o Centric CRM!]]></value>
+<value><![CDATA[Por favor aguarde... atualizando o Concourse Suite Community Edition!]]></value>
 </param>
 <param name="setup.systemAlreadyUpgraded.text">
 <value><![CDATA[Este sistema parece já ter sido atualizado. Continuando, marcará este sistema como atualizado, permitindo usuários se conectarem.]]></value>
@@ -4133,7 +4133,7 @@
 <value><![CDATA[Uma confirmação será enviada por email, bem como o arquivo de licença para este sistema.]]></value>
 </param>
 <param name="setup.registrationInformationSubmitted.text">
-<value><![CDATA[Suas informações de registro foram submetidas para a Dark Horse Ventures, LLC.]]></value>
+<value><![CDATA[Suas informações de registro foram submetidas para a Concursive Corporation.]]></value>
 </param>
 <param name="setup.registrationSent">
 <value><![CDATA[Registro enviado]]></value>
@@ -4172,10 +4172,10 @@
 <value><![CDATA[Um perfil o permitirá gerenciar esta conta online e é simplesmente um nome que você gostaria de referir para este sistema.]]></value>
 </param>
 <param name="setup.darkHorseVenturesTeam">
-<value><![CDATA[Equipe da Dark Horse Ventures]]></value>
+<value><![CDATA[Equipe da Concursive Corporation]]></value>
 </param>
 <param name="setup.requestRegistrationLicense.text">
-<value><![CDATA[<ul><li>A informação abaixo será enviada para a Dark Horse Ventures e processada</li><li>Um arquivo de licença será enviado por email para o endereço especificado abaixo</li><li>De boa fé, a Dark Horse Ventures fornece este software e o autoriza a usá-lo de acordo com o termo de licença</li><li>Endereços de email anônimos não serão aceitos no processamento dos registros</li><li>Suas informações de endereço de email e de contato não serão fornecidas a terceiros sem o seu consentimento</li></ul>]]></value>
+<value><![CDATA[<ul><li>A informação abaixo será enviada para a Concursive Corporation e processada</li><li>Um arquivo de licença será enviado por email para o endereço especificado abaixo</li><li>De boa fé, a Concursive Corporation fornece este software e o autoriza a usá-lo de acordo com o termo de licença</li><li>Endereços de email anônimos não serão aceitos no processamento dos registros</li><li>Suas informações de endereço de email e de contato não serão fornecidas a terceiros sem o seu consentimento</li></ul>]]></value>
 </param>
 <param name="setup.requestRegistrationLicense.label">
 <value><![CDATA[Para solicitar uma licença de registro, preencha as seguintes informações.]]></value>
@@ -4196,13 +4196,13 @@
 <value><![CDATA[O passo seguinte é conectar!]]></value>
 </param>
 <param name="setup.jspPrecompile.note">
-<value><![CDATA[Como os JavaServerPages ainda não foram compilados, você deve precompilar os JSPs para que a aplicação trabalhe sem atrasos de complilação. A compilação será executada em background e você poderá continuar usando o Centric CRM.]]></value>
+<value><![CDATA[Como os JavaServerPages ainda não foram compilados, você deve precompilar os JSPs para que a aplicação trabalhe sem atrasos de complilação. A compilação será executada em background e você poderá continuar usando o Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.furtherConfiguration.text">
-<value><![CDATA[Configurações adicionais podem ser efetuadas clicando na aba Administração do Sistema no Centric CRM.]]></value>
+<value><![CDATA[Configurações adicionais podem ser efetuadas clicando na aba Administração do Sistema no Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.installationComplete.text">
-<value><![CDATA[A instalação está completa e você pode agora começar a usar o Centric CRM.]]></value>
+<value><![CDATA[A instalação está completa e você pode agora começar a usar o Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.loginAccountCreated">
 <value><![CDATA[Conta de conexão criada!]]></value>
@@ -4223,21 +4223,21 @@
 <value><![CDATA[Nome da Empresa:]]></value>
 </param>
 <param name="setup.createAdministratorAccount.text">
-<value><![CDATA[Criar uma conta de administrador Centric CRM]]></value>
+<value><![CDATA[Criar uma conta de administrador Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.followingInformationAppearsEmployees.text">
-<value><![CDATA[A seguinte informação aparecerá no Centric CRM em Colaboradores e pode ser modificada posteriormente se necessário.]]></value>
+<value><![CDATA[A seguinte informação aparecerá no Concourse Suite Community Edition em Colaboradores e pode ser modificada posteriormente se necessário.]]></value>
 </param>
 <param name="setup.administratorResponsibilities.text">
-<value><![CDATA[Um usuário administrativo é exigido para gerenciar o Centric CRM.  O administrador
+<value><![CDATA[Um usuário administrativo é exigido para gerenciar o Concourse Suite Community Edition.  O administrador
       é primeiramente responsável por incluir usuários, configurar permissões de usuários
-      e personalizar o Centric CRM para sua organização.]]></value>
+      e personalizar o Concourse Suite Community Edition para sua organização.]]></value>
 </param>
 <param name="setup.centricCRM.step4of4">
-<value><![CDATA[Configuração do Centric CRM (Passo 4 de 4)<br />Configuração de Usuário]]></value>
+<value><![CDATA[Configuração do Concourse Suite Community Edition (Passo 4 de 4)<br />Configuração de Usuário]]></value>
 </param>
 <param name="setup.nextStepDatabaseConnection.text">
-<value><![CDATA[O próximo passo é configurar e verificar a conexão do banco de dados do Centric CRM.]]></value>
+<value><![CDATA[O próximo passo é configurar e verificar a conexão do banco de dados do Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.server.colon">
 <value><![CDATA[Servidor:]]></value>
@@ -4258,7 +4258,7 @@
 <value><![CDATA[Email falhou.  O transporte do email retornou o seguinte erro:]]></value>
 </param>
 <param name="setup.centricCRMMailTest">
-<value><![CDATA[Teste de Correspondência do Centric CRM]]></value>
+<value><![CDATA[Teste de Correspondência do Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.faxServer.example">
 <value><![CDATA[(ex: fax.suaempresa.com)]]></value>
@@ -4267,10 +4267,10 @@
 <value><![CDATA[<ul><li>O servidor especificado deve permitir este servidor enviar faxes</li><li>Deixe em banco se o serviço de fax não for usado</li></ul>]]></value>
 </param>
 <param name="setup.faxServer.question">
-<value><![CDATA[Qual servidor de fax o Centric CRM deve usar?]]></value>
+<value><![CDATA[Qual servidor de fax o Concourse Suite Community Edition deve usar?]]></value>
 </param>
 <param name="setup.userCapabilitySendFaxes.text">
-<value><![CDATA[Usuários podem ter a capacidade para enviar faxes usando o Centric CRM.]]></value>
+<value><![CDATA[Usuários podem ter a capacidade para enviar faxes usando o Concourse Suite Community Edition.]]></value>
 </param>
 <param name="project.backToForum">
 <value><![CDATA[Voltar para Fórum]]></value>
@@ -4282,7 +4282,7 @@
 <value><![CDATA[(ex: crm.suaempresa.com${contextPath})]]></value>
 </param>
 <param name="setup.systemEmailURL.text">
-<value><![CDATA[<ul><li>A URL deve existir em seu DNS para que os usuários possam se conectar</li><li>Opcionalmente, você pode especificar o endereço IP</li><li>Incluir o caminho completo da URL executar a aplicação web Centric CRM, excluindo HTTP:// ou HTTPS://</li><li>Clicando o botão Teste tentará trazer uma página de confirmação do Centric CRM localizada neste servidor</li></ul>]]></value>
+<value><![CDATA[<ul><li>A URL deve existir em seu DNS para que os usuários possam se conectar</li><li>Opcionalmente, você pode especificar o endereço IP</li><li>Incluir o caminho completo da URL executar a aplicação web Concourse Suite Community Edition, excluindo HTTP:// ou HTTPS://</li><li>Clicando o botão Teste tentará trazer uma página de confirmação do Concourse Suite Community Edition localizada neste servidor</li></ul>]]></value>
 </param>
 <param name="setup.systemEmailURL.question">
 <value><![CDATA[Para emails do sistema, qual URL deve ser incluída para permitir o usuário voltar ao site?]]></value>
@@ -4297,13 +4297,13 @@
 <value><![CDATA[O servidor especificado deve permitir este servidor enviar email]]></value>
 </param>
 <param name="setup.emailServer.question">
-<value><![CDATA[O Centric CRM envia várias notificações aos usuários por email.  O Centric CRM também pode ser usado
-      para enviar email aos contatos que foram cadastrados no Centric CRM.<br>
-      Qual servidor de email o Centric CRM deve usar?]]></value>
+<value><![CDATA[O Concourse Suite Community Edition envia várias notificações aos usuários por email.  O Concourse Suite Community Edition também pode ser usado
+      para enviar email aos contatos que foram cadastrados no Concourse Suite Community Edition.<br>
+      Qual servidor de email o Concourse Suite Community Edition deve usar?]]></value>
 </param>
 <param name="setup.defaultCurrency.question">
-<value><![CDATA[Todo valor monetário no Centric CRM é atualmente padronizado para uma única moeda.
-      Qual moeda o Centric CRM deve usar?]]></value>
+<value><![CDATA[Todo valor monetário no Concourse Suite Community Edition é atualmente padronizado para uma única moeda.
+      Qual moeda o Concourse Suite Community Edition deve usar?]]></value>
 </param>
 <param name="setup.defaultCurrency">
 <value><![CDATA[Moeda Padrão]]></value>
@@ -4312,14 +4312,14 @@
 <value><![CDATA[País:]]></value>
 </param>
 <param name="setup.defaultCountry.question">
-<value><![CDATA[Qual país o Centric CRM deve usar como padrão para os endereços de correspondência?]]></value>
+<value><![CDATA[Qual país o Concourse Suite Community Edition deve usar como padrão para os endereços de correspondência?]]></value>
 </param>
 <param name="setup.defaultCountry">
 <value><![CDATA[País Padrão]]></value>
 </param>
 <param name="setup.defaultLocale.question">
-<value><![CDATA[Toda a formatação regional no Centric CRM é atualmente padronizada para uma única localidade.
-      Qual idioma e localidade o Centric CRM deve usar?]]></value>
+<value><![CDATA[Toda a formatação regional no Concourse Suite Community Edition é atualmente padronizada para uma única localidade.
+      Qual idioma e localidade o Concourse Suite Community Edition deve usar?]]></value>
 </param>
 <param name="setup.defaultLanguageLocale">
 <value><![CDATA[Idioma/Localidade Padrão]]></value>
@@ -4332,25 +4332,25 @@
       </ul>]]></value>
 </param>
 <param name="setup.defaultTimezone.question">
-<value><![CDATA[Cada usuário do Centric CRM pode configurar o fuso horário em que ele está atualmente.<br /> Qual deve ser o fuso horário padrão a ser configurado para os novos usuários?]]></value>
+<value><![CDATA[Cada usuário do Concourse Suite Community Edition pode configurar o fuso horário em que ele está atualmente.<br /> Qual deve ser o fuso horário padrão a ser configurado para os novos usuários?]]></value>
 </param>
 <param name="setup.serversServicesMustBeDefined.text">
-<value><![CDATA[O Centric CRM interage com vários servidores e serviços que devem ser definidos.]]></value>
+<value><![CDATA[O Concourse Suite Community Edition interage com vários servidores e serviços que devem ser definidos.]]></value>
 </param>
 <param name="setup.centricCRM.step2of4">
-<value><![CDATA[Configuração do Centric CRM (Passo 2 de 4)<br />Configuração do Servidor]]></value>
+<value><![CDATA[Configuração do Concourse Suite Community Edition (Passo 2 de 4)<br />Configuração do Servidor]]></value>
 </param>
 <param name="setup.rememberToMakeBackupsBeforeUpgrading.text">
 <value><![CDATA[Lembre-se de fazer os backups de seus dados antes de atualizá-lo.]]></value>
 </param>
 <param name="setup.centricCRMUpgrade">
-<value><![CDATA[Atualização do Centric CRM]]></value>
+<value><![CDATA[Atualização do Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.centricCRMHelp">
-<value><![CDATA[Ajuda do Centric CRM]]></value>
+<value><![CDATA[Ajuda do Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.centricCRMResources">
-<value><![CDATA[Recursos do Centric CRM]]></value>
+<value><![CDATA[Recursos do Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.postgreSQLHelp">
 <value><![CDATA[Ajuda do PostgreSQL]]></value>
@@ -4389,19 +4389,19 @@
 <value><![CDATA[Aprenda mais sobre nossos produtos]]></value>
 </param>
 <param name="setup.acquireRetainAndServiceCustomers.text">
-<value><![CDATA[Adquira, alugue e preste serviços aos seus clientes com o Centric CRM.]]></value>
+<value><![CDATA[Adquira, alugue e preste serviços aos seus clientes com o Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.youWereHere.label">
 <value><![CDATA[Você está aqui...]]></value>
 </param>
 <param name="setup.centricCRMInstallation">
-<value><![CDATA[Instalação do Centric CRM]]></value>
+<value><![CDATA[Instalação do Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.timeToConfigureServerSettings.text">
-<value><![CDATA[Agora deve-se configurar o servidor Centric CRM.]]></value>
+<value><![CDATA[Agora deve-se configurar o servidor Concourse Suite Community Edition.]]></value>
 </param>
 <param name="setup.centricCRMstoresUserDataAt.colon">
-<value><![CDATA[O Centric CRM armazenará agora o sistema e os dados do usuário em:]]></value>
+<value><![CDATA[O Concourse Suite Community Edition armazenará agora o sistema e os dados do usuário em:]]></value>
 </param>
 <param name="setup.fileLibraryCreated">
 <value><![CDATA[Biblioteca de Arquivos criada!]]></value>
@@ -4419,10 +4419,10 @@
 <value><![CDATA[<ul><li>Se o diretório alvo não existe, ele será criado</li><li>O diretório alvo deve ter um grande espaço livre de armazenagem para uploads</li><li>O diretório alvo deve ter permissão de escrita</li><li>Deve-se efetuar o backup do diretório alvo frequentemente para prevenir perda dos dados</li><li>O diretório alvo não deve estar localizado no caminho do servlet para realizar atualizações facilmente</li></ul>]]></value>
 </param>
 <param name="setup.usersFileStore.question">
-<value><![CDATA[Os usuários terão a capacidade para realizar upload e criar arquivos no servidor.<br />Onde o Centric CRM deve armazenar os arquivos que forem criados?]]></value>
+<value><![CDATA[Os usuários terão a capacidade para realizar upload e criar arquivos no servidor.<br />Onde o Concourse Suite Community Edition deve armazenar os arquivos que forem criados?]]></value>
 </param>
 <param name="setup.centricCRM.step1of4.text">
-<value><![CDATA[Configuração do Centric CRM (Passo 1 de 4)<br />Configuração da Biblioteca de Arquivos]]></value>
+<value><![CDATA[Configuração do Concourse Suite Community Edition (Passo 1 de 4)<br />Configuração da Biblioteca de Arquivos]]></value>
 </param>
 <param name="setup.pleaseWait.creatingDatabase.text">
 <value><![CDATA[Por favor aguarde... criando o banco de dados! Isto pode levar até 5 minutos...]]></value>
@@ -4434,7 +4434,7 @@
 <value><![CDATA[Conexão com o banco de dados bem sucedida!]]></value>
 </param>
 <param name="setup.createDatabaseTables.text">
-<value><![CDATA[O Centric CRM criará agora todas as tabelas necessárias do banco de dados e os dados iniciais na seguinte base de dados:]]></value>
+<value><![CDATA[O Concourse Suite Community Edition criará agora todas as tabelas necessárias do banco de dados e os dados iniciais na seguinte base de dados:]]></value>
 </param>
 <param name="button.backL">
 <value><![CDATA[< Voltar]]></value>
@@ -4443,7 +4443,7 @@
 <value><![CDATA[A etapa final é criar um usuário administrativo.]]></value>
 </param>
 <param name="setup.centricCRMDatabaseTables.text">
-<value><![CDATA[O Centric CRM tem agora todas as tabelas necessárias do banco de dados, assim como os dados iniciais instalados.]]></value>
+<value><![CDATA[O Concourse Suite Community Edition tem agora todas as tabelas necessárias do banco de dados, assim como os dados iniciais instalados.]]></value>
 </param>
 <param name="setup.databaseCreationSuccessful">
 <value><![CDATA[Criação do banco de dados bem sucedida!]]></value>
@@ -4488,10 +4488,10 @@
       </ul>]]></value>
 </param>
 <param name="setup.centricCRM.usesDatabase.text">
-<value><![CDATA[O Centric CRM armazena e recupera dados usando um banco de dados.]]></value>
+<value><![CDATA[O Concourse Suite Community Edition armazena e recupera dados usando um banco de dados.]]></value>
 </param>
 <param name="setup.configuration.step3to4">
-<value><![CDATA[Configuração do Centric CRM (Passo 3 de 4)<br />
+<value><![CDATA[Configuração do Concourse Suite Community Edition (Passo 3 de 4)<br />
       Instalação &amp; Configuração do Banco de Dados]]></value>
 </param>
 <param name="search.totalResultsInOpportunities.text">
@@ -5076,13 +5076,13 @@
 <value><![CDATA[Lead ID]]></value>
 </param>
 <param name="confirmreverttolead.title">
-<value><![CDATA[Centric CRM: Confirm Revert back to Lead]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Confirm Revert back to Lead]]></value>
 </param>
 <param name="confirmdelete.unableToRevertAccountsToLeads">
-<value><![CDATA[Unable to revert the account contacts back to leads because it has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[Unable to revert the account contacts back to leads because it has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.ticketActionPlansCanNotRevertAccounts">
-<value><![CDATA[Ticket Action Plans can not be used to revert Account Contacts to Leads within Centric CRM]]></value>
+<value><![CDATA[Ticket Action Plans can not be used to revert Account Contacts to Leads within Concourse Suite Community Edition]]></value>
 </param>
 <param name="communications.campaign.ActiveCampaign">
 <value><![CDATA[Active Campaign]]></value>
@@ -5091,7 +5091,7 @@
 <value><![CDATA[Resposta à Mensagem]]></value>
 </param>
 <param name="centriccrm.accounts">
-<value><![CDATA[Centric CRM Accounts]]></value>
+<value><![CDATA[Concourse Suite Community Edition Accounts]]></value>
 </param>
 <param name="campaigns.restartCampaign">
 <value><![CDATA[Restart Campaign]]></value>
@@ -7020,7 +7020,7 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[Endereço de Email]]></value>
 </param>
 <param name="quotes.dependencies">
-<value><![CDATA[A proposta a ser excluída possui as seguintes dependências no Centric CRM:]]></value>
+<value><![CDATA[A proposta a ser excluída possui as seguintes dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="quotes.deleteRelatedOrdersFirst">
 <value><![CDATA[Por favor, exclua qualquer pedido associado a esta proposta primeiro.]]></value>
@@ -7764,33 +7764,33 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[Exibir mais]]></value>
 </param>
 <param name="mail.body.crmRegistration">
-<value><![CDATA[      Obrigado por registrar o Centric CRM. ${crlf} ${crlf} 
+<value><![CDATA[      Obrigado por registrar o Concourse Suite Community Edition. ${crlf} ${crlf}
       Copie o código de registro completo do arquivo anexado 
-      (incluindo a expressão <licença>) no campo de validação da licença do Centric CRM. ${crlf} ${crlf} 
+      (incluindo a expressão <licença>) no campo de validação da licença do Concourse Suite Community Edition. ${crlf} ${crlf}
       Alguns programas de email podem ter problemas com anexos. Se isso ocorrer, por favor informe
-      o nome da aplicação cliente e do software servidor de emails para a Centric CRM. ${crlf} ${crlf} 
-      Equipe Centric CRM
+      o nome da aplicação cliente e do software servidor de emails para a Concourse Suite Community Edition. ${crlf} ${crlf}
+      Equipe Concourse Suite Community Edition
     ]]></value>
 </param>
 <param name="mail.body.accountEnabled">
 <value><![CDATA[Sua conta de auto-atendimento foi habilitada.<br /><br />]]></value>
 </param>
 <param name="mail.body.congratulations">
-<value><![CDATA[Parabéns, o sistema de mensagens do Centric CRM está funcionando.]]></value>
+<value><![CDATA[Parabéns, o sistema de mensagens do Concourse Suite Community Edition está funcionando.]]></value>
 </param>
 <param name="mail.quoteErrorMessage">
 <value><![CDATA[. O seguinte erro ocorreu durante o envio da proposta por email \r\n]]></value>
 </param>
 <param name="mail.body.sentBy">
-<value><![CDATA[A seguinte mensagem foi enviada para sua caixa de entrada no Centric CRM por]]></value>
+<value><![CDATA[A seguinte mensagem foi enviada para sua caixa de entrada no Concourse Suite Community Edition por]]></value>
 </param>
 <param name="mail.body.newLoginInformation">
-<value><![CDATA[      Esta mensagem detalha informações sobre sua conta no Centric CRM.<br /><br />
-      A senha de sua conta de usuário no Centric CRM foi reconfigurada por ${nameLastFirst}.<br /><br />
+<value><![CDATA[      Esta mensagem detalha informações sobre sua conta no Concourse Suite Community Edition.<br /><br />
+      A senha de sua conta de usuário no Concourse Suite Community Edition foi reconfigurada por ${nameLastFirst}.<br /><br />
       Por favor, conecte-se com as seguintes informações:<br /><br />
       Usuário: ${username} <br />
       Senha: ${password} <br /><br />
-      É recomendado que você altere sua senha na próxima vez que se conectar no Centric CRM.<br /><br />
+      É recomendado que você altere sua senha na próxima vez que se conectar no Concourse Suite Community Edition.<br /><br />
     ]]></value>
 </param>
 <param name="mail.contactErrorMessage">
@@ -7833,7 +7833,7 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[NOTA: Alguns destes podem não ser acessíveis se não forem de sua propriedade.]]></value>
 </param>
 <param name="confirmdelete.unableHeader">
-<value><![CDATA[O objeto não pode ser excluído porque ele possui as seguintes dependências no Centric CRM:]]></value>
+<value><![CDATA[O objeto não pode ser excluído porque ele possui as seguintes dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.ticketActivitiesHeader">
 <value><![CDATA[Este ticket não pode ser excluído porque está associado a um ou mais logs de atividades.]]></value>
@@ -7887,13 +7887,13 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[Você tem certeza que deseja excluir este formulário?]]></value>
 </param>
 <param name="confirmdelete.header">
-<value><![CDATA[Este objeto possui as seguintes dependências no Centric CRM:]]></value>
+<value><![CDATA[Este objeto possui as seguintes dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.header3">
-<value><![CDATA[O produto que você deseja excluir possui as seguintes dependências no Centric CRM:]]></value>
+<value><![CDATA[O produto que você deseja excluir possui as seguintes dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.formHeader">
-<value><![CDATA[O formulário que você deseja excluir pode possuir dependências no Centric CRM:]]></value>
+<value><![CDATA[O formulário que você deseja excluir pode possuir dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.roleUserHeader">
 <value><![CDATA[Este perfil não pode ser excluído porque está atribuído a pelo menos um usuário.]]></value>
@@ -7935,10 +7935,10 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[Por favor, atribua novamente ou exclua todas as oportunidades associadas a este contato primeiro.]]></value>
 </param>
 <param name="confirmdelete.contact.opps.delete">
-<value><![CDATA[Centric CRM: Oportunidades de Contatos Gerais]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Oportunidades de Contatos Gerais]]></value>
 </param>
 <param name="confirmdelete.account.opps.delete">
-<value><![CDATA[Centric CRM: Oportunidades de Gerenciamento de Empresas]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Oportunidades de Gerenciamento de Empresas]]></value>
 </param>
 <param name="communications.campaign.largeMessageOrGraphics">
 <value><![CDATA[A mensagem excede 255 caracteres ou contém caracteres gráficos]]></value>
@@ -7956,7 +7956,7 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[Abrir Repositórios de Documentos]]></value>
 </param>
 <param name="mail.subject.test">
-<value><![CDATA[Mensagem de teste do Centric CRM]]></value>
+<value><![CDATA[Mensagem de teste do Concourse Suite Community Edition]]></value>
 </param>
 <param name="object.validation.actionError.blankFormCanNotBeSaved">
 <value><![CDATA[Um formulário em branco não pode ser salvo. Por favor, informe dados válidos para salvá-lo.]]></value>
@@ -8074,7 +8074,7 @@ enquanto um Convidado possui permissões de acesso muito limitadas.]]></value>
 <value><![CDATA[Para:]]></value>
 </param>
 <param name="mail.subject.crmRegistration">
-<value><![CDATA[Registro Centric CRM]]></value>
+<value><![CDATA[Registro Concourse Suite Community Edition]]></value>
 </param>
 <param name="mail.label.taskDetails">
 <value><![CDATA[------Detalhes da Tarefa------<br /><br />]]></value>
@@ -8159,7 +8159,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Um erro ocorreu]]></value>
 </param>
 <param name="setup.jspPagesNotYetCompiled.text">
-<value><![CDATA[Como os JavaServerPages ainda não foram compilados, você deve precompilar os JSPs visto que os trabalhos da aplicação sem compilar atrasam. A compilação ocorrerá em background e você pode continuar a usar Centric CRM.]]></value>
+<value><![CDATA[Como os JavaServerPages ainda não foram compilados, você deve precompilar os JSPs visto que os trabalhos da aplicação sem compilar atrasam. A compilação ocorrerá em background e você pode continuar a usar Concourse Suite Community Edition.]]></value>
 </param>
 <param name="dynamicForm.survey.questionType">
 <value><![CDATA[Tipo de Pergunta]]></value>
@@ -8669,7 +8669,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Influenciador de]]></value>
 </param>
 <param name="contact.object.example">
-<value><![CDATA[Centric CRM Enterprise para 2005 (Opp)]]></value>
+<value><![CDATA[Concourse Suite Community Edition Enterprise para 2005 (Opp)]]></value>
 </param>
 <param name="contact.index">
 <value><![CDATA[Índice]]></value>
@@ -8759,7 +8759,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[antes da data de vencimento]]></value>
 </param>
 <param name="confirmdelete.title">
-<value><![CDATA[Centric CRM: Confirmar Exclusão]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Confirmar Exclusão]]></value>
 </param>
 <param name="contact.associateWithAccount.colon">
 <value><![CDATA[Associado à Empresa:]]></value>
@@ -8774,7 +8774,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Todos os Departamentos]]></value>
 </param>
 <param name="confirmdelete.opps.componenet.delete">
-<value><![CDATA[Centric CRM: Gerenciamento de Oportunidades]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Gerenciamento de Oportunidades]]></value>
 </param>
 <param name="project.campaignNOTfall">
 <value><![CDATA[campanha NOT abandonada]]></value>
@@ -9242,7 +9242,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Ativar]]></value>
 </param>
 <param name="calendar.webdavFolder.text">
-<value><![CDATA[A Pasta Web permite que você acesse documentos e dados no Centric CRM como se eles 
+<value><![CDATA[A Pasta Web permite que você acesse documentos e dados no Concourse Suite Community Edition como se eles
       estivessem disponíveis em uma rede de arquivos compartilhados. Um vez que o acesso à Pasta Web for ativado,
       crie um volume ou pasta compartilhada para a seguinte URL:]]></value>
 </param>
@@ -9697,7 +9697,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Exibir Usuários]]></value>
 </param>
 <param name="alt.invitation.text">
-<value><![CDATA[Visite www.CentricCRM.com]]></value>
+<value><![CDATA[Visite www.concursive.com]]></value>
 </param>
 <param name="admin.webSessionTimeout.text">
 <value><![CDATA[Timeout da Sessão Web (temporário)]]></value>
@@ -9760,7 +9760,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[A URL deve ser especificada e deve existir em seu DNS]]></value>
 </param>
 <param name="admin.url.note.3">
-<value><![CDATA[Se um nome de domínio não está configurado, você poderá especificar o endereço IP e incluir o caminho completo para acessar a aplicação web Centric CRM.]]></value>
+<value><![CDATA[Se um nome de domínio não está configurado, você poderá especificar o endereço IP e incluir o caminho completo para acessar a aplicação web Concourse Suite Community Edition.]]></value>
 </param>
 <param name="admin.uploadLogo">
 <value><![CDATA[Upload da Logo]]></value>
@@ -9967,7 +9967,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Nova Opção]]></value>
 </param>
 <param name="admin.modifyLicense.contactForUpgrade.text">
-<value><![CDATA[Acesse ${url}www.centriccrm.com${end} para informações sobre upgrade]]></value>
+<value><![CDATA[Acesse ${url}www.concursive.com${end} para informações sobre upgrade]]></value>
 </param>
 <param name="admin.modifyEmailServer">
 <value><![CDATA[Alterar Servidor de Email]]></value>
@@ -10030,7 +10030,7 @@ Você não tem permissão para executar esta ação.]]></value>
 <value><![CDATA[Você efetuou o upgrade de sua licença?]]></value>
 </param>
 <param name="admin.license.text">
-<value><![CDATA[Todas as instâncias de aplicação do Centric CRM requerem um contrato de licenciamento da Dark Horse Ventures.
+<value><![CDATA[Todas as instâncias de aplicação do Concourse Suite Community Edition requerem um contrato de licenciamento da Concursive Corporation.
 Se alterações forem efetuadas na licença, como por exemplo 
 a aquisição de usuários adicionais, então as licenças instaladas devem ser atualizadas para
 refletir estas alterações.]]></value>
@@ -10093,7 +10093,7 @@ refletir estas alterações.]]></value>
 <value><![CDATA[a pasta é somente de leitura para todos os usuários]]></value>
 </param>
 <param name="admin.faxServer.text">
-<value><![CDATA[Qual servidor de fax o Centric CRM deve usar?</b><br />Os usuários terão a capacidade de enviar faxes usando o Centric CRM.<br /><font color="red">* </font>O servidor de aplicação HylaFax requer Linux ou Unix.<br />O componente de faxing requer um servidor ${server}HylaFax${end} corretamente configurado, incluindo o hardware do fax.]]></value>
+<value><![CDATA[Qual servidor de fax o Concourse Suite Community Edition deve usar?</b><br />Os usuários terão a capacidade de enviar faxes usando o Concourse Suite Community Edition.<br /><font color="red">* </font>O servidor de aplicação HylaFax requer Linux ou Unix.<br />O componente de faxing requer um servidor ${server}HylaFax${end} corretamente configurado, incluindo o hardware do fax.]]></value>
 </param>
 <param name="admin.folderVisibleUsers.text">
 <value><![CDATA[a pasta é visível para os usuários]]></value>
@@ -10210,19 +10210,19 @@ refletir estas alterações.]]></value>
 <value><![CDATA[Workflow]]></value>
 </param>
 <param name="admin.confirm.title">
-<value><![CDATA[Centric CRM: Confirmação]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Confirmação]]></value>
 </param>
 <param name="admin.confirm.header">
 <value><![CDATA[Você tem certeza?]]></value>
 </param>
 <param name="admin.confirm.categories.header">
-<value><![CDATA[As seguintes categorias possuem dependências no Centric CRM:]]></value>
+<value><![CDATA[As seguintes categorias possuem dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="admin.confirm.alert">
-<value><![CDATA[Centric CRM: Alerta]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Alerta]]></value>
 </param>
 <param name="admin.confirm.alert.message">
-<value><![CDATA[A lista não pode ser atualizada porque as seguintes categorias possuem dependências no Centric CRM:]]></value>
+<value><![CDATA[A lista não pode ser atualizada porque as seguintes categorias possuem dependências no Concourse Suite Community Edition:]]></value>
 </param>
 <param name="admin.configureOptions">
 <value><![CDATA[Opções de Configuração]]></value>
@@ -10255,7 +10255,7 @@ refletir estas alterações.]]></value>
 <value><![CDATA[Limpar Contato]]></value>
 </param>
 <param name="admin.centricCrmUrl">
-<value><![CDATA[URL do Centric CRM]]></value>
+<value><![CDATA[URL do Concourse Suite Community Edition]]></value>
 </param>
 <param name="admin.archiveContact.text">
 <value><![CDATA[Marque esta caixa se você quiser arquivar o contato associado a este usuário de forma a não exibir mais esta informação nos módulos Contato/Colaboradores.]]></value>
@@ -11395,7 +11395,7 @@ refletir estas alterações.]]></value>
 <value><![CDATA[Detalhes do Documento]]></value>
 </param>
 <param name="accounts.accounts_add.addressRequestMessage">
-<value><![CDATA[Formulário de Atualização de Endereço. Você recebeu esta solicitação para atualizar seus dados no Centric CRM.]]></value>
+<value><![CDATA[Formulário de Atualização de Endereço. Você recebeu esta solicitação para atualizar seus dados no Concourse Suite Community Edition.]]></value>
 </param>
 <param name="reports.parameter.endDateTo">
 <value><![CDATA[Até Data de Término]]></value>
@@ -11776,7 +11776,7 @@ refletir estas alterações.]]></value>
 <value><![CDATA[Monte grupos de distribuição dinâmicos.]]></value>
 </param>
 <param name="mail.body.emailContactWithBody">
-<value><![CDATA[      A seguinte mensagem foi enviada para sua caixa de entrada no Centric CRM por ${thisRecord.contact.nameFirstLast}.
+<value><![CDATA[      A seguinte mensagem foi enviada para sua caixa de entrada no Concourse Suite Community Edition por ${thisRecord.contact.nameFirstLast}.
       Esta cópia foi enviada para sua conta de email por solicitação do remetente.<br /><br />--- Mensagem Original ---<br /><br />" 
       ${thisNote.body}
     ]]></value>
@@ -11800,7 +11800,7 @@ refletir estas alterações.]]></value>
 <value><![CDATA[Data da Última Atividade]]></value>
 </param>
 <param name="mail.subject.accountInformation">
-<value><![CDATA[Informações da Conta Centric CRM]]></value>
+<value><![CDATA[Informações da Conta Concourse Suite Community Edition]]></value>
 </param>
 <param name="reports.parameter.beginDate">
 <value><![CDATA[Data Inicial]]></value>

@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Ausblenden",
       "label.any":                      "Jeder",
       "specify.contact":                "- Bitte geben Sie einen Kontakt an\r\n",
-      "webcal.message":                 "Wenn Sie Ihren Centric CRM Kalender offline sehen wollen, benouml;tigen Sie einen iCalendar kompatible Anwendung, wie z.B. Mozilla Sunbird, Apple iCal, and andere.\r\n\r\nDiese Funktion ist eventuell auf Ihrem PC nicht verfuuml;gbar.",
+      "webcal.message":                 "Wenn Sie Ihren Concourse Suite Community Edition Kalender offline sehen wollen, benouml;tigen Sie einen iCalendar kompatible Anwendung, wie z.B. Mozilla Sunbird, Apple iCal, and andere.\r\n\r\nDiese Funktion ist eventuell auf Ihrem PC nicht verfuuml;gbar.",
       "cannot.assign":                  "Der Erstkontakt konnte nicht zugeordent werden, bitte uuml;berspringen Sie den aktuellen Erstkontakt",
       "confirm.delete.lead":            "Sind Sie sicher, dass Sie diesen Erstkontakt louml;schen wollen?",
       "check.postalcode":               "- Bitte geben Sie eine guuml;ltige Postleitzahl ein\r\n",

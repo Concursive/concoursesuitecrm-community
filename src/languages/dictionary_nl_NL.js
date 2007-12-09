@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Verberg",
       "label.any":                      "Om het even welk",
       "specify.contact":                "- Bepaal aub een contactpersoon\r\n",
-      "webcal.message":                 "Het offline bekijken van uw Centric CRM calender vereist een op iCalendar gebaseerde desktopapplicatie. Dit zijn onder andere Mozilla Sunbird, Apple iCal, en mogelijk anderen.   \r\n\r\nHet zou kunnen dat deze functie niet werkt op uw systeem.",
+      "webcal.message":                 "Het offline bekijken van uw Concourse Suite Community Edition calender vereist een op iCalendar gebaseerde desktopapplicatie. Dit zijn onder andere Mozilla Sunbird, Apple iCal, en mogelijk anderen.   \r\n\r\nHet zou kunnen dat deze functie niet werkt op uw systeem.",
       "cannot.assign":                  "De prospect kon niet worden toegewezen. Sla de huidige prospect over aub",
       "confirm.delete.lead":            "Weet u zeker dat u deze prospect wilt verwijderen?",
       "check.postalcode":               "- Vul een geldige postcode in aub\r\n",

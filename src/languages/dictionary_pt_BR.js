@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Ocultar",
       "label.any":                      "Qualquer",
       "specify.contact":                "- Por favor, especifique um contato\r\n",
-      "webcal.message":                 "Visualizar seu calendário Centric CRM offline requer uma aplicação iCalendar compatível. Estas aplicações incluem Mozilla Sunbird, Apple iCal e possivelmente outras.   \r\n\r\nEsta característica pode não funcionar em seu sistema.",
+      "webcal.message":                 "Visualizar seu calendário Concourse Suite Community Edition offline requer uma aplicação iCalendar compatível. Estas aplicações incluem Mozilla Sunbird, Apple iCal e possivelmente outras.   \r\n\r\nEsta característica pode não funcionar em seu sistema.",
       "cannot.assign":                  "O lead não pôde ser atribuído. Por favor, salte o lead atual",
       "confirm.delete.lead":            "Você tem certeza que deseja excluir este lead?",
       "check.postalcode":               "- Por favor, insira um CEP válido\r\n",

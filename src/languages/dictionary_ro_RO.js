@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Ascunde",
       "label.any":                      "Oricare",
       "specify.contact":                "- Va rugam sa specificati un contact\r\n",
-      "webcal.message":                 "Pentru a vedea calendarul Centric CRM offline trebuie sa aveti o aplicatie iCalendar. Aceste aplicatii pot fi Mozilla Sunbird, Apple iCal, si altele.   \r\n\r\nAceasta optiune ar putea sa nu functioneze pe acest sistem.",
+      "webcal.message":                 "Pentru a vedea calendarul Concourse Suite Community Edition offline trebuie sa aveti o aplicatie iCalendar. Aceste aplicatii pot fi Mozilla Sunbird, Apple iCal, si altele.   \r\n\r\nAceasta optiune ar putea sa nu functioneze pe acest sistem.",
       "cannot.assign":                  "Conducerea nu a putut fi atribuita. Va rugam sa sariti peste aceasta conducere",
       "confirm.delete.lead":            "Sunteti sigur ca doriti sa stergeti aceasta conducere?",
       "check.postalcode":               "- Va rugam sa introduceti un cod postal valid\r\n",

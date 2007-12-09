@@ -1208,7 +1208,7 @@
 <value><![CDATA[Add User Group]]></value>
 </param>
 <param name="usergroup.dependencies">
-<value><![CDATA[The group you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The group you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="usergroup.assignedGroup">
 <value><![CDATA[Assigned Group]]></value>
@@ -1618,7 +1618,7 @@
 <value><![CDATA[No action plan editors to configure.]]></value>
 </param>
 <param name="admin.ldap.useUserEmail">
-<value><![CDATA[Lookup user's primary email from Centric CRM records]]></value>
+<value><![CDATA[Lookup user's primary email from Concourse Suite Community Edition records]]></value>
 </param>
 <param name="admin.ldap.userMapping">
 <value><![CDATA[User Mapping:]]></value>
@@ -1627,7 +1627,7 @@
 <value><![CDATA[Use LDAP Composite DN]]></value>
 </param>
 <param name="admin.ldap.useCentricLogin">
-<value><![CDATA[Use user's Centric CRM login]]></value>
+<value><![CDATA[Use user's Concourse Suite Community Edition login]]></value>
 </param>
 <param name="admin.ldap.searchByAttribute">
 <value><![CDATA[Search for user in LDAP by Attribute]]></value>
@@ -1720,7 +1720,7 @@
 <value><![CDATA[Add a Phase after this Phase]]></value>
 </param>
 <param name="actionstep.dependencies">
-<value><![CDATA[The action step you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The action step you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="actionPlan.workActionPlan">
 <value><![CDATA[Work Action Plan]]></value>
@@ -1867,7 +1867,7 @@
 <value><![CDATA[Estimated Step Duration]]></value>
 </param>
 <param name="actionplan.dependencies">
-<value><![CDATA[The action plan you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The action plan you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="actionPlan.daysInStage">
 <value><![CDATA[Days in Stage]]></value>
@@ -1924,7 +1924,7 @@
 <value><![CDATA[Jour]]></value>
 </param>
 <param name="actionphase.dependencies">
-<value><![CDATA[The action phase you are requesting to delete has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[The action phase you are requesting to delete has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="actionItem.updateStep.ownerNext">
 <value><![CDATA[Owner of the next step]]></value>
@@ -1993,13 +1993,13 @@
 <value><![CDATA[Lead ID]]></value>
 </param>
 <param name="confirmreverttolead.title">
-<value><![CDATA[Centric CRM: Confirm Revert back to Lead]]></value>
+<value><![CDATA[Concourse Suite Community Edition: Confirm Revert back to Lead]]></value>
 </param>
 <param name="confirmdelete.unableToRevertAccountsToLeads">
-<value><![CDATA[Unable to revert the account contacts back to leads because it has the following dependencies within Centric CRM:]]></value>
+<value><![CDATA[Unable to revert the account contacts back to leads because it has the following dependencies within Concourse Suite Community Edition:]]></value>
 </param>
 <param name="confirmdelete.ticketActionPlansCanNotRevertAccounts">
-<value><![CDATA[Ticket Action Plans can not be used to revert Account Contacts to Leads within Centric CRM]]></value>
+<value><![CDATA[Ticket Action Plans can not be used to revert Account Contacts to Leads within Concourse Suite Community Edition]]></value>
 </param>
 <param name="communications.campaign.ActiveCampaign">
 <value><![CDATA[Active Campaign]]></value>
@@ -2448,7 +2448,7 @@
 <value><![CDATA[Email Address]]></value>
 </param>
 <param name="admin.emailServer.question">
-<value><![CDATA[Quel serveur d'email si CRM central use?${bold}${break}Centric CRM envoie de divers avis aux utilisateurs par l'email. Bidon central de CRM également soyez employé pour envoyer l'email aux contacts qui ont été écrits dans les contacts et les comptes modules.]]></value>
+<value><![CDATA[Quel serveur d'email si CRM central use?${bold}${break}Concourse Suite Community Edition envoie de divers avis aux utilisateurs par l'email. Bidon central de CRM également soyez employé pour envoyer l'email aux contacts qui ont été écrits dans les contacts et les comptes modules.]]></value>
 </param>
 <param name="project.role.colon">
 <value><![CDATA[Rôle:]]></value>
@@ -2523,7 +2523,7 @@
 <value><![CDATA[Liste D'Action (${description})]]></value>
 </param>
 <param name="admin.emailAddress.question">
-<value><![CDATA[Quel email address si soyez dans du champ de tous les email envoyés par Centric CRM ?]]></value>
+<value><![CDATA[Quel email address si soyez dans du champ de tous les email envoyés par Concourse Suite Community Edition ?]]></value>
 </param>
 <param name="ticket.enteredDateBetween">
 <value><![CDATA[Date écrite entre]]></value>
@@ -3055,7 +3055,7 @@
 </param>
 <param name="ticket.problem.userDisabled">
 <value><![CDATA[
-     L'utilisateur Centric CRM ${thisUser.username} a été neutralisé par ${thisRec.username}.
+     L'utilisateur Concourse Suite Community Edition ${thisUser.username} a été neutralisé par ${thisRec.username}.
      Puisque vous êtes le directeur direct de ${thisUser.username}, on vous a annoncé. Il est essentiel que
       n'importe quelles données directement toujours liées à cet utilisateur handicapé obtiennent attribuées à nouveau aussitôt que possible.
     ]]></value>
@@ -3559,7 +3559,7 @@
 <value><![CDATA[Par défaut]]></value>
 </param>
 <param name="admin.centricCrmUrl">
-<value><![CDATA[URL de Centric CRM]]></value>
+<value><![CDATA[URL de Concourse Suite Community Edition]]></value>
 </param>
 <param name="admin.confirm.header">
 <value><![CDATA[Etes-vous certain ?]]></value>
@@ -3745,7 +3745,7 @@
 <value><![CDATA[Catégories d'occupation]]></value>
 </param>
 <param name="accounts.contacts.moveTitle">
-<value><![CDATA[Centric CRM : Déplacer le contact]]></value>
+<value><![CDATA[Concourse Suite Community Edition : Déplacer le contact]]></value>
 </param>
 <param name="reports.helpdesk.subTotal">
 <value><![CDATA[total partiel]]></value>
@@ -3760,7 +3760,7 @@
 <value><![CDATA[Numéro de contrat]]></value>
 </param>
 <param name="accounts.contacts.unableToMoveHeader">
-<value><![CDATA[        Ce contact ne peut être déplacé vers un autre compte à cause des dépendances suivantes de Centric CRM :
+<value><![CDATA[        Ce contact ne peut être déplacé vers un autre compte à cause des dépendances suivantes de Concourse Suite Community Edition :
         Veuillez supprimer ou réassigner ces dépendances pour pouvoir le deplacer.]]></value>
 </param>
 <param name="accounts.company.colon">
@@ -4262,7 +4262,7 @@
 <value><![CDATA[Description de l'alerte]]></value>
 </param>
 <param name="accounts.accounts_add.addressRequestMessage">
-<value><![CDATA[Forme pour la mise à jour de l'adresse. Vous avez reçu cette requête pour mettre à jour vos coordonnées de Centric CRM]]></value>
+<value><![CDATA[Forme pour la mise à jour de l'adresse. Vous avez reçu cette requête pour mettre à jour vos coordonnées de Concourse Suite Community Edition]]></value>
 </param>
 <param name="accounts.accounts_add.AddressLine1">
 <value><![CDATA[Adresse ligne 1]]></value>
@@ -4313,7 +4313,7 @@
 <value><![CDATA[Les catégories suivantes ont des dépendances dans CRM central:]]></value>
 </param>
 <param name="admin.confirm.alert">
-<value><![CDATA[Centric CRM : Alerte]]></value>
+<value><![CDATA[Concourse Suite Community Edition : Alerte]]></value>
 </param>
 <param name="admin.changeContact">
 <value><![CDATA[Changez Le Contact]]></value>
@@ -4481,7 +4481,7 @@
 <value><![CDATA[La quantité ne peut pas être négatif]]></value>
 </param>
 <param name="setup.welcomeToCentricCRM.label">
-<value><![CDATA[Bienvenue à Centric CRM]]></value>
+<value><![CDATA[Bienvenue à Concourse Suite Community Edition]]></value>
 </param>
 <param name="tasks.noTasksFoundInView">
 <value><![CDATA[Aucun charge trouvé dans cette vue.]]></value>
@@ -4619,7 +4619,7 @@
 <value><![CDATA[La configuration comprend les étapes suivantes :]]></value>
 </param>
 <param name="setup.centricCRMHelp">
-<value><![CDATA[Aide de Centric CRM]]></value>
+<value><![CDATA[Aide de Concourse Suite Community Edition]]></value>
 </param>
 <param name="sales.Error">
 <value><![CDATA[Erreur]]></value>
@@ -4634,7 +4634,7 @@
 <value><![CDATA[Valeur par défaut]]></value>
 </param>
 <param name="setup.createAdministratorAccount.text">
-<value><![CDATA[Créer un compte administrateur pour Centric CRM]]></value>
+<value><![CDATA[Créer un compte administrateur pour Concourse Suite Community Edition]]></value>
 </param>
 <param name="setup.databaseConnection">
 <value><![CDATA[La connexion à la base de données]]></value>
@@ -5277,7 +5277,7 @@
 <value><![CDATA[Au moins un contact est requis]]></value>
 </param>
 <param name="object.validation.actionError.unspecifiedErrorRejectedRegistration">
-<value><![CDATA[      Erreur non spécifiée : Le serveur Centric CRM a rejeté l'inscription ${thisStatus.message} ]]></value>
+<value><![CDATA[      Erreur non spécifiée : Le serveur Concourse Suite Community Edition a rejeté l'inscription ${thisStatus.message} ]]></value>
 </param>
 <param name="object.validation.descriptionNotGT300Characters">
 <value><![CDATA[La description ne doit pas dépasser les 300 caractères]]></value>
@@ -5349,13 +5349,13 @@
 <value><![CDATA[Tâche :]]></value>
 </param>
 <param name="mail.subject.crmRegistration">
-<value><![CDATA[Inscription à Centric CRM]]></value>
+<value><![CDATA[Inscription à Concourse Suite Community Edition]]></value>
 </param>
 <param name="button.submit">
 <value><![CDATA[Soumettez]]></value>
 </param>
 <param name="mail.subject.accountInformation">
-<value><![CDATA[Informations à propos du compte Centric CRM]]></value>
+<value><![CDATA[Informations à propos du compte Concourse Suite Community Edition]]></value>
 </param>
 <param name="mail.label.modified">
 <value><![CDATA[Modifié le :]]></value>
@@ -5364,7 +5364,7 @@
 <value><![CDATA[Longueur :]]></value>
 </param>
 <param name="mail.body.sentBy">
-<value><![CDATA[Les messages suivants ont été envoyés à votre boîte Centric CRM par]]></value>
+<value><![CDATA[Les messages suivants ont été envoyés à votre boîte Concourse Suite Community Edition par]]></value>
 </param>
 <param name="mail.body.newPasswordIs">
 <value><![CDATA[Votre nouveau mot de passe est : ${password} <br /><br />]]></value>
@@ -5726,7 +5726,7 @@
 <value><![CDATA[Détails De Fil]]></value>
 </param>
 <param name="admin.confirm.title">
-<value><![CDATA[Centric CRM : Confirmez]]></value>
+<value><![CDATA[Concourse Suite Community Edition : Confirmez]]></value>
 </param>
 <param name="pipeline.bestGuessEstimate">
 <value><![CDATA[La Meilleure Évaluation De Conjecture]]></value>
@@ -5789,7 +5789,7 @@
 <value><![CDATA[Campagnes actives créé dans la gamme de date]]></value>
 </param>
 <param name="admin.modifyLicense.contactForUpgrade.text">
-<value><![CDATA[Contact ${url}www.centriccrm.com${end} pour l'information de mise à niveau]]></value>
+<value><![CDATA[Contact ${url}www.concursive.com${end} pour l'information de mise à niveau]]></value>
 </param>
 <param name="campaign.noSurveyOrAddressUpdateRequest.text">
 <value><![CDATA[Cette campagne n'a pas un aperçu ou n'adresse pas la demande de mise à jour.]]></value>
@@ -6749,7 +6749,7 @@
 <value><![CDATA[URL du serveur]]></value>
 </param>
 <param name="setup.centricCRMLDAPTest">
-<value><![CDATA[Centric CRM LDAP Test]]></value>
+<value><![CDATA[Concourse Suite Community Edition LDAP Test]]></value>
 </param>
 <param name="admin.step">
 <value><![CDATA[Etape]]></value>
@@ -6767,7 +6767,7 @@
 <value><![CDATA[Utilisateur : <span class="highlight">${contactName}</span> /]]></value>
 </param>
 <param name="alt.invitation.text">
-<value><![CDATA[Visitez www.CentricCRM.com]]></value>
+<value><![CDATA[Visitez www.concursive.com]]></value>
 </param>
 <param name="alt.moveDown">
 <value><![CDATA[Déplacer vers le bas]]></value>
@@ -7109,7 +7109,7 @@
 <value><![CDATA[Processus Plus tard]]></value>
 </param>
 <param name="confirmdelete.account.opps.delete">
-<value><![CDATA[Centric CRM : Occasions De Gestion De Compte]]></value>
+<value><![CDATA[Concourse Suite Community Edition : Occasions De Gestion De Compte]]></value>
 </param>
 <param name="project.department">
 <value><![CDATA[Département]]></value>
@@ -8389,7 +8389,7 @@
 <value><![CDATA[The selected manager is a disabled user. Please select a different manager for this user.]]></value>
 </param>
 <param name="setup.centricCRMInstallation">
-<value><![CDATA[Installation de Centric CRM]]></value>
+<value><![CDATA[Installation de Concourse Suite Community Edition]]></value>
 </param>
 <param name="actionList.allCompleteLists">
 <value><![CDATA[Toutes les Listes Complètes]]></value>
@@ -9062,7 +9062,7 @@
 </param>
 <param name="errors.toAddNewUser.points">
 <value><![CDATA[${li}L'un ou l'autre neutralisent un utilisateur qui n'emploie pas le système ainsi un utilisateur additionnel peut soyez ajouté, ous${li}
-      ${li}Achetez un permis augmente dont le nombre maximum userß{sli} plus d'information de ${li}for voient${urlStart}www.centriccrm.com${urlEnd}${li}]]></value>
+      ${li}Achetez un permis augmente dont le nombre maximum userß{sli} plus d'information de ${li}for voient${urlStart}www.concursive.com${urlEnd}${li}]]></value>
 </param>
 <param name="product.categoryDetails">
 <value><![CDATA[Détails De Catégorie]]></value>
@@ -9715,7 +9715,7 @@
 <value><![CDATA[Merci de visiter notre page de mise à jour d'adresse]]></value>
 </param>
 <param name="confirmdelete.title">
-<value><![CDATA[Centric CRM : Confirmez L'Effacement]]></value>
+<value><![CDATA[Concourse Suite Community Edition : Confirmez L'Effacement]]></value>
 </param>
 <param name="object.validation.OwnerMustBeEnteredBy">
 <value><![CDATA[Le disque doit être possédé par l'utilisateur qui l'a écrit]]></value>
@@ -10289,7 +10289,7 @@
 <value><![CDATA[Produit De Recherche Catalogue]]></value>
 </param>
 <param name="setup.followingInformationAppearsEmployees.text">
-<value><![CDATA[The following information will appear in Centric CRM under Employees and can be modified later if necessary.]]></value>
+<value><![CDATA[The following information will appear in Concourse Suite Community Edition under Employees and can be modified later if necessary.]]></value>
 </param>
 <param name="calendar.incompleteTasks">
 <value><![CDATA[Inachevé Charge]]></value>
@@ -10526,7 +10526,7 @@
 <value><![CDATA[Choisissez facultatif${break}attachments]]></value>
 </param>
 <param name="centriccrm.accounts">
-<value><![CDATA[Comptes Centric CRM]]></value>
+<value><![CDATA[Comptes Concourse Suite Community Edition]]></value>
 </param>
 <param name="dynamicForm.enteredBy">
 <value><![CDATA[Entré Près]]></value>
@@ -11140,7 +11140,7 @@
 <value><![CDATA[Projet Nom]]></value>
 </param>
 <param name="confirmdelete.contact.opps.delete">
-<value><![CDATA[Centric CRM : Occasions Générales De Contacts]]></value>
+<value><![CDATA[Concourse Suite Community Edition : Occasions Générales De Contacts]]></value>
 </param>
 <param name="admin.updateRole">
 <value><![CDATA[Mise à jour Rôle]]></value>

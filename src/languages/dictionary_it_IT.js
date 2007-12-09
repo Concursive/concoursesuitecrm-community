@@ -186,7 +186,7 @@ if (!FrameworkI18N) {
       "label.hide":                     "Nascondi",
       "label.any":                      "Ognuno",
       "specify.contact":                "- Prego specificare un contatto\r\n",
-      "webcal.message":                 "Vedere il tuo calendario Centric CRM offline richiede un'applicazione desktop che supporti iCalendar. Queste applicazioni comprendono Mozilla Sunbird, Apple iCal, e probabilmente altri.   \r\n\r\nQuesta caratteristica può non funzionare sul tuo sistema.",
+      "webcal.message":                 "Vedere il tuo calendario Concourse Suite Community Edition offline richiede un'applicazione desktop che supporti iCalendar. Queste applicazioni comprendono Mozilla Sunbird, Apple iCal, e probabilmente altri.   \r\n\r\nQuesta caratteristica può non funzionare sul tuo sistema.",
       "cannot.assign":                  "Il capo non può essere assegnato. Prego saltare il capo corrente",
       "confirm.delete.lead":            "Sei sicuro di voler cancellare questo capo?",
       "check.postalcode":               "- Prego inserire un Codice Postale valido\r\n",
