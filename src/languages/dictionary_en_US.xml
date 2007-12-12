@@ -12473,9 +12473,6 @@ any data still directly associated with this disabled user gets re-assigned as s
       <value><![CDATA[Add an Activity]]></value>
     </param>
 
-    <param name="permission.dashboard">
-      <value><![CDATA[Configure Custom Dashboards]]></value>
-    </param>
     <param name="folder.noDataSelected">
       <value><![CDATA[No folder selected.]]></value>
     </param>
@@ -12484,9 +12481,6 @@ any data still directly associated with this disabled user gets re-assigned as s
     </param>
     <param name="workArea.note">
       <value><![CDATA[Note: Following special characters <.>?;'"[{]}&%$#@!`~ are not supported and should not contain more than 30 parameters in the work area formula.]]></value>
-    </param>
-    <param name="permission.customtab">
-      <value><![CDATA[Configure Custom Tabs]]></value>
     </param>
 
 

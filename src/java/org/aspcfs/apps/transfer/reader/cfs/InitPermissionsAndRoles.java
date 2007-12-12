@@ -204,8 +204,6 @@ public class InitPermissionsAndRoles implements DataReader {
             "webdav", (String) category.getAttribute("webdav"));
         thisRecord.addField("logos", (String) category.getAttribute("logos"));
         thisRecord.addField("actionPlans", (String) category.getAttribute("actionPlans"));
-        thisRecord.addField("dashboards", (String) category.getAttribute("dashboards"));
-        thisRecord.addField("customtabs", (String) category.getAttribute("customtabs"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
 
@@ -422,6 +420,9 @@ public class InitPermissionsAndRoles implements DataReader {
         } else {
           thisRecord.addField("enabled", "true");
         }
+        if(logger.isDebugEnabled()) {
+            logger.debug("Role: " + (String)role.getAttribute("name"));
+        }
         writer.save(thisRecord);
         int roleId = Integer.parseInt(writer.getLastResponse());
 
@@ -431,6 +432,9 @@ public class InitPermissionsAndRoles implements DataReader {
         Iterator permissionList = rolePermissionList.iterator();
         while (permissionList.hasNext()) {
           Element rolePermission = (Element) permissionList.next();
+          if(logger.isDebugEnabled()) {
+              logger.info("  Permission: " + (String)rolePermission.getAttribute("name"));
+          }
           DataRecord rolePermissionRecord = new DataRecord();
           rolePermissionRecord.setName("rolePermission");
           rolePermissionRecord.setAction("insert");

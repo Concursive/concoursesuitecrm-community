@@ -143,15 +143,5 @@
       <zeroio:tz timestamp="<%= documentStore.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
-<dhv:evaluate if="<%= documentStore.getPublicStore() %>">
-   <tr class="containerBody">
-    <td nowrap class="formLabel">
-      <dhv:label name="documents.details.public">Public</dhv:label>
-    </td>
-    <td>
-      <dhv:label name="documents.details.isAllowedWebsiteAndDashboardUsersToAccess">Documents in this store can be accessed from the website and from dashboards</dhv:label>
-    </td>
-  </tr>
-</dhv:evaluate>
 </table>
 
