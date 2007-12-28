@@ -38,9 +38,6 @@
 ## TODO: Verify BSH script with each database server type
 2007-03-16-script01-ananth.bsh
 
-2007-02-19-artemz.bsh
-2007-04-12-script01-mr.sql
-2007-04-12-script02-mr.bsh
 ## TODO: the following script needs description translations
 2007-04-12-script03-mr.bsh
 
@@ -60,7 +57,6 @@
 2007-05-25-script01-mr.sql
 
 # folder and dashboard improvements
-2007-05-03-script01-rajendra.bsh
 2007-05-04-script01-rajendra.bsh
 2007-05-09-script01-alugubillis.sql
 
@@ -128,5 +124,4 @@
 ##############################################################################
 # Run each time after upgrading a system (NOTE: this is a temporary measure)
 2005-07-20-script01-mr.bsh
-2006-06-01-script01-mr.bsh
 ##############################################################################
