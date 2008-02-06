@@ -22,6 +22,7 @@
 <jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="source" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>

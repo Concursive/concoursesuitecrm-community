@@ -35,7 +35,7 @@
             param2 = "&trailSource=accounts";
           }
       %>
-       <dhv:container name="accountscontacts" selected="<%= selected %>" param="<%= param1 %>" style="tabs" appendToUrl="<%= param2 %>"/>
+       <dhv:container name="accountscontacts" object="contactDetails" selected="<%= selected %>" param="<%= param1 %>" style="tabs" appendToUrl="<%= param2 %>"/>
       </dhv:evaluate>
     </td>
     <td align="right" valign="top" nowrap>

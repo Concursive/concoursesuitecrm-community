@@ -17,7 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.contacts.base.Contact,java.util.Iterator" %>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.contacts.base.Contact, org.aspcfs.utils.web.HtmlOption" %>
 <jsp:useBean id="ContactList"
              class="org.aspcfs.modules.contacts.base.ContactList"
              scope="request"/>

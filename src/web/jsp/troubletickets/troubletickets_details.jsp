@@ -18,6 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ page import="com.zeroio.iteam.FileItem" %>
 <jsp:useBean id="TicketDetails"
              class="org.aspcfs.modules.troubletickets.base.Ticket"
              scope="request"/>

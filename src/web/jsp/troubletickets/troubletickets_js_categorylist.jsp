@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.admin.base.User,org.aspcfs.modules.actionplans.base.ActionPlan" %>
 <jsp:useBean id="CategoryList"
              class="org.aspcfs.modules.troubletickets.base.TicketCategoryList"
              scope="request"/>
