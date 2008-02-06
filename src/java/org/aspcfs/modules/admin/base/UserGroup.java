@@ -481,6 +481,8 @@ public class UserGroup extends GenericBean {
     sql.append("VALUES (" + (mapId > -1 ? "?," : "") + " ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
+    } else {
+      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("? ) ");
     int i = 0;
@@ -493,9 +495,7 @@ public class UserGroup extends GenericBean {
     pst.setInt(++i, level);
     if (entered != null) {
       pst.setTimestamp(++i, entered);
-    } else {
-      sql.append(DatabaseUtils.getCurrentTimestamp(db) + ", ");
-    }
+    } 
     pst.setBoolean(++i, true);
     pst.execute();
     pst.close();
