@@ -838,9 +838,9 @@ public class CampaignList extends Vector implements SyncableList{
       sqlFilter = new StringBuffer();
     }
     if(id == -1){
-      sqlFilter.append("c.campaign_id > ?");
+      sqlFilter.append("c.campaign_id > ? ");
     }else{
-      sqlFilter.append("c.campaign_id = ?");
+      sqlFilter.append("c.campaign_id = ? ");
     }
 
     if (activeDate != null) {

@@ -3582,9 +3582,9 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     }
 
     if(id == -1){
-      sqlFilter.append("c.contact_id > ?");
+      sqlFilter.append("c.contact_id > ? ");
     }else{
-      sqlFilter.append("c.contact_id = ?");
+      sqlFilter.append("c.contact_id = ? ");
     }
 
     sqlFilter
@@ -3613,7 +3613,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
 
     if (typeId != -1) {
       sqlFilter
-          .append("AND (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = ?) )");
+          .append("AND (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = ?) ) ");
     }
 
     if (departmentId > -1) {
@@ -3702,7 +3702,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
 	//This query is modified by replacing "*" with "atl.org_id" from the Select statement
 	if (accountTypeList!= null && accountTypeList.size()!=0) {
 		if(pagedListInfo.getCriteriaValue("searchmultiplecodeaccountTypeListOption")!=null && Constants.ALL.equals(pagedListInfo.getCriteriaValue("searchmultiplecodeaccountTypeListOption"))){
-		      sqlFilter.append("AND EXISTS (" + DatabaseUtils.createParams(accountTypeList,"(SELECT atl.org_id FROM account_type_levels atl WHERE atl.type_id = ? AND o.org_id = atl.org_id)") + ")");
+		      sqlFilter.append("AND EXISTS (" + DatabaseUtils.createParams(accountTypeList,"(SELECT atl.org_id FROM account_type_levels atl WHERE atl.type_id = ? AND o.org_id = atl.org_id)") + ") ");
 		}
     	else{
     	      sqlFilter.append("AND EXISTS (SELECT atl.org_id FROM account_type_levels atl WHERE " + DatabaseUtils.createParams(accountTypeList,"atl.type_id",db,"ANY",Constants.INT) + " AND o.org_id = atl.org_id) ");
@@ -3722,13 +3722,13 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
       sqlFilter
           .append("AND EXISTS (SELECT o.org_id FROM asset a WHERE o.org_id = a.account_id AND "
               + DatabaseUtils.toLowerCase(db)
-              + " (a.serial_number) = ? )");
+              + " (a.serial_number) = ? ) ");
     }
 
     //Multisearch for Asset Serial Number field
 	if (assetSerialNumberList != null && assetSerialNumberList.size()!=0) {
 	  sqlFilter.append(
-		"AND EXISTS (SELECT o.org_id FROM asset a WHERE o.org_id = a.account_id AND " + DatabaseUtils.createParams( assetSerialNumberList," (a.serial_number) ",db,"ANY",Constants.STRING) + ")" );
+		"AND EXISTS (SELECT o.org_id FROM asset a WHERE o.org_id = a.account_id AND " + DatabaseUtils.createParams( assetSerialNumberList," (a.serial_number) ",db,"ANY",Constants.STRING) + ") ");
 	}
 
     if (accountSegment != null) {
@@ -3761,7 +3761,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
 
     //Multisearch for Contact Phone Number field
 	if (contactPhoneNumberList !=null && contactPhoneNumberList.size()!=0){
-		sqlFilter.append("AND c.contact_id IN (select cp.contact_id from contact_phone cp where " + DatabaseUtils.createParams(contactPhoneNumberList," (cp.number) ",db,"ANY",Constants.STRING) + ")");
+		sqlFilter.append("AND c.contact_id IN (select cp.contact_id from contact_phone cp where " + DatabaseUtils.createParams(contactPhoneNumberList," (cp.number) ",db,"ANY",Constants.STRING) + ") ");
 	}
 
     if (contactState != null && !"-1".equals(contactState)) {
@@ -3852,7 +3852,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     if (orgSiteId == -1) {
       if (includeContactsFromOrganizationsWithoutSite) {
         sqlFilter
-            .append("AND EXISTS (SELECT c.contact_id FROM organization o WHERE  o.org_id = c.org_id AND o.site_id IS NULL )");
+            .append("AND EXISTS (SELECT c.contact_id FROM organization o WHERE  o.org_id = c.org_id AND o.site_id IS NULL ) ");
       }
     }
 
@@ -3872,7 +3872,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
         sqlFilter
             .append("AND EXISTS (SELECT c.contact_id FROM "
                 + DatabaseUtils.addQuotes(db, "access")
-                + " a WHERE  a.contact_id = c.contact_id AND a.site_id IS NULL )");
+                + " a WHERE  a.contact_id = c.contact_id AND a.site_id IS NULL ) ");
       }
     }
 
@@ -3888,7 +3888,7 @@ public class ContactList extends Vector implements UserCentric, SyncableList {
     if (importSiteId == -1) {
       if (includeContactsFromImportsOfAllSites) {
         sqlFilter
-            .append("AND EXISTS (SELECT c.contact_id FROM import i WHERE  i.import_id = c.import_id AND i.site_id IS NULL )");
+            .append("AND EXISTS (SELECT c.contact_id FROM import i WHERE  i.import_id = c.import_id AND i.site_id IS NULL ) ");
       }
     }
 

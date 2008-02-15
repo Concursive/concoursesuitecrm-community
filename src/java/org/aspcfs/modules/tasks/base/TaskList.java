@@ -720,9 +720,9 @@ public class TaskList extends ArrayList implements UserCentric {
     }
 
     if(id == -1){
-      sqlFilter.append("t.task_id > ?");
+      sqlFilter.append("t.task_id > ? ");
     }else{
-      sqlFilter.append("t.task_id = ?");
+      sqlFilter.append("t.task_id = ? ");
     }
     
     if (enteredBy != -1) {
