@@ -206,6 +206,7 @@ public class ContainerMenuHandler extends TagSupport implements TryCatchFinally 
         }
       }
       stack = stack == null ? (HashMap) pageContext.getSession().getAttribute("stack") : stack;
+      stack = stack == null ? new HashMap() : stack;
       stack.remove(name);
       stack.put(name, container);
       pageContext.getSession().setAttribute("stack", stack);
