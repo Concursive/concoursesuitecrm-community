@@ -130,9 +130,7 @@
   </td>
   <td>
     <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
-    <input type="text" name="contractValue" size="15"
-           value="<zeroio:number value="<%= serviceContract.getContractValue() %>
-    " locale="<%= User.getLocale() %>" />">
+    <input type="text" name="contractValue" size="15" value="<zeroio:number value="<%= serviceContract.getContractValue() %>" locale="<%= User.getLocale() %>" />">
     <%= showAttribute(request, "contractValueError") %>
   </td>
 </tr>
