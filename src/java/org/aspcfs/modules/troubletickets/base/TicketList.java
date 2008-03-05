@@ -1978,7 +1978,7 @@ public class TicketList extends ArrayList implements SyncableList {
     }
 
     if (submitterOrgId > -1) {
-      sqlFilter.append("AND (t.submitter_id = ? ");
+      sqlFilter.append("AND (t.submitter_id = ? ) ");
     }
   }
 
