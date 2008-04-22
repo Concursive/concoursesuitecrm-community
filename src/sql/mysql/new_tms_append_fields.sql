@@ -21,6 +21,7 @@ ALTER TABLE ticket ADD COLUMN resolution_id INTEGER REFERENCES lookup_ticket_res
 ALTER TABLE ticket ADD COLUMN defect_id INTEGER REFERENCES ticket_defect(defect_id);
 ALTER TABLE ticket ADD COLUMN escalation_level INT REFERENCES lookup_ticket_escalation(code);
 ALTER TABLE ticket ADD COLUMN resolvable TINYINT(1) NOT NULL DEFAULT '1';
+UPDATE ticket SET resolvable = true;
 ALTER TABLE ticket ADD COLUMN resolvedby INT REFERENCES `access`(user_id);
 ALTER TABLE ticket ADD COLUMN resolvedby_department_code INT REFERENCES lookup_department(code);
 ALTER TABLE ticket ADD COLUMN state_id INTEGER REFERENCES lookup_ticket_state(code);

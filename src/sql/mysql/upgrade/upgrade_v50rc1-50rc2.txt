@@ -1,0 +1,38 @@
+# These scripts upgrade a 5.0RC1 production database to 5.0, in order
+
+# Cleanup of Website module
+2007-11-23-script01.sql
+2007-11-22-script01.bsh
+
+# increasing size of name field in organization table
+2007-11-28-script01-abdul.sql
+
+# Updating the permission description of qa permision, missed in the earlier version
+2007-11-08-script01-yury.sql
+
+2007-12-03-script01-ananth.bsh
+2007-10-20-script01-rajendra.bsh
+
+# Register new css for website
+2007-12-05-script-register-css.bsh
+
+# encrypts the password of all the existing email accounts
+2007-12-06-script01-rajendra.bsh
+
+# Remove duplicate PlanEditor entry
+2007-12-08-script01-ananth.bsh
+
+# adding four new fields to the organization table
+2007-12-08-script01-abdul.sql
+
+# resetting values for activity end dates
+2007-12-09-script01-kailash.bsh
+
+# Adds custom tabs to modules
+2007-12-10-script02-kailash.bsh
+
+# Permissions fix for sales-leads-folder
+2007-12-10-script01-ananth.bsh
+
+# Add trigger definitions for timestamp fields
+2007-12-10-script02-ananth.sql

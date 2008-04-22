@@ -18,6 +18,17 @@ CREATE TABLE lookup_container_menu (
   modified TIMESTAMP NULL
 );
 
+CREATE INDEX lkupcontmenu_code_idx
+  ON lookup_container_menu (code);
+
+CREATE INDEX lkcontmenu_level_idx
+  ON lookup_container_menu (`level`);
+
+CREATE INDEX lkcontmenu_lmid_idx
+  ON lookup_container_menu (link_module_id);
+
+--CREATE UNIQUE INDEX u_lcontmenu_cname ON lookup_container_menu (cname);
+
 CREATE TRIGGER lookup_container_menu_entries BEFORE INSERT ON  lookup_container_menu FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -32,6 +43,10 @@ CREATE TABLE lookup_webpage_priority (
   entered timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified timestamp NULL
 );
+
+CREATE INDEX lkupwp_code_idx
+  ON lookup_webpage_priority
+  (code);
 
 CREATE TRIGGER lookup_webpage_priority_entries BEFORE INSERT ON lookup_webpage_priority FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
@@ -52,6 +67,10 @@ CREATE TRIGGER lookup_sitechange_frequency_entries BEFORE INSERT ON lookup_sitec
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
+CREATE INDEX lkup_sitefreq_code_idx
+  ON lookup_sitechange_frequency
+  (code);
+
 CREATE TABLE web_layout (
   layout_id INT AUTO_INCREMENT PRIMARY KEY,
   layout_constant INT UNIQUE,
@@ -61,6 +80,13 @@ CREATE TABLE web_layout (
   custom BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE INDEX weblayout_layout_idx
+  ON web_layout (layout_id);
+
+CREATE INDEX weblayout_layout_constant_idx
+  ON web_layout
+  (layout_constant);
+
 CREATE TABLE web_style (
   style_id INT AUTO_INCREMENT PRIMARY KEY,
   style_constant INT UNIQUE,
@@ -68,8 +94,21 @@ CREATE TABLE web_style (
   css VARCHAR(300),
   thumbnail VARCHAR(300),
   custom BOOLEAN NOT NULL DEFAULT false,
-  layout_id INT REFERENCES web_layout(layout_id)
+  layout_id INT REFERENCES web_layout(layout_id),
+  active_style BOOLEAN DEFAULT false NOT NULL
 );
+
+CREATE INDEX webstyle_style_constant_idx
+  ON web_style
+  (style_constant);
+
+CREATE INDEX webstyle_style_id_idx
+  ON web_style
+  (style_id);
+
+CREATE INDEX webstyle_layout_id_idx
+  ON web_style
+  (layout_id);
 
 CREATE TABLE web_site (
   site_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,6 +127,18 @@ CREATE TABLE web_site (
   scripts TEXT,
   url varchar (2000)
 );
+
+CREATE INDEX website_site_id_idx
+  ON web_site
+  (site_id);
+
+CREATE INDEX website_style_id_idx
+  ON web_site
+  (style_id);
+
+CREATE INDEX website_layout_id_idx
+  ON web_site
+  (layout_id);
 
 CREATE TRIGGER web_site_entries BEFORE INSERT ON web_site FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
@@ -120,6 +171,18 @@ CREATE TABLE web_tab (
   keywords VARCHAR(300)
 );
 
+CREATE INDEX webtab_tab_id_idx
+  ON web_tab
+  (tab_id);
+
+CREATE INDEX webtab_site_id_idx
+  ON web_tab
+  (site_id);
+
+CREATE INDEX webtab_tab_position_idx
+  ON web_tab
+  (tab_position);
+
 CREATE TRIGGER web_tab_entries BEFORE INSERT ON web_tab FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -135,6 +198,10 @@ CREATE TABLE web_page_version (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE INDEX webpgvers_page_version_id_idx
+  ON web_page_version
+  (page_version_id);
 
 CREATE TRIGGER web_page_version_entries BEFORE INSERT ON web_page_version FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
@@ -152,6 +219,18 @@ CREATE TABLE web_page_group (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE INDEX webpggrep_page_group_id_idx
+  ON web_page_group
+  (page_group_id);
+
+CREATE INDEX webpggrep_tab_id_idx
+  ON web_page_group
+  (tab_id);
+
+CREATE INDEX webpggrep_group_position_idx
+  ON web_page_group
+  (group_position);
+
 CREATE TRIGGER web_page_group_entries BEFORE INSERT ON web_page_group FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -165,6 +244,10 @@ CREATE TABLE web_tab_banner (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE INDEX webtabbanner_tab_banner_id_idx
+  ON web_tab_banner
+  (tab_banner_id);
 
 CREATE TRIGGER web_tab_banner_entries BEFORE INSERT ON web_tab_banner FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
@@ -192,6 +275,22 @@ CREATE TABLE web_page (
   page_priority INT REFERENCES lookup_webpage_priority(code)
 );
 
+CREATE INDEX webpage_page_priority_idx
+  ON web_page
+  (page_priority);
+
+CREATE INDEX webpage_change_freq_idx
+  ON web_page
+  (change_freq);
+
+CREATE INDEX webpage_page_id_idx
+  ON web_page
+  (page_id);
+
+CREATE INDEX webpage_page_group_id_idx
+  ON web_page
+  (page_group_id);
+
 CREATE TRIGGER web_page_entries BEFORE INSERT ON web_page FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -209,6 +308,18 @@ CREATE TABLE web_page_row (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE INDEX wpr_page_row_id_idx
+  ON web_page_row
+  (page_row_id);
+
+CREATE INDEX wpr_row_position_idx
+  ON web_page_row
+  (row_position);
+
+CREATE INDEX wpr_page_version_id_idx
+  ON web_page_row
+  (page_version_id);
+
 CREATE TRIGGER web_page_row_entries BEFORE INSERT ON web_page_row FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -216,11 +327,15 @@ NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00',
 CREATE TABLE web_icelet (
   icelet_id INT AUTO_INCREMENT PRIMARY KEY,
   icelet_name VARCHAR(300) NOT NULL,
-  icelet_description TEXT,
-  icelet_configurator_class VARCHAR(255) NOT NULL UNIQUE,
+  icelet_description VARCHAR(1500),
+  icelet_configurator_class VARCHAR(300) NOT NULL UNIQUE,
   icelet_version INT,
   enabled BOOLEAN NOT NULL DEFAULT true
 );
+
+CREATE INDEX wi_icelet_id_idx
+  ON web_icelet
+  (icelet_id);
 
 CREATE TABLE web_row_column (
   row_column_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -234,6 +349,22 @@ CREATE TABLE web_row_column (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
+
+CREATE INDEX wrc_rc_id_idx
+  ON web_row_column
+  (row_column_id);
+
+CREATE INDEX wrc_page_row_id_idx
+  ON web_row_column
+  (page_row_id);
+
+CREATE INDEX wrc_icelet_id_idx
+  ON web_row_column
+  (icelet_id);
+
+CREATE INDEX wrc_column_position_idx
+  ON web_row_column
+  (column_position);
 
 CREATE TRIGGER web_row_column_entries BEFORE INSERT ON web_row_column FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
@@ -269,6 +400,14 @@ CREATE TABLE portfolio_category (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE INDEX pc_category_id_idx
+  ON portfolio_category
+  (category_id);
+
+CREATE INDEX pc_parent_category_id_idx
+  ON portfolio_category
+  (parent_category_id);
+
 CREATE TRIGGER portfolio_category_entries BEFORE INSERT ON portfolio_category FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -288,6 +427,18 @@ CREATE TABLE portfolio_item (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE INDEX pi_portfolio_category_id_idx
+  ON portfolio_item
+  (portfolio_category_id);
+
+CREATE INDEX pi_item_id_idx
+  ON portfolio_item
+  (item_id);
+
+CREATE INDEX pi_item_position_id_idx
+  ON portfolio_item
+  (item_position_id);
+
 CREATE TRIGGER portfolio_item_entries BEFORE INSERT ON portfolio_item FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -302,6 +453,14 @@ CREATE TABLE web_site_access_log (
   browser VARCHAR(255),
   referrer VARCHAR(1024)
 );
+
+CREATE INDEX wsal_site_log_id_idx
+  ON web_site_access_log
+  (site_log_id);
+
+CREATE INDEX wsal_site_id_idx
+  ON web_site_access_log
+  (site_id);
 
 CREATE TRIGGER web_site_access_log_entries BEFORE INSERT ON web_site_access_log FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered);
@@ -352,6 +511,18 @@ CREATE TABLE web_page_role_map (
   modifiedby INT NOT NULL REFERENCES `access`(user_id)
 );
 
+CREATE INDEX wprm_page_role_map_id_idx
+  ON web_page_role_map
+  (page_role_map_id);
+
+CREATE INDEX wprm_role_id_idx
+  ON web_page_role_map
+  (role_id);
+
+CREATE INDEX wprm_web_page_id_idx
+  ON web_page_role_map
+  (web_page_id);
+
 CREATE TRIGGER web_page_role_map_entries BEFORE INSERT ON web_page_role_map FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -365,6 +536,18 @@ create table web_icelet_dashboard_map (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL references `access`(user_id)
 );
+
+CREATE INDEX widm_dashboard_map_id_idx
+  ON web_icelet_dashboard_map
+  (dashboard_map_id);
+
+CREATE INDEX widm_icelet_id_idx
+  ON web_icelet_dashboard_map
+  (icelet_id);
+
+CREATE INDEX widm_link_module_id_idx
+  ON web_icelet_dashboard_map
+  (link_module_id);
 
 CREATE TRIGGER web_icelet_dashboard_map_entries BEFORE INSERT ON web_icelet_dashboard_map FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
@@ -380,6 +563,18 @@ create table web_icelet_customtab_map (
   modifiedby INT NOT NULL references `access`(user_id)
 );
 
+CREATE INDEX wictm_custom_map_id_idx
+  ON web_icelet_customtab_map
+  (custom_map_id);
+
+CREATE INDEX wictm_icelet_id_idx
+  ON web_icelet_customtab_map
+  (icelet_id);
+
+CREATE INDEX wictm_link_container_id_idx
+  ON web_icelet_customtab_map
+  (link_container_id);
+
 CREATE TRIGGER web_icelet_customtab_map_entries BEFORE INSERT ON web_icelet_customtab_map FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
@@ -392,6 +587,14 @@ create table web_icelet_publicwebsite (
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL references `access`(user_id)
 );
+
+CREATE INDEX wip_icelet_publicwebsite_id_idx
+  ON web_icelet_publicwebsite
+  (icelet_publicwebsite_id);
+
+CREATE INDEX wip_icelet_id_idx
+  ON web_icelet_publicwebsite
+  (icelet_id);
 
 CREATE TRIGGER web_icelet_publicwebsite_entries BEFORE INSERT ON web_icelet_publicwebsite FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),

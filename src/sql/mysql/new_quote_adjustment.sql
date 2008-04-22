@@ -15,7 +15,7 @@ CREATE TABLE lookup_quote_delivery (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -31,7 +31,7 @@ CREATE TABLE lookup_quote_condition (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -46,6 +46,7 @@ CREATE TABLE quote_group (
   unused CHAR(1)
 );
 
+ALTER TABLE quote_group AUTO_INCREMENT = 1000;
 -- Adjustments to the quote_entry table
 ALTER TABLE quote_entry ADD COLUMN product_id INTEGER REFERENCES product_catalog(product_id);
 ALTER TABLE quote_entry ADD COLUMN customer_product_id INTEGER REFERENCES customer_product(customer_product_id);
@@ -105,7 +106,7 @@ CREATE TABLE lookup_quote_remarks (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );

@@ -13,7 +13,7 @@ CREATE TABLE lookup_call_types (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_call_types_entries BEFORE INSERT ON lookup_call_types FOR EACH ROW SET
@@ -28,7 +28,7 @@ CREATE TABLE lookup_call_priority (
   enabled BOOLEAN DEFAULT true,
   weight INTEGER NOT NULL,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_call_priority_entries BEFORE INSERT ON lookup_call_priority FOR EACH ROW SET
@@ -43,7 +43,7 @@ CREATE TABLE lookup_call_reminder (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_call_reminder_entries BEFORE INSERT ON lookup_call_reminder FOR EACH ROW SET
@@ -60,7 +60,7 @@ CREATE TABLE lookup_call_result (
   next_call_type_id INTEGER,
   canceled_type BOOLEAN NOT NULL DEFAULT false,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_call_result_entries BEFORE INSERT ON lookup_call_result FOR EACH ROW SET
@@ -75,7 +75,7 @@ CREATE TABLE lookup_opportunity_types (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_opportunity_types_entries BEFORE INSERT ON lookup_opportunity_types FOR EACH ROW SET
@@ -90,7 +90,7 @@ CREATE TABLE lookup_opportunity_environment (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_opportunity_environment_entries BEFORE INSERT ON lookup_opportunity_environment FOR EACH ROW SET
@@ -105,7 +105,7 @@ CREATE TABLE lookup_opportunity_competitors (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_opportunity_competitors_entries BEFORE INSERT ON lookup_opportunity_competitors FOR EACH ROW SET
@@ -120,7 +120,7 @@ CREATE TABLE lookup_opportunity_event_compelling (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_opportunity_event_compelling_entries BEFORE INSERT ON lookup_opportunity_event_compelling FOR EACH ROW SET
@@ -135,7 +135,7 @@ CREATE TABLE lookup_opportunity_budget (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER lookup_opportunity_budget_entries BEFORE INSERT ON lookup_opportunity_budget FOR EACH ROW SET
@@ -213,6 +213,7 @@ CREATE INDEX `oppcomplist_description` ON `opportunity_component` (description);
 
 
 CREATE TABLE opportunity_component_levels (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   opp_id INT NOT NULL REFERENCES opportunity_component(id),
   type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
   level INTEGER NOT NULL,
@@ -255,14 +256,14 @@ CREATE TABLE call_log (
   alertdate_timezone VARCHAR(255),
   trashed_date TIMESTAMP NULL,
   followup_contact_id INT REFERENCES contact(contact_id),
-  followup_end_date TIMESTAMP,
+  followup_end_date TIMESTAMP NULL,
   followup_end_date_timezone VARCHAR(255),
   followup_location VARCHAR(255),
   followup_length INTEGER,
   followup_length_duration INT REFERENCES lookup_call_reminder(code),
-  call_start_date TIMESTAMP,
+  call_start_date TIMESTAMP NULL,
   call_start_date_timezone VARCHAR(255),
-  call_end_date TIMESTAMP,
+  call_end_date TIMESTAMP NULL,
   call_end_date_timezone VARCHAR(255),
   call_location VARCHAR(255),
   call_length_duration INT REFERENCES lookup_call_reminder(code),
@@ -301,7 +302,7 @@ CREATE TABLE opportunity_component_log(
   enteredby INT NOT NULL REFERENCES `access`(user_id),
   closedate_timezone VARCHAR(255),
   closed TIMESTAMP NULL,
-  modified TIMESTAMP
+  modified TIMESTAMP NULL
 );
 
 CREATE TRIGGER opportunity_component_log_entries BEFORE INSERT ON opportunity_component_log FOR EACH ROW SET
@@ -314,7 +315,7 @@ CREATE TABLE call_log_participant(
   contact_id INT NOT NULL REFERENCES contact (contact_id),
   is_available INT DEFAULT 1,
   entered timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  modified timestamp,
+  modified timestamp NULL,
   enteredby INT NOT NULL REFERENCES `access` (user_id),
   modifiedby INT NOT NULL REFERENCES `access` (user_id),
   is_followup INT DEFAULT 0

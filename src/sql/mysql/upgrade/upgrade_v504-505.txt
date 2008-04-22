@@ -1,0 +1,18 @@
+# These scripts upgrade a 5.0.4 production database to 5.0.5, in order
+
+#replaces Centric CRM with ConcourseSuite
+2008-02-06-script01-raja.bsh
+# offline permissions fix
+2008-02-08-script01-ananth.bsh
+# Expand knowledge base text fields.
+2008-02-26-script1-jfielek.sql
+# revise trigger to enable custom folder display
+2008-02-29-script01-jgraff.sql
+# MySQL doesn't do default values for TEXT fields
+2008-03-05-script01-jgraff.sql
+# EmailAcount fixes for importing email
+2008-02-28-script01-jfielek.sql
+# EmailAcount fixes for importing email
+2008-02-28-script01-jfielek.bsh
+# Remove redundant completed activity history items
+2008-03-03-script01-ananth.bsh

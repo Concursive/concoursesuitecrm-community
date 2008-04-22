@@ -32,7 +32,7 @@ CREATE TABLE `access` (
   endofday INTEGER DEFAULT 18,
   locale VARCHAR(255),
   timezone VARCHAR(255) DEFAULT 'America/New_York',
-  last_ip VARCHAR(15),
+  last_ip VARCHAR(30),
   last_login TIMESTAMP NULL,
   enteredby INT NOT NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -448,7 +448,7 @@ NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00',
 
 CREATE TABLE organization (
   org_id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name VARCHAR(80) NOT NULL,
+  name VARCHAR(255) NOT NULL,
   account_number VARCHAR(50),
   account_group INT,
   url TEXT,
@@ -498,10 +498,15 @@ CREATE TABLE organization (
   duns_number VARCHAR(30),
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  sic_text VARCHAR(8),
   year_started INTEGER,
   sic_description VARCHAR(300),
   stage_id INTEGER REFERENCES lookup_account_stage(code),
-  comments TEXT
+  comments TEXT,
+  no_phone BOOLEAN DEFAULT false,
+  no_fax BOOLEAN DEFAULT false,
+  no_mail BOOLEAN DEFAULT false,
+  no_email BOOLEAN DEFAULT false
 );
 
 CREATE TRIGGER organization_entries BEFORE INSERT ON  organization FOR EACH ROW SET
@@ -585,6 +590,7 @@ CREATE TABLE contact (
   duns_number VARCHAR(30),
   business_name_two VARCHAR(300),
   sic_code INTEGER REFERENCES lookup_sic_codes(code),
+  sic_text VARCHAR(8),
   year_started INTEGER,
   sic_description VARCHAR(300),
   stage INT REFERENCES lookup_contact_stage(code)
@@ -668,7 +674,7 @@ CREATE TABLE permission_category (
   object_events BOOLEAN NOT NULL DEFAULT false,
   reports BOOLEAN NOT NULL DEFAULT false,
   webdav BOOLEAN NOT NULL DEFAULT false,
-	logos BOOLEAN NOT NULL DEFAULT false,
+  logos BOOLEAN NOT NULL DEFAULT false,
   constant INT UNIQUE NOT NULL,
   action_plans BOOLEAN NOT NULL DEFAULT false,
   custom_list_views BOOLEAN NOT NULL DEFAULT false,
@@ -959,13 +965,13 @@ CREATE TABLE cfsinbox_message (
   id INT AUTO_INCREMENT PRIMARY KEY,
   subject VARCHAR(255) DEFAULT NULL,
   body TEXT NOT NULL,
-  reply_id INT NOT NULL,
-  enteredby INT NOT NULL REFERENCES `access`(user_id),
+  reply_id INT,
+  enteredby INT REFERENCES `access`(user_id),
   sent TIMESTAMP NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL,
   type int not null default -1,
-  modifiedby INT NOT NULL REFERENCES `access`(user_id),
+  modifiedby INT REFERENCES `access`(user_id),
   delete_flag BOOLEAN default false
 );
 
@@ -975,7 +981,7 @@ NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00',
 
 CREATE TABLE cfsinbox_messagelink (
   id INT NOT NULL REFERENCES cfsinbox_message(id),
-  sent_to INT NOT NULL REFERENCES contact(contact_id),
+  sent_to INT REFERENCES contact(contact_id),
   status INT NOT NULL DEFAULT 0,
   viewed TIMESTAMP NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
@@ -1153,7 +1159,7 @@ CREATE TABLE report_queue (
   filename VARCHAR(256),
   filesize INT DEFAULT -1,
   enabled BOOLEAN DEFAULT true,
-  output_type INTEGER REFERENCES lookup_report_type(code),
+  output_type INT REFERENCES lookup_report_type(code),
   email BOOLEAN DEFAULT false
 );
 

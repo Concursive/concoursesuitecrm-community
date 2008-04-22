@@ -40,7 +40,8 @@ CREATE TABLE custom_field_category (
 
 CREATE TRIGGER custom_field_category_entries BEFORE INSERT ON  custom_field_category FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
-NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified),
+NEW.start_date = IF (NEW.start_date IS NULL OR NEW.start_date = '0000-00-00 00:00:00', NEW.entered, NEW.start_date);
 
 CREATE INDEX `custom_field_cat_idx` USING btree ON `custom_field_category` (`module_id`);
 
@@ -60,7 +61,8 @@ CREATE TABLE custom_field_group (
 
 CREATE TRIGGER custom_field_group_entries BEFORE INSERT ON  custom_field_group FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
-NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified),
+NEW.start_date = IF (NEW.start_date IS NULL OR NEW.start_date = '0000-00-00 00:00:00', NEW.entered, NEW.start_date);
 
 CREATE INDEX `custom_field_grp_idx` USING btree ON `custom_field_group` (`category_id`);
 
@@ -86,7 +88,8 @@ CREATE TABLE custom_field_info (
 
 CREATE TRIGGER custom_field_info_entries BEFORE INSERT ON  custom_field_info FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
-NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified),
+NEW.start_date = IF (NEW.start_date IS NULL OR NEW.start_date = '0000-00-00 00:00:00', NEW.entered, NEW.start_date);
 
 CREATE INDEX `custom_field_inf_idx` USING btree ON `custom_field_info` (`group_id`);
 
@@ -106,7 +109,8 @@ CREATE TABLE custom_field_lookup (
 
 CREATE TRIGGER custom_field_lookup_entries BEFORE INSERT ON  custom_field_lookup FOR EACH ROW SET
 NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
-NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified),
+NEW.start_date = IF (NEW.start_date IS NULL OR NEW.start_date = '0000-00-00 00:00:00', NEW.entered, NEW.start_date);
 
 /* The saved records in a folder associated with each category_id */
 CREATE TABLE custom_field_record (

@@ -1,0 +1,4 @@
+# These scripts upgrade a 5.0.1 production database to 5.0.2, in order
+
+# Removes an unnecessary workflow process
+2007-12-20-script01-mr.bsh

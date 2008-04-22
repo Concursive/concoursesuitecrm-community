@@ -1,0 +1,4 @@
+# These scripts upgrade a 5.0.3 production database to 5.0.4, in order
+
+# Offline permissions fix
+2007-05-17-script01-holub.bsh

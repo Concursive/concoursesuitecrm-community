@@ -38,8 +38,14 @@ CREATE TABLE action_plan_category_draft (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
-  site_id INTEGER REFERENCES lookup_site_id(code)
+  site_id INTEGER REFERENCES lookup_site_id(code),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NULL
 );
+
+CREATE TRIGGER action_plan_category_draft_entries BEFORE INSERT ON action_plan_category_draft FOR EACH ROW SET
+NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW(), NEW.entered),
+NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 -- Create a new table for identifying objects used by action plans
 CREATE TABLE action_plan_constants (
@@ -79,10 +85,10 @@ CREATE TABLE action_plan (
   description VARCHAR(2048),
   enabled boolean NOT NULL DEFAULT true,
   approved TIMESTAMP NULL,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES `access`(user_id),
-	modified TIMESTAMP NULL,
-	modifiedby INT NOT NULL REFERENCES `access`(user_id),
+  modified TIMESTAMP NULL,
+  modifiedby INT NOT NULL REFERENCES `access`(user_id),
   archive_date TIMESTAMP NULL,
   cat_code INT REFERENCES action_plan_category(id),
   subcat_code1 INT REFERENCES action_plan_category(id),
@@ -104,7 +110,7 @@ CREATE TABLE action_phase (
   phase_name VARCHAR(255) NOT NULL,
   description VARCHAR(2048),
   enabled boolean NOT NULL DEFAULT true,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   random BOOLEAN DEFAULT false,
   global BOOLEAN DEFAULT false,
   modified TIMESTAMP NULL
@@ -121,7 +127,7 @@ CREATE TABLE lookup_duration_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -160,7 +166,7 @@ CREATE TABLE action_step (
   role_id INTEGER REFERENCES role(role_id),
   department_id INTEGER REFERENCES lookup_department(code),
   enabled boolean NOT NULL DEFAULT true,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   allow_skip_to_here boolean NOT NULL DEFAULT FALSE,
   label VARCHAR(80),
   action_required boolean NOT NULL DEFAULT FALSE,

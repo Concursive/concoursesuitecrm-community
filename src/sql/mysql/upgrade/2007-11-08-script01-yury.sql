@@ -1,0 +1,1 @@
+UPDATE permission SET description = 'Custom Editor' WHERE permission = 'qa';

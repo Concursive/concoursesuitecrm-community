@@ -1,0 +1,16 @@
+# These scripts upgrade a 5.0 production database to 5.0.1, in order
+
+# Enable website module
+2007-12-17-script01-jason.bsh
+
+# Add website module indices
+2007-12-18-script01-abdul.sql
+
+# Setting default values for modified fields in lookup email tables.
+2007-12-19-script01-rambabun.sql
+
+# re-name existing graph portlets file name with uinque string
+2007-12-18-script01-rajendra.bsh
+
+# Add a new column in email_account table 
+2007-12-19-script01-abdul.sql

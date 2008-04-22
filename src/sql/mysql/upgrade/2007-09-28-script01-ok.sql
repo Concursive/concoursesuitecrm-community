@@ -1,0 +1,1 @@
+UPDATE lookup_call_types SET default_item = false WHERE default_item = true;

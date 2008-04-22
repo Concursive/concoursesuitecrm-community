@@ -532,7 +532,7 @@ NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00',
 CREATE TABLE lookup_project_permission (
   code INT AUTO_INCREMENT PRIMARY KEY,
   category_id INTEGER REFERENCES lookup_project_permission_category(code),
-  permission VARCHAR(255) UNIQUE NOT NULL,
+  permission VARCHAR(300) UNIQUE NOT NULL,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,

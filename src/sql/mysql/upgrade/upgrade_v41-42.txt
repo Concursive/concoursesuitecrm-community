@@ -1,0 +1,175 @@
+# These scripts upgrade the 4.1 production databases to 5.0RC1, in order
+
+# Some old systems, need the following, most won't so it is commented out
+#2007-09-27-script01-mr.sql
+
+# adding quick_complete in the action_step table; website documents; ingres
+2007-01-30-script01-zhenya.sql
+2007-01-19-script01-olga.sql
+
+# permission_category
+2007-03-09-script01-mr.sql
+2007-02-01-script01-ayarotski.sql
+2006-12-27-script01-narayan.sql
+
+# offline capabilities
+2006-10-30-script01-holub.sql
+2006-11-08-script01-holub.sql
+2006-11-13-script01-holub.sql
+2006-11-18-script01-ananth.sql
+2006-12-11-script01-ananth.sql
+2006-12-12-script01-sk.sql
+2006-12-13-script01-ananth.sql
+2007-02-08-script01-ananth.sql
+2007-02-09-script01-ananth.sql
+2007-02-11-script01-ananth.sql
+2007-02-12-script02-ananth.sql
+2007-02-12-script01-holub.sql
+2007-02-15-script01-holub.sql
+2007-02-15-script02-holub.bsh
+2007-02-19-script01-holub.sql
+
+2007-09-27-script02-mr.bsh
+
+## NOTE: These scripts incorrectly add a primary key and have been replaced
+# 2007-02-09-script02-ananth.sql
+# 2007-02-12-script01-ananth.sql
+# 2007-02-15-script01-zhenya.sql
+## TODO: Verify BSH script with each database server type
+2007-03-16-script01-ananth.bsh
+
+2007-02-19-artemz.bsh
+2007-04-12-script01-mr.sql
+2007-04-12-script02-mr.bsh
+## TODO: the following script needs description translations
+2007-04-12-script03-mr.bsh
+
+# instant campaign syncing
+#2007-03-28-script01-ananth.sql Replaced by BSH-script
+2007-03-28-script01-ananth-vitalii.bsh
+2007-03-28-script01-holub.sql
+
+# folder portlets
+## TODO: the following 3 bsh scripts need translation
+2007-03-27-script01-alugubillis.bsh
+2007-03-27-script02-alugubillis.bsh
+2007-03-30-script01-dharmas.sql
+2007-03-30-script01-dharmas.bsh
+2007-04-03-script01-alugubillis.bsh
+
+# Fix for MySQL document versions (backported to 4.1.3)
+2007-05-25-script01-mr.sql
+
+# folder and dashboard improvements
+2007-05-03-script01-rajendra.bsh
+2007-05-04-script01-rajendra.bsh
+2007-05-09-script01-alugubillis.sql
+
+# CMS Meta-tag
+2007-04-03-script1-yury.sql
+
+# Offline permissions
+2007-05-17-script01-holub.bsh
+2007-05-22-script01-holub.bsh
+
+# Contact History and Activity improvements
+2007-05-02-script01-holub.sql
+2007-05-05-script01-ok.sql
+2007-02-09-script01-vadim.bsh
+2007-05-10-script01-david.sql
+2007-05-11-script01-holub.bsh
+#2007-06-20-script01-holub.sql Replaced by BSH-script
+2007-06-20-script01-holub-vitalii.bsh
+2007-08-22-script01-mr.sql
+# TODO: Import JOIN
+2007-08-23-script01-mr.sql
+# TODO: Add translation to the following script
+2007-06-28-script01-zhenya.sql
+2007-06-27-script01-zhenya.bsh
+2007-07-04-script01-yury.bsh
+2007-07-04-script01-zhenya.sql
+2007-07-04-vitalii-script01.bsh
+2007-07-05-vitalii-script02.bsh
+2007-07-13-script01-yury.bsh
+2007-07-13-script02-yury.bsh
+2007-07-13-script03-yury.bsh
+2007-07-16-script02-yury.bsh
+2007-07-24-script-vitalii.bsh
+2007-07-24-script-vitalii.sql
+2007-07-24-script01-ananth.bsh
+# TODO: Needs translation?
+2007-07-24-script02-ananth.bsh
+2007-08-24-script01-mr.bsh
+# TODO: Needs translation
+2007-06-22-script01-yury.bsh
+2007-06-22-script02-yury.bsh
+2007-06-22-script03-yury.bsh
+2007-06-22-script04-yury.bsh
+2007-06-22-script05-yury.bsh
+2007-22-06-script1-vitalii.bsh
+2007-22-06-script2-vitalii.bsh
+# Recent Items, etc.
+2007-06-21-az.sql
+# Unsubscribe option
+2007-06-01-script01-ok.bsh
+# Website Module improvements (scripts, sitemap)
+2007-07-12-az.sql
+2007-07-18-script01-ok.sql
+2007-07-18-script01-ok.bsh
+2007-07-18-script02-ok.bsh
+# Module Introductions
+2006-09-13-script01-Kedar.bsh
+2006-09-20-script01-arpan.sql
+# Portlets
+2007-07-07-vitalii-script01.bsh
+2007-09-12-script01-rajendra.bsh
+2007-11-20-script01-kailash.bsh
+# Help Desk
+2006-12-27-script01-narayan.bsh
+2006-12-28-script01-narayan.bsh
+2007-01-02-script01-surya.sql
+2007-01-02-script01-alugubillis.bsh
+2007-01-19-script01-alugubillis.sql
+2007-02-13-script01-alugubillis.bsh
+2007-09-17-script01-mr.sql
+2007-02-15-script01-alugubillis.bsh
+2007-02-16-script01-alugubillis.sql
+2007-03-15-script01-alugubillis.sql
+2007-07-13-script01-nagarajay.sql
+2007-07-17-script01-nagarajay.sql
+2007-08-30-script01-nagarajay.sql
+# TODO: Need script to convert KB to html
+2007-09-17-script01-kailash.bsh
+2007-09-17-script02-kailash.bsh
+2007-06-12-script01-slava.sql
+2007-06-12-script01-slava-vitalii.bsh
+
+2007-09-28-script01-ok.sql
+2007-10-01-andreev.sql
+# TODO: Scripts needs translation
+2007-10-02-script01-ok.bsh
+2007-10-05-script01-ok.sql
+2007-11-08-script01-ok.sql
+
+# Providing dashboards permission by default, if the module-permission is true.
+2007-12-04-script01-raja.bsh
+
+2007-10-10-script01-prasadd.bsh
+2007-10-12-script01-mr.sql
+
+##############################################################################
+# Run each time after upgrading a system (NOTE: this is a temporary measure)
+2005-07-20-script01-mr.bsh
+2006-06-01-script01-mr.bsh
+
+# the following must run after the two scripts above to ensure that the
+# defaults for the portlets are properly installed.
+2007-10-05-script01-rajendra.bsh
+
+##############################################################################
+# Australian states update for existing address
+2007-10-30-script01-ok.sql
+
+# Add triggers for MySQL default timestamps
+2007-09-21-script01-zhenya.sql
+

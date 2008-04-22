@@ -14,7 +14,7 @@ CREATE TABLE saved_criterialist (
   modifiedby INTEGER NOT NULL REFERENCES `access`(user_id),
   owner INTEGER NOT NULL REFERENCES `access`(user_id),
   name VARCHAR(80) NOT NULL,
-  contact_source INTEGER DEFAULT -1,
+  source INTEGER DEFAULT -1,
   enabled BOOLEAN NOT NULL DEFAULT true
 );
 
@@ -215,7 +215,7 @@ CREATE TABLE active_survey_responses (
   active_survey_id INT NOT NULL REFERENCES active_survey(active_survey_id),
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
-  ip_address VARCHAR(15) NOT NULL,
+  ip_address VARCHAR(30) NOT NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   address_updated INT
 );
@@ -249,7 +249,7 @@ CREATE TABLE active_survey_answer_avg (
 CREATE TABLE field_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   data_typeid int NOT NULL DEFAULT -1,
-	data_type VARCHAR(20),
+  data_type VARCHAR(20),
   operator VARCHAR(50),
   display_text varchar(50),
   enabled boolean NOT NULL DEFAULT true

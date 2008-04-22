@@ -18,7 +18,7 @@ CREATE TABLE lookup_order_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -34,7 +34,7 @@ CREATE TABLE lookup_order_type (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -48,9 +48,9 @@ CREATE TABLE lookup_order_terms (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
-	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
 
@@ -64,9 +64,9 @@ CREATE TABLE lookup_order_source (
   code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
-	level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
 
@@ -185,11 +185,11 @@ CREATE TABLE order_product_option_text (
 
 -- Example: Billing, Shipping
 CREATE TABLE lookup_orderaddress_types (
-	code INT AUTO_INCREMENT PRIMARY KEY,
+  code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -199,18 +199,18 @@ NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE order_address (
-	address_id INT AUTO_INCREMENT PRIMARY KEY,
-	order_id INT NOT NULL REFERENCES order_entry(order_id),
-	address_type INT REFERENCES lookup_orderaddress_types(code),
-	addrline1 VARCHAR(300),
-	addrline2 VARCHAR(300),
-	addrline3 VARCHAR(300),
-	city VARCHAR(300),
-	state VARCHAR(300),
-	country VARCHAR(300),
-	postalcode VARCHAR(40),
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES `access`(user_id),
+  address_id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL REFERENCES order_entry(order_id),
+  address_type INT REFERENCES lookup_orderaddress_types(code),
+  addrline1 VARCHAR(300),
+  addrline2 VARCHAR(300),
+  addrline3 VARCHAR(300),
+  city VARCHAR(300),
+  state VARCHAR(300),
+  country VARCHAR(300),
+  postalcode VARCHAR(40),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   addrline4 VARCHAR(300)
@@ -223,12 +223,12 @@ NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00',
 -- The method in which a payment is made
 -- Example: Credit Card, EFT, Cash, Check, Money Order
 CREATE TABLE lookup_payment_methods (
-	code INT AUTO_INCREMENT PRIMARY KEY,
+  code INT AUTO_INCREMENT PRIMARY KEY,
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enabled BOOLEAN DEFAULT true,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
 
@@ -253,16 +253,16 @@ NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE payment_creditcard (
-	creditcard_id INT AUTO_INCREMENT PRIMARY KEY,
-	card_type INT REFERENCES lookup_creditcard_types(code),
-	card_number VARCHAR(300),
-	card_security_code VARCHAR(300),
-	expiration_month INT,
-	expiration_year INT,
+  creditcard_id INT AUTO_INCREMENT PRIMARY KEY,
+  card_type INT REFERENCES lookup_creditcard_types(code),
+  card_number VARCHAR(300),
+  card_security_code VARCHAR(300),
+  expiration_month INT,
+  expiration_year INT,
   name_on_card VARCHAR(300),
   company_name_on_card VARCHAR(300),
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES `access`(user_id),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   order_id INTEGER REFERENCES order_entry(order_id)
@@ -273,14 +273,14 @@ NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE payment_eft (
-	bank_id INT AUTO_INCREMENT PRIMARY KEY,
-	bank_name VARCHAR(300),
-	routing_number VARCHAR(300),
-	account_number VARCHAR(300),
-	name_on_account VARCHAR(300),
+  bank_id INT AUTO_INCREMENT PRIMARY KEY,
+  bank_name VARCHAR(300), 
+  routing_number VARCHAR(300),
+  account_number VARCHAR(300),
+  name_on_account VARCHAR(300),
   company_name_on_account VARCHAR(300),
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES `access`(user_id),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   order_id INTEGER REFERENCES order_entry(order_id)
@@ -338,7 +338,7 @@ CREATE TABLE lookup_payment_status (
   description VARCHAR(300) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-	enabled BOOLEAN DEFAULT true,
+  enabled BOOLEAN DEFAULT true,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP NULL
 );
@@ -348,20 +348,20 @@ NEW.entered = IF(NEW.entered IS NULL OR NEW.entered = '0000-00-00 00:00:00', NOW
 NEW.modified = IF (NEW.modified IS NULL OR NEW.modified = '0000-00-00 00:00:00', NEW.entered, NEW.modified);
 
 CREATE TABLE order_payment (
-	payment_id INT AUTO_INCREMENT PRIMARY KEY,
-	order_id INT NOT NULL REFERENCES order_entry(order_id),
+  payment_id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL REFERENCES order_entry(order_id),
   payment_method_id INT NOT NULL REFERENCES lookup_payment_methods(code),
-	payment_amount FLOAT,
+  payment_amount FLOAT,
   authorization_ref_number VARCHAR(30),
   authorization_code VARCHAR(30),
   authorization_date TIMESTAMP NULL,
-	entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES `access`(user_id),
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES `access`(user_id),
   modified TIMESTAMP NULL,
   modifiedby INT NOT NULL REFERENCES `access`(user_id),
   order_item_id INT REFERENCES order_product(item_id),
   history_id INT REFERENCES customer_product_history(history_id),
-	date_to_process TIMESTAMP NULL,
+  date_to_process TIMESTAMP NULL,
   creditcard_id INTEGER REFERENCES payment_creditcard(creditcard_id),
   bank_id INTEGER REFERENCES payment_eft(bank_id),
   status_id INTEGER REFERENCES lookup_payment_status(code)

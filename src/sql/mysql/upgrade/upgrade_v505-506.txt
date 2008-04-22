@@ -1,0 +1,4 @@
+# These scripts upgrade a 5.0.5 production database to 5.0.6, in order
+
+# Adds "sic_text" to organization and contact tables.
+2008-04-07-script01-jfielek.sql
